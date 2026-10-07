@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Registro de texto · Análise linguística</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+  <body>
+    <div class="page">
+      <header class="site-header">
+        <a class="brand" href="{{ url_for('index') }}" aria-label="Análise linguística — início">
+          <span class="brand-mark" aria-hidden="true">a<span>l</span></span>
+          <span>Análise linguística</span>
+        </a>
+        <span class="stage">Registro de textos</span>
+      </header>
+
+      <main>
+        <div class="intro">
+          <p class="eyebrow">Seu ponto de partida</p>
+          <h1>Registre seu texto.</h1>
+          <p class="intro-description">Cole ou escreva o conteúdo que deseja guardar. Ao enviar, seu texto será registrado com uma identificação e a data de recebimento.</p>
+        </div>
+
+        {% if record %}
+        <section class="notice notice-success" role="status" aria-live="polite">
+          <span class="notice-icon" aria-hidden="true">✓</span>
+          <div>
+            <h2>Texto registrado</h2>
+            <p>Registro #{{ record.id }} <span class="notice-separator" aria-hidden="true">·</span> {{ record.created_at }} (horário de Brasília)</p>
+          </div>
+          <a class="new-text" href="{{ url_for('index') }}">Novo texto <span aria-hidden="true">→</span></a>
+        </section>
+        {% endif %}
+
+        <section class="editor" aria-labelledby="editor-title">
+          <div class="editor-heading">
+            <h2 id="editor-title">Conteúdo do texto</h2>
+            <p>O conteúdo será guardado como foi enviado.</p>
+          </div>
+
+          {% if error %}
+          <p class="notice notice-error" id="form-error" role="alert">{{ error }}</p>
+          {% endif %}
+
+          <form method="post" action="{{ url_for('submit_text') }}" accept-charset="UTF-8">
+            <label for="content">Seu texto</label>
+            <textarea id="content" name="content" rows="12" placeholder="Escreva aqui ou cole seu texto…" required aria-describedby="content-help{% if error %} form-error{% endif %}"{% if error %} aria-invalid="true"{% endif %}>
+{{ content }}</textarea>
+            <div class="form-footer">
+              <p id="content-help">Você pode manter parágrafos, espaços e pontuação.</p>
+              <button type="submit">Registrar texto <span aria-hidden="true">→</span></button>
+            </div>
+          </form>
+        </section>
+      </main>
+
+      <footer class="site-footer">Um espaço para organizar o começo da sua análise.</footer>
+    </div>
+  </body>
+</html>
