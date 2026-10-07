@@ -32,6 +32,26 @@
           </div>
           <a class="new-text" href="{{ url_for('index') }}">Novo texto <span aria-hidden="true">→</span></a>
         </section>
+
+        <section class="editor preparation-panel" aria-labelledby="preparation-title">
+          <div class="editor-heading">
+            <h2 id="preparation-title">Preparação para análise</h2>
+            {% if prepared %}
+            <p>Registro validado. O original permanece intacto.</p>
+            <a href="{{ url_for('preparation_json', record_id=record.id, preparacao_id=prepared.preparacao_id) }}">Baixar registro JSON</a>
+            {% else %}
+            <p>Este documento foi recebido antes desta etapa. Gere sua primeira preparação.</p>
+            {% endif %}
+          </div>
+          <form method="post" action="{{ url_for('prepare_submission', record_id=record.id) }}">
+            <label class="technical-option">
+              <input type="checkbox" name="normalizar_crlf">
+              Converter CRLF em LF somente no texto de trabalho
+            </label>
+            <p class="option-help">Desativado por padrão. Cada preparação é salva separadamente.</p>
+            <button type="submit">Gerar nova preparação</button>
+          </form>
+        </section>
         {% endif %}
 
         <section class="editor" aria-labelledby="editor-title">
@@ -48,6 +68,14 @@
             <label for="content">Seu texto</label>
             <textarea id="content" name="content" rows="12" placeholder="Escreva aqui ou cole seu texto…" required aria-describedby="content-help{% if error %} form-error{% endif %}"{% if error %} aria-invalid="true"{% endif %}>
 {{ content }}</textarea>
+            <details class="technical-settings">
+              <summary>Preparação técnica opcional</summary>
+              <label class="technical-option">
+                <input type="checkbox" name="normalizar_crlf">
+                Converter CRLF em LF somente no texto de trabalho
+              </label>
+              <p class="option-help">O original é preservado. Por padrão, o texto de trabalho é idêntico ao original.</p>
+            </details>
             <div class="form-footer">
               <p id="content-help">Você pode manter parágrafos, espaços e pontuação.</p>
               <button type="submit">Registrar texto <span aria-hidden="true">→</span></button>

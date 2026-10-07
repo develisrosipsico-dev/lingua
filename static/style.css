@@ -97,6 +97,13 @@ h1 {
 .editor-heading { margin-bottom: 24px; }
 .editor-heading h2 { margin: 0 0 3px; font-size: 18px; font-weight: 650; }
 .editor-heading p { margin: 0; color: var(--muted); font-size: 14px; }
+.preparation-panel { margin-bottom: 20px; }
+.preparation-panel .editor-heading a { display: inline-block; margin-top: 10px; }
+.technical-settings { margin-top: 16px; color: var(--muted); font-size: 14px; }
+.technical-settings summary { cursor: pointer; }
+.technical-option { display: flex; align-items: flex-start; gap: 10px; margin: 14px 0 0; font-size: 14px; }
+.technical-option input { margin: 6px 0 0; flex-shrink: 0; }
+.option-help { margin: 6px 0 16px; color: var(--muted); font-size: 13px; }
 label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 650; }
 
 textarea {

@@ -1,9 +1,10 @@
 # Lingua
 
 Projeto independente de análise linguística, em Python com interface HTML.
-Nesta primeira etapa, recebe um texto e registra o conteúdo original em SQLite,
-com um identificador e a data do envio. A análise linguística e a exportação de
-pacotes de dados serão etapas posteriores.
+Recebe um texto, registra o original em SQLite e gera uma preparação validada
+em JSON para as etapas seguintes. O registro contém versões, hashes SHA-256,
+metadados e um mapa de posições até o original. A análise linguística será
+uma etapa posterior.
 
 ## Obter uma cópia local
 
@@ -43,6 +44,19 @@ clique em **Registrar texto**. A confirmação mostra o identificador do registr
 e a data em horário de Brasília. Atualizar a confirmação não repete o envio.
 Mantenha o terminal aberto durante o uso e pressione `Ctrl+C` para encerrar.
 
+## Preparar o registro para análise
+
+Por padrão, o texto de trabalho é idêntico ao original. A opção técnica de
+converter CRLF em LF começa desativada e modifica somente a cópia de trabalho.
+Depois de registrar o texto, clique em **Baixar registro JSON**. Para outra
+preparação do mesmo original, use **Gerar nova preparação**; as versões
+anteriores permanecem disponíveis.
+
+O módulo usa apenas a biblioteca padrão e pode ser utilizado sem Flask.
+Veja [instruções, metadados e convenções de posições](docs/preparacao.md), e os
+exemplos de [preservação literal](examples/preservacao_literal.json) e
+[transformação opcional](examples/crlf_para_lf.json).
+
 ## Dados locais
 
 O banco SQLite é criado automaticamente em `instance/textos.sqlite3` e não é
@@ -54,6 +68,8 @@ A tabela `submissions` guarda `id`, `content` e `created_at` (data em UTC no for
 ISO 8601). O conteúdo preserva espaços, acentos e quebras de linha. Textos vazios
 são recusados e cada requisição tem limite de 2 MB. Para escolher outro caminho
 para o banco, defina a variável `ANALISE_DB` antes de iniciar o aplicativo.
+As preparações ficam na tabela `preparations`, no mesmo banco, sem sobrescrever
+os textos recebidos. A nova tabela é criada automaticamente ao atualizar o app.
 
 ## Sincronizar o código
 
@@ -101,5 +117,6 @@ No Windows:
 .\.venv\Scripts\python.exe -m unittest discover -s tests -v
 ```
 
-Os testes usam bancos temporários e verificam persistência após reiniciar o
-aplicativo, preservação do texto, validação dos envios e exibição segura de HTML.
+Os testes usam bancos temporários e verificam persistência após reiniciar,
+preservação literal e Unicode, mapas CRLF, metadados/hashes, ida e volta pelo
+JSON, histórico de preparações, erros explícitos e exibição segura de HTML.

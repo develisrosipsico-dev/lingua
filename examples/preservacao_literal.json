@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0.0",
+  "documento_id": "e1637006-5d39-431d-be38-19ed3462c056",
+  "preparacao_id": "448d58fc-9e3e-444d-9496-ac0d935841da",
+  "registrado_em": "2026-10-07T19:39:33.005407-03:00",
+  "original": {
+    "texto": "Eu não queria sair.\r\nMas fiquei.",
+    "versao": 1,
+    "comprimento": 32,
+    "sha256": "9017e7c5d28209ddfed8e42e69d1782ae4ee973e56f0b50d351adabb10f9b84f"
+  },
+  "trabalho": {
+    "texto": "Eu não queria sair.\r\nMas fiquei.",
+    "versao": 1,
+    "comprimento": 32,
+    "sha256": "9017e7c5d28209ddfed8e42e69d1782ae4ee973e56f0b50d351adabb10f9b84f"
+  },
+  "coordenadas": {
+    "unidade": "pontos_de_codigo_unicode",
+    "base": 0,
+    "fim_exclusivo": true
+  },
+  "politica": {
+    "identificacao": "preservacao_literal",
+    "versao": "1.0.0",
+    "opcoes": {
+      "normalizar_crlf": false
+    }
+  },
+  "metadados_origem": {
+    "documento_id": "e1637006-5d39-431d-be38-19ed3462c056",
+    "versao": 1,
+    "comprimento": 32,
+    "sha256": "9017e7c5d28209ddfed8e42e69d1782ae4ee973e56f0b50d351adabb10f9b84f"
+  },
+  "mapa_trechos": [
+    {
+      "tipo": "copia",
+      "trabalho": {
+        "inicio": 0,
+        "fim": 32
+      },
+      "original": {
+        "inicio": 0,
+        "fim": 32
+      },
+      "alteracao_id": null
+    }
+  ],
+  "alteracoes": [],
+  "validacao": {
+    "estado": "pronto_para_etapa_04",
+    "pronto_para_etapa_04": true,
+    "verificacoes": [
+      "estrutura_json",
+      "schema_identificadores_e_data",
+      "metadados_origem",
+      "versoes_comprimentos_e_hashes_utf8",
+      "convencao_de_coordenadas",
+      "politica_e_resultado_permitido",
+      "limites_ordem_e_cobertura_dos_intervalos",
+      "igualdade_dos_trechos_copiados",
+      "transformacoes_e_alteracoes_correspondentes"
+    ]
+  }
+}
