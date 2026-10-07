@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Registro de texto · Análise linguística</title>
+    <title>Texto e segmentação · Análise linguística</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   </head>
   <body>
@@ -13,14 +13,14 @@
           <span class="brand-mark" aria-hidden="true">a<span>l</span></span>
           <span>Análise linguística</span>
         </a>
-        <span class="stage">Registro de textos</span>
+        <span class="stage">Textos e segmentação</span>
       </header>
 
       <main>
         <div class="intro">
           <p class="eyebrow">Seu ponto de partida</p>
-          <h1>Registre seu texto.</h1>
-          <p class="intro-description">Cole ou escreva o conteúdo que deseja guardar. Ao enviar, seu texto será registrado com uma identificação e a data de recebimento.</p>
+          <h1>Prepare seu texto para análise.</h1>
+          <p class="intro-description">Registre seu texto e preserve o conteúdo original. Quando quiser, separe o texto de trabalho em parágrafos, períodos e tokens.</p>
         </div>
 
         {% if record %}
@@ -51,7 +51,86 @@
             <p class="option-help">Desativado por padrão. Cada preparação é salva separadamente.</p>
             <button type="submit">Gerar nova preparação</button>
           </form>
+          {% if preparation_history|length > 1 %}
+          <details class="preparation-history">
+            <summary>Preparações salvas ({{ preparation_history|length }})</summary>
+            <ul>
+              {% for history in preparation_history %}
+              <li>
+                <a href="{{ url_for('submission', record_id=record.id, preparacao_id=history.preparacao_id) }}"{% if prepared and history.preparacao_id == prepared.preparacao_id %} aria-current="page"{% endif %}>Preparação #{{ history.id }}</a>
+                {% if prepared and history.preparacao_id == prepared.preparacao_id %}<span class="current-preparation">Em exibição</span>{% endif %}
+              </li>
+              {% endfor %}
+            </ul>
+          </details>
+          {% endif %}
         </section>
+
+        {% if prepared %}
+        <section class="editor segmentation-panel" aria-labelledby="segmentation-title">
+          <div class="editor-heading">
+            <h2 id="segmentation-title">Tokenização e segmentação</h2>
+            <p>Separe o texto de trabalho em unidades. Cada execução gera um novo registro e preserva o original.</p>
+          </div>
+          <form method="post" action="{{ url_for('segment_submission', record_id=record.id) }}">
+            <input type="hidden" name="preparacao_id" value="{{ prepared.preparacao_id }}">
+            <button type="submit">Tokenizar e segmentar <span aria-hidden="true">→</span></button>
+          </form>
+
+          {% if segmented %}
+          <div class="segmentation-result">
+            <h3>Unidades do texto</h3>
+            <dl class="unit-counts" aria-label="Contagem de unidades">
+              <div>
+                <dt>Parágrafos</dt>
+                <dd>{{ segmented.paragrafos|length }}</dd>
+              </div>
+              <div>
+                <dt>Períodos</dt>
+                <dd>{{ segmented.periodos|length }}</dd>
+              </div>
+              <div>
+                <dt>Tokens</dt>
+                <dd>{{ segmented.tokens|length }}</dd>
+              </div>
+            </dl>
+            <a class="download-link" href="{{ url_for('segmentation_json', record_id=record.id, segmentacao_id=segmented.segmentacao_id) }}">Baixar segmentação JSON <span aria-hidden="true">↓</span></a>
+
+            <h3 class="periods-heading">Períodos</h3>
+            {% if segmented.periodos %}
+            <ol class="period-list">
+              {% for periodo in segmented.periodos %}
+              <li>
+                <p class="period-text">{{ periodo.texto }}</p>
+                <details class="period-location">
+                  <summary>Localização no texto de trabalho</summary>
+                  <p>Caracteres {{ periodo.trabalho.inicio }} a {{ periodo.trabalho.fim }}. A contagem começa em zero e o limite final é exclusivo.</p>
+                </details>
+              </li>
+              {% endfor %}
+            </ol>
+            {% else %}
+            <p class="empty-result">Nenhum período identificado neste texto de trabalho.</p>
+            {% endif %}
+          </div>
+          {% endif %}
+
+          {% if segmentation_history|length > 1 %}
+          <details class="segmentation-history">
+            <summary>Segmentações salvas ({{ segmentation_history|length }})</summary>
+            <ul>
+              {% for history in segmentation_history %}
+              <li>
+                <a href="{{ url_for('submission', record_id=record.id, preparacao_id=prepared.preparacao_id, segmentacao_id=history.segmentacao_id) }}"{% if segmented and history.segmentacao_id == segmented.segmentacao_id %} aria-current="page"{% endif %}>Segmentação {{ loop.index }}</a>
+                <time datetime="{{ history.registrado_em }}">{{ history.registrado_em }}</time>
+                {% if segmented and history.segmentacao_id == segmented.segmentacao_id %}<span class="current-segmentation">Em exibição</span>{% endif %}
+              </li>
+              {% endfor %}
+            </ul>
+          </details>
+          {% endif %}
+        </section>
+        {% endif %}
         {% endif %}
 
         <section class="editor" aria-labelledby="editor-title">

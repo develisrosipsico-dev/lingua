@@ -11,6 +11,7 @@ from zoneinfo import ZoneInfo
 from flask import Flask, Response, abort, redirect, render_template, request, url_for
 
 from preparacao import ErroPreparacao, preparar_texto, validar_registro
+from segmentacao import ErroSegmentacao, contexto_periodo, segmentar_preparacao, validar_segmentacao
 
 
 BASE = Path(__file__).resolve().parent
@@ -71,6 +72,51 @@ def latest_preparation(connection, document, preparation_id=None):
     return prepared
 
 
+def save_segmentation(connection, document, prepared, **options):
+    """Acrescenta uma execução vinculada à preparação efetivamente processada."""
+    segmented = segmentar_preparacao(prepared, **options)
+    connection.execute(
+        """INSERT INTO segmentations
+           (segmentation_id, preparation_id, submission_id, registered_at, record_json)
+           VALUES (?, ?, ?, ?, ?)""",
+        (
+            segmented["segmentacao_id"], prepared["preparacao_id"], document["id"],
+            segmented["registrado_em"], json.dumps(segmented, ensure_ascii=False, allow_nan=False),
+        ),
+    )
+    return segmented
+
+
+def latest_segmentation(connection, document, preparation_id=None, segmentation_id=None):
+    sql = "SELECT * FROM segmentations WHERE submission_id = ?"
+    parameters = [document["id"]]
+    if preparation_id is not None:
+        sql += " AND preparation_id = ?"
+        parameters.append(preparation_id)
+    if segmentation_id is not None:
+        sql += " AND segmentation_id = ?"
+        parameters.append(segmentation_id)
+    row = connection.execute(sql + " ORDER BY id DESC LIMIT 1", parameters).fetchone()
+    if row is None:
+        return None
+    try:
+        segmented = json.loads(row["record_json"])
+    except (ValueError, TypeError) as error:
+        raise ErroSegmentacao("O JSON da segmentação armazenada é inválido.") from error
+    validar_segmentacao(segmented)
+    prepared = latest_preparation(connection, document, row["preparation_id"])
+    if (
+        prepared is None
+        or segmented["documento_id"] != document["id"]
+        or segmented["segmentacao_id"] != row["segmentation_id"]
+        or segmented["preparacao_id"] != row["preparation_id"]
+        or segmented["registrado_em"] != row["registered_at"]
+        or segmented["preparacao"] != prepared
+    ):
+        raise ErroSegmentacao("A segmentação não corresponde à preparação original armazenada.")
+    return segmented
+
+
 def create_app(config=None):
     app = Flask(__name__)
     app.config.from_mapping(
@@ -98,6 +144,19 @@ def create_app(config=None):
                 submission_id INTEGER NOT NULL REFERENCES submissions(id),
                 record_json TEXT NOT NULL
             )"""
+        )
+        connection.execute(
+            """CREATE TABLE IF NOT EXISTS segmentations (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                segmentation_id TEXT NOT NULL UNIQUE,
+                preparation_id TEXT NOT NULL REFERENCES preparations(preparation_id),
+                submission_id INTEGER NOT NULL REFERENCES submissions(id),
+                registered_at TEXT NOT NULL,
+                record_json TEXT NOT NULL
+            )"""
+        )
+        connection.execute(
+            "CREATE INDEX IF NOT EXISTS segmentations_preparation ON segmentations (submission_id, preparation_id, id)"
         )
         connection.commit()
 
@@ -143,14 +202,40 @@ def create_app(config=None):
             if row is None:
                 abort(404)
             try:
-                prepared = latest_preparation(connection, row)
-            except ErroPreparacao as error:
+                preparation_id = request.args.get("preparacao_id")
+                segmentation_id = request.args.get("segmentacao_id")
+                if segmentation_id is not None:
+                    segmented = latest_segmentation(connection, row, segmentation_id=segmentation_id)
+                    if segmented is None:
+                        abort(404)
+                    if preparation_id is not None and preparation_id != segmented["preparacao_id"]:
+                        return {"erro": "A segmentação pertence a outra preparação."}, 400
+                    preparation_id = segmented["preparacao_id"]
+                prepared = latest_preparation(connection, row, preparation_id)
+                if preparation_id is not None and prepared is None:
+                    abort(404)
+                if segmentation_id is None:
+                    segmented = latest_segmentation(connection, row, prepared["preparacao_id"]) if prepared else None
+                history = connection.execute(
+                    """SELECT segmentation_id AS segmentacao_id, registered_at AS registrado_em
+                       FROM segmentations WHERE submission_id = ? AND preparation_id = ? ORDER BY id DESC""",
+                    (record_id, prepared["preparacao_id"]),
+                ).fetchall() if prepared else []
+                preparation_history = connection.execute(
+                    "SELECT id, preparation_id AS preparacao_id FROM preparations WHERE submission_id = ? ORDER BY id DESC",
+                    (record_id,),
+                ).fetchall()
+            except (ErroPreparacao, ErroSegmentacao) as error:
                 return {"erro": str(error)}, 409
         record = dict(row)
         record["created_at"] = datetime.fromisoformat(record["created_at"]).astimezone(
             ZoneInfo("America/Sao_Paulo")
         ).strftime("%d/%m/%Y às %H:%M:%S")
-        return render_template("index.html", content=row["content"], error=None, record=record, prepared=prepared)
+        return render_template(
+            "index.html", content=row["content"], error=None, record=record, prepared=prepared,
+            segmented=segmented, segmentation_history=[dict(item) for item in history],
+            preparation_history=[dict(item) for item in preparation_history],
+        )
 
     @app.post("/envios/<int:record_id>/preparacoes")
     def prepare_submission(record_id):
@@ -197,6 +282,86 @@ def create_app(config=None):
             mimetype="application/json",
             headers={"Content-Disposition": f'attachment; filename="preparacao-{record_id}.json"'},
         )
+
+    @app.post("/envios/<int:record_id>/segmentacoes")
+    def segment_submission(record_id):
+        if request.is_json:
+            payload = request.get_json(silent=True)
+            allowed = {"preparacao_id", "segmentacao_id", "registrado_em"}
+            if not isinstance(payload, dict) or payload.keys() - allowed:
+                return {"erro": "Envie um objeto JSON com preparacao_id, segmentacao_id ou registrado_em."}, 400
+            options = dict(payload)
+        else:
+            if set(request.form) != {"preparacao_id"} or len(request.form.getlist("preparacao_id")) != 1:
+                return {"erro": "Selecione uma única preparação para segmentar."}, 400
+            options = {"preparacao_id": request.form["preparacao_id"]}
+        preparation_id = options.pop("preparacao_id", None)
+        if "preparacao_id" in (payload if request.is_json else request.form) and (
+            not isinstance(preparation_id, str) or not preparation_id.strip()
+        ):
+            return {"erro": "preparacao_id deve ser um identificador textual não vazio."}, 400
+        try:
+            with closing(connect_database(app.config["DATABASE"])) as connection:
+                document = connection.execute("SELECT * FROM submissions WHERE id = ?", (record_id,)).fetchone()
+                if document is None:
+                    abort(404)
+                prepared = latest_preparation(connection, document, preparation_id)
+                if prepared is None:
+                    return {"erro": "Preparação não encontrada. Prepare este documento antes de segmentar."}, 404
+                segmented = save_segmentation(connection, document, prepared, **options)
+                connection.commit()
+        except ErroPreparacao as error:
+            return {"erro": str(error)}, 409
+        except ErroSegmentacao as error:
+            return {"erro": str(error)}, 400
+        except sqlite3.IntegrityError:
+            return {"erro": "Esse identificador de segmentação já existe. Gere uma nova execução."}, 409
+        if request.is_json:
+            return Response(json.dumps(segmented, ensure_ascii=False, allow_nan=False), status=201, mimetype="application/json")
+        return redirect(
+            url_for("submission", record_id=record_id, preparacao_id=prepared["preparacao_id"], segmentacao_id=segmented["segmentacao_id"]),
+            code=303,
+        )
+
+    @app.get("/envios/<int:record_id>/segmentacao.json")
+    def segmentation_json(record_id):
+        with closing(connect_database(app.config["DATABASE"])) as connection:
+            document = connection.execute("SELECT * FROM submissions WHERE id = ?", (record_id,)).fetchone()
+            if document is None:
+                abort(404)
+            try:
+                segmented = latest_segmentation(connection, document, segmentation_id=request.args.get("segmentacao_id"))
+            except (ErroPreparacao, ErroSegmentacao) as error:
+                return {"erro": str(error)}, 409
+        if segmented is None:
+            return {"erro": "Nenhuma segmentação encontrada. Tokenize e segmente uma preparação deste documento."}, 404
+        return Response(
+            json.dumps(segmented, ensure_ascii=False, indent=2, allow_nan=False), mimetype="application/json",
+            headers={"Content-Disposition": f'attachment; filename="segmentacao-{record_id}.json"'},
+        )
+
+    @app.get("/envios/<int:record_id>/segmentacoes/<segmentacao_id>/periodos/<periodo_id>/contexto.json")
+    @app.get("/envios/<int:record_id>/contexto-periodo.json")
+    def period_context_json(record_id, segmentacao_id=None, periodo_id=None):
+        if segmentacao_id is None:
+            values = [request.args.getlist(name) for name in ("segmentacao_id", "periodo_id")]
+            if any(len(items) != 1 or not items[0].strip() for items in values):
+                return {"erro": "Forneça segmentacao_id e periodo_id uma única vez."}, 400
+            segmentacao_id, periodo_id = (items[0] for items in values)
+        with closing(connect_database(app.config["DATABASE"])) as connection:
+            document = connection.execute("SELECT * FROM submissions WHERE id = ?", (record_id,)).fetchone()
+            if document is None:
+                abort(404)
+            try:
+                segmented = latest_segmentation(connection, document, segmentation_id=segmentacao_id)
+                if segmented is None:
+                    abort(404)
+                if not any(period["id"] == periodo_id for period in segmented["periodos"]):
+                    return {"erro": "Período não encontrado nesta segmentação."}, 404
+                context = contexto_periodo(segmented, periodo_id)
+            except (ErroPreparacao, ErroSegmentacao) as error:
+                return {"erro": str(error)}, 409
+        return Response(json.dumps(context, ensure_ascii=False, allow_nan=False), mimetype="application/json")
 
     @app.errorhandler(413)
     def too_large(_error):

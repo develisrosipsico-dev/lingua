@@ -1,14 +1,15 @@
 # Lingua
 
 Projeto independente de análise linguística, em Python com interface HTML.
-Recebe um texto, registra o original em SQLite e gera uma preparação validada
-em JSON para as etapas seguintes. O registro contém versões, hashes SHA-256,
-metadados e um mapa de posições até o original. A análise linguística será
-uma etapa posterior.
+Recebe um texto, registra o original em SQLite, gera uma preparação validada
+e segmenta sua cópia de trabalho em tokens, períodos e parágrafos. Os registros
+JSON contêm versões, hashes SHA-256, metadados e posições que apontam até o
+original. A interpretação linguística será uma etapa posterior.
 
 ## Obter uma cópia local
 
-Requer Git e Python 3.10 ou superior, com `pip`. No terminal:
+Requer Git e Python de 3.10 a 3.14, com `pip`. A dependência spaCy 3.8.16
+aceita Python anterior a 3.15. No terminal:
 
 ```bash
 git clone --branch main https://github.com/develisrosipsico-dev/lingua.git
@@ -57,6 +58,21 @@ Veja [instruções, metadados e convenções de posições](docs/preparacao.md),
 exemplos de [preservação literal](examples/preservacao_literal.json) e
 [transformação opcional](examples/crlf_para_lf.json).
 
+## Tokenizar e segmentar
+
+Depois de registrar o texto, escolha a preparação em **Preparações salvas**,
+quando houver versões anteriores, e clique em **Tokenizar e segmentar** no
+painel dessa preparação. O resultado mostra as contagens e os
+períodos; **Baixar segmentação JSON** exporta o registro completo. Cada geração
+acrescenta um registro ao histórico, vinculado à preparação escolhida, sem
+modificar o texto original ou resultados anteriores.
+
+A etapa 04 usa `spacy.blank("pt")` e regras próprias versionadas para períodos,
+sem baixar um modelo linguístico. Ela prepara a estrutura para a etapa 05;
+suas fronteiras podem precisar de revisão em textos ambíguos.
+Veja [uso direto, regras e API HTTP](docs/segmentacao.md) e o
+[exemplo de segmentação](examples/segmentacao.json).
+
 ## Dados locais
 
 O banco SQLite é criado automaticamente em `instance/textos.sqlite3` e não é
@@ -70,6 +86,8 @@ são recusados e cada requisição tem limite de 2 MB. Para escolher outro camin
 para o banco, defina a variável `ANALISE_DB` antes de iniciar o aplicativo.
 As preparações ficam na tabela `preparations`, no mesmo banco, sem sobrescrever
 os textos recebidos. A nova tabela é criada automaticamente ao atualizar o app.
+As segmentações ficam na tabela `segmentations`, também local e criada
+automaticamente. Cada uma preserva a preparação exata que foi utilizada.
 
 ## Sincronizar o código
 
@@ -99,8 +117,20 @@ Se o rebase apontar conflitos, resolva-os antes de continuar com
 ao rebase. Evite `push --force` para preservar o histórico compartilhado.
 
 O Git sincroniza o código; o banco e o ambiente virtual permanecem locais.
-Se `requirements.txt` mudar, execute novamente o comando de instalação de
-dependências correspondente ao seu sistema.
+Depois de atualizar para a etapa 04, instale a nova dependência spaCy.
+Na raiz `lingua`, no macOS ou Linux:
+
+```bash
+.venv/bin/python -m pip install -r requirements.txt
+```
+
+No Windows:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+```
+
+Repita a instalação quando `requirements.txt` mudar.
 
 ## Verificar
 
@@ -119,4 +149,7 @@ No Windows:
 
 Os testes usam bancos temporários e verificam persistência após reiniciar,
 preservação literal e Unicode, mapas CRLF, metadados/hashes, ida e volta pelo
-JSON, histórico de preparações, erros explícitos e exibição segura de HTML.
+JSON, histórico de preparações e segmentações, contexto dos períodos, erros
+explícitos e exibição segura de HTML. Os exemplos curtos anotados manualmente
+servem como referência; o relato de três parágrafos e dezesseis períodos ainda
+não foi fornecido e suas contagens não foram verificadas.

@@ -1,0 +1,417 @@
+{
+  "schema_version": "1.0.0",
+  "etapa": "04_tokenizacao_segmentacao",
+  "documento_id": "e1637006-5d39-431d-be38-19ed3462c056",
+  "preparacao_id": "41a34ea7-c87d-4c73-9299-037ec9cca840",
+  "segmentacao_id": "581416a6-ef44-4090-b377-098273305f1c",
+  "registrado_em": "2026-10-07T20:33:06.024250-03:00",
+  "preparacao": {
+    "schema_version": "1.0.0",
+    "documento_id": "e1637006-5d39-431d-be38-19ed3462c056",
+    "preparacao_id": "41a34ea7-c87d-4c73-9299-037ec9cca840",
+    "registrado_em": "2026-10-07T19:39:33.005407-03:00",
+    "original": {
+      "texto": "Eu não queria sair.\r\nMas fiquei.",
+      "versao": 1,
+      "comprimento": 32,
+      "sha256": "9017e7c5d28209ddfed8e42e69d1782ae4ee973e56f0b50d351adabb10f9b84f"
+    },
+    "trabalho": {
+      "texto": "Eu não queria sair.\nMas fiquei.",
+      "versao": 2,
+      "comprimento": 31,
+      "sha256": "f7a4db4212484dc0ad5ae62fade9da643eab941eddd8113320d66af6fe9b1753"
+    },
+    "coordenadas": {
+      "unidade": "pontos_de_codigo_unicode",
+      "base": 0,
+      "fim_exclusivo": true
+    },
+    "politica": {
+      "identificacao": "preservacao_literal",
+      "versao": "1.0.0",
+      "opcoes": {
+        "normalizar_crlf": true
+      }
+    },
+    "metadados_origem": {
+      "documento_id": "e1637006-5d39-431d-be38-19ed3462c056",
+      "versao": 1,
+      "comprimento": 32,
+      "sha256": "9017e7c5d28209ddfed8e42e69d1782ae4ee973e56f0b50d351adabb10f9b84f"
+    },
+    "mapa_trechos": [
+      {
+        "tipo": "copia",
+        "trabalho": {
+          "inicio": 0,
+          "fim": 19
+        },
+        "original": {
+          "inicio": 0,
+          "fim": 19
+        },
+        "alteracao_id": null
+      },
+      {
+        "tipo": "transformacao_tecnica",
+        "trabalho": {
+          "inicio": 19,
+          "fim": 20
+        },
+        "original": {
+          "inicio": 19,
+          "fim": 21
+        },
+        "alteracao_id": "41a34ea7-c87d-4c73-9299-037ec9cca840:alteracao:1"
+      },
+      {
+        "tipo": "copia",
+        "trabalho": {
+          "inicio": 20,
+          "fim": 31
+        },
+        "original": {
+          "inicio": 21,
+          "fim": 32
+        },
+        "alteracao_id": null
+      }
+    ],
+    "alteracoes": [
+      {
+        "id": "41a34ea7-c87d-4c73-9299-037ec9cca840:alteracao:1",
+        "operacao": "crlf_para_lf",
+        "versao_regra": "1.0.0",
+        "motivo": "Conversão técnica opcional de CRLF em LF solicitada pelo chamador.",
+        "antes": "\r\n",
+        "depois": "\n",
+        "original": {
+          "inicio": 19,
+          "fim": 21
+        },
+        "trabalho": {
+          "inicio": 19,
+          "fim": 20
+        }
+      }
+    ],
+    "validacao": {
+      "estado": "pronto_para_etapa_04",
+      "pronto_para_etapa_04": true,
+      "verificacoes": [
+        "estrutura_json",
+        "schema_identificadores_e_data",
+        "metadados_origem",
+        "versoes_comprimentos_e_hashes_utf8",
+        "convencao_de_coordenadas",
+        "politica_e_resultado_permitido",
+        "limites_ordem_e_cobertura_dos_intervalos",
+        "igualdade_dos_trechos_copiados",
+        "transformacoes_e_alteracoes_correspondentes"
+      ]
+    }
+  },
+  "coordenadas": {
+    "unidade": "pontos_de_codigo_unicode",
+    "base": 0,
+    "fim_exclusivo": true
+  },
+  "processamento": {
+    "ferramenta": "spacy",
+    "versao": "3.8.16",
+    "idioma": "pt",
+    "modelo": null,
+    "tokenizador": {
+      "identificacao": "spacy.blank(pt)",
+      "versao": "3.8.16",
+      "ajustes": []
+    },
+    "regras": {
+      "identificacao": "segmentacao_portugues_por_regras",
+      "versao": "1.0.0"
+    },
+    "configuracoes": {
+      "max_caracteres": 2097152,
+      "paragrafos": "linhas_em_branco_lf_ou_crlf_com_espacos_ascii_ou_tabulacoes",
+      "limites_paragrafo": "primeiro_ao_ultimo_token_nao_espacial",
+      "reticencias": "nao_encerram_por_si",
+      "abreviacoes_protegidas": [
+        "Dr.",
+        "Dra.",
+        "Sr.",
+        "Sra."
+      ],
+      "etc": "encerra_antes_de_proxima_palavra_com_inicial_maiuscula_ou_fim_paragrafo",
+      "separadores": "complemento_dos_intervalos_dos_tokens_nao_espaciais",
+      "fechamento_aspas_retas": "adjacente_a_pontuacao_terminal",
+      "segmentador": "componente_proprio_sobre_tokens"
+    }
+  },
+  "paragrafos": [
+    {
+      "id": "581416a6-ef44-4090-b377-098273305f1c:paragrafo:0",
+      "ordem": 0,
+      "texto": "Eu não queria sair.\nMas fiquei.",
+      "trabalho": {
+        "inicio": 0,
+        "fim": 31
+      },
+      "original": {
+        "inicio": 0,
+        "fim": 32
+      },
+      "periodos": [
+        "581416a6-ef44-4090-b377-098273305f1c:periodo:0",
+        "581416a6-ef44-4090-b377-098273305f1c:periodo:1"
+      ]
+    }
+  ],
+  "periodos": [
+    {
+      "id": "581416a6-ef44-4090-b377-098273305f1c:periodo:0",
+      "ordem": 0,
+      "texto": "Eu não queria sair.",
+      "trabalho": {
+        "inicio": 0,
+        "fim": 19
+      },
+      "original": {
+        "inicio": 0,
+        "fim": 19
+      },
+      "paragrafo_id": "581416a6-ef44-4090-b377-098273305f1c:paragrafo:0",
+      "tokens": [
+        "581416a6-ef44-4090-b377-098273305f1c:token:0",
+        "581416a6-ef44-4090-b377-098273305f1c:token:1",
+        "581416a6-ef44-4090-b377-098273305f1c:token:2",
+        "581416a6-ef44-4090-b377-098273305f1c:token:3",
+        "581416a6-ef44-4090-b377-098273305f1c:token:4"
+      ],
+      "regra_encerramento": "pontuacao_terminal"
+    },
+    {
+      "id": "581416a6-ef44-4090-b377-098273305f1c:periodo:1",
+      "ordem": 1,
+      "texto": "Mas fiquei.",
+      "trabalho": {
+        "inicio": 20,
+        "fim": 31
+      },
+      "original": {
+        "inicio": 21,
+        "fim": 32
+      },
+      "paragrafo_id": "581416a6-ef44-4090-b377-098273305f1c:paragrafo:0",
+      "tokens": [
+        "581416a6-ef44-4090-b377-098273305f1c:token:5",
+        "581416a6-ef44-4090-b377-098273305f1c:token:6",
+        "581416a6-ef44-4090-b377-098273305f1c:token:7"
+      ],
+      "regra_encerramento": "pontuacao_terminal"
+    }
+  ],
+  "tokens": [
+    {
+      "id": "581416a6-ef44-4090-b377-098273305f1c:token:0",
+      "ordem": 0,
+      "texto": "Eu",
+      "trabalho": {
+        "inicio": 0,
+        "fim": 2
+      },
+      "original": {
+        "inicio": 0,
+        "fim": 2
+      },
+      "paragrafo_id": "581416a6-ef44-4090-b377-098273305f1c:paragrafo:0",
+      "periodo_id": "581416a6-ef44-4090-b377-098273305f1c:periodo:0"
+    },
+    {
+      "id": "581416a6-ef44-4090-b377-098273305f1c:token:1",
+      "ordem": 1,
+      "texto": "não",
+      "trabalho": {
+        "inicio": 3,
+        "fim": 6
+      },
+      "original": {
+        "inicio": 3,
+        "fim": 6
+      },
+      "paragrafo_id": "581416a6-ef44-4090-b377-098273305f1c:paragrafo:0",
+      "periodo_id": "581416a6-ef44-4090-b377-098273305f1c:periodo:0"
+    },
+    {
+      "id": "581416a6-ef44-4090-b377-098273305f1c:token:2",
+      "ordem": 2,
+      "texto": "queria",
+      "trabalho": {
+        "inicio": 7,
+        "fim": 13
+      },
+      "original": {
+        "inicio": 7,
+        "fim": 13
+      },
+      "paragrafo_id": "581416a6-ef44-4090-b377-098273305f1c:paragrafo:0",
+      "periodo_id": "581416a6-ef44-4090-b377-098273305f1c:periodo:0"
+    },
+    {
+      "id": "581416a6-ef44-4090-b377-098273305f1c:token:3",
+      "ordem": 3,
+      "texto": "sair",
+      "trabalho": {
+        "inicio": 14,
+        "fim": 18
+      },
+      "original": {
+        "inicio": 14,
+        "fim": 18
+      },
+      "paragrafo_id": "581416a6-ef44-4090-b377-098273305f1c:paragrafo:0",
+      "periodo_id": "581416a6-ef44-4090-b377-098273305f1c:periodo:0"
+    },
+    {
+      "id": "581416a6-ef44-4090-b377-098273305f1c:token:4",
+      "ordem": 4,
+      "texto": ".",
+      "trabalho": {
+        "inicio": 18,
+        "fim": 19
+      },
+      "original": {
+        "inicio": 18,
+        "fim": 19
+      },
+      "paragrafo_id": "581416a6-ef44-4090-b377-098273305f1c:paragrafo:0",
+      "periodo_id": "581416a6-ef44-4090-b377-098273305f1c:periodo:0"
+    },
+    {
+      "id": "581416a6-ef44-4090-b377-098273305f1c:token:5",
+      "ordem": 5,
+      "texto": "Mas",
+      "trabalho": {
+        "inicio": 20,
+        "fim": 23
+      },
+      "original": {
+        "inicio": 21,
+        "fim": 24
+      },
+      "paragrafo_id": "581416a6-ef44-4090-b377-098273305f1c:paragrafo:0",
+      "periodo_id": "581416a6-ef44-4090-b377-098273305f1c:periodo:1"
+    },
+    {
+      "id": "581416a6-ef44-4090-b377-098273305f1c:token:6",
+      "ordem": 6,
+      "texto": "fiquei",
+      "trabalho": {
+        "inicio": 24,
+        "fim": 30
+      },
+      "original": {
+        "inicio": 25,
+        "fim": 31
+      },
+      "paragrafo_id": "581416a6-ef44-4090-b377-098273305f1c:paragrafo:0",
+      "periodo_id": "581416a6-ef44-4090-b377-098273305f1c:periodo:1"
+    },
+    {
+      "id": "581416a6-ef44-4090-b377-098273305f1c:token:7",
+      "ordem": 7,
+      "texto": ".",
+      "trabalho": {
+        "inicio": 30,
+        "fim": 31
+      },
+      "original": {
+        "inicio": 31,
+        "fim": 32
+      },
+      "paragrafo_id": "581416a6-ef44-4090-b377-098273305f1c:paragrafo:0",
+      "periodo_id": "581416a6-ef44-4090-b377-098273305f1c:periodo:1"
+    }
+  ],
+  "separadores": [
+    {
+      "id": "581416a6-ef44-4090-b377-098273305f1c:separador:0",
+      "ordem": 0,
+      "texto": " ",
+      "trabalho": {
+        "inicio": 2,
+        "fim": 3
+      },
+      "original": {
+        "inicio": 2,
+        "fim": 3
+      }
+    },
+    {
+      "id": "581416a6-ef44-4090-b377-098273305f1c:separador:1",
+      "ordem": 1,
+      "texto": " ",
+      "trabalho": {
+        "inicio": 6,
+        "fim": 7
+      },
+      "original": {
+        "inicio": 6,
+        "fim": 7
+      }
+    },
+    {
+      "id": "581416a6-ef44-4090-b377-098273305f1c:separador:2",
+      "ordem": 2,
+      "texto": " ",
+      "trabalho": {
+        "inicio": 13,
+        "fim": 14
+      },
+      "original": {
+        "inicio": 13,
+        "fim": 14
+      }
+    },
+    {
+      "id": "581416a6-ef44-4090-b377-098273305f1c:separador:3",
+      "ordem": 3,
+      "texto": "\n",
+      "trabalho": {
+        "inicio": 19,
+        "fim": 20
+      },
+      "original": {
+        "inicio": 19,
+        "fim": 21
+      }
+    },
+    {
+      "id": "581416a6-ef44-4090-b377-098273305f1c:separador:4",
+      "ordem": 4,
+      "texto": " ",
+      "trabalho": {
+        "inicio": 23,
+        "fim": 24
+      },
+      "original": {
+        "inicio": 24,
+        "fim": 25
+      }
+    }
+  ],
+  "validacao": {
+    "estado": "pronto_para_etapa_05",
+    "pronto_para_etapa_05": true,
+    "verificacoes": [
+      "estrutura_json_identificadores_e_data",
+      "preparacao_textos_hashes_e_mapa",
+      "coordenadas_e_processamento",
+      "limites_ordem_identificadores_e_textos_exatos",
+      "reconstrucao_por_tokens_e_separadores",
+      "paragrafos_e_periodos_por_regras",
+      "relacoes_e_contencao_das_unidades",
+      "correspondencia_ao_original"
+    ]
+  }
+}
