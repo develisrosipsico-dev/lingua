@@ -4,6 +4,8 @@ O catálogo é dado JSON, independente da execução e sem inferências sobre a
 correção das previsões da etapa 06. Versões históricas devem ser preservadas.
 """
 
+from copy import deepcopy
+
 
 def _regra(identificador, familia, descricao, *, condicoes, atributos, padrao,
            resultado, alcance, excecoes, sobreposicao, exemplos, cobertura,
@@ -19,7 +21,7 @@ def _regra(identificador, familia, descricao, *, condicoes, atributos, padrao,
     }
 
 
-CATALOGO = {
+CATALOGO_V1 = {
     "id": "lingua-etapa07", "versao": "1.0.0",
     "regras": [
         _regra("negacao_correlativa", "negacao",
@@ -153,5 +155,16 @@ CATALOGO = {
                cobertura="Somente por isso anteposto; não inclui uso pós-verbal/argumental, portanto, logo ou por esse motivo."),
     ],
 }
+
+# A versão recebida da continuação permanece íntegra para validar arquivos
+# históricos. Mudanças de alcance têm uma versão própria, sem reinterpretá-los.
+CATALOGO = deepcopy(CATALOGO_V1)
+CATALOGO["versao"] = "1.1.0"
+for _regra_atual in CATALOGO["regras"]:
+    _regra_atual["versao"] = "1.1.0"
+    _regra_atual["condicoes"].append(
+        "Delimitadores literais de citação não constituem núcleos; o alcance "
+        "permanece na mesma região de citação do marcador, inclusive fora de aspas."
+    )
 
 REGRA_IDS = tuple(regra["id"] for regra in CATALOGO["regras"])

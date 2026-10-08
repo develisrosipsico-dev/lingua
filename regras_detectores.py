@@ -14,6 +14,7 @@ _SUBORDINADAS = {"xcomp", "ccomp", "advcl", "acl", "csubj"}
 _ELOCUCAO = {"dizer", "afirmar", "contar", "declarar", "responder", "perguntar", "relatar", "escrever"}
 _NEGATIVOS = {"não", "nunca", "nem"}
 _TEMPORAIS = {"ontem", "hoje", "amanhã"}
+_DELIMITADORES_CITACAO = {'"', "'", "“", "”", "«", "»", "‘", "’"}
 _MODAIS = {"poder": "possibilidade_indeterminada", "dever": "obrigacao",
            "precisar": "necessidade", "necessitar": "necessidade",
            "conseguir": "capacidade", "saber": "capacidade",
@@ -41,7 +42,13 @@ def _proposta(familia, categoria, marcador, nucleo, alcance, explicacao,
 class _Indice:
     """Índices compartilhados, com ownership de oração e subárvores em ordem DFS."""
 
-    def __init__(self, analise):
+    def __init__(self, analise, *, versao="1.1.0"):
+        if versao not in {"1.0.0", "1.1.0"}:
+            raise ValueError(f"Versão de detectores não suportada: {versao!r}.")
+        self.versao = versao
+        # Reproduzir 1.0.0 é necessário para conferir registros históricos:
+        # suas decisões não recebem retroativamente as correções de citação.
+        self.corrigir_citacao = versao == "1.1.0"
         self.analise = analise
         self.segmentacao = analise["anotacao"]["segmentacao"]
         anotacoes = {a["token_id"]: a for a in analise["anotacao"]["anotacoes_tokens"]}
@@ -68,6 +75,9 @@ class _Indice:
                         and self.dependencia[t["id"]] not in _AUXILIARES}
         self.nucleos.update(t["cabeca_token_id"] for t in self.lista
                             if self.dependencia[t["id"]] == "cop")
+        if self.corrigir_citacao:
+            self.nucleos.difference_update(
+                t["id"] for t in self.lista if t["texto"] in _DELIMITADORES_CITACAO)
         self.pertence = {}
         self.proprios = defaultdict(list)
         self.entrada, self.saida, self.dfs = {}, {}, []
@@ -136,12 +146,33 @@ class _Indice:
     def contexto_citacao(self, ident):
         return self.citacao.get(ident)
 
+    def filtrar_citacao(self, alcance, referencia):
+        """Restrinja 1.1.0 à região enunciativa da referência, inclusive fora de aspas.
+
+        A lista recebida pode vir de um alcance modal calculado diretamente.
+        Delimitadores são reconhecidos pelo texto literal, sem corrigir o POS.
+        """
+        if not self.corrigir_citacao or alcance is None:
+            return alcance
+        citacao = self.contexto_citacao(referencia)
+        if citacao is not None and not citacao["fechado"]:
+            return None
+        return [i for i in alcance
+                if self.tokens[i]["texto"] not in _DELIMITADORES_CITACAO
+                and self.contexto_citacao(i) is citacao] or None
+
     def alcance(self, nucleo, marcador=None, *, constituinte=False):
         if nucleo is None:
             return None
         alcance = self.descendentes(nucleo) if constituinte else self.proprios.get(nucleo, [])
         if not alcance:
             return None
+        if self.corrigir_citacao:
+            referencia = nucleo if marcador is None else marcador
+            if self.contexto_citacao(nucleo) is not self.contexto_citacao(referencia):
+                return None
+            return self.filtrar_citacao(alcance, referencia)
+        # Caminho histórico, com a convenção exata dos detectores 1.0.0.
         if marcador is not None:
             citacao = self.contexto_citacao(marcador)
             if citacao is not None:
@@ -236,9 +267,9 @@ class _Indice:
         return resultados
 
 
-def construir_contexto(analise):
+def construir_contexto(analise, *, versao="1.1.0"):
     """Construa os índices uma única vez por execução (após validar a etapa 06)."""
-    return _Indice(analise)
+    return _Indice(analise, versao=versao)
 
 
 def _supressos(indice, habilitadas):
@@ -258,7 +289,9 @@ def _oracoes(indice, habilitadas):
     for ident in indice.ordenar(indice.nucleos):
         token = indice.tokens[ident]
         auxiliares = [filho for filho in indice.filhos[ident]
-                      if indice.dependencia[filho] in _AUXILIARES]
+                      if indice.dependencia[filho] in _AUXILIARES
+                      and (not indice.corrigir_citacao
+                           or indice.tokens[filho]["texto"] not in _DELIMITADORES_CITACAO)]
         marcador = indice.ordenar([ident] + auxiliares)
         pai = indice.pai_oracional(ident)
         dep = indice.dependencia[ident]
@@ -312,7 +345,11 @@ def _negador(indice, ident, habilitadas):
     constituinte = False
     # Um marcador ligado diretamente a nome/adjetivo pode negar esse
     # constituinte; não promovemos essa negação à oração inteira.
-    if permitido and cabeca != ident and indice.tokens[cabeca]["pos"] is None:
+    if (indice.corrigir_citacao and indice.tokens[cabeca]["texto"] in _DELIMITADORES_CITACAO):
+        # Um delimitador recebido como cabeça não sustenta um constituinte
+        # negado, mesmo quando o modelo lhe atribuiu POS nominal/adjetival.
+        nucleo = None
+    elif permitido and cabeca != ident and indice.tokens[cabeca]["pos"] is None:
         nucleo = None
     elif permitido and cabeca != ident and cabeca not in indice.nucleos and indice.dependencia[cabeca] not in _AUXILIARES:
         nucleo, constituinte = cabeca, True
@@ -514,6 +551,9 @@ def _modalidade_verbal(indice, habilitadas):
             categoria = "obrigacao"
         else:
             categoria = _MODAIS[lema]
+        # Filtre antes de inspecionar a negação no conteúdo: uma palavra
+        # mencionada entre aspas não passa a negar o conteúdo modal externo.
+        alcance = indice.filtrar_citacao(alcance, ident)
         vinculos, ambiguidades, contexto = _limitacoes_modal(indice, ident, alcance)
         vinculos += [_vinculo("conteudo_modal", i) for i in complementos]
         alternativas = []
@@ -528,7 +568,7 @@ def _modalidade_verbal(indice, habilitadas):
             contexto.append("A ocorrência registra desejo expresso pela construção, sem atribuir conceito teórico ou estado ao narrador.")
         alcance = alcance or None
         citacao = indice.contexto_citacao(ident)
-        if citacao is not None:
+        if citacao is not None and not indice.corrigir_citacao:
             if not citacao["fechado"]:
                 alcance = None
             elif alcance is not None:
@@ -567,6 +607,7 @@ def _modalidade_lexical(indice, habilitadas):
                 continue
             categoria, nucleo = adjetivos[lema], ident
             alcance, complementos = _conteudo_modal(indice, ident)
+        alcance = indice.filtrar_citacao(alcance, ident)
         vinculos, ambiguidades, contexto = _limitacoes_modal(indice, ident, alcance)
         if nucleo is not None:
             vinculos.append(_vinculo("predicado_associado", nucleo))

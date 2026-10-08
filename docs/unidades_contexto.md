@@ -20,10 +20,13 @@ textuais e verificar seu hash antes de vetorizar; a etapa 08 não cria vetores.
 O registro usa `schema_version = "1.0.0"`,
 `etapa = "08_unidades_contexto"` e módulo, política e identidade lógica
 na versão `1.0.0`.
+Essa versão aceita execuções de regras dos mecanismos `1.0.0` e `1.1.0`.
+Cada fonte é validada com as regras da sua versão e permanece integralmente
+preservada no contexto; a atualização da etapa 07 não muda o formato da etapa 08.
 
 ## Instalação e execução local
 
-Use a pasta `linguaSpike` criada pelas [instruções do README](../README.md).
+Use a pasta `lingua` criada pelas [instruções do README](../README.md).
 Com o aplicativo encerrado e suas alterações locais preservadas:
 
 ```bash
@@ -51,7 +54,7 @@ from unidades_contexto import (
     validar_unidades_contexto,
 )
 
-with open("examples/regras_linguisticas_literal.json", encoding="utf-8") as arquivo:
+with open("examples/regras_integradas.json", encoding="utf-8") as arquivo:
     regras = json.load(arquivo)
 
 registro = construir_unidades_contexto(
@@ -273,14 +276,28 @@ pronta não é persistida como execução contextual parcial.
 - [Preservação literal](../examples/unidades_contexto_literal.json).
 - [Conversão opcional de CRLF em LF](../examples/unidades_contexto_normalizada.json).
 
-Os exemplos partem das execuções de regras já disponibilizadas, preservando
-integralmente suas previsões e limitações. Usam IDs e datas fornecidos, a
+Os dois arquivos acima são exemplos históricos do módulo `1.0.0` da etapa 08,
+com fontes do catálogo e mecanismo `1.0.0` da etapa 07. Continuam válidos,
+assim como os dois exemplos históricos de regras. As contagens e comparações
+abaixo referem-se a esses registros recebidos.
+
+O [exemplo atual de contexto](../examples/contexto_integrado.json) preserva
+integralmente a origem do
+[exemplo atual de regras](../examples/regras_integradas.json), gerado pelo
+mecanismo `1.1.0`. O módulo contextual continua na versão `1.0.0`.
+Esse exemplo foi gerado por HTTP real e contém quatro focos em dois parágrafos,
+com passagem entre parágrafos explicitamente habilitada. A integração passou
+em **424 testes**, além da verificação dos downloads e da integridade do banco
+temporário após reiniciar o aplicativo.
+
+Os exemplos históricos partem das execuções de regras já disponibilizadas,
+preservando integralmente suas previsões e limitações. Usam IDs e datas fornecidos, a
 política inicial sem passagem entre parágrafos e o mesmo documento original.
 Eles ilustram a rastreabilidade; as previsões do modelo não são um gabarito
 linguístico independente.
 
-Cada exemplo contém cinco unidades, distribuídas pelos dois parágrafos da
-origem, e 33 registros de pendências herdadas entre as janelas. Uma mesma
+Cada exemplo histórico contém cinco unidades, distribuídas pelos dois parágrafos
+da origem, e 33 registros de pendências herdadas entre as janelas. Uma mesma
 pendência pode aparecer em mais de uma janela, com sua origem explícita.
 Os arquivos foram revalidados após serialização. A seleção e os intervalos
 originais são equivalentes entre as duas preparações, assim como as cinco
@@ -288,7 +305,7 @@ identidades lógicas. Quatro hashes de janela diferem porque seus recortes de
 trabalho incluem quebras CRLF/LF; a janela formada somente pelos períodos
 três e quatro não contém essa transformação e mantém seu hash.
 
-Para executar os testes na raiz local `linguaSpike`:
+Para executar os testes na raiz local `lingua`:
 
 ```bash
 .venv/bin/python -m unittest discover -s tests -v

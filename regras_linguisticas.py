@@ -13,14 +13,14 @@ import math
 import re
 from uuid import uuid4
 
-from catalogo_regras import CATALOGO
+from catalogo_regras import CATALOGO, CATALOGO_V1
 from preparacao import mapear_intervalos
 from regras_detectores import construir_contexto, detectar_regra
 from sintaxe_entidades import ErroAnalise, validar_analise_sintaxe_entidades
 
 
 SCHEMA_VERSION = "1.0.0"
-MODULO_VERSION = "1.0.0"
+MODULO_VERSION = "1.1.0"
 ETAPA = "07_regras_linguisticas"
 FAMILIAS = ("oracoes", "negacao", "tempo", "modalidade", "conectores")
 _IDS_ORIGEM = ("documento_id", "preparacao_id", "segmentacao_id", "anotacao_id", "analise_id")
@@ -106,12 +106,18 @@ def _fonte(analise):
         raise ErroEntrada(f"Análise da etapa 06 inválida: {erro}") from erro
 
 
-def _regras_catalogo():
-    return sorted(CATALOGO["regras"], key=lambda r: (r["prioridade"], r["id"]))
+def _catalogo_versao(versao):
+    _exigir(type(versao) is str and versao in ("1.0.0", MODULO_VERSION),
+            "Versão do mecanismo de regras não suportada.")
+    return CATALOGO_V1 if versao == "1.0.0" else CATALOGO
 
 
-def _configuracao(habilitadas):
-    ids = [r["id"] for r in _regras_catalogo()]
+def _regras_catalogo(versao=MODULO_VERSION):
+    return sorted(_catalogo_versao(versao)["regras"], key=lambda r: (r["prioridade"], r["id"]))
+
+
+def _configuracao(habilitadas, *, versao=MODULO_VERSION):
+    ids = [r["id"] for r in _regras_catalogo(versao)]
     if habilitadas is None:
         habilitadas = ids
     if not isinstance(habilitadas, list) or not all(isinstance(r, str) for r in habilitadas):
@@ -233,17 +239,17 @@ def _pendencias(valor, fonte):
     return sorted({_canonico(p): p for p in resultado}.values(), key=_canonico)
 
 
-def _executar(analise, configuracao, *, falhas=None):
+def _executar(analise, configuracao, *, falhas=None, versao=MODULO_VERSION):
     fonte = _Fonte(analise)
     contexto, erro_contexto = None, None
     try:
-        contexto = construir_contexto(analise)
+        contexto = construir_contexto(analise, versao=versao)
     except Exception as erro:
         erro_contexto = {"codigo": "falha_execucao_regra", "tipo": type(erro).__name__,
                          "mensagem": _MENSAGEM_FALHA}
     propostas, execucoes = [], []
     habilitadas = configuracao["regras_habilitadas"]
-    for regra in _regras_catalogo():
+    for regra in _regras_catalogo(versao):
         identificador = regra["id"]
         execucao = {"regra_id": identificador, "versao": regra["versao"], "estado": "desabilitada",
                     "ocorrencias_total": 0, "pendencias": [], "erro": None}
@@ -326,10 +332,10 @@ def _ocorrencias(propostas, fonte, execucao_id):
     return resultado
 
 
-def _relatorio(execucoes, ocorrencias):
+def _relatorio(execucoes, ocorrencias, *, versao=MODULO_VERSION):
     habilitadas = [e for e in execucoes if e["estado"] != "desabilitada"]
     pronto = bool(habilitadas) and all(e["estado"] == "executada" for e in habilitadas)
-    regras = {r["id"]: r for r in CATALOGO["regras"]}
+    regras = {r["id"]: r for r in _catalogo_versao(versao)["regras"]}
     familias = {}
     for familia in FAMILIAS:
         itens = [e for e in execucoes if regras[e["regra_id"]]["familia"] == familia]
@@ -358,22 +364,23 @@ def _relatorio(execucoes, ocorrencias):
     }
 
 
-def _gerar(fonte, execucao_id, data, configuracao, *, falhas=None):
-    indice, propostas, execucoes = _executar(fonte, configuracao, falhas=falhas)
+def _gerar(fonte, execucao_id, data, configuracao, *, falhas=None, versao=MODULO_VERSION):
+    catalogo = _catalogo_versao(versao)
+    indice, propostas, execucoes = _executar(fonte, configuracao, falhas=falhas, versao=versao)
     ocorrencias = _ocorrencias(propostas, indice, execucao_id)
     registro = {
         "schema_version": SCHEMA_VERSION, "etapa": ETAPA,
         **{c: fonte[c] for c in _IDS_ORIGEM}, "execucao_id": execucao_id, "registrado_em": data,
         "analise": fonte, "coordenadas": deepcopy(fonte["coordenadas"]),
-        "catalogo": deepcopy(CATALOGO), "configuracao": configuracao,
+        "catalogo": deepcopy(catalogo), "configuracao": configuracao,
         "processamento": {
             "ferramenta": "biblioteca_padrao", "natureza": "hipoteses_por_regras",
-            "modulo": {"nome": "regras_linguisticas", "versao": MODULO_VERSION},
-            "catalogo_sha256": hashlib.sha256(_canonico(CATALOGO).encode("utf-8")).hexdigest(),
+            "modulo": {"nome": "regras_linguisticas", "versao": versao},
+            "catalogo_sha256": hashlib.sha256(_canonico(catalogo).encode("utf-8")).hexdigest(),
             "modelo_reexecutado": False,
         },
         "execucoes_regras": execucoes, "ocorrencias": ocorrencias,
-        "validacao": _relatorio(execucoes, ocorrencias),
+        "validacao": _relatorio(execucoes, ocorrencias, versao=versao),
     }
     return registro
 
@@ -413,11 +420,16 @@ def validar_regras_linguisticas(registro):
     data = _data(registro.get("registrado_em"))
     fonte = registro.get("analise")
     _fonte(fonte)
-    _exigir(_canonico(registro.get("catalogo")) == _canonico(CATALOGO),
+    processamento = registro.get("processamento")
+    _exigir(type(processamento) is dict and type(processamento.get("modulo")) is dict,
+            "Identificação e versão do mecanismo ausentes ou inválidas.")
+    versao = processamento["modulo"].get("versao")
+    catalogo = _catalogo_versao(versao)
+    _exigir(_canonico(registro.get("catalogo")) == _canonico(catalogo),
             "Catálogo inexistente, alterado ou versão não suportada.")
     informado = registro.get("configuracao")
     _exigir(isinstance(informado, dict) and "regras_habilitadas" in informado, "Configuração ausente ou inválida.")
-    configuracao = _configuracao(informado["regras_habilitadas"])
+    configuracao = _configuracao(informado["regras_habilitadas"], versao=versao)
     _exigir(_canonico(informado) == _canonico(configuracao), "Configuração ou ordem de execução inconsistente.")
     execucoes = registro.get("execucoes_regras")
     _exigir(isinstance(execucoes, list), "execucoes_regras deve ser uma lista.")
@@ -434,7 +446,7 @@ def validar_regras_linguisticas(registro):
                     and isinstance(erro["tipo"], str) and re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", erro["tipo"]) is not None,
                     "Diagnóstico de falha inconsistente.")
             falhas[regra_id] = erro
-    esperado = _gerar(fonte, identificador, data, configuracao, falhas=falhas)
+    esperado = _gerar(fonte, identificador, data, configuracao, falhas=falhas, versao=versao)
     _exigir(_canonico(registro) == _canonico(esperado),
             "Registro inconsistente: origem, execução, condições, evidências, alcances, vínculos ou prontidão divergentes.")
     return deepcopy(esperado["validacao"])

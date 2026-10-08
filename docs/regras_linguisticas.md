@@ -13,11 +13,14 @@ instaladas continuam necessárias para criar uma nova origem nas etapas 04–06.
 O resultado fornece evidências para a etapa 08; não constrói ainda unidades
 de contexto nem atribui conceitos teóricos ao narrador.
 O registro usa `schema_version = "1.0.0"`,
-`etapa = "07_regras_linguisticas"` e mecanismo na versão `1.0.0`.
+`etapa = "07_regras_linguisticas"` e catálogo e mecanismo na versão `1.1.0`.
+O formato mantém `execucao_id` e os vínculos tipados. O leitor também valida
+registros históricos do mecanismo `1.0.0`, reproduzindo as regras dessa versão
+e preservando o catálogo e as ocorrências originalmente registrados.
 
 ## Instalação e execução local
 
-Use a pasta `linguaSpike` criada pelas [instruções do README](../README.md).
+Use a pasta `lingua` criada pelas [instruções do README](../README.md).
 Com o aplicativo encerrado e suas alterações locais preservadas:
 
 ```bash
@@ -86,7 +89,7 @@ critério de alcance, exceções, prioridade, política de sobreposição e exem
 anotados. O registro guarda seu snapshot completo, além da versão do mecanismo.
 Esta é uma cobertura inicial documentada, não uma gramática completa do português.
 
-O catálogo `lingua-etapa07` e suas 12 regras estão na versão `1.0.0`:
+O catálogo `lingua-etapa07` e suas 12 regras atuais estão na versão `1.1.0`:
 
 | Regra | Família | Cobertura inicial |
 | --- | --- | --- |
@@ -184,6 +187,13 @@ regra. “Por isso” precisa ocorrer antes do núcleo predicativo. Usos
 pós-verbais ou argumentais como “passei por isso” ficam fora da versão inicial.
 
 ## Citações, ambiguidades e limites da entrada
+
+Na versão `1.1.0`, delimitadores literais de aspas nunca se tornam núcleos
+oracionais, mesmo quando o modelo lhes atribui uma classe gramatical incorreta.
+O alcance proposto permanece na mesma região de citação do marcador. Esse
+limite também vale para marcadores fora das aspas e para alcances modais;
+nenhum deles incorpora automaticamente o conteúdo de outra região citada.
+Esses ajustes não corrigem nem sobrescrevem as anotações recebidas.
 
 As ocorrências conservam informações de citações pareadas simples e propostas
 de discurso relatado apoiadas em complementos/parataxe de verbos de elocução.
@@ -308,8 +318,16 @@ Diagnóstico incompleto com HTTP 422 é distinto de erro estrutural do registro.
 
 ## Exemplos e verificações
 
-Na entrega da etapa 07, **318 testes passaram**, incluindo 58 testes novos
-de regras/contrato e 21 de integração do aplicativo. O fluxo também foi
+Na integração atual, **424 testes passaram**. Os testes adicionais cobrem
+citações, versões históricas e sua convivência com novas execuções no SQLite.
+O fluxo 03–08 também foi verificado por HTTP real com banco temporário,
+incluindo downloads após reinício, integridade do SQLite, original com CRLF
+preservado e cópia de trabalho com a transformação opcional. Os dois exemplos
+atuais foram gerados por esse fluxo e revalidados após a leitura do JSON.
+
+Na entrega histórica da etapa 07 com mecanismo `1.0.0`, **318 testes passaram**,
+incluindo 58 testes novos de regras/contrato e 21 de integração do aplicativo.
+O fluxo também foi
 verificado por um servidor HTTP real com banco temporário: cadeia 03–07,
 cinco famílias, 38 ocorrências no texto dos exemplos, download JSON,
 diagnóstico incompleto com HTTP 422, original intacto e histórico preservado
@@ -318,14 +336,23 @@ após encerrar e reiniciar o servidor.
 - [Preservação literal](../examples/regras_linguisticas_literal.json).
 - [Conversão opcional de CRLF em LF](../examples/regras_linguisticas_normalizada.json).
 
-Os exemplos usam o mesmo texto original, espaços repetidos, CRLF, Unicode,
-cópula, auxiliar, subordinadas, negação, tempo relativo, modalidade, conectores
+Os dois arquivos acima são exemplos históricos do catálogo e mecanismo
+`1.0.0`. Continuam válidos e são lidos com a semântica dessa versão; suas
+contagens abaixo descrevem a execução histórica.
+
+O [exemplo atual de regras](../examples/regras_integradas.json) usa a versão
+`1.1.0` e fornece a origem exata do
+[exemplo integrado de contexto](../examples/contexto_integrado.json).
+O contexto mantém o módulo da etapa 08 na versão `1.0.0`.
+
+Os exemplos históricos usam o mesmo texto original, espaços repetidos, CRLF,
+Unicode, cópula, auxiliar, subordinadas, negação, tempo relativo, modalidade, conectores
 e uma expressão citada. Suas origens foram geradas com o modelo real, com IDs
 e datas fornecidos, e revalidadas depois da serialização. Eles mostram saídas
 reais e limites das previsões, não um gabarito linguístico independente.
 
-Nos dois exemplos, todas as 12 regras foram executadas e o mecanismo produziu
-38 ocorrências. As 89 evidências/fragmentos de alcance correspondentes
+Nos dois exemplos históricos, todas as 12 regras foram executadas e o mecanismo
+produziu 38 ocorrências. As 89 evidências/fragmentos de alcance correspondentes
 conservaram intervalos originais iguais entre a preparação literal e a
 normalizada. A modalidade de “posso” conserva alternativas, e o “Não” dentro
 de “Ele disse: ‘Não sairei amanhã’” conserva a indicação de citação/discurso
@@ -335,7 +362,7 @@ O modelo recebido anotou “escrevi” com `VerbForm=Part`, `Gender=Masc` e
 `Number=Plur`. Os exemplos preservam essa previsão e o lema recebido
 `escrevi`; a validade estrutural e a detecção da correlativa não os corrigem.
 
-Para executar os testes, na raiz local `linguaSpike`:
+Para executar os testes, na raiz local `lingua`:
 
 ```bash
 .venv/bin/python -m unittest discover -s tests -v

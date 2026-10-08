@@ -1,0 +1,4395 @@
+{
+  "schema_version": "1.0.0",
+  "etapa": "07_regras_linguisticas",
+  "documento_id": 1,
+  "preparacao_id": "4c8d6d29-312d-4bd8-b5f0-b67021961118",
+  "segmentacao_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013",
+  "anotacao_id": "917e4f4e-3c87-4b55-9050-a52677f76e52",
+  "analise_id": "204b8507-0e4a-4ff0-b0f2-e5382134f546",
+  "execucao_id": "71445a83-d759-44e0-90c8-31b6d4949b77",
+  "registrado_em": "2026-10-08T05:19:57.822416+00:00",
+  "analise": {
+    "schema_version": "1.0.0",
+    "etapa": "06_sintaxe_entidades",
+    "documento_id": 1,
+    "preparacao_id": "4c8d6d29-312d-4bd8-b5f0-b67021961118",
+    "segmentacao_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013",
+    "anotacao_id": "917e4f4e-3c87-4b55-9050-a52677f76e52",
+    "analise_id": "204b8507-0e4a-4ff0-b0f2-e5382134f546",
+    "registrado_em": "2026-10-08T05:19:57.591759+00:00",
+    "anotacao": {
+      "schema_version": "1.0.0",
+      "etapa": "05_morfologia_vocabulario",
+      "documento_id": 1,
+      "preparacao_id": "4c8d6d29-312d-4bd8-b5f0-b67021961118",
+      "segmentacao_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013",
+      "anotacao_id": "917e4f4e-3c87-4b55-9050-a52677f76e52",
+      "registrado_em": "2026-10-08T05:19:57.392453+00:00",
+      "segmentacao": {
+        "schema_version": "1.0.0",
+        "etapa": "04_tokenizacao_segmentacao",
+        "documento_id": 1,
+        "preparacao_id": "4c8d6d29-312d-4bd8-b5f0-b67021961118",
+        "segmentacao_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013",
+        "registrado_em": "2026-10-08T05:19:56.871699+00:00",
+        "preparacao": {
+          "schema_version": "1.0.0",
+          "documento_id": 1,
+          "preparacao_id": "4c8d6d29-312d-4bd8-b5f0-b67021961118",
+          "registrado_em": "2026-10-08T05:19:56.806610+00:00",
+          "original": {
+            "texto": "João não chegou hoje. Maria pode sair amanhã.\r\n\r\nJoão chegou. Maria saiu.",
+            "versao": 1,
+            "comprimento": 73,
+            "sha256": "89cdbefe983e76e5d242adcdffb7db7129e592e479bd5721f17f463c5cd2e0cf"
+          },
+          "trabalho": {
+            "texto": "João não chegou hoje. Maria pode sair amanhã.\n\nJoão chegou. Maria saiu.",
+            "versao": 2,
+            "comprimento": 71,
+            "sha256": "157eb620f5381885e8667ad694bb62b80ccade2b97b8a836bb008f8dafdf0c91"
+          },
+          "coordenadas": {
+            "unidade": "pontos_de_codigo_unicode",
+            "base": 0,
+            "fim_exclusivo": true
+          },
+          "politica": {
+            "identificacao": "preservacao_literal",
+            "versao": "1.0.0",
+            "opcoes": {
+              "normalizar_crlf": true
+            }
+          },
+          "metadados_origem": {
+            "documento_id": 1,
+            "recebido_em": "2026-10-08T05:19:56.806610+00:00"
+          },
+          "mapa_trechos": [
+            {
+              "tipo": "copia",
+              "trabalho": {
+                "inicio": 0,
+                "fim": 45
+              },
+              "original": {
+                "inicio": 0,
+                "fim": 45
+              },
+              "alteracao_id": null
+            },
+            {
+              "tipo": "transformacao_tecnica",
+              "trabalho": {
+                "inicio": 45,
+                "fim": 46
+              },
+              "original": {
+                "inicio": 45,
+                "fim": 47
+              },
+              "alteracao_id": "4c8d6d29-312d-4bd8-b5f0-b67021961118:alteracao:1"
+            },
+            {
+              "tipo": "transformacao_tecnica",
+              "trabalho": {
+                "inicio": 46,
+                "fim": 47
+              },
+              "original": {
+                "inicio": 47,
+                "fim": 49
+              },
+              "alteracao_id": "4c8d6d29-312d-4bd8-b5f0-b67021961118:alteracao:2"
+            },
+            {
+              "tipo": "copia",
+              "trabalho": {
+                "inicio": 47,
+                "fim": 71
+              },
+              "original": {
+                "inicio": 49,
+                "fim": 73
+              },
+              "alteracao_id": null
+            }
+          ],
+          "alteracoes": [
+            {
+              "id": "4c8d6d29-312d-4bd8-b5f0-b67021961118:alteracao:1",
+              "operacao": "crlf_para_lf",
+              "versao_regra": "1.0.0",
+              "motivo": "Conversão técnica opcional de CRLF em LF solicitada pelo chamador.",
+              "antes": "\r\n",
+              "depois": "\n",
+              "original": {
+                "inicio": 45,
+                "fim": 47
+              },
+              "trabalho": {
+                "inicio": 45,
+                "fim": 46
+              }
+            },
+            {
+              "id": "4c8d6d29-312d-4bd8-b5f0-b67021961118:alteracao:2",
+              "operacao": "crlf_para_lf",
+              "versao_regra": "1.0.0",
+              "motivo": "Conversão técnica opcional de CRLF em LF solicitada pelo chamador.",
+              "antes": "\r\n",
+              "depois": "\n",
+              "original": {
+                "inicio": 47,
+                "fim": 49
+              },
+              "trabalho": {
+                "inicio": 46,
+                "fim": 47
+              }
+            }
+          ],
+          "validacao": {
+            "estado": "pronto_para_etapa_04",
+            "pronto_para_etapa_04": true,
+            "verificacoes": [
+              "estrutura_json",
+              "schema_identificadores_e_data",
+              "metadados_origem",
+              "versoes_comprimentos_e_hashes_utf8",
+              "convencao_de_coordenadas",
+              "politica_e_resultado_permitido",
+              "limites_ordem_e_cobertura_dos_intervalos",
+              "igualdade_dos_trechos_copiados",
+              "transformacoes_e_alteracoes_correspondentes"
+            ]
+          }
+        },
+        "coordenadas": {
+          "unidade": "pontos_de_codigo_unicode",
+          "base": 0,
+          "fim_exclusivo": true
+        },
+        "processamento": {
+          "ferramenta": "spacy",
+          "versao": "3.8.16",
+          "idioma": "pt",
+          "modelo": null,
+          "tokenizador": {
+            "identificacao": "spacy.blank(pt)",
+            "versao": "3.8.16",
+            "ajustes": []
+          },
+          "regras": {
+            "identificacao": "segmentacao_portugues_por_regras",
+            "versao": "1.0.0"
+          },
+          "configuracoes": {
+            "max_caracteres": 2097152,
+            "paragrafos": "linhas_em_branco_lf_ou_crlf_com_espacos_ascii_ou_tabulacoes",
+            "limites_paragrafo": "primeiro_ao_ultimo_token_nao_espacial",
+            "reticencias": "nao_encerram_por_si",
+            "abreviacoes_protegidas": [
+              "Dr.",
+              "Dra.",
+              "Sr.",
+              "Sra."
+            ],
+            "etc": "encerra_antes_de_proxima_palavra_com_inicial_maiuscula_ou_fim_paragrafo",
+            "separadores": "complemento_dos_intervalos_dos_tokens_nao_espaciais",
+            "fechamento_aspas_retas": "adjacente_a_pontuacao_terminal",
+            "segmentador": "componente_proprio_sobre_tokens"
+          }
+        },
+        "paragrafos": [
+          {
+            "id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+            "ordem": 0,
+            "texto": "João não chegou hoje. Maria pode sair amanhã.",
+            "trabalho": {
+              "inicio": 0,
+              "fim": 45
+            },
+            "original": {
+              "inicio": 0,
+              "fim": 45
+            },
+            "periodos": [
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:0",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:1"
+            ]
+          },
+          {
+            "id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:1",
+            "ordem": 1,
+            "texto": "João chegou. Maria saiu.",
+            "trabalho": {
+              "inicio": 47,
+              "fim": 71
+            },
+            "original": {
+              "inicio": 49,
+              "fim": 73
+            },
+            "periodos": [
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:2",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:3"
+            ]
+          }
+        ],
+        "periodos": [
+          {
+            "id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:0",
+            "ordem": 0,
+            "texto": "João não chegou hoje.",
+            "trabalho": {
+              "inicio": 0,
+              "fim": 21
+            },
+            "original": {
+              "inicio": 0,
+              "fim": 21
+            },
+            "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+            "tokens": [
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:0",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:1",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:2",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:3",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:4"
+            ],
+            "regra_encerramento": "pontuacao_terminal"
+          },
+          {
+            "id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:1",
+            "ordem": 1,
+            "texto": "Maria pode sair amanhã.",
+            "trabalho": {
+              "inicio": 22,
+              "fim": 45
+            },
+            "original": {
+              "inicio": 22,
+              "fim": 45
+            },
+            "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+            "tokens": [
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:5",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:6",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:7",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:8",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:9"
+            ],
+            "regra_encerramento": "pontuacao_terminal"
+          },
+          {
+            "id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:2",
+            "ordem": 2,
+            "texto": "João chegou.",
+            "trabalho": {
+              "inicio": 47,
+              "fim": 59
+            },
+            "original": {
+              "inicio": 49,
+              "fim": 61
+            },
+            "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:1",
+            "tokens": [
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:10",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:11",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:12"
+            ],
+            "regra_encerramento": "pontuacao_terminal"
+          },
+          {
+            "id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:3",
+            "ordem": 3,
+            "texto": "Maria saiu.",
+            "trabalho": {
+              "inicio": 60,
+              "fim": 71
+            },
+            "original": {
+              "inicio": 62,
+              "fim": 73
+            },
+            "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:1",
+            "tokens": [
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:13",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:14",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:15"
+            ],
+            "regra_encerramento": "pontuacao_terminal"
+          }
+        ],
+        "tokens": [
+          {
+            "id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:0",
+            "ordem": 0,
+            "texto": "João",
+            "trabalho": {
+              "inicio": 0,
+              "fim": 4
+            },
+            "original": {
+              "inicio": 0,
+              "fim": 4
+            },
+            "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+            "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:0"
+          },
+          {
+            "id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:1",
+            "ordem": 1,
+            "texto": "não",
+            "trabalho": {
+              "inicio": 5,
+              "fim": 8
+            },
+            "original": {
+              "inicio": 5,
+              "fim": 8
+            },
+            "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+            "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:0"
+          },
+          {
+            "id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:2",
+            "ordem": 2,
+            "texto": "chegou",
+            "trabalho": {
+              "inicio": 9,
+              "fim": 15
+            },
+            "original": {
+              "inicio": 9,
+              "fim": 15
+            },
+            "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+            "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:0"
+          },
+          {
+            "id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:3",
+            "ordem": 3,
+            "texto": "hoje",
+            "trabalho": {
+              "inicio": 16,
+              "fim": 20
+            },
+            "original": {
+              "inicio": 16,
+              "fim": 20
+            },
+            "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+            "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:0"
+          },
+          {
+            "id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:4",
+            "ordem": 4,
+            "texto": ".",
+            "trabalho": {
+              "inicio": 20,
+              "fim": 21
+            },
+            "original": {
+              "inicio": 20,
+              "fim": 21
+            },
+            "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+            "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:0"
+          },
+          {
+            "id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:5",
+            "ordem": 5,
+            "texto": "Maria",
+            "trabalho": {
+              "inicio": 22,
+              "fim": 27
+            },
+            "original": {
+              "inicio": 22,
+              "fim": 27
+            },
+            "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+            "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:1"
+          },
+          {
+            "id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:6",
+            "ordem": 6,
+            "texto": "pode",
+            "trabalho": {
+              "inicio": 28,
+              "fim": 32
+            },
+            "original": {
+              "inicio": 28,
+              "fim": 32
+            },
+            "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+            "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:1"
+          },
+          {
+            "id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:7",
+            "ordem": 7,
+            "texto": "sair",
+            "trabalho": {
+              "inicio": 33,
+              "fim": 37
+            },
+            "original": {
+              "inicio": 33,
+              "fim": 37
+            },
+            "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+            "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:1"
+          },
+          {
+            "id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:8",
+            "ordem": 8,
+            "texto": "amanhã",
+            "trabalho": {
+              "inicio": 38,
+              "fim": 44
+            },
+            "original": {
+              "inicio": 38,
+              "fim": 44
+            },
+            "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+            "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:1"
+          },
+          {
+            "id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:9",
+            "ordem": 9,
+            "texto": ".",
+            "trabalho": {
+              "inicio": 44,
+              "fim": 45
+            },
+            "original": {
+              "inicio": 44,
+              "fim": 45
+            },
+            "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+            "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:1"
+          },
+          {
+            "id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:10",
+            "ordem": 10,
+            "texto": "João",
+            "trabalho": {
+              "inicio": 47,
+              "fim": 51
+            },
+            "original": {
+              "inicio": 49,
+              "fim": 53
+            },
+            "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:1",
+            "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:2"
+          },
+          {
+            "id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:11",
+            "ordem": 11,
+            "texto": "chegou",
+            "trabalho": {
+              "inicio": 52,
+              "fim": 58
+            },
+            "original": {
+              "inicio": 54,
+              "fim": 60
+            },
+            "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:1",
+            "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:2"
+          },
+          {
+            "id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:12",
+            "ordem": 12,
+            "texto": ".",
+            "trabalho": {
+              "inicio": 58,
+              "fim": 59
+            },
+            "original": {
+              "inicio": 60,
+              "fim": 61
+            },
+            "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:1",
+            "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:2"
+          },
+          {
+            "id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:13",
+            "ordem": 13,
+            "texto": "Maria",
+            "trabalho": {
+              "inicio": 60,
+              "fim": 65
+            },
+            "original": {
+              "inicio": 62,
+              "fim": 67
+            },
+            "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:1",
+            "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:3"
+          },
+          {
+            "id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:14",
+            "ordem": 14,
+            "texto": "saiu",
+            "trabalho": {
+              "inicio": 66,
+              "fim": 70
+            },
+            "original": {
+              "inicio": 68,
+              "fim": 72
+            },
+            "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:1",
+            "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:3"
+          },
+          {
+            "id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:15",
+            "ordem": 15,
+            "texto": ".",
+            "trabalho": {
+              "inicio": 70,
+              "fim": 71
+            },
+            "original": {
+              "inicio": 72,
+              "fim": 73
+            },
+            "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:1",
+            "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:3"
+          }
+        ],
+        "separadores": [
+          {
+            "id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:separador:0",
+            "ordem": 0,
+            "texto": " ",
+            "trabalho": {
+              "inicio": 4,
+              "fim": 5
+            },
+            "original": {
+              "inicio": 4,
+              "fim": 5
+            }
+          },
+          {
+            "id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:separador:1",
+            "ordem": 1,
+            "texto": " ",
+            "trabalho": {
+              "inicio": 8,
+              "fim": 9
+            },
+            "original": {
+              "inicio": 8,
+              "fim": 9
+            }
+          },
+          {
+            "id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:separador:2",
+            "ordem": 2,
+            "texto": " ",
+            "trabalho": {
+              "inicio": 15,
+              "fim": 16
+            },
+            "original": {
+              "inicio": 15,
+              "fim": 16
+            }
+          },
+          {
+            "id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:separador:3",
+            "ordem": 3,
+            "texto": " ",
+            "trabalho": {
+              "inicio": 21,
+              "fim": 22
+            },
+            "original": {
+              "inicio": 21,
+              "fim": 22
+            }
+          },
+          {
+            "id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:separador:4",
+            "ordem": 4,
+            "texto": " ",
+            "trabalho": {
+              "inicio": 27,
+              "fim": 28
+            },
+            "original": {
+              "inicio": 27,
+              "fim": 28
+            }
+          },
+          {
+            "id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:separador:5",
+            "ordem": 5,
+            "texto": " ",
+            "trabalho": {
+              "inicio": 32,
+              "fim": 33
+            },
+            "original": {
+              "inicio": 32,
+              "fim": 33
+            }
+          },
+          {
+            "id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:separador:6",
+            "ordem": 6,
+            "texto": " ",
+            "trabalho": {
+              "inicio": 37,
+              "fim": 38
+            },
+            "original": {
+              "inicio": 37,
+              "fim": 38
+            }
+          },
+          {
+            "id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:separador:7",
+            "ordem": 7,
+            "texto": "\n\n",
+            "trabalho": {
+              "inicio": 45,
+              "fim": 47
+            },
+            "original": {
+              "inicio": 45,
+              "fim": 49
+            }
+          },
+          {
+            "id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:separador:8",
+            "ordem": 8,
+            "texto": " ",
+            "trabalho": {
+              "inicio": 51,
+              "fim": 52
+            },
+            "original": {
+              "inicio": 53,
+              "fim": 54
+            }
+          },
+          {
+            "id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:separador:9",
+            "ordem": 9,
+            "texto": " ",
+            "trabalho": {
+              "inicio": 59,
+              "fim": 60
+            },
+            "original": {
+              "inicio": 61,
+              "fim": 62
+            }
+          },
+          {
+            "id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:separador:10",
+            "ordem": 10,
+            "texto": " ",
+            "trabalho": {
+              "inicio": 65,
+              "fim": 66
+            },
+            "original": {
+              "inicio": 67,
+              "fim": 68
+            }
+          }
+        ],
+        "validacao": {
+          "estado": "pronto_para_etapa_05",
+          "pronto_para_etapa_05": true,
+          "verificacoes": [
+            "estrutura_json_identificadores_e_data",
+            "preparacao_textos_hashes_e_mapa",
+            "coordenadas_e_processamento",
+            "limites_ordem_identificadores_e_textos_exatos",
+            "reconstrucao_por_tokens_e_separadores",
+            "paragrafos_e_periodos_por_regras",
+            "relacoes_e_contencao_das_unidades",
+            "correspondencia_ao_original"
+          ]
+        }
+      },
+      "coordenadas": {
+        "unidade": "pontos_de_codigo_unicode",
+        "base": 0,
+        "fim_exclusivo": true
+      },
+      "processamento": {
+        "ferramenta": "spacy",
+        "versao": "3.8.16",
+        "idioma": "pt",
+        "modelo": {
+          "nome": "pt_core_news_sm",
+          "versao": "3.8.0",
+          "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+        },
+        "componentes_executados": [
+          "tok2vec",
+          "morphologizer",
+          "lemmatizer"
+        ],
+        "componentes_desativados": [
+          "parser",
+          "senter",
+          "attribute_ruler",
+          "ner"
+        ],
+        "componentes_disponiveis": [
+          "tok2vec",
+          "morphologizer",
+          "parser",
+          "lemmatizer",
+          "senter",
+          "attribute_ruler",
+          "ner"
+        ],
+        "configuracoes": {
+          "tokenizador": {
+            "identificacao": "spacy.blank(pt)",
+            "versao_origem": "3.8.16",
+            "versao_execucao": "3.8.16",
+            "ajustes": []
+          },
+          "max_caracteres": 50000,
+          "max_tokens_internos": 10000,
+          "fronteiras_periodos": "herdadas_da_etapa_04",
+          "vocabulario": {
+            "pos_excluidas": [
+              "PUNCT",
+              "SYM"
+            ],
+            "remover_stopwords": false
+          },
+          "embeddings_exportados": false
+        }
+      },
+      "anotacoes_tokens": [
+        {
+          "texto": "João",
+          "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:0",
+          "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+          "trabalho": {
+            "inicio": 0,
+            "fim": 4
+          },
+          "original": {
+            "inicio": 0,
+            "fim": 4
+          },
+          "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:0",
+          "lema": "João",
+          "pos": "PROPN",
+          "tag": null,
+          "morfologia": {
+            "Gender": "Masc",
+            "Number": "Sing"
+          },
+          "origem": {
+            "ferramenta": "spacy",
+            "versao": "3.8.16",
+            "modelo": {
+              "nome": "pt_core_news_sm",
+              "versao": "3.8.0"
+            },
+            "componentes": [
+              "tok2vec",
+              "morphologizer",
+              "lemmatizer"
+            ]
+          },
+          "campos_nao_resolvidos": [
+            "tag"
+          ]
+        },
+        {
+          "texto": "não",
+          "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:0",
+          "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+          "trabalho": {
+            "inicio": 5,
+            "fim": 8
+          },
+          "original": {
+            "inicio": 5,
+            "fim": 8
+          },
+          "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:1",
+          "lema": "não",
+          "pos": "ADV",
+          "tag": null,
+          "morfologia": {
+            "Polarity": "Neg"
+          },
+          "origem": {
+            "ferramenta": "spacy",
+            "versao": "3.8.16",
+            "modelo": {
+              "nome": "pt_core_news_sm",
+              "versao": "3.8.0"
+            },
+            "componentes": [
+              "tok2vec",
+              "morphologizer",
+              "lemmatizer"
+            ]
+          },
+          "campos_nao_resolvidos": [
+            "tag"
+          ]
+        },
+        {
+          "texto": "chegou",
+          "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:0",
+          "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+          "trabalho": {
+            "inicio": 9,
+            "fim": 15
+          },
+          "original": {
+            "inicio": 9,
+            "fim": 15
+          },
+          "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:2",
+          "lema": "chegar",
+          "pos": "VERB",
+          "tag": null,
+          "morfologia": {
+            "Mood": "Ind",
+            "Number": "Sing",
+            "Person": "3",
+            "Tense": "Past",
+            "VerbForm": "Fin"
+          },
+          "origem": {
+            "ferramenta": "spacy",
+            "versao": "3.8.16",
+            "modelo": {
+              "nome": "pt_core_news_sm",
+              "versao": "3.8.0"
+            },
+            "componentes": [
+              "tok2vec",
+              "morphologizer",
+              "lemmatizer"
+            ]
+          },
+          "campos_nao_resolvidos": [
+            "tag"
+          ]
+        },
+        {
+          "texto": "hoje",
+          "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:0",
+          "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+          "trabalho": {
+            "inicio": 16,
+            "fim": 20
+          },
+          "original": {
+            "inicio": 16,
+            "fim": 20
+          },
+          "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:3",
+          "lema": "hoje",
+          "pos": "ADV",
+          "tag": null,
+          "morfologia": {},
+          "origem": {
+            "ferramenta": "spacy",
+            "versao": "3.8.16",
+            "modelo": {
+              "nome": "pt_core_news_sm",
+              "versao": "3.8.0"
+            },
+            "componentes": [
+              "tok2vec",
+              "morphologizer",
+              "lemmatizer"
+            ]
+          },
+          "campos_nao_resolvidos": [
+            "tag"
+          ]
+        },
+        {
+          "texto": ".",
+          "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:0",
+          "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+          "trabalho": {
+            "inicio": 20,
+            "fim": 21
+          },
+          "original": {
+            "inicio": 20,
+            "fim": 21
+          },
+          "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:4",
+          "lema": ".",
+          "pos": "PUNCT",
+          "tag": null,
+          "morfologia": {},
+          "origem": {
+            "ferramenta": "spacy",
+            "versao": "3.8.16",
+            "modelo": {
+              "nome": "pt_core_news_sm",
+              "versao": "3.8.0"
+            },
+            "componentes": [
+              "tok2vec",
+              "morphologizer",
+              "lemmatizer"
+            ]
+          },
+          "campos_nao_resolvidos": [
+            "tag"
+          ]
+        },
+        {
+          "texto": "Maria",
+          "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:1",
+          "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+          "trabalho": {
+            "inicio": 22,
+            "fim": 27
+          },
+          "original": {
+            "inicio": 22,
+            "fim": 27
+          },
+          "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:5",
+          "lema": "maria",
+          "pos": "PROPN",
+          "tag": null,
+          "morfologia": {
+            "Gender": "Fem",
+            "Number": "Sing"
+          },
+          "origem": {
+            "ferramenta": "spacy",
+            "versao": "3.8.16",
+            "modelo": {
+              "nome": "pt_core_news_sm",
+              "versao": "3.8.0"
+            },
+            "componentes": [
+              "tok2vec",
+              "morphologizer",
+              "lemmatizer"
+            ]
+          },
+          "campos_nao_resolvidos": [
+            "tag"
+          ]
+        },
+        {
+          "texto": "pode",
+          "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:1",
+          "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+          "trabalho": {
+            "inicio": 28,
+            "fim": 32
+          },
+          "original": {
+            "inicio": 28,
+            "fim": 32
+          },
+          "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:6",
+          "lema": "poder",
+          "pos": "VERB",
+          "tag": null,
+          "morfologia": {
+            "Mood": "Ind",
+            "Number": "Sing",
+            "Person": "3",
+            "Tense": "Pres",
+            "VerbForm": "Fin"
+          },
+          "origem": {
+            "ferramenta": "spacy",
+            "versao": "3.8.16",
+            "modelo": {
+              "nome": "pt_core_news_sm",
+              "versao": "3.8.0"
+            },
+            "componentes": [
+              "tok2vec",
+              "morphologizer",
+              "lemmatizer"
+            ]
+          },
+          "campos_nao_resolvidos": [
+            "tag"
+          ]
+        },
+        {
+          "texto": "sair",
+          "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:1",
+          "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+          "trabalho": {
+            "inicio": 33,
+            "fim": 37
+          },
+          "original": {
+            "inicio": 33,
+            "fim": 37
+          },
+          "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:7",
+          "lema": "sair",
+          "pos": "VERB",
+          "tag": null,
+          "morfologia": {
+            "VerbForm": "Inf"
+          },
+          "origem": {
+            "ferramenta": "spacy",
+            "versao": "3.8.16",
+            "modelo": {
+              "nome": "pt_core_news_sm",
+              "versao": "3.8.0"
+            },
+            "componentes": [
+              "tok2vec",
+              "morphologizer",
+              "lemmatizer"
+            ]
+          },
+          "campos_nao_resolvidos": [
+            "tag"
+          ]
+        },
+        {
+          "texto": "amanhã",
+          "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:1",
+          "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+          "trabalho": {
+            "inicio": 38,
+            "fim": 44
+          },
+          "original": {
+            "inicio": 38,
+            "fim": 44
+          },
+          "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:8",
+          "lema": "amanhã",
+          "pos": "ADV",
+          "tag": null,
+          "morfologia": {},
+          "origem": {
+            "ferramenta": "spacy",
+            "versao": "3.8.16",
+            "modelo": {
+              "nome": "pt_core_news_sm",
+              "versao": "3.8.0"
+            },
+            "componentes": [
+              "tok2vec",
+              "morphologizer",
+              "lemmatizer"
+            ]
+          },
+          "campos_nao_resolvidos": [
+            "tag"
+          ]
+        },
+        {
+          "texto": ".",
+          "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:1",
+          "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+          "trabalho": {
+            "inicio": 44,
+            "fim": 45
+          },
+          "original": {
+            "inicio": 44,
+            "fim": 45
+          },
+          "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:9",
+          "lema": ".",
+          "pos": "PUNCT",
+          "tag": null,
+          "morfologia": {},
+          "origem": {
+            "ferramenta": "spacy",
+            "versao": "3.8.16",
+            "modelo": {
+              "nome": "pt_core_news_sm",
+              "versao": "3.8.0"
+            },
+            "componentes": [
+              "tok2vec",
+              "morphologizer",
+              "lemmatizer"
+            ]
+          },
+          "campos_nao_resolvidos": [
+            "tag"
+          ]
+        },
+        {
+          "texto": "João",
+          "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:2",
+          "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:1",
+          "trabalho": {
+            "inicio": 47,
+            "fim": 51
+          },
+          "original": {
+            "inicio": 49,
+            "fim": 53
+          },
+          "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:10",
+          "lema": "João",
+          "pos": "PROPN",
+          "tag": null,
+          "morfologia": {
+            "Gender": "Masc",
+            "Number": "Sing"
+          },
+          "origem": {
+            "ferramenta": "spacy",
+            "versao": "3.8.16",
+            "modelo": {
+              "nome": "pt_core_news_sm",
+              "versao": "3.8.0"
+            },
+            "componentes": [
+              "tok2vec",
+              "morphologizer",
+              "lemmatizer"
+            ]
+          },
+          "campos_nao_resolvidos": [
+            "tag"
+          ]
+        },
+        {
+          "texto": "chegou",
+          "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:2",
+          "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:1",
+          "trabalho": {
+            "inicio": 52,
+            "fim": 58
+          },
+          "original": {
+            "inicio": 54,
+            "fim": 60
+          },
+          "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:11",
+          "lema": "chegar",
+          "pos": "VERB",
+          "tag": null,
+          "morfologia": {
+            "Mood": "Ind",
+            "Number": "Sing",
+            "Person": "3",
+            "Tense": "Past",
+            "VerbForm": "Fin"
+          },
+          "origem": {
+            "ferramenta": "spacy",
+            "versao": "3.8.16",
+            "modelo": {
+              "nome": "pt_core_news_sm",
+              "versao": "3.8.0"
+            },
+            "componentes": [
+              "tok2vec",
+              "morphologizer",
+              "lemmatizer"
+            ]
+          },
+          "campos_nao_resolvidos": [
+            "tag"
+          ]
+        },
+        {
+          "texto": ".",
+          "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:2",
+          "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:1",
+          "trabalho": {
+            "inicio": 58,
+            "fim": 59
+          },
+          "original": {
+            "inicio": 60,
+            "fim": 61
+          },
+          "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:12",
+          "lema": ".",
+          "pos": "PUNCT",
+          "tag": null,
+          "morfologia": {},
+          "origem": {
+            "ferramenta": "spacy",
+            "versao": "3.8.16",
+            "modelo": {
+              "nome": "pt_core_news_sm",
+              "versao": "3.8.0"
+            },
+            "componentes": [
+              "tok2vec",
+              "morphologizer",
+              "lemmatizer"
+            ]
+          },
+          "campos_nao_resolvidos": [
+            "tag"
+          ]
+        },
+        {
+          "texto": "Maria",
+          "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:3",
+          "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:1",
+          "trabalho": {
+            "inicio": 60,
+            "fim": 65
+          },
+          "original": {
+            "inicio": 62,
+            "fim": 67
+          },
+          "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:13",
+          "lema": "Maria",
+          "pos": "PROPN",
+          "tag": null,
+          "morfologia": {
+            "Gender": "Fem",
+            "Number": "Sing"
+          },
+          "origem": {
+            "ferramenta": "spacy",
+            "versao": "3.8.16",
+            "modelo": {
+              "nome": "pt_core_news_sm",
+              "versao": "3.8.0"
+            },
+            "componentes": [
+              "tok2vec",
+              "morphologizer",
+              "lemmatizer"
+            ]
+          },
+          "campos_nao_resolvidos": [
+            "tag"
+          ]
+        },
+        {
+          "texto": "saiu",
+          "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:3",
+          "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:1",
+          "trabalho": {
+            "inicio": 66,
+            "fim": 70
+          },
+          "original": {
+            "inicio": 68,
+            "fim": 72
+          },
+          "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:14",
+          "lema": "sair",
+          "pos": "VERB",
+          "tag": null,
+          "morfologia": {
+            "Mood": "Ind",
+            "Number": "Sing",
+            "Person": "3",
+            "Tense": "Past",
+            "VerbForm": "Fin"
+          },
+          "origem": {
+            "ferramenta": "spacy",
+            "versao": "3.8.16",
+            "modelo": {
+              "nome": "pt_core_news_sm",
+              "versao": "3.8.0"
+            },
+            "componentes": [
+              "tok2vec",
+              "morphologizer",
+              "lemmatizer"
+            ]
+          },
+          "campos_nao_resolvidos": [
+            "tag"
+          ]
+        },
+        {
+          "texto": ".",
+          "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:3",
+          "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:1",
+          "trabalho": {
+            "inicio": 70,
+            "fim": 71
+          },
+          "original": {
+            "inicio": 72,
+            "fim": 73
+          },
+          "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:15",
+          "lema": ".",
+          "pos": "PUNCT",
+          "tag": null,
+          "morfologia": {},
+          "origem": {
+            "ferramenta": "spacy",
+            "versao": "3.8.16",
+            "modelo": {
+              "nome": "pt_core_news_sm",
+              "versao": "3.8.0"
+            },
+            "componentes": [
+              "tok2vec",
+              "morphologizer",
+              "lemmatizer"
+            ]
+          },
+          "campos_nao_resolvidos": [
+            "tag"
+          ]
+        }
+      ],
+      "vocabulario": [
+        {
+          "id": "917e4f4e-3c87-4b55-9050-a52677f76e52:vocabulario:0",
+          "ordem": 0,
+          "lema": "João",
+          "pos": "PROPN",
+          "criterio_agrupamento": "lema_pos",
+          "forma_agrupamento": null,
+          "formas": [
+            "João"
+          ],
+          "quantidade": 2,
+          "token_ids": [
+            "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:0",
+            "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:10"
+          ]
+        },
+        {
+          "id": "917e4f4e-3c87-4b55-9050-a52677f76e52:vocabulario:1",
+          "ordem": 1,
+          "lema": "não",
+          "pos": "ADV",
+          "criterio_agrupamento": "lema_pos",
+          "forma_agrupamento": null,
+          "formas": [
+            "não"
+          ],
+          "quantidade": 1,
+          "token_ids": [
+            "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:1"
+          ]
+        },
+        {
+          "id": "917e4f4e-3c87-4b55-9050-a52677f76e52:vocabulario:2",
+          "ordem": 2,
+          "lema": "chegar",
+          "pos": "VERB",
+          "criterio_agrupamento": "lema_pos",
+          "forma_agrupamento": null,
+          "formas": [
+            "chegou"
+          ],
+          "quantidade": 2,
+          "token_ids": [
+            "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:2",
+            "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:11"
+          ]
+        },
+        {
+          "id": "917e4f4e-3c87-4b55-9050-a52677f76e52:vocabulario:3",
+          "ordem": 3,
+          "lema": "hoje",
+          "pos": "ADV",
+          "criterio_agrupamento": "lema_pos",
+          "forma_agrupamento": null,
+          "formas": [
+            "hoje"
+          ],
+          "quantidade": 1,
+          "token_ids": [
+            "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:3"
+          ]
+        },
+        {
+          "id": "917e4f4e-3c87-4b55-9050-a52677f76e52:vocabulario:4",
+          "ordem": 4,
+          "lema": "maria",
+          "pos": "PROPN",
+          "criterio_agrupamento": "lema_pos",
+          "forma_agrupamento": null,
+          "formas": [
+            "Maria"
+          ],
+          "quantidade": 1,
+          "token_ids": [
+            "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:5"
+          ]
+        },
+        {
+          "id": "917e4f4e-3c87-4b55-9050-a52677f76e52:vocabulario:5",
+          "ordem": 5,
+          "lema": "poder",
+          "pos": "VERB",
+          "criterio_agrupamento": "lema_pos",
+          "forma_agrupamento": null,
+          "formas": [
+            "pode"
+          ],
+          "quantidade": 1,
+          "token_ids": [
+            "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:6"
+          ]
+        },
+        {
+          "id": "917e4f4e-3c87-4b55-9050-a52677f76e52:vocabulario:6",
+          "ordem": 6,
+          "lema": "sair",
+          "pos": "VERB",
+          "criterio_agrupamento": "lema_pos",
+          "forma_agrupamento": null,
+          "formas": [
+            "sair",
+            "saiu"
+          ],
+          "quantidade": 2,
+          "token_ids": [
+            "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:7",
+            "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:14"
+          ]
+        },
+        {
+          "id": "917e4f4e-3c87-4b55-9050-a52677f76e52:vocabulario:7",
+          "ordem": 7,
+          "lema": "amanhã",
+          "pos": "ADV",
+          "criterio_agrupamento": "lema_pos",
+          "forma_agrupamento": null,
+          "formas": [
+            "amanhã"
+          ],
+          "quantidade": 1,
+          "token_ids": [
+            "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:8"
+          ]
+        },
+        {
+          "id": "917e4f4e-3c87-4b55-9050-a52677f76e52:vocabulario:8",
+          "ordem": 8,
+          "lema": "Maria",
+          "pos": "PROPN",
+          "criterio_agrupamento": "lema_pos",
+          "forma_agrupamento": null,
+          "formas": [
+            "Maria"
+          ],
+          "quantidade": 1,
+          "token_ids": [
+            "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:13"
+          ]
+        }
+      ],
+      "validacao": {
+        "estado": "pronto_para_etapa_06",
+        "pronto_para_etapa_06": true,
+        "verificacoes": [
+          "estrutura_json_identificadores_e_data",
+          "segmentacao_textos_hashes_e_mapa",
+          "coordenadas_e_processamento",
+          "cobertura_ordem_e_vinculos_dos_tokens",
+          "textos_e_intervalos_herdados",
+          "campos_linguisticos_e_pendencias",
+          "agrupamento_contagens_e_vinculos_do_vocabulario"
+        ],
+        "cobertura": {
+          "tokens_total": 16,
+          "tokens_anotados": 16,
+          "tokens_no_vocabulario": 12,
+          "tokens_excluidos_vocabulario": 4
+        },
+        "pendencias": [
+          {
+            "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:0",
+            "campo": "tag",
+            "motivo": "atributo_nao_produzido"
+          },
+          {
+            "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:1",
+            "campo": "tag",
+            "motivo": "atributo_nao_produzido"
+          },
+          {
+            "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:2",
+            "campo": "tag",
+            "motivo": "atributo_nao_produzido"
+          },
+          {
+            "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:3",
+            "campo": "tag",
+            "motivo": "atributo_nao_produzido"
+          },
+          {
+            "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:4",
+            "campo": "tag",
+            "motivo": "atributo_nao_produzido"
+          },
+          {
+            "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:5",
+            "campo": "tag",
+            "motivo": "atributo_nao_produzido"
+          },
+          {
+            "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:6",
+            "campo": "tag",
+            "motivo": "atributo_nao_produzido"
+          },
+          {
+            "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:7",
+            "campo": "tag",
+            "motivo": "atributo_nao_produzido"
+          },
+          {
+            "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:8",
+            "campo": "tag",
+            "motivo": "atributo_nao_produzido"
+          },
+          {
+            "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:9",
+            "campo": "tag",
+            "motivo": "atributo_nao_produzido"
+          },
+          {
+            "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:10",
+            "campo": "tag",
+            "motivo": "atributo_nao_produzido"
+          },
+          {
+            "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:11",
+            "campo": "tag",
+            "motivo": "atributo_nao_produzido"
+          },
+          {
+            "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:12",
+            "campo": "tag",
+            "motivo": "atributo_nao_produzido"
+          },
+          {
+            "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:13",
+            "campo": "tag",
+            "motivo": "atributo_nao_produzido"
+          },
+          {
+            "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:14",
+            "campo": "tag",
+            "motivo": "atributo_nao_produzido"
+          },
+          {
+            "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:15",
+            "campo": "tag",
+            "motivo": "atributo_nao_produzido"
+          }
+        ]
+      }
+    },
+    "coordenadas": {
+      "unidade": "pontos_de_codigo_unicode",
+      "base": 0,
+      "fim_exclusivo": true
+    },
+    "processamento": {
+      "ferramenta": "spacy",
+      "versao": "3.8.16",
+      "idioma": "pt",
+      "modulo": {
+        "nome": "sintaxe_entidades",
+        "versao": "1.0.0"
+      },
+      "modelo": {
+        "nome": "pt_core_news_sm",
+        "versao": "3.8.0",
+        "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+      },
+      "componentes_executados": [
+        "tok2vec",
+        "parser",
+        "ner"
+      ],
+      "componentes_desativados": [
+        "morphologizer",
+        "lemmatizer",
+        "senter",
+        "attribute_ruler"
+      ],
+      "componentes_disponiveis": [
+        "tok2vec",
+        "morphologizer",
+        "parser",
+        "lemmatizer",
+        "senter",
+        "attribute_ruler",
+        "ner"
+      ],
+      "rotulos_dependencias": [
+        "ROOT",
+        "acl",
+        "acl:relcl",
+        "advcl",
+        "advmod",
+        "amod",
+        "appos",
+        "aux",
+        "aux:pass",
+        "case",
+        "cc",
+        "ccomp",
+        "compound",
+        "conj",
+        "cop",
+        "csubj",
+        "dep",
+        "det",
+        "discourse",
+        "expl",
+        "fixed",
+        "flat",
+        "flat:foreign",
+        "flat:name",
+        "iobj",
+        "mark",
+        "nmod",
+        "nsubj",
+        "nsubj:pass",
+        "nummod",
+        "obj",
+        "obl",
+        "obl:agent",
+        "parataxis",
+        "punct",
+        "xcomp"
+      ],
+      "rotulos_entidades": [
+        "LOC",
+        "MISC",
+        "ORG",
+        "PER"
+      ],
+      "natureza": "previsoes_do_modelo",
+      "configuracoes": {
+        "tokenizador": {
+          "identificacao": "spacy.blank(pt)",
+          "versao_origem": "3.8.16",
+          "versao_execucao": "3.8.16",
+          "ajustes": []
+        },
+        "max_caracteres": 50000,
+        "max_tokens_internos": 10000,
+        "fronteiras_periodos": "herdadas_da_etapa_04_nos_tokens_de_conteudo",
+        "separadores": "preservados_no_documento_interno_sem_ids_linguisticos",
+        "morfologia": "herdada_da_etapa_05_sem_reanotacao",
+        "raiz": {
+          "dependencia": "ROOT",
+          "cabeca": "proprio_token"
+        },
+        "mapa_original": "lote_equivalente_a_mapear_intervalo",
+        "embeddings_exportados": false
+      }
+    },
+    "sintaxe": [
+      {
+        "texto": "João",
+        "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:0",
+        "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+        "trabalho": {
+          "inicio": 0,
+          "fim": 4
+        },
+        "original": {
+          "inicio": 0,
+          "fim": 4
+        },
+        "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:0",
+        "dependencia": "nsubj",
+        "cabeca_token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:2",
+        "origem": {
+          "ferramenta": "spacy",
+          "versao": "3.8.16",
+          "modelo": {
+            "nome": "pt_core_news_sm",
+            "versao": "3.8.0",
+            "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+          },
+          "componentes": [
+            "tok2vec",
+            "parser",
+            "ner"
+          ],
+          "natureza": "previsoes_do_modelo"
+        }
+      },
+      {
+        "texto": "não",
+        "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:0",
+        "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+        "trabalho": {
+          "inicio": 5,
+          "fim": 8
+        },
+        "original": {
+          "inicio": 5,
+          "fim": 8
+        },
+        "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:1",
+        "dependencia": "advmod",
+        "cabeca_token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:2",
+        "origem": {
+          "ferramenta": "spacy",
+          "versao": "3.8.16",
+          "modelo": {
+            "nome": "pt_core_news_sm",
+            "versao": "3.8.0",
+            "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+          },
+          "componentes": [
+            "tok2vec",
+            "parser",
+            "ner"
+          ],
+          "natureza": "previsoes_do_modelo"
+        }
+      },
+      {
+        "texto": "chegou",
+        "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:0",
+        "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+        "trabalho": {
+          "inicio": 9,
+          "fim": 15
+        },
+        "original": {
+          "inicio": 9,
+          "fim": 15
+        },
+        "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:2",
+        "dependencia": "ROOT",
+        "cabeca_token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:2",
+        "origem": {
+          "ferramenta": "spacy",
+          "versao": "3.8.16",
+          "modelo": {
+            "nome": "pt_core_news_sm",
+            "versao": "3.8.0",
+            "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+          },
+          "componentes": [
+            "tok2vec",
+            "parser",
+            "ner"
+          ],
+          "natureza": "previsoes_do_modelo"
+        }
+      },
+      {
+        "texto": "hoje",
+        "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:0",
+        "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+        "trabalho": {
+          "inicio": 16,
+          "fim": 20
+        },
+        "original": {
+          "inicio": 16,
+          "fim": 20
+        },
+        "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:3",
+        "dependencia": "advmod",
+        "cabeca_token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:2",
+        "origem": {
+          "ferramenta": "spacy",
+          "versao": "3.8.16",
+          "modelo": {
+            "nome": "pt_core_news_sm",
+            "versao": "3.8.0",
+            "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+          },
+          "componentes": [
+            "tok2vec",
+            "parser",
+            "ner"
+          ],
+          "natureza": "previsoes_do_modelo"
+        }
+      },
+      {
+        "texto": ".",
+        "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:0",
+        "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+        "trabalho": {
+          "inicio": 20,
+          "fim": 21
+        },
+        "original": {
+          "inicio": 20,
+          "fim": 21
+        },
+        "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:4",
+        "dependencia": "punct",
+        "cabeca_token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:2",
+        "origem": {
+          "ferramenta": "spacy",
+          "versao": "3.8.16",
+          "modelo": {
+            "nome": "pt_core_news_sm",
+            "versao": "3.8.0",
+            "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+          },
+          "componentes": [
+            "tok2vec",
+            "parser",
+            "ner"
+          ],
+          "natureza": "previsoes_do_modelo"
+        }
+      },
+      {
+        "texto": "Maria",
+        "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:1",
+        "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+        "trabalho": {
+          "inicio": 22,
+          "fim": 27
+        },
+        "original": {
+          "inicio": 22,
+          "fim": 27
+        },
+        "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:5",
+        "dependencia": "nsubj",
+        "cabeca_token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:6",
+        "origem": {
+          "ferramenta": "spacy",
+          "versao": "3.8.16",
+          "modelo": {
+            "nome": "pt_core_news_sm",
+            "versao": "3.8.0",
+            "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+          },
+          "componentes": [
+            "tok2vec",
+            "parser",
+            "ner"
+          ],
+          "natureza": "previsoes_do_modelo"
+        }
+      },
+      {
+        "texto": "pode",
+        "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:1",
+        "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+        "trabalho": {
+          "inicio": 28,
+          "fim": 32
+        },
+        "original": {
+          "inicio": 28,
+          "fim": 32
+        },
+        "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:6",
+        "dependencia": "ROOT",
+        "cabeca_token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:6",
+        "origem": {
+          "ferramenta": "spacy",
+          "versao": "3.8.16",
+          "modelo": {
+            "nome": "pt_core_news_sm",
+            "versao": "3.8.0",
+            "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+          },
+          "componentes": [
+            "tok2vec",
+            "parser",
+            "ner"
+          ],
+          "natureza": "previsoes_do_modelo"
+        }
+      },
+      {
+        "texto": "sair",
+        "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:1",
+        "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+        "trabalho": {
+          "inicio": 33,
+          "fim": 37
+        },
+        "original": {
+          "inicio": 33,
+          "fim": 37
+        },
+        "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:7",
+        "dependencia": "xcomp",
+        "cabeca_token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:6",
+        "origem": {
+          "ferramenta": "spacy",
+          "versao": "3.8.16",
+          "modelo": {
+            "nome": "pt_core_news_sm",
+            "versao": "3.8.0",
+            "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+          },
+          "componentes": [
+            "tok2vec",
+            "parser",
+            "ner"
+          ],
+          "natureza": "previsoes_do_modelo"
+        }
+      },
+      {
+        "texto": "amanhã",
+        "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:1",
+        "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+        "trabalho": {
+          "inicio": 38,
+          "fim": 44
+        },
+        "original": {
+          "inicio": 38,
+          "fim": 44
+        },
+        "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:8",
+        "dependencia": "advmod",
+        "cabeca_token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:7",
+        "origem": {
+          "ferramenta": "spacy",
+          "versao": "3.8.16",
+          "modelo": {
+            "nome": "pt_core_news_sm",
+            "versao": "3.8.0",
+            "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+          },
+          "componentes": [
+            "tok2vec",
+            "parser",
+            "ner"
+          ],
+          "natureza": "previsoes_do_modelo"
+        }
+      },
+      {
+        "texto": ".",
+        "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:1",
+        "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+        "trabalho": {
+          "inicio": 44,
+          "fim": 45
+        },
+        "original": {
+          "inicio": 44,
+          "fim": 45
+        },
+        "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:9",
+        "dependencia": "punct",
+        "cabeca_token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:7",
+        "origem": {
+          "ferramenta": "spacy",
+          "versao": "3.8.16",
+          "modelo": {
+            "nome": "pt_core_news_sm",
+            "versao": "3.8.0",
+            "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+          },
+          "componentes": [
+            "tok2vec",
+            "parser",
+            "ner"
+          ],
+          "natureza": "previsoes_do_modelo"
+        }
+      },
+      {
+        "texto": "João",
+        "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:2",
+        "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:1",
+        "trabalho": {
+          "inicio": 47,
+          "fim": 51
+        },
+        "original": {
+          "inicio": 49,
+          "fim": 53
+        },
+        "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:10",
+        "dependencia": "nsubj",
+        "cabeca_token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:11",
+        "origem": {
+          "ferramenta": "spacy",
+          "versao": "3.8.16",
+          "modelo": {
+            "nome": "pt_core_news_sm",
+            "versao": "3.8.0",
+            "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+          },
+          "componentes": [
+            "tok2vec",
+            "parser",
+            "ner"
+          ],
+          "natureza": "previsoes_do_modelo"
+        }
+      },
+      {
+        "texto": "chegou",
+        "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:2",
+        "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:1",
+        "trabalho": {
+          "inicio": 52,
+          "fim": 58
+        },
+        "original": {
+          "inicio": 54,
+          "fim": 60
+        },
+        "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:11",
+        "dependencia": "ROOT",
+        "cabeca_token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:11",
+        "origem": {
+          "ferramenta": "spacy",
+          "versao": "3.8.16",
+          "modelo": {
+            "nome": "pt_core_news_sm",
+            "versao": "3.8.0",
+            "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+          },
+          "componentes": [
+            "tok2vec",
+            "parser",
+            "ner"
+          ],
+          "natureza": "previsoes_do_modelo"
+        }
+      },
+      {
+        "texto": ".",
+        "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:2",
+        "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:1",
+        "trabalho": {
+          "inicio": 58,
+          "fim": 59
+        },
+        "original": {
+          "inicio": 60,
+          "fim": 61
+        },
+        "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:12",
+        "dependencia": "punct",
+        "cabeca_token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:11",
+        "origem": {
+          "ferramenta": "spacy",
+          "versao": "3.8.16",
+          "modelo": {
+            "nome": "pt_core_news_sm",
+            "versao": "3.8.0",
+            "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+          },
+          "componentes": [
+            "tok2vec",
+            "parser",
+            "ner"
+          ],
+          "natureza": "previsoes_do_modelo"
+        }
+      },
+      {
+        "texto": "Maria",
+        "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:3",
+        "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:1",
+        "trabalho": {
+          "inicio": 60,
+          "fim": 65
+        },
+        "original": {
+          "inicio": 62,
+          "fim": 67
+        },
+        "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:13",
+        "dependencia": "nsubj",
+        "cabeca_token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:14",
+        "origem": {
+          "ferramenta": "spacy",
+          "versao": "3.8.16",
+          "modelo": {
+            "nome": "pt_core_news_sm",
+            "versao": "3.8.0",
+            "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+          },
+          "componentes": [
+            "tok2vec",
+            "parser",
+            "ner"
+          ],
+          "natureza": "previsoes_do_modelo"
+        }
+      },
+      {
+        "texto": "saiu",
+        "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:3",
+        "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:1",
+        "trabalho": {
+          "inicio": 66,
+          "fim": 70
+        },
+        "original": {
+          "inicio": 68,
+          "fim": 72
+        },
+        "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:14",
+        "dependencia": "ROOT",
+        "cabeca_token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:14",
+        "origem": {
+          "ferramenta": "spacy",
+          "versao": "3.8.16",
+          "modelo": {
+            "nome": "pt_core_news_sm",
+            "versao": "3.8.0",
+            "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+          },
+          "componentes": [
+            "tok2vec",
+            "parser",
+            "ner"
+          ],
+          "natureza": "previsoes_do_modelo"
+        }
+      },
+      {
+        "texto": ".",
+        "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:3",
+        "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:1",
+        "trabalho": {
+          "inicio": 70,
+          "fim": 71
+        },
+        "original": {
+          "inicio": 72,
+          "fim": 73
+        },
+        "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:15",
+        "dependencia": "punct",
+        "cabeca_token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:14",
+        "origem": {
+          "ferramenta": "spacy",
+          "versao": "3.8.16",
+          "modelo": {
+            "nome": "pt_core_news_sm",
+            "versao": "3.8.0",
+            "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+          },
+          "componentes": [
+            "tok2vec",
+            "parser",
+            "ner"
+          ],
+          "natureza": "previsoes_do_modelo"
+        }
+      }
+    ],
+    "entidades": [
+      {
+        "texto": "João",
+        "rotulo": "PER",
+        "token_ids": [
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:0"
+        ],
+        "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:0",
+        "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+        "trabalho": {
+          "inicio": 0,
+          "fim": 4
+        },
+        "original": {
+          "inicio": 0,
+          "fim": 4
+        },
+        "origem": {
+          "ferramenta": "spacy",
+          "versao": "3.8.16",
+          "modelo": {
+            "nome": "pt_core_news_sm",
+            "versao": "3.8.0",
+            "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+          },
+          "componentes": [
+            "tok2vec",
+            "parser",
+            "ner"
+          ],
+          "natureza": "previsoes_do_modelo"
+        },
+        "id": "204b8507-0e4a-4ff0-b0f2-e5382134f546:entidade:0",
+        "ordem": 0
+      },
+      {
+        "texto": "Maria",
+        "rotulo": "PER",
+        "token_ids": [
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:5"
+        ],
+        "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:1",
+        "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+        "trabalho": {
+          "inicio": 22,
+          "fim": 27
+        },
+        "original": {
+          "inicio": 22,
+          "fim": 27
+        },
+        "origem": {
+          "ferramenta": "spacy",
+          "versao": "3.8.16",
+          "modelo": {
+            "nome": "pt_core_news_sm",
+            "versao": "3.8.0",
+            "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+          },
+          "componentes": [
+            "tok2vec",
+            "parser",
+            "ner"
+          ],
+          "natureza": "previsoes_do_modelo"
+        },
+        "id": "204b8507-0e4a-4ff0-b0f2-e5382134f546:entidade:1",
+        "ordem": 1
+      },
+      {
+        "texto": "João",
+        "rotulo": "PER",
+        "token_ids": [
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:10"
+        ],
+        "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:2",
+        "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:1",
+        "trabalho": {
+          "inicio": 47,
+          "fim": 51
+        },
+        "original": {
+          "inicio": 49,
+          "fim": 53
+        },
+        "origem": {
+          "ferramenta": "spacy",
+          "versao": "3.8.16",
+          "modelo": {
+            "nome": "pt_core_news_sm",
+            "versao": "3.8.0",
+            "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+          },
+          "componentes": [
+            "tok2vec",
+            "parser",
+            "ner"
+          ],
+          "natureza": "previsoes_do_modelo"
+        },
+        "id": "204b8507-0e4a-4ff0-b0f2-e5382134f546:entidade:2",
+        "ordem": 2
+      },
+      {
+        "texto": "Maria",
+        "rotulo": "PER",
+        "token_ids": [
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:13"
+        ],
+        "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:3",
+        "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:1",
+        "trabalho": {
+          "inicio": 60,
+          "fim": 65
+        },
+        "original": {
+          "inicio": 62,
+          "fim": 67
+        },
+        "origem": {
+          "ferramenta": "spacy",
+          "versao": "3.8.16",
+          "modelo": {
+            "nome": "pt_core_news_sm",
+            "versao": "3.8.0",
+            "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+          },
+          "componentes": [
+            "tok2vec",
+            "parser",
+            "ner"
+          ],
+          "natureza": "previsoes_do_modelo"
+        },
+        "id": "204b8507-0e4a-4ff0-b0f2-e5382134f546:entidade:3",
+        "ordem": 3
+      }
+    ],
+    "validacao": {
+      "estado": "pronto_para_etapa_07",
+      "pronto_para_etapa_07": true,
+      "verificacoes": [
+        "estrutura_json_identificadores_e_data",
+        "anotacao_e_registros_de_origem",
+        "coordenadas_e_processamento",
+        "cobertura_alinhamento_e_vinculos_dos_tokens",
+        "arvores_raizes_cabecas_e_ausencia_de_ciclos",
+        "entidades_ordem_textos_tokens_unidades_e_mapa_original"
+      ],
+      "cobertura": {
+        "tokens_total": 16,
+        "tokens_analisados": 16,
+        "periodos_total": 4,
+        "entidades_total": 4
+      }
+    }
+  },
+  "coordenadas": {
+    "unidade": "pontos_de_codigo_unicode",
+    "base": 0,
+    "fim_exclusivo": true
+  },
+  "catalogo": {
+    "id": "lingua-etapa07",
+    "versao": "1.1.0",
+    "regras": [
+      {
+        "id": "negacao_correlativa",
+        "versao": "1.1.0",
+        "familia": "negacao",
+        "descricao": "Adição correlativa explícita não só/somente/apenas ... mas também.",
+        "condicoes": [
+          "Pares adjacentes não+só/somente/apenas e mas+também no mesmo período.",
+          "Marcadores adverbiais e coordenativo com núcleos sintáticos identificáveis.",
+          "POS dos possíveis predicados do período precisa estar disponível para delimitar o alcance; ausência mantém marcador e pendência, sem interpretar null como classe não verbal.",
+          "Delimitadores literais de citação não constituem núcleos; o alcance permanece na mesma região de citação do marcador, inclusive fora de aspas."
+        ],
+        "atributos_utilizados": [
+          "texto",
+          "pos",
+          "dependencia",
+          "cabeca_token_id",
+          "periodo_id"
+        ],
+        "padrao": "não (só|somente|apenas) ... mas também; mas tem dependência cc.",
+        "resultado": "adicao_correlativa; não atribui negação simples aos mesmos marcadores.",
+        "alcance": "União dos tokens próprios dos predicados correlacionados, sem subordinadas de outros núcleos.",
+        "excecoes": [
+          "Uma expressão incompleta não dispara a regra.",
+          "Expressões citadas sem núcleo interno permanecem ambíguas."
+        ],
+        "sobreposicao": "Tem prioridade apenas sobre seu não e seu mas; outros marcadores continuam ativos. Suprime simples somente se habilitada.",
+        "exemplos": [
+          {
+            "texto": "Não só estudou, mas também trabalhou.",
+            "resultado": "adicao_correlativa"
+          },
+          {
+            "texto": "Não só não estudou, mas também faltou.",
+            "resultado": "adicao_correlativa e negacao_simples do segundo não"
+          }
+        ],
+        "cobertura": "Somente pares completos adjacentes; não contempla mas ainda, como também nem correlações elípticas.",
+        "prioridade": 10
+      },
+      {
+        "id": "oracao_predicado",
+        "versao": "1.1.0",
+        "familia": "oracoes",
+        "descricao": "Agrupamentos de predicados verbais e construções copulares.",
+        "condicoes": [
+          "POS VERB/AUX fora de dependências aux/cop, ou núcleo com filho cop.",
+          "POS dos possíveis predicados do período precisa estar disponível para delimitar o alcance; ausência mantém marcador e pendência, sem interpretar null como classe não verbal.",
+          "Delimitadores literais de citação não constituem núcleos; o alcance permanece na mesma região de citação do marcador, inclusive fora de aspas."
+        ],
+        "atributos_utilizados": [
+          "pos",
+          "dependencia",
+          "cabeca_token_id",
+          "periodo_id"
+        ],
+        "padrao": "Núcleo VERB/AUX e seus auxiliares; ADJ/NOUN/etc. com cópula dependente.",
+        "resultado": "oracao com núcleo predicativo, auxiliares e relação com outro núcleo.",
+        "alcance": "Subárvore própria, excluindo subárvores cujo núcleo representa outra oração; pode ser descontínua.",
+        "excecoes": [
+          "xcomp/ccomp constituem agrupamentos ligados, não locuções automaticamente.",
+          "Não recupera verbos elípticos nem corrige POS recebido."
+        ],
+        "sobreposicao": "Aux/cop integram a mesma oração; relações pai/filho preservadas por vínculos. Sobreposição com outras famílias permitida.",
+        "exemplos": [
+          {
+            "texto": "Ela está feliz.",
+            "nucleo": "feliz",
+            "associado": "está"
+          },
+          {
+            "texto": "Ela está estudando.",
+            "nucleo": "estudando",
+            "associado": "está"
+          },
+          {
+            "texto": "Ela quer sair.",
+            "nucleos": [
+              "quer",
+              "sair"
+            ]
+          }
+        ],
+        "cobertura": "Verbos, auxiliares, cópulas, conj, xcomp, ccomp, advcl, acl e csubj segundo a árvore recebida.",
+        "prioridade": 20
+      },
+      {
+        "id": "negacao_nao",
+        "versao": "1.1.0",
+        "familia": "negacao",
+        "descricao": "Marcador não com alcance sintático proposto.",
+        "condicoes": [
+          "Texto não com POS ADV/PART e dependência advmod/neg, ou ROOT incompleto, ou marcador citado mencionado.",
+          "POS dos possíveis predicados do período precisa estar disponível para delimitar o alcance; ausência mantém marcador e pendência, sem interpretar null como classe não verbal.",
+          "Delimitadores literais de citação não constituem núcleos; o alcance permanece na mesma região de citação do marcador, inclusive fora de aspas."
+        ],
+        "atributos_utilizados": [
+          "texto",
+          "pos",
+          "dependencia",
+          "cabeca_token_id"
+        ],
+        "padrao": "não dependente de predicado ou constituinte.",
+        "resultado": "negacao_simples, com marcador e núcleo separados.",
+        "alcance": "Tokens próprios do predicado ou subárvore do constituinte negado; ausente quando não sustentado.",
+        "excecoes": [
+          "Não da correlativa ativa excluído.",
+          "Citação sem predicado interno não é atribuída ao narrador."
+        ],
+        "sobreposicao": "Mantém cada não e vínculos com modalidade; pode participar também de multiplos_marcadores.",
+        "exemplos": [
+          {
+            "texto": "Não pensei em sair.",
+            "nucleo": "pensei"
+          },
+          {
+            "texto": "Pensei em não sair.",
+            "nucleo": "sair"
+          }
+        ],
+        "cobertura": "Negação explícita não; exclui nominalizações como o não quando não citadas.",
+        "prioridade": 100
+      },
+      {
+        "id": "negacao_nunca",
+        "versao": "1.1.0",
+        "familia": "negacao",
+        "descricao": "Negação temporal explícita nunca.",
+        "condicoes": [
+          "Texto nunca com POS ADV e dependência advmod/neg, ou ROOT incompleto, ou marcador citado.",
+          "POS dos possíveis predicados do período precisa estar disponível para delimitar o alcance; ausência mantém marcador e pendência, sem interpretar null como classe não verbal.",
+          "Delimitadores literais de citação não constituem núcleos; o alcance permanece na mesma região de citação do marcador, inclusive fora de aspas."
+        ],
+        "atributos_utilizados": [
+          "texto",
+          "pos",
+          "dependencia",
+          "cabeca_token_id"
+        ],
+        "padrao": "nunca adverbial ligado ao predicado.",
+        "resultado": "negacao_temporal.",
+        "alcance": "Tokens próprios do predicado; não converte o quantificador temporal em uma data.",
+        "excecoes": [
+          "Menção citada conserva indeterminação."
+        ],
+        "sobreposicao": "Mantém marcadores múltiplos sem calcular polaridade.",
+        "exemplos": [
+          {
+            "texto": "Nunca saio.",
+            "nucleo": "saio"
+          }
+        ],
+        "cobertura": "Não inclui jamais, tampouco ou prefixos negativos.",
+        "prioridade": 100
+      },
+      {
+        "id": "negacao_nem",
+        "versao": "1.1.0",
+        "familia": "negacao",
+        "descricao": "Negação aditiva com nem.",
+        "condicoes": [
+          "Texto nem adverbial/coordenativo e dependência cc/advmod/neg, ou ROOT incompleto, ou marcador citado.",
+          "POS dos possíveis predicados do período precisa estar disponível para delimitar o alcance; ausência mantém marcador e pendência, sem interpretar null como classe não verbal.",
+          "Delimitadores literais de citação não constituem núcleos; o alcance permanece na mesma região de citação do marcador, inclusive fora de aspas."
+        ],
+        "atributos_utilizados": [
+          "texto",
+          "pos",
+          "dependencia",
+          "cabeca_token_id"
+        ],
+        "padrao": "nem com dependência adverbial ou de coordenação.",
+        "resultado": "negacao_aditiva.",
+        "alcance": "Predicado próprio ou constituinte nominal coordenado identificado pela cabeça.",
+        "excecoes": [
+          "Não interpreta toda coordenação como negação oracional."
+        ],
+        "sobreposicao": "Cada nem permanece individual; pode haver agrupamento de marcadores.",
+        "exemplos": [
+          {
+            "texto": "Nem João veio.",
+            "marcador": "Nem"
+          }
+        ],
+        "cobertura": "Somente nem explícito; alcance nominal pode exigir contexto.",
+        "prioridade": 100
+      },
+      {
+        "id": "negacao_multiplos",
+        "versao": "1.1.0",
+        "familia": "negacao",
+        "descricao": "Agrupamento de marcadores negativos no mesmo predicado.",
+        "condicoes": [
+          "Ao menos dois marcadores reconhecidos não/nunca/nem com mesmo núcleo e contexto de citação.",
+          "POS dos possíveis predicados do período precisa estar disponível para delimitar o alcance; ausência mantém marcador e pendência, sem interpretar null como classe não verbal.",
+          "Delimitadores literais de citação não constituem núcleos; o alcance permanece na mesma região de citação do marcador, inclusive fora de aspas."
+        ],
+        "atributos_utilizados": [
+          "texto",
+          "pos",
+          "dependencia",
+          "cabeca_token_id"
+        ],
+        "padrao": "Agrupar marcadores válidos por núcleo e região citada.",
+        "resultado": "multiplos_marcadores.",
+        "alcance": "Mesmo alcance sintático compartilhado; sem aritmética de polaridade.",
+        "excecoes": [
+          "Marcador não da correlativa ativa excluído.",
+          "Não combina negadores de orações distintas."
+        ],
+        "sobreposicao": "Sobrepõe-se intencionalmente às ocorrências negativas individuais.",
+        "exemplos": [
+          {
+            "texto": "Não saiu nunca.",
+            "marcadores": [
+              "Não",
+              "nunca"
+            ]
+          }
+        ],
+        "cobertura": "Agrupa somente negadores explícitos com núcleo identificável.",
+        "prioridade": 100
+      },
+      {
+        "id": "tempo_flexao",
+        "versao": "1.1.0",
+        "familia": "tempo",
+        "descricao": "Evidência de tempo, modo e forma verbal da anotação morfológica.",
+        "condicoes": [
+          "POS VERB/AUX e ao menos uma flexão Tense/Mood/VerbForm disponível.",
+          "POS dos possíveis predicados do período precisa estar disponível para delimitar o alcance; ausência mantém marcador e pendência, sem interpretar null como classe não verbal.",
+          "Delimitadores literais de citação não constituem núcleos; o alcance permanece na mesma região de citação do marcador, inclusive fora de aspas."
+        ],
+        "atributos_utilizados": [
+          "pos",
+          "morfologia",
+          "dependencia",
+          "cabeca_token_id"
+        ],
+        "padrao": "Tense, Mood e VerbForm são preservados como valores recebidos.",
+        "resultado": "flexao_verbal.",
+        "alcance": "Tokens próprios do predicado ao qual o verbo/auxiliar pertence.",
+        "excecoes": [
+          "Não corrige previsões morfológicas e não converte Future em data."
+        ],
+        "sobreposicao": "Flexão e expressão relativa permanecem evidências distintas.",
+        "exemplos": [
+          {
+            "texto": "Ela saiu.",
+            "atributo": "Tense=Past"
+          }
+        ],
+        "cobertura": "Somente atributos existentes; morfologia ausente gera pendência.",
+        "prioridade": 100
+      },
+      {
+        "id": "tempo_relativo",
+        "versao": "1.1.0",
+        "familia": "tempo",
+        "descricao": "Referências ontem/hoje/amanhã e construção temporal quando.",
+        "condicoes": [
+          "Ontem/hoje/amanhã adverbiais; quando marcador de oração advcl temporal.",
+          "POS dos possíveis predicados do período precisa estar disponível para delimitar o alcance; ausência mantém marcador e pendência, sem interpretar null como classe não verbal.",
+          "Delimitadores literais de citação não constituem núcleos; o alcance permanece na mesma região de citação do marcador, inclusive fora de aspas."
+        ],
+        "atributos_utilizados": [
+          "texto",
+          "pos",
+          "dependencia",
+          "cabeca_token_id"
+        ],
+        "padrao": "Advérbios relativos ou quando/mark ligado a advcl.",
+        "resultado": "referencia_relativa ou construcao_temporal, sem data absoluta.",
+        "alcance": "Tokens próprios do predicado associado; marcador pode permanecer sem alcance.",
+        "excecoes": [
+          "Quando interrogativo não afirma conexão temporal.",
+          "Data técnica de processamento não é referência do enunciado."
+        ],
+        "sobreposicao": "Quando pode produzir também conector temporal.",
+        "exemplos": [
+          {
+            "texto": "Amanhã sairei.",
+            "valor": "relativo"
+          },
+          {
+            "texto": "Quando chegar, avise.",
+            "valor": "construcao_temporal"
+          }
+        ],
+        "cobertura": "Não inclui calendários, datas absolutas ou resolução de dêixis.",
+        "prioridade": 100
+      },
+      {
+        "id": "modalidade_verbal",
+        "versao": "1.1.0",
+        "familia": "modalidade",
+        "descricao": "Modalidade proposta por verbos e construções ter que/de.",
+        "condicoes": [
+          "Verbo/AUX com lema poder/dever/precisar/necessitar/conseguir/saber/querer/desejar/duvidar; ter com que/de e complemento verbal.",
+          "POS dos possíveis predicados do período precisa estar disponível para delimitar o alcance; ausência mantém marcador e pendência, sem interpretar null como classe não verbal.",
+          "Delimitadores literais de citação não constituem núcleos; o alcance permanece na mesma região de citação do marcador, inclusive fora de aspas."
+        ],
+        "atributos_utilizados": [
+          "lema",
+          "pos",
+          "dependencia",
+          "cabeca_token_id"
+        ],
+        "padrao": "Lexema modal com complemento; conseguir/saber requerem complemento xcomp com VerbForm=Inf.",
+        "resultado": "possibilidade_indeterminada, obrigacao, necessidade, capacidade, desejo ou duvida.",
+        "alcance": "Conteúdo dos complementos xcomp/ccomp/obj/obl quando identificado; marcador separado.",
+        "excecoes": [
+          "Poder mantém possibilidade/permissao/capacidade.",
+          "Dever mantém obrigacao/inferencia_epistemica.",
+          "Querer negado não comprova desejo positivo."
+        ],
+        "sobreposicao": "Vincula negadores relevantes e agrupamentos por seus tokens; sem atribuir estado teórico ao narrador.",
+        "exemplos": [
+          {
+            "texto": "Ela pode sair.",
+            "alternativas": [
+              "possibilidade",
+              "permissao",
+              "capacidade"
+            ]
+          },
+          {
+            "texto": "Não quero sair.",
+            "limitacao": "marcador modal negado"
+          }
+        ],
+        "cobertura": "Padrões explícitos; não resolve sentido pragmático, ironia ou capacidade sem sintaxe verbal infinitiva; saber/conseguir com ccomp não afirmam habilidade.",
+        "prioridade": 100
+      },
+      {
+        "id": "modalidade_lexical",
+        "versao": "1.1.0",
+        "familia": "modalidade",
+        "descricao": "Advérbios de dúvida/possibilidade e predicados necessário/obrigatório/capaz.",
+        "condicoes": [
+          "Talvez/possivelmente/provavelmente adverbiais; necessário/obrigatório/capaz como predicados copulares.",
+          "POS dos possíveis predicados do período precisa estar disponível para delimitar o alcance; ausência mantém marcador e pendência, sem interpretar null como classe não verbal.",
+          "Delimitadores literais de citação não constituem núcleos; o alcance permanece na mesma região de citação do marcador, inclusive fora de aspas."
+        ],
+        "atributos_utilizados": [
+          "texto",
+          "lema",
+          "pos",
+          "dependencia",
+          "cabeca_token_id"
+        ],
+        "padrao": "Advérbio ligado a predicado, ou adjetivo predicativo com cópula.",
+        "resultado": "duvida, possibilidade, necessidade, obrigacao ou capacidade.",
+        "alcance": "Predicado modificado ou conteúdo complemental do predicado copular.",
+        "excecoes": [
+          "Adjetivo amod de nome não dispara modalidade predicativa.",
+          "Palavra citada não caracteriza o narrador."
+        ],
+        "sobreposicao": "Pode coexistir com modalidades verbais e negação justificadas.",
+        "exemplos": [
+          {
+            "texto": "Talvez ela saia.",
+            "resultado": "duvida"
+          },
+          {
+            "texto": "É necessário sair.",
+            "resultado": "necessidade"
+          }
+        ],
+        "cobertura": "Não contempla todo vocabulário modal nem substantivos abstratos.",
+        "prioridade": 100
+      },
+      {
+        "id": "conector_simples",
+        "versao": "1.1.0",
+        "familia": "conectores",
+        "descricao": "Conexões mas/porque/se/quando condicionadas à sintaxe.",
+        "condicoes": [
+          "Mas cc de núcleo predicativo conj; porque mark de oração; se SCONJ/mark de advcl ou condição incompleta; quando mark/advmod de advcl.",
+          "POS dos possíveis predicados do período precisa estar disponível para delimitar o alcance; ausência mantém marcador e pendência, sem interpretar null como classe não verbal.",
+          "Delimitadores literais de citação não constituem núcleos; o alcance permanece na mesma região de citação do marcador, inclusive fora de aspas."
+        ],
+        "atributos_utilizados": [
+          "texto",
+          "pos",
+          "dependencia",
+          "cabeca_token_id"
+        ],
+        "padrao": "Conector associado a um núcleo e relação sintática apropriada.",
+        "resultado": "contraste, causa, condicao ou tempo.",
+        "alcance": "Oração modificada; liga ao núcleo relacionado quando existente, sem fabricar unidades.",
+        "excecoes": [
+          "Se pronominal/reflexivo/passivador e se de ccomp interrogativo excluídos.",
+          "Mas da correlativa ativa excluído.",
+          "Quando interrogativo excluído.",
+          "Contraste nominal com mas, como João mas não Pedro, não integra a cobertura oracional v1."
+        ],
+        "sobreposicao": "Quando pode sustentar tempo e conexão em ocorrências distintas.",
+        "exemplos": [
+          {
+            "texto": "Se chover, fico.",
+            "resultado": "condicao"
+          },
+          {
+            "texto": "Ela se lavou.",
+            "resultado": "sem condicao"
+          },
+          {
+            "texto": "Perguntei se sairia.",
+            "resultado": "sem condicao"
+          }
+        ],
+        "cobertura": "Sem elipses recuperadas; condições sem consequência exigem contexto.",
+        "prioridade": 100
+      },
+      {
+        "id": "conector_por_isso",
+        "versao": "1.1.0",
+        "familia": "conectores",
+        "descricao": "Consequência explícita por isso com retomada contextual.",
+        "condicoes": [
+          "Por e isso adjacentes no mesmo período, por/case ligado a isso e isso/obl ou advmod associado a predicado, com por isso antes do núcleo predicativo.",
+          "POS dos possíveis predicados do período precisa estar disponível para delimitar o alcance; ausência mantém marcador e pendência, sem interpretar null como classe não verbal.",
+          "Delimitadores literais de citação não constituem núcleos; o alcance permanece na mesma região de citação do marcador, inclusive fora de aspas."
+        ],
+        "atributos_utilizados": [
+          "texto",
+          "pos",
+          "dependencia",
+          "cabeca_token_id",
+          "periodo_id"
+        ],
+        "padrao": "por isso com ligação sintática explícita e posição anterior ao predicado consequente.",
+        "resultado": "consequencia.",
+        "alcance": "Tokens próprios do predicado consequente; antecedente só ligado quando há núcleo anterior na mesma árvore.",
+        "excecoes": [
+          "Retomada entre períodos não inventa antecedente; registra necessidade de contexto.",
+          "Uso pós-verbal/argumental como passei por isso fica fora da cobertura v1."
+        ],
+        "sobreposicao": "Convive com coordenação e modalidades; não é duplicata de outra família.",
+        "exemplos": [
+          {
+            "texto": "Choveu; por isso fiquei.",
+            "resultado": "consequencia"
+          }
+        ],
+        "cobertura": "Somente por isso anteposto; não inclui uso pós-verbal/argumental, portanto, logo ou por esse motivo.",
+        "prioridade": 100
+      }
+    ]
+  },
+  "configuracao": {
+    "regras_habilitadas": [
+      "negacao_correlativa",
+      "oracao_predicado",
+      "conector_por_isso",
+      "conector_simples",
+      "modalidade_lexical",
+      "modalidade_verbal",
+      "negacao_multiplos",
+      "negacao_nao",
+      "negacao_nem",
+      "negacao_nunca",
+      "tempo_flexao",
+      "tempo_relativo"
+    ],
+    "ordem_execucao": [
+      "negacao_correlativa",
+      "oracao_predicado",
+      "conector_por_isso",
+      "conector_simples",
+      "modalidade_lexical",
+      "modalidade_verbal",
+      "negacao_multiplos",
+      "negacao_nao",
+      "negacao_nem",
+      "negacao_nunca",
+      "tempo_flexao",
+      "tempo_relativo"
+    ],
+    "politica_falha": "preservar_diagnostico_sem_prontidao",
+    "alcance": "tokens_selecionados_sem_expandir_periodo",
+    "datas_relativas": "sem_conversao_automatica"
+  },
+  "processamento": {
+    "ferramenta": "biblioteca_padrao",
+    "natureza": "hipoteses_por_regras",
+    "modulo": {
+      "nome": "regras_linguisticas",
+      "versao": "1.1.0"
+    },
+    "catalogo_sha256": "8fc774801d9cb319bfa874eb5ba2170af8eb3f512d11d22d16343b4e1bf4e6fc",
+    "modelo_reexecutado": false
+  },
+  "execucoes_regras": [
+    {
+      "regra_id": "negacao_correlativa",
+      "versao": "1.1.0",
+      "estado": "executada",
+      "ocorrencias_total": 0,
+      "pendencias": [],
+      "erro": null
+    },
+    {
+      "regra_id": "oracao_predicado",
+      "versao": "1.1.0",
+      "estado": "executada",
+      "ocorrencias_total": 5,
+      "pendencias": [],
+      "erro": null
+    },
+    {
+      "regra_id": "conector_por_isso",
+      "versao": "1.1.0",
+      "estado": "executada",
+      "ocorrencias_total": 0,
+      "pendencias": [],
+      "erro": null
+    },
+    {
+      "regra_id": "conector_simples",
+      "versao": "1.1.0",
+      "estado": "executada",
+      "ocorrencias_total": 0,
+      "pendencias": [],
+      "erro": null
+    },
+    {
+      "regra_id": "modalidade_lexical",
+      "versao": "1.1.0",
+      "estado": "executada",
+      "ocorrencias_total": 0,
+      "pendencias": [],
+      "erro": null
+    },
+    {
+      "regra_id": "modalidade_verbal",
+      "versao": "1.1.0",
+      "estado": "executada",
+      "ocorrencias_total": 1,
+      "pendencias": [],
+      "erro": null
+    },
+    {
+      "regra_id": "negacao_multiplos",
+      "versao": "1.1.0",
+      "estado": "executada",
+      "ocorrencias_total": 0,
+      "pendencias": [],
+      "erro": null
+    },
+    {
+      "regra_id": "negacao_nao",
+      "versao": "1.1.0",
+      "estado": "executada",
+      "ocorrencias_total": 1,
+      "pendencias": [],
+      "erro": null
+    },
+    {
+      "regra_id": "negacao_nem",
+      "versao": "1.1.0",
+      "estado": "executada",
+      "ocorrencias_total": 0,
+      "pendencias": [],
+      "erro": null
+    },
+    {
+      "regra_id": "negacao_nunca",
+      "versao": "1.1.0",
+      "estado": "executada",
+      "ocorrencias_total": 0,
+      "pendencias": [],
+      "erro": null
+    },
+    {
+      "regra_id": "tempo_flexao",
+      "versao": "1.1.0",
+      "estado": "executada",
+      "ocorrencias_total": 5,
+      "pendencias": [],
+      "erro": null
+    },
+    {
+      "regra_id": "tempo_relativo",
+      "versao": "1.1.0",
+      "estado": "executada",
+      "ocorrencias_total": 2,
+      "pendencias": [],
+      "erro": null
+    }
+  ],
+  "ocorrencias": [
+    {
+      "familia": "negacao",
+      "categoria": "negacao_simples",
+      "regra": {
+        "id": "negacao_nao",
+        "versao": "1.1.0"
+      },
+      "marcador_token_ids": [
+        "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:1"
+      ],
+      "nucleo_token_ids": [
+        "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:2"
+      ],
+      "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:0",
+      "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+      "vinculos": [
+        {
+          "tipo": "modifica",
+          "alvo_tipo": "token",
+          "alvo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:2"
+        },
+        {
+          "tipo": "estrutura_associada",
+          "alvo_tipo": "ocorrencia",
+          "alvo_id": "71445a83-d759-44e0-90c8-31b6d4949b77:ocorrencia:1"
+        },
+        {
+          "tipo": "modifica",
+          "alvo_tipo": "ocorrencia",
+          "alvo_id": "71445a83-d759-44e0-90c8-31b6d4949b77:ocorrencia:1"
+        }
+      ],
+      "explicacao": "O marcador literal 'não' tem POS=ADV e dependência advmod; o alcance proposto segue sua ligação sintática, sem inferir polaridade por contagem.",
+      "ambiguidades": [],
+      "alternativas": [],
+      "necessidade_contexto": [],
+      "id": "71445a83-d759-44e0-90c8-31b6d4949b77:ocorrencia:0",
+      "ordem": 0,
+      "evidencias": [
+        {
+          "token_ids": [
+            "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:1",
+            "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:2"
+          ],
+          "texto": "não chegou",
+          "trabalho": {
+            "inicio": 5,
+            "fim": 15
+          },
+          "original": {
+            "inicio": 5,
+            "fim": 15
+          },
+          "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:0",
+          "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0"
+        }
+      ],
+      "alcance": {
+        "token_ids": [
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:0",
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:1",
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:2",
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:3",
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:4"
+        ],
+        "trechos": [
+          {
+            "token_ids": [
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:0",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:1",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:2",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:3",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:4"
+            ],
+            "texto": "João não chegou hoje.",
+            "trabalho": {
+              "inicio": 0,
+              "fim": 21
+            },
+            "original": {
+              "inicio": 0,
+              "fim": 21
+            },
+            "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:0",
+            "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0"
+          }
+        ]
+      },
+      "anotacoes_utilizadas": [
+        {
+          "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:1",
+          "lema": "não",
+          "pos": "ADV",
+          "morfologia": {
+            "Polarity": "Neg"
+          },
+          "dependencia": "advmod",
+          "cabeca_token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:2"
+        },
+        {
+          "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:2",
+          "lema": "chegar",
+          "pos": "VERB",
+          "morfologia": {
+            "Mood": "Ind",
+            "Number": "Sing",
+            "Person": "3",
+            "Tense": "Past",
+            "VerbForm": "Fin"
+          },
+          "dependencia": "ROOT",
+          "cabeca_token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:2"
+        }
+      ]
+    },
+    {
+      "familia": "oracoes",
+      "categoria": "oracao",
+      "regra": {
+        "id": "oracao_predicado",
+        "versao": "1.1.0"
+      },
+      "marcador_token_ids": [
+        "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:2"
+      ],
+      "nucleo_token_ids": [
+        "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:2"
+      ],
+      "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:0",
+      "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+      "vinculos": [],
+      "explicacao": "'chegou' é núcleo verbal na anotação recebida (POS=VERB, dependência=ROOT).",
+      "ambiguidades": [],
+      "alternativas": [],
+      "necessidade_contexto": [],
+      "id": "71445a83-d759-44e0-90c8-31b6d4949b77:ocorrencia:1",
+      "ordem": 1,
+      "evidencias": [
+        {
+          "token_ids": [
+            "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:2"
+          ],
+          "texto": "chegou",
+          "trabalho": {
+            "inicio": 9,
+            "fim": 15
+          },
+          "original": {
+            "inicio": 9,
+            "fim": 15
+          },
+          "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:0",
+          "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0"
+        }
+      ],
+      "alcance": {
+        "token_ids": [
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:0",
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:1",
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:2",
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:3",
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:4"
+        ],
+        "trechos": [
+          {
+            "token_ids": [
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:0",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:1",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:2",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:3",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:4"
+            ],
+            "texto": "João não chegou hoje.",
+            "trabalho": {
+              "inicio": 0,
+              "fim": 21
+            },
+            "original": {
+              "inicio": 0,
+              "fim": 21
+            },
+            "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:0",
+            "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0"
+          }
+        ]
+      },
+      "anotacoes_utilizadas": [
+        {
+          "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:2",
+          "lema": "chegar",
+          "pos": "VERB",
+          "morfologia": {
+            "Mood": "Ind",
+            "Number": "Sing",
+            "Person": "3",
+            "Tense": "Past",
+            "VerbForm": "Fin"
+          },
+          "dependencia": "ROOT",
+          "cabeca_token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:2"
+        }
+      ]
+    },
+    {
+      "familia": "tempo",
+      "categoria": "flexao_verbal",
+      "regra": {
+        "id": "tempo_flexao",
+        "versao": "1.1.0"
+      },
+      "marcador_token_ids": [
+        "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:2"
+      ],
+      "nucleo_token_ids": [
+        "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:2"
+      ],
+      "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:0",
+      "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+      "vinculos": [
+        {
+          "tipo": "predicado_associado",
+          "alvo_tipo": "token",
+          "alvo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:2"
+        },
+        {
+          "tipo": "estrutura_associada",
+          "alvo_tipo": "ocorrencia",
+          "alvo_id": "71445a83-d759-44e0-90c8-31b6d4949b77:ocorrencia:1"
+        },
+        {
+          "tipo": "predicado_associado",
+          "alvo_tipo": "ocorrencia",
+          "alvo_id": "71445a83-d759-44e0-90c8-31b6d4949b77:ocorrencia:1"
+        }
+      ],
+      "explicacao": "A anotação morfológica de 'chegou' registra Tense=Past, Mood=Ind, VerbForm=Fin. Os valores recebidos são evidências linguísticas preservadas, sem correção do modelo ou conversão em data.",
+      "ambiguidades": [],
+      "alternativas": [],
+      "necessidade_contexto": [],
+      "id": "71445a83-d759-44e0-90c8-31b6d4949b77:ocorrencia:2",
+      "ordem": 2,
+      "evidencias": [
+        {
+          "token_ids": [
+            "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:2"
+          ],
+          "texto": "chegou",
+          "trabalho": {
+            "inicio": 9,
+            "fim": 15
+          },
+          "original": {
+            "inicio": 9,
+            "fim": 15
+          },
+          "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:0",
+          "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0"
+        }
+      ],
+      "alcance": {
+        "token_ids": [
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:0",
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:1",
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:2",
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:3",
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:4"
+        ],
+        "trechos": [
+          {
+            "token_ids": [
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:0",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:1",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:2",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:3",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:4"
+            ],
+            "texto": "João não chegou hoje.",
+            "trabalho": {
+              "inicio": 0,
+              "fim": 21
+            },
+            "original": {
+              "inicio": 0,
+              "fim": 21
+            },
+            "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:0",
+            "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0"
+          }
+        ]
+      },
+      "anotacoes_utilizadas": [
+        {
+          "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:2",
+          "lema": "chegar",
+          "pos": "VERB",
+          "morfologia": {
+            "Mood": "Ind",
+            "Number": "Sing",
+            "Person": "3",
+            "Tense": "Past",
+            "VerbForm": "Fin"
+          },
+          "dependencia": "ROOT",
+          "cabeca_token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:2"
+        }
+      ]
+    },
+    {
+      "familia": "tempo",
+      "categoria": "referencia_relativa",
+      "regra": {
+        "id": "tempo_relativo",
+        "versao": "1.1.0"
+      },
+      "marcador_token_ids": [
+        "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:3"
+      ],
+      "nucleo_token_ids": [
+        "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:2"
+      ],
+      "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:0",
+      "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+      "vinculos": [
+        {
+          "tipo": "predicado_associado",
+          "alvo_tipo": "token",
+          "alvo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:2"
+        },
+        {
+          "tipo": "estrutura_associada",
+          "alvo_tipo": "ocorrencia",
+          "alvo_id": "71445a83-d759-44e0-90c8-31b6d4949b77:ocorrencia:1"
+        },
+        {
+          "tipo": "predicado_associado",
+          "alvo_tipo": "ocorrencia",
+          "alvo_id": "71445a83-d759-44e0-90c8-31b6d4949b77:ocorrencia:1"
+        }
+      ],
+      "explicacao": "'hoje' é referência temporal relativa com POS=ADV e dependência advmod; seu valor relativo é preservado sem usar a data técnica de processamento.",
+      "ambiguidades": [],
+      "alternativas": [],
+      "necessidade_contexto": [
+        "Determinar referência temporal apropriada ao enunciado para eventual resolução contextual; nenhuma data absoluta foi calculada."
+      ],
+      "id": "71445a83-d759-44e0-90c8-31b6d4949b77:ocorrencia:3",
+      "ordem": 3,
+      "evidencias": [
+        {
+          "token_ids": [
+            "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:2",
+            "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:3"
+          ],
+          "texto": "chegou hoje",
+          "trabalho": {
+            "inicio": 9,
+            "fim": 20
+          },
+          "original": {
+            "inicio": 9,
+            "fim": 20
+          },
+          "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:0",
+          "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0"
+        }
+      ],
+      "alcance": {
+        "token_ids": [
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:0",
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:1",
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:2",
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:3",
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:4"
+        ],
+        "trechos": [
+          {
+            "token_ids": [
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:0",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:1",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:2",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:3",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:4"
+            ],
+            "texto": "João não chegou hoje.",
+            "trabalho": {
+              "inicio": 0,
+              "fim": 21
+            },
+            "original": {
+              "inicio": 0,
+              "fim": 21
+            },
+            "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:0",
+            "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0"
+          }
+        ]
+      },
+      "anotacoes_utilizadas": [
+        {
+          "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:2",
+          "lema": "chegar",
+          "pos": "VERB",
+          "morfologia": {
+            "Mood": "Ind",
+            "Number": "Sing",
+            "Person": "3",
+            "Tense": "Past",
+            "VerbForm": "Fin"
+          },
+          "dependencia": "ROOT",
+          "cabeca_token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:2"
+        },
+        {
+          "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:3",
+          "lema": "hoje",
+          "pos": "ADV",
+          "morfologia": {},
+          "dependencia": "advmod",
+          "cabeca_token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:2"
+        }
+      ]
+    },
+    {
+      "familia": "modalidade",
+      "categoria": "possibilidade_indeterminada",
+      "regra": {
+        "id": "modalidade_verbal",
+        "versao": "1.1.0"
+      },
+      "marcador_token_ids": [
+        "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:6"
+      ],
+      "nucleo_token_ids": [
+        "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:6"
+      ],
+      "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:1",
+      "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+      "vinculos": [
+        {
+          "tipo": "conteudo_modal",
+          "alvo_tipo": "token",
+          "alvo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:7"
+        },
+        {
+          "tipo": "estrutura_associada",
+          "alvo_tipo": "ocorrencia",
+          "alvo_id": "71445a83-d759-44e0-90c8-31b6d4949b77:ocorrencia:5"
+        },
+        {
+          "tipo": "conteudo_modal",
+          "alvo_tipo": "ocorrencia",
+          "alvo_id": "71445a83-d759-44e0-90c8-31b6d4949b77:ocorrencia:7"
+        }
+      ],
+      "explicacao": "O marcador 'pode' tem lema=poder, POS=VERB e ligação sintática com o conteúdo anotado; o catálogo propõe possibilidade_indeterminada.",
+      "ambiguidades": [
+        "A sintaxe de poder não distingue, por si, possibilidade, permissão e capacidade."
+      ],
+      "alternativas": [
+        "possibilidade",
+        "permissao",
+        "capacidade"
+      ],
+      "necessidade_contexto": [
+        "Distinguir a leitura de poder com contexto na etapa 08."
+      ],
+      "id": "71445a83-d759-44e0-90c8-31b6d4949b77:ocorrencia:4",
+      "ordem": 4,
+      "evidencias": [
+        {
+          "token_ids": [
+            "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:6"
+          ],
+          "texto": "pode",
+          "trabalho": {
+            "inicio": 28,
+            "fim": 32
+          },
+          "original": {
+            "inicio": 28,
+            "fim": 32
+          },
+          "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:1",
+          "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0"
+        }
+      ],
+      "alcance": {
+        "token_ids": [
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:7",
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:8",
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:9"
+        ],
+        "trechos": [
+          {
+            "token_ids": [
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:7",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:8",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:9"
+            ],
+            "texto": "sair amanhã.",
+            "trabalho": {
+              "inicio": 33,
+              "fim": 45
+            },
+            "original": {
+              "inicio": 33,
+              "fim": 45
+            },
+            "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:1",
+            "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0"
+          }
+        ]
+      },
+      "anotacoes_utilizadas": [
+        {
+          "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:6",
+          "lema": "poder",
+          "pos": "VERB",
+          "morfologia": {
+            "Mood": "Ind",
+            "Number": "Sing",
+            "Person": "3",
+            "Tense": "Pres",
+            "VerbForm": "Fin"
+          },
+          "dependencia": "ROOT",
+          "cabeca_token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:6"
+        }
+      ]
+    },
+    {
+      "familia": "oracoes",
+      "categoria": "oracao",
+      "regra": {
+        "id": "oracao_predicado",
+        "versao": "1.1.0"
+      },
+      "marcador_token_ids": [
+        "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:6"
+      ],
+      "nucleo_token_ids": [
+        "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:6"
+      ],
+      "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:1",
+      "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+      "vinculos": [],
+      "explicacao": "'pode' é núcleo verbal na anotação recebida (POS=VERB, dependência=ROOT).",
+      "ambiguidades": [],
+      "alternativas": [],
+      "necessidade_contexto": [],
+      "id": "71445a83-d759-44e0-90c8-31b6d4949b77:ocorrencia:5",
+      "ordem": 5,
+      "evidencias": [
+        {
+          "token_ids": [
+            "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:6"
+          ],
+          "texto": "pode",
+          "trabalho": {
+            "inicio": 28,
+            "fim": 32
+          },
+          "original": {
+            "inicio": 28,
+            "fim": 32
+          },
+          "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:1",
+          "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0"
+        }
+      ],
+      "alcance": {
+        "token_ids": [
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:5",
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:6"
+        ],
+        "trechos": [
+          {
+            "token_ids": [
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:5",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:6"
+            ],
+            "texto": "Maria pode",
+            "trabalho": {
+              "inicio": 22,
+              "fim": 32
+            },
+            "original": {
+              "inicio": 22,
+              "fim": 32
+            },
+            "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:1",
+            "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0"
+          }
+        ]
+      },
+      "anotacoes_utilizadas": [
+        {
+          "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:6",
+          "lema": "poder",
+          "pos": "VERB",
+          "morfologia": {
+            "Mood": "Ind",
+            "Number": "Sing",
+            "Person": "3",
+            "Tense": "Pres",
+            "VerbForm": "Fin"
+          },
+          "dependencia": "ROOT",
+          "cabeca_token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:6"
+        }
+      ]
+    },
+    {
+      "familia": "tempo",
+      "categoria": "flexao_verbal",
+      "regra": {
+        "id": "tempo_flexao",
+        "versao": "1.1.0"
+      },
+      "marcador_token_ids": [
+        "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:6"
+      ],
+      "nucleo_token_ids": [
+        "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:6"
+      ],
+      "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:1",
+      "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+      "vinculos": [
+        {
+          "tipo": "predicado_associado",
+          "alvo_tipo": "token",
+          "alvo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:6"
+        },
+        {
+          "tipo": "estrutura_associada",
+          "alvo_tipo": "ocorrencia",
+          "alvo_id": "71445a83-d759-44e0-90c8-31b6d4949b77:ocorrencia:5"
+        },
+        {
+          "tipo": "predicado_associado",
+          "alvo_tipo": "ocorrencia",
+          "alvo_id": "71445a83-d759-44e0-90c8-31b6d4949b77:ocorrencia:5"
+        }
+      ],
+      "explicacao": "A anotação morfológica de 'pode' registra Tense=Pres, Mood=Ind, VerbForm=Fin. Os valores recebidos são evidências linguísticas preservadas, sem correção do modelo ou conversão em data.",
+      "ambiguidades": [],
+      "alternativas": [],
+      "necessidade_contexto": [],
+      "id": "71445a83-d759-44e0-90c8-31b6d4949b77:ocorrencia:6",
+      "ordem": 6,
+      "evidencias": [
+        {
+          "token_ids": [
+            "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:6"
+          ],
+          "texto": "pode",
+          "trabalho": {
+            "inicio": 28,
+            "fim": 32
+          },
+          "original": {
+            "inicio": 28,
+            "fim": 32
+          },
+          "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:1",
+          "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0"
+        }
+      ],
+      "alcance": {
+        "token_ids": [
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:5",
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:6"
+        ],
+        "trechos": [
+          {
+            "token_ids": [
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:5",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:6"
+            ],
+            "texto": "Maria pode",
+            "trabalho": {
+              "inicio": 22,
+              "fim": 32
+            },
+            "original": {
+              "inicio": 22,
+              "fim": 32
+            },
+            "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:1",
+            "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0"
+          }
+        ]
+      },
+      "anotacoes_utilizadas": [
+        {
+          "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:6",
+          "lema": "poder",
+          "pos": "VERB",
+          "morfologia": {
+            "Mood": "Ind",
+            "Number": "Sing",
+            "Person": "3",
+            "Tense": "Pres",
+            "VerbForm": "Fin"
+          },
+          "dependencia": "ROOT",
+          "cabeca_token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:6"
+        }
+      ]
+    },
+    {
+      "familia": "oracoes",
+      "categoria": "oracao",
+      "regra": {
+        "id": "oracao_predicado",
+        "versao": "1.1.0"
+      },
+      "marcador_token_ids": [
+        "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:7"
+      ],
+      "nucleo_token_ids": [
+        "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:7"
+      ],
+      "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:1",
+      "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+      "vinculos": [
+        {
+          "tipo": "subordinacao",
+          "alvo_tipo": "token",
+          "alvo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:6"
+        },
+        {
+          "tipo": "subordinacao",
+          "alvo_tipo": "ocorrencia",
+          "alvo_id": "71445a83-d759-44e0-90c8-31b6d4949b77:ocorrencia:5"
+        }
+      ],
+      "explicacao": "'sair' é núcleo verbal na anotação recebida (POS=VERB, dependência=xcomp). A dependência xcomp liga este núcleo a outro agrupamento; não é fundido automaticamente.",
+      "ambiguidades": [],
+      "alternativas": [],
+      "necessidade_contexto": [],
+      "id": "71445a83-d759-44e0-90c8-31b6d4949b77:ocorrencia:7",
+      "ordem": 7,
+      "evidencias": [
+        {
+          "token_ids": [
+            "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:7"
+          ],
+          "texto": "sair",
+          "trabalho": {
+            "inicio": 33,
+            "fim": 37
+          },
+          "original": {
+            "inicio": 33,
+            "fim": 37
+          },
+          "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:1",
+          "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0"
+        }
+      ],
+      "alcance": {
+        "token_ids": [
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:7",
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:8",
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:9"
+        ],
+        "trechos": [
+          {
+            "token_ids": [
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:7",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:8",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:9"
+            ],
+            "texto": "sair amanhã.",
+            "trabalho": {
+              "inicio": 33,
+              "fim": 45
+            },
+            "original": {
+              "inicio": 33,
+              "fim": 45
+            },
+            "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:1",
+            "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0"
+          }
+        ]
+      },
+      "anotacoes_utilizadas": [
+        {
+          "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:7",
+          "lema": "sair",
+          "pos": "VERB",
+          "morfologia": {
+            "VerbForm": "Inf"
+          },
+          "dependencia": "xcomp",
+          "cabeca_token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:6"
+        }
+      ]
+    },
+    {
+      "familia": "tempo",
+      "categoria": "flexao_verbal",
+      "regra": {
+        "id": "tempo_flexao",
+        "versao": "1.1.0"
+      },
+      "marcador_token_ids": [
+        "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:7"
+      ],
+      "nucleo_token_ids": [
+        "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:7"
+      ],
+      "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:1",
+      "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+      "vinculos": [
+        {
+          "tipo": "predicado_associado",
+          "alvo_tipo": "token",
+          "alvo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:7"
+        },
+        {
+          "tipo": "estrutura_associada",
+          "alvo_tipo": "ocorrencia",
+          "alvo_id": "71445a83-d759-44e0-90c8-31b6d4949b77:ocorrencia:7"
+        },
+        {
+          "tipo": "predicado_associado",
+          "alvo_tipo": "ocorrencia",
+          "alvo_id": "71445a83-d759-44e0-90c8-31b6d4949b77:ocorrencia:7"
+        }
+      ],
+      "explicacao": "A anotação morfológica de 'sair' registra VerbForm=Inf. Os valores recebidos são evidências linguísticas preservadas, sem correção do modelo ou conversão em data.",
+      "ambiguidades": [],
+      "alternativas": [],
+      "necessidade_contexto": [],
+      "id": "71445a83-d759-44e0-90c8-31b6d4949b77:ocorrencia:8",
+      "ordem": 8,
+      "evidencias": [
+        {
+          "token_ids": [
+            "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:7"
+          ],
+          "texto": "sair",
+          "trabalho": {
+            "inicio": 33,
+            "fim": 37
+          },
+          "original": {
+            "inicio": 33,
+            "fim": 37
+          },
+          "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:1",
+          "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0"
+        }
+      ],
+      "alcance": {
+        "token_ids": [
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:7",
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:8",
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:9"
+        ],
+        "trechos": [
+          {
+            "token_ids": [
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:7",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:8",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:9"
+            ],
+            "texto": "sair amanhã.",
+            "trabalho": {
+              "inicio": 33,
+              "fim": 45
+            },
+            "original": {
+              "inicio": 33,
+              "fim": 45
+            },
+            "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:1",
+            "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0"
+          }
+        ]
+      },
+      "anotacoes_utilizadas": [
+        {
+          "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:7",
+          "lema": "sair",
+          "pos": "VERB",
+          "morfologia": {
+            "VerbForm": "Inf"
+          },
+          "dependencia": "xcomp",
+          "cabeca_token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:6"
+        }
+      ]
+    },
+    {
+      "familia": "tempo",
+      "categoria": "referencia_relativa",
+      "regra": {
+        "id": "tempo_relativo",
+        "versao": "1.1.0"
+      },
+      "marcador_token_ids": [
+        "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:8"
+      ],
+      "nucleo_token_ids": [
+        "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:7"
+      ],
+      "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:1",
+      "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0",
+      "vinculos": [
+        {
+          "tipo": "predicado_associado",
+          "alvo_tipo": "token",
+          "alvo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:7"
+        },
+        {
+          "tipo": "estrutura_associada",
+          "alvo_tipo": "ocorrencia",
+          "alvo_id": "71445a83-d759-44e0-90c8-31b6d4949b77:ocorrencia:7"
+        },
+        {
+          "tipo": "predicado_associado",
+          "alvo_tipo": "ocorrencia",
+          "alvo_id": "71445a83-d759-44e0-90c8-31b6d4949b77:ocorrencia:7"
+        }
+      ],
+      "explicacao": "'amanhã' é referência temporal relativa com POS=ADV e dependência advmod; seu valor relativo é preservado sem usar a data técnica de processamento.",
+      "ambiguidades": [],
+      "alternativas": [],
+      "necessidade_contexto": [
+        "Determinar referência temporal apropriada ao enunciado para eventual resolução contextual; nenhuma data absoluta foi calculada."
+      ],
+      "id": "71445a83-d759-44e0-90c8-31b6d4949b77:ocorrencia:9",
+      "ordem": 9,
+      "evidencias": [
+        {
+          "token_ids": [
+            "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:7",
+            "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:8"
+          ],
+          "texto": "sair amanhã",
+          "trabalho": {
+            "inicio": 33,
+            "fim": 44
+          },
+          "original": {
+            "inicio": 33,
+            "fim": 44
+          },
+          "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:1",
+          "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0"
+        }
+      ],
+      "alcance": {
+        "token_ids": [
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:7",
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:8",
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:9"
+        ],
+        "trechos": [
+          {
+            "token_ids": [
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:7",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:8",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:9"
+            ],
+            "texto": "sair amanhã.",
+            "trabalho": {
+              "inicio": 33,
+              "fim": 45
+            },
+            "original": {
+              "inicio": 33,
+              "fim": 45
+            },
+            "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:1",
+            "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:0"
+          }
+        ]
+      },
+      "anotacoes_utilizadas": [
+        {
+          "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:7",
+          "lema": "sair",
+          "pos": "VERB",
+          "morfologia": {
+            "VerbForm": "Inf"
+          },
+          "dependencia": "xcomp",
+          "cabeca_token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:6"
+        },
+        {
+          "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:8",
+          "lema": "amanhã",
+          "pos": "ADV",
+          "morfologia": {},
+          "dependencia": "advmod",
+          "cabeca_token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:7"
+        }
+      ]
+    },
+    {
+      "familia": "oracoes",
+      "categoria": "oracao",
+      "regra": {
+        "id": "oracao_predicado",
+        "versao": "1.1.0"
+      },
+      "marcador_token_ids": [
+        "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:11"
+      ],
+      "nucleo_token_ids": [
+        "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:11"
+      ],
+      "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:2",
+      "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:1",
+      "vinculos": [],
+      "explicacao": "'chegou' é núcleo verbal na anotação recebida (POS=VERB, dependência=ROOT).",
+      "ambiguidades": [],
+      "alternativas": [],
+      "necessidade_contexto": [],
+      "id": "71445a83-d759-44e0-90c8-31b6d4949b77:ocorrencia:10",
+      "ordem": 10,
+      "evidencias": [
+        {
+          "token_ids": [
+            "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:11"
+          ],
+          "texto": "chegou",
+          "trabalho": {
+            "inicio": 52,
+            "fim": 58
+          },
+          "original": {
+            "inicio": 54,
+            "fim": 60
+          },
+          "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:2",
+          "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:1"
+        }
+      ],
+      "alcance": {
+        "token_ids": [
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:10",
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:11",
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:12"
+        ],
+        "trechos": [
+          {
+            "token_ids": [
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:10",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:11",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:12"
+            ],
+            "texto": "João chegou.",
+            "trabalho": {
+              "inicio": 47,
+              "fim": 59
+            },
+            "original": {
+              "inicio": 49,
+              "fim": 61
+            },
+            "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:2",
+            "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:1"
+          }
+        ]
+      },
+      "anotacoes_utilizadas": [
+        {
+          "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:11",
+          "lema": "chegar",
+          "pos": "VERB",
+          "morfologia": {
+            "Mood": "Ind",
+            "Number": "Sing",
+            "Person": "3",
+            "Tense": "Past",
+            "VerbForm": "Fin"
+          },
+          "dependencia": "ROOT",
+          "cabeca_token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:11"
+        }
+      ]
+    },
+    {
+      "familia": "tempo",
+      "categoria": "flexao_verbal",
+      "regra": {
+        "id": "tempo_flexao",
+        "versao": "1.1.0"
+      },
+      "marcador_token_ids": [
+        "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:11"
+      ],
+      "nucleo_token_ids": [
+        "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:11"
+      ],
+      "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:2",
+      "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:1",
+      "vinculos": [
+        {
+          "tipo": "predicado_associado",
+          "alvo_tipo": "token",
+          "alvo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:11"
+        },
+        {
+          "tipo": "estrutura_associada",
+          "alvo_tipo": "ocorrencia",
+          "alvo_id": "71445a83-d759-44e0-90c8-31b6d4949b77:ocorrencia:10"
+        },
+        {
+          "tipo": "predicado_associado",
+          "alvo_tipo": "ocorrencia",
+          "alvo_id": "71445a83-d759-44e0-90c8-31b6d4949b77:ocorrencia:10"
+        }
+      ],
+      "explicacao": "A anotação morfológica de 'chegou' registra Tense=Past, Mood=Ind, VerbForm=Fin. Os valores recebidos são evidências linguísticas preservadas, sem correção do modelo ou conversão em data.",
+      "ambiguidades": [],
+      "alternativas": [],
+      "necessidade_contexto": [],
+      "id": "71445a83-d759-44e0-90c8-31b6d4949b77:ocorrencia:11",
+      "ordem": 11,
+      "evidencias": [
+        {
+          "token_ids": [
+            "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:11"
+          ],
+          "texto": "chegou",
+          "trabalho": {
+            "inicio": 52,
+            "fim": 58
+          },
+          "original": {
+            "inicio": 54,
+            "fim": 60
+          },
+          "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:2",
+          "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:1"
+        }
+      ],
+      "alcance": {
+        "token_ids": [
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:10",
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:11",
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:12"
+        ],
+        "trechos": [
+          {
+            "token_ids": [
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:10",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:11",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:12"
+            ],
+            "texto": "João chegou.",
+            "trabalho": {
+              "inicio": 47,
+              "fim": 59
+            },
+            "original": {
+              "inicio": 49,
+              "fim": 61
+            },
+            "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:2",
+            "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:1"
+          }
+        ]
+      },
+      "anotacoes_utilizadas": [
+        {
+          "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:11",
+          "lema": "chegar",
+          "pos": "VERB",
+          "morfologia": {
+            "Mood": "Ind",
+            "Number": "Sing",
+            "Person": "3",
+            "Tense": "Past",
+            "VerbForm": "Fin"
+          },
+          "dependencia": "ROOT",
+          "cabeca_token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:11"
+        }
+      ]
+    },
+    {
+      "familia": "oracoes",
+      "categoria": "oracao",
+      "regra": {
+        "id": "oracao_predicado",
+        "versao": "1.1.0"
+      },
+      "marcador_token_ids": [
+        "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:14"
+      ],
+      "nucleo_token_ids": [
+        "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:14"
+      ],
+      "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:3",
+      "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:1",
+      "vinculos": [],
+      "explicacao": "'saiu' é núcleo verbal na anotação recebida (POS=VERB, dependência=ROOT).",
+      "ambiguidades": [],
+      "alternativas": [],
+      "necessidade_contexto": [],
+      "id": "71445a83-d759-44e0-90c8-31b6d4949b77:ocorrencia:12",
+      "ordem": 12,
+      "evidencias": [
+        {
+          "token_ids": [
+            "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:14"
+          ],
+          "texto": "saiu",
+          "trabalho": {
+            "inicio": 66,
+            "fim": 70
+          },
+          "original": {
+            "inicio": 68,
+            "fim": 72
+          },
+          "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:3",
+          "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:1"
+        }
+      ],
+      "alcance": {
+        "token_ids": [
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:13",
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:14",
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:15"
+        ],
+        "trechos": [
+          {
+            "token_ids": [
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:13",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:14",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:15"
+            ],
+            "texto": "Maria saiu.",
+            "trabalho": {
+              "inicio": 60,
+              "fim": 71
+            },
+            "original": {
+              "inicio": 62,
+              "fim": 73
+            },
+            "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:3",
+            "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:1"
+          }
+        ]
+      },
+      "anotacoes_utilizadas": [
+        {
+          "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:14",
+          "lema": "sair",
+          "pos": "VERB",
+          "morfologia": {
+            "Mood": "Ind",
+            "Number": "Sing",
+            "Person": "3",
+            "Tense": "Past",
+            "VerbForm": "Fin"
+          },
+          "dependencia": "ROOT",
+          "cabeca_token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:14"
+        }
+      ]
+    },
+    {
+      "familia": "tempo",
+      "categoria": "flexao_verbal",
+      "regra": {
+        "id": "tempo_flexao",
+        "versao": "1.1.0"
+      },
+      "marcador_token_ids": [
+        "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:14"
+      ],
+      "nucleo_token_ids": [
+        "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:14"
+      ],
+      "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:3",
+      "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:1",
+      "vinculos": [
+        {
+          "tipo": "predicado_associado",
+          "alvo_tipo": "token",
+          "alvo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:14"
+        },
+        {
+          "tipo": "estrutura_associada",
+          "alvo_tipo": "ocorrencia",
+          "alvo_id": "71445a83-d759-44e0-90c8-31b6d4949b77:ocorrencia:12"
+        },
+        {
+          "tipo": "predicado_associado",
+          "alvo_tipo": "ocorrencia",
+          "alvo_id": "71445a83-d759-44e0-90c8-31b6d4949b77:ocorrencia:12"
+        }
+      ],
+      "explicacao": "A anotação morfológica de 'saiu' registra Tense=Past, Mood=Ind, VerbForm=Fin. Os valores recebidos são evidências linguísticas preservadas, sem correção do modelo ou conversão em data.",
+      "ambiguidades": [],
+      "alternativas": [],
+      "necessidade_contexto": [],
+      "id": "71445a83-d759-44e0-90c8-31b6d4949b77:ocorrencia:13",
+      "ordem": 13,
+      "evidencias": [
+        {
+          "token_ids": [
+            "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:14"
+          ],
+          "texto": "saiu",
+          "trabalho": {
+            "inicio": 66,
+            "fim": 70
+          },
+          "original": {
+            "inicio": 68,
+            "fim": 72
+          },
+          "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:3",
+          "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:1"
+        }
+      ],
+      "alcance": {
+        "token_ids": [
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:13",
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:14",
+          "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:15"
+        ],
+        "trechos": [
+          {
+            "token_ids": [
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:13",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:14",
+              "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:15"
+            ],
+            "texto": "Maria saiu.",
+            "trabalho": {
+              "inicio": 60,
+              "fim": 71
+            },
+            "original": {
+              "inicio": 62,
+              "fim": 73
+            },
+            "periodo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:periodo:3",
+            "paragrafo_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:paragrafo:1"
+          }
+        ]
+      },
+      "anotacoes_utilizadas": [
+        {
+          "token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:14",
+          "lema": "sair",
+          "pos": "VERB",
+          "morfologia": {
+            "Mood": "Ind",
+            "Number": "Sing",
+            "Person": "3",
+            "Tense": "Past",
+            "VerbForm": "Fin"
+          },
+          "dependencia": "ROOT",
+          "cabeca_token_id": "6f84c7e7-180f-41f6-b1b3-3d09e4e8e013:token:14"
+        }
+      ]
+    }
+  ],
+  "validacao": {
+    "estado": "pronto_para_etapa_08",
+    "pronto_para_etapa_08": true,
+    "verificacoes": [
+      "analise_e_cadeia_de_origem",
+      "catalogo_e_configuracao",
+      "execucao_por_regra",
+      "condicoes_e_evidencias",
+      "tokens_textos_intervalos_e_mapa_original",
+      "alcances_fragmentos_vinculos_ordem_e_duplicatas"
+    ],
+    "cobertura": {
+      "regras_total": 12,
+      "regras_habilitadas": 12,
+      "regras_executadas": 12,
+      "regras_desabilitadas": 0,
+      "regras_com_pendencias": 0,
+      "regras_falharam": 0,
+      "ocorrencias_total": 14,
+      "familias": {
+        "oracoes": {
+          "estado": "executada",
+          "regras_habilitadas": 1,
+          "ocorrencias_total": 5
+        },
+        "negacao": {
+          "estado": "executada",
+          "regras_habilitadas": 5,
+          "ocorrencias_total": 1
+        },
+        "tempo": {
+          "estado": "executada",
+          "regras_habilitadas": 2,
+          "ocorrencias_total": 7
+        },
+        "modalidade": {
+          "estado": "executada",
+          "regras_habilitadas": 2,
+          "ocorrencias_total": 1
+        },
+        "conectores": {
+          "estado": "executada",
+          "regras_habilitadas": 2,
+          "ocorrencias_total": 0
+        }
+      }
+    },
+    "limites": [
+      "Validade estrutural não certifica a correção linguística das hipóteses.",
+      "Ambiguidades e necessidade de contexto são preservadas para a etapa 08."
+    ]
+  }
+}

@@ -18,8 +18,8 @@ Requer Git e Python de 3.10 a 3.14, com `pip`. A dependência spaCy 3.8.16
 aceita Python anterior a 3.15. No terminal:
 
 ```bash
-git clone --branch main https://github.com/spikeSpy13/lingua.git linguaSpike
-cd linguaSpike
+git clone --branch main https://github.com/develisrosipsico-dev/lingua.git lingua
+cd lingua
 ```
 
 O repositório público pode ser clonado sem login; para enviar alterações, autentique
@@ -27,7 +27,7 @@ sua conta no GitHub Desktop ou configure a autenticação Git no terminal.
 
 ## Executar
 
-Execute os comandos na pasta `linguaSpike`. A instalação inicial das dependências
+Execute os comandos na pasta `lingua`. A instalação inicial das dependências
 precisa de internet; depois, o aplicativo funciona localmente, sem serviços externos.
 
 ### macOS ou Linux
@@ -143,8 +143,14 @@ incompleto também fica no histórico: a interface diferencia regras sem
 ocorrências, desabilitadas, impedidas por anotações ausentes e com falha.
 Somente uma execução completa e validada recebe `pronto_para_etapa_08: true`.
 
-Veja [catálogo, decisões, limitações e API HTTP](docs/regras_linguisticas.md)
-e os exemplos com [preservação literal](examples/regras_linguisticas_literal.json)
+As novas execuções usam catálogo e mecanismo `1.1.0`. Delimitadores literais
+de aspas são excluídos dos núcleos, e os alcances respeitam a região de citação
+do marcador, inclusive na modalidade. O formato JSON permanece na versão
+`1.0.0`; execuções históricas continuam sendo validadas com suas regras originais.
+
+Veja [catálogo, decisões, limitações e API HTTP](docs/regras_linguisticas.md),
+o [exemplo atual de regras](examples/regras_integradas.json) e os exemplos
+históricos `1.0.0` com [preservação literal](examples/regras_linguisticas_literal.json)
 e [normalização opcional de CRLF](examples/regras_linguisticas_normalizada.json).
 
 ## Construir unidades de contexto
@@ -164,11 +170,15 @@ Cada execução possui seu próprio ID e fica no histórico. Os textos exatos do
 foco e da janela recebem hashes SHA-256, e a seleção recebe uma identidade
 lógica estável, independente do ID e da data da execução. Somente um registro
 validado recebe `pronto_para_etapa_09: true`. A vetorização da etapa 09 ainda
-não é executada.
+está em desenvolvimento e não é executada nesta versão.
+
+O módulo contextual permanece na versão `1.0.0` e aceita ambas as versões
+das regras. Os quatro exemplos históricos das etapas 07 e 08 permanecem válidos.
 
 Veja [uso direto, identidade, limites e API HTTP](docs/unidades_contexto.md),
-a [especificação consolidada](docs/especificacao_etapa08.md) e os exemplos com
-[preservação literal](examples/unidades_contexto_literal.json) e
+a [especificação consolidada](docs/especificacao_etapa08.md), o
+[exemplo atual de contexto](examples/contexto_integrado.json) e os exemplos
+históricos com [preservação literal](examples/unidades_contexto_literal.json) e
 [normalização opcional de CRLF](examples/unidades_contexto_normalizada.json).
 
 ## Dados locais
@@ -202,6 +212,12 @@ análises, regras ou janelas não altera o histórico contextual.
 
 ## Sincronizar o código
 
+O repositório principal é `develisrosipsico-dev/lingua`. A continuação de
+[spikeSpy13/lingua](https://github.com/spikeSpy13/lingua) foi integrada até a
+etapa 08 a partir do commit `886d40f`. A implementação local anterior da etapa
+07 foi preservada neste ambiente na branch local `preservacao/etapa07-local`,
+commit `110d137`, para comparação durante a integração.
+
 Trabalhamos na branch `main`. Antes de editar, execute `git status` e preserve
 alterações locais: faça um commit do trabalho concluído ou guarde temporariamente
 o trabalho em andamento antes de mudar de branch ou atualizar.
@@ -232,7 +248,7 @@ Depois de atualizar para a etapa 05, instale as dependências e o modelo portugu
 As etapas 05 e 06 compartilham esse modelo; a etapa 06 não exige um novo download
 quando as dependências já estão instaladas. A etapa 07 não acrescenta dependências.
 A etapa 08 também não acrescenta dependências nem exige outro modelo.
-Na raiz `linguaSpike`, no macOS ou Linux:
+Na raiz `lingua`, no macOS ou Linux:
 
 ```bash
 .venv/bin/python -m pip install -r requirements.txt
@@ -248,7 +264,7 @@ Repita a instalação quando `requirements.txt` mudar.
 
 ## Verificar
 
-Na raiz `linguaSpike`, execute os testes com o Python do ambiente virtual.
+Na raiz `lingua`, execute os testes com o Python do ambiente virtual.
 No macOS ou Linux:
 
 ```bash
