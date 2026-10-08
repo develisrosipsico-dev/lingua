@@ -8,7 +8,9 @@ vocabulário do documento, relações sintáticas e entidades nomeadas. Regras
 versionadas acrescentam ocorrências de orações, negação, tempo, modalidade
 e conectores, com evidências e propostas de alcance. Cada período recebe
 uma unidade de contexto, com o foco, os vizinhos selecionados e as referências
-às anotações existentes.
+às anotações existentes. A etapa 09 permite gerar embeddings locais do
+período, da janela contextual e do documento, com modelo e perfil
+configuráveis, sem substituir os resultados anteriores.
 Os registros JSON contêm versões, hashes SHA-256,
 metadados e posições que apontam até o original.
 
@@ -169,8 +171,8 @@ semânticas novas nem declara ambiguidades resolvidas por incluir mais texto.
 Cada execução possui seu próprio ID e fica no histórico. Os textos exatos do
 foco e da janela recebem hashes SHA-256, e a seleção recebe uma identidade
 lógica estável, independente do ID e da data da execução. Somente um registro
-validado recebe `pronto_para_etapa_09: true`. A vetorização da etapa 09 ainda
-está em desenvolvimento e não é executada nesta versão.
+validado recebe `pronto_para_etapa_09: true`, condição verificada novamente
+antes da vetorização.
 
 O módulo contextual permanece na versão `1.0.0` e aceita ambas as versões
 das regras. Os quatro exemplos históricos das etapas 07 e 08 permanecem válidos.
@@ -180,6 +182,47 @@ a [especificação consolidada](docs/especificacao_etapa08.md), o
 [exemplo atual de contexto](examples/contexto_integrado.json) e os exemplos
 históricos com [preservação literal](examples/unidades_contexto_literal.json) e
 [normalização opcional de CRLF](examples/unidades_contexto_normalizada.json).
+
+## Vetorizar períodos, contexto e documento
+
+Escolha uma execução contextual pronta e solicite a vetorização no painel
+da etapa 09. O perfil inicial usa `intfloat/multilingual-e5-large` para
+comparação entre textos; CPU é o dispositivo inicial. Modelo, perfil,
+dispositivo e políticas são configuráveis. GPUs são opcionais, e os
+experimentos de modelos diferentes conservam seus próprios resultados.
+
+A inferência usa um trabalho acompanhado por progresso e diagnóstico.
+Falhas podem ser retomadas; um resultado parcial não é disponibilizado como
+pronto. O histórico e os downloads recuperam a origem contextual exata,
+os textos preservados, a configuração, os vetores e seus hashes.
+
+As dependências de embeddings e os pesos são opcionais. Com o aplicativo
+encerrado, instale e baixe explicitamente o modelo antes do primeiro uso:
+
+```bash
+.venv/bin/python -m pip install -r requirements-vetorizacao.txt
+.venv/bin/python modelo_embeddings.py --baixar
+.venv/bin/python app.py
+```
+
+No Windows, use `.\.venv\Scripts\python.exe`. Abrir a interface não baixa
+pesos automaticamente; as etapas 01–08 continuam usando suas dependências
+existentes. Depois de instalar os recursos, a inferência funciona localmente.
+
+A entrada é enviada integralmente quando cabe no limite efetivo do modelo.
+Quando necessário, fragmentos literais preservam cobertura e intervalos;
+a representação agregada registra componentes e fórmula. Perfis diferentes
+não são considerados automaticamente comparáveis. O perfil histórico do
+`embed.py` precisa ser solicitado explicitamente e não restringe os demais
+modelos. Veja [arquitetura, perfis, configuração, instalação e API HTTP](docs/vetorizacao.md).
+
+O comando `vetorizar.py` também gera uma execução a partir de um JSON da
+etapa 08, sempre em arquivo novo. `avaliacao_vetorizacao.py` calcula métricas
+de recuperação sobre relevâncias fornecidas e caracteriza armazenamento;
+`compatibilidade_embeddings.py` registra comparações amostrais de mecanismos.
+Os [exemplos de vetorização](examples/vetorizacao.json) e
+[fragmentação](examples/vetorizacao_fragmentada.json) conservam sua origem e
+as configurações efetivas. As instruções completas estão no documento da etapa.
 
 ## Dados locais
 
@@ -209,6 +252,10 @@ A tabela é criada automaticamente sem apagar registros anteriores.
 As execuções da etapa 08 ficam na tabela `context_runs`, vinculadas à execução
 exata de regras. Cada linha conserva sua política e origem; gerar novas
 análises, regras ou janelas não altera o histórico contextual.
+Os trabalhos e resultados da etapa 09 também ficam no SQLite local. Os
+vetores são armazenados em BLOBs com dimensão, formato numérico e hashes;
+as representações conservam vínculos com a origem contextual. A atualização
+cria as tabelas de forma aditiva, sem substituir textos ou vetores anteriores.
 
 ## Sincronizar o código
 
@@ -248,6 +295,8 @@ Depois de atualizar para a etapa 05, instale as dependências e o modelo portugu
 As etapas 05 e 06 compartilham esse modelo; a etapa 06 não exige um novo download
 quando as dependências já estão instaladas. A etapa 07 não acrescenta dependências.
 A etapa 08 também não acrescenta dependências nem exige outro modelo.
+A etapa 09 usa o conjunto opcional `requirements-vetorizacao.txt` e um
+download explícito dos pesos, conforme as instruções de vetorização acima.
 Na raiz `lingua`, no macOS ou Linux:
 
 ```bash
@@ -294,6 +343,11 @@ A etapa 08 verifica seleções contextuais com referências independentes,
 fronteiras de parágrafos, raios e tipos estritos, recortes e hashes exatos,
 identidade lógica estável, anotações por proprietário, pendências herdadas,
 limites de recursos, adulterações, consultas e histórico com bancos temporários.
+A etapa 09 separa testes de contrato com adaptadores controlados dos testes
+de inferência real. Verifica formatos e dimensões variáveis, hashes,
+preservação dos textos, fragmentação, agregação, derivação, compatibilidade,
+histórico, retomada e downloads. Testes estruturais não certificam a
+qualidade semântica de um modelo nem equivalência entre mecanismos.
 O relato
 de três parágrafos e dezesseis períodos ainda
 não foi fornecido e suas contagens não foram verificadas.

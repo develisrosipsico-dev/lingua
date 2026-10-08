@@ -311,6 +311,26 @@ button:hover { background: #1e483d; }
 .context-history { margin-top: 24px; }
 .context-history ul { padding-left: 20px; }
 .context-history time { margin-left: 8px; color: var(--muted); font-size: 12px; }
+.vector-panel { margin-bottom: 20px; }
+.vector-panel select, .vector-options input { display: block; width: 100%; margin-top: 6px; padding: 9px 12px; border: 1px solid #c8d3cb; border-radius: 7px; background: #fdfefb; color: var(--ink); font: inherit; }
+.vector-panel select:focus-visible, .vector-options input:focus-visible { outline: 3px solid #a2cbb5; outline-offset: 3px; }
+.vector-settings { margin-bottom: 18px; }
+.vector-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 14px; }
+.vector-options label { min-width: 0; font-size: 13px; }
+.vector-job, .vector-result { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--line); }
+.vector-job h3 { margin: 0 0 8px; font-size: 15px; }
+.vector-status { margin: 0 0 8px; font-weight: 600; font-size: 14px; }
+.vector-progress { display: block; width: 100%; height: 14px; accent-color: var(--accent); }
+.vector-references { margin-top: 16px; font-size: 13px; }
+.vector-references summary, .vector-history summary { cursor: pointer; color: var(--accent); }
+.vector-config { max-height: 320px; overflow: auto; padding: 12px; border-radius: 7px; background: #f3f6f0; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 12px; }
+.vector-table { min-width: 640px; }
+.vector-table-description { margin-top: 18px; }
+.vector-history { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--line); font-size: 14px; }
+.vector-history ul { list-style: none; margin: 12px 0 0; padding: 0; }
+.vector-history li { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 12px; padding: 8px 0; }
+.vector-history time { color: var(--muted); font-size: 12px; }
+.vector-history-origin { display: block; width: 100%; color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
 
 @media (max-width: 600px) {
   .page { padding: 0 18px; }
@@ -326,7 +346,8 @@ button:hover { background: #1e483d; }
   .notice-success { flex-wrap: wrap; gap: 10px; }
   .new-text { margin-left: 40px; }
   button { width: 100%; }
-  .annotation-panel button, .syntax-panel button, .rules-panel button, .context-panel button { white-space: normal; }
+  .annotation-panel button, .syntax-panel button, .rules-panel button, .context-panel button, .vector-panel button { white-space: normal; }
+  .vector-options { grid-template-columns: 1fr; }
   .occurrence-summary { grid-template-columns: 1fr; gap: 3px; }
   .occurrence-summary dd { margin-bottom: 7px; }
 }

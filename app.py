@@ -39,9 +39,32 @@ from unidades_contexto import (
     consultar_unidade_contexto,
     validar_unidades_contexto,
 )
+from perfis_vetorizacao import ErroPerfil, carregar_perfil
+from vetorizacao import ErroVetorizacao, consultar_representacao
+from persistencia_vetores import (
+    ErroPersistenciaVetores,
+    inicializar_vetores,
+    obter_vetorizacao,
+)
+from trabalhos_vetorizacao import (
+    ErroTrabalhoVetorizacao,
+    enfileirar_vetorizacao,
+    iniciar_trabalho,
+    listar_trabalhos,
+    obter_trabalho,
+    retomar_trabalho,
+)
 
 
 BASE = Path(__file__).resolve().parent
+SOURCE_ERRORS = (ErroPreparacao, ErroSegmentacao, ErroAnotacao, ErroAnalise, ErroRegras, ErroContexto)
+VECTOR_ERRORS = (ErroVetorizacao, ErroPersistenciaVetores, ErroTrabalhoVetorizacao, ErroPerfil)
+VECTOR_PROFILES = [
+    {"id": "e5_simetrico", "nome": "Comparação entre textos", "descricao": "Perfil simétrico E5 de referência."},
+    {"id": "e5_consulta", "nome": "Consulta de recuperação", "descricao": "Consulta para um índice compatível."},
+    {"id": "e5_conteudo", "nome": "Conteúdo para recuperação", "descricao": "Conteúdo para um índice compatível."},
+    {"id": "e5_legado", "nome": "Compatibilidade histórica", "descricao": "Preparação histórica explícita, com cobertura declarada."},
+]
 
 
 def connect_database(database):
@@ -330,11 +353,27 @@ def latest_context_run(connection, document, rule_execution_id=None, execution_i
     return contextualized
 
 
+def load_vector_context(connection, document_id, context_execution_id):
+    """Confere a cadeia armazenada completa, sem executar modelos novamente."""
+    # O trabalhador abre sua própria conexão; os leitores anteriores usam nomes.
+    connection.row_factory = sqlite3.Row
+    document = connection.execute("SELECT * FROM submissions WHERE id = ?", (document_id,)).fetchone()
+    if document is None:
+        raise ErroContexto("O documento da vetorização não existe.")
+    contextualized = latest_context_run(connection, document, execution_id=context_execution_id)
+    if contextualized is None:
+        raise ErroContexto("A execução de contexto da vetorização não existe.")
+    return contextualized
+
+
 def create_app(config=None):
     app = Flask(__name__)
     app.config.from_mapping(
         DATABASE=os.environ.get("ANALISE_DB", str(BASE / "instance" / "textos.sqlite3")),
         MAX_CONTENT_LENGTH=2 * 1024 * 1024,
+        VECTORS_AUTO_START=True,
+        VECTORS_MAX_WORKERS=1,
+        VECTORS_ADAPTER_FACTORY=None,
     )
     if config:
         app.config.update(config)
@@ -433,7 +472,23 @@ def create_app(config=None):
         connection.execute(
             "CREATE INDEX IF NOT EXISTS context_runs_rules ON context_runs (submission_id, rule_execution_id, id)"
         )
+        inicializar_vetores(connection)
         connection.commit()
+
+    def start_vector_job(execution_id):
+        if app.config["VECTORS_AUTO_START"]:
+            iniciar_trabalho(
+                app.config["DATABASE"], execution_id,
+                fabrica_adaptador=app.config["VECTORS_ADAPTER_FACTORY"],
+                carregar_contexto=load_vector_context,
+                max_workers=app.config["VECTORS_MAX_WORKERS"],
+            )
+
+    def vector_status_payload(job, record_id):
+        result = dict(job)
+        result["status_url"] = url_for("vector_status", record_id=record_id, execution_id=job["execucao_id"])
+        result["detalhe_url"] = url_for("submission", record_id=record_id, vetorizacao_execucao_id=job["execucao_id"])
+        return result
 
     @app.get("/")
     def index():
@@ -483,11 +538,24 @@ def create_app(config=None):
                 analysis_id = request.args.get("analise_id")
                 execution_id = request.args.get("execucao_id")
                 context_execution_id = request.args.get("contexto_execucao_id")
+                vector_execution_id = request.args.get("vetorizacao_execucao_id")
+                vector_job = None
+                vectorized = None
                 contextualized = None
+                if vector_execution_id is not None:
+                    fields = ("vetorizacao_execucao_id", "contexto_execucao_id", "execucao_id", "preparacao_id", "segmentacao_id", "anotacao_id", "analise_id")
+                    if any(field in request.args and (len(request.args.getlist(field)) != 1 or not request.args[field].strip()) for field in fields):
+                        return {"erro": "Selecione identificadores únicos para consultar a vetorização."}, 400
+                    vector_job = obter_trabalho(connection, vector_execution_id, documento_id=record_id)
+                    if vector_job is None:
+                        abort(404)
+                    if context_execution_id is not None and context_execution_id != vector_job["contexto_execucao_id"]:
+                        return {"erro": "A vetorização pertence a outra execução de contexto."}, 400
+                    context_execution_id = vector_job["contexto_execucao_id"]
                 if execution_id is not None and (len(request.args.getlist("execucao_id")) != 1 or not execution_id.strip()):
                     return {"erro": "Selecione uma única execução de regras."}, 400
                 if context_execution_id is not None:
-                    if len(request.args.getlist("contexto_execucao_id")) != 1 or not context_execution_id.strip():
+                    if "contexto_execucao_id" in request.args and (len(request.args.getlist("contexto_execucao_id")) != 1 or not context_execution_id.strip()):
                         return {"erro": "Selecione uma única execução de contexto."}, 400
                     for field in ("preparacao_id", "segmentacao_id", "anotacao_id", "analise_id"):
                         if field in request.args and (len(request.args.getlist(field)) != 1 or not request.args[field].strip()):
@@ -557,6 +625,14 @@ def create_app(config=None):
                     ruled = latest_rule_run(connection, row, analysis_id=analyzed["analise_id"]) if analyzed else None
                 if context_execution_id is None:
                     contextualized = latest_context_run(connection, row, rule_execution_id=ruled["execucao_id"]) if ruled else None
+                vector_history = listar_trabalhos(connection, record_id)
+                if vector_job is None and contextualized is not None:
+                    matching_jobs = [item for item in vector_history if item["contexto_execucao_id"] == contextualized["execucao_id"]]
+                    vector_job = matching_jobs[0] if matching_jobs else None
+                if vector_job is not None and vector_job["estado"] == "concluida":
+                    vectorized = obter_vetorizacao(connection, record_id, execucao_id=vector_job["execucao_id"])
+                    if vectorized is None or vectorized["contexto"] != contextualized:
+                        raise ErroPersistenciaVetores("A vetorização não corresponde ao contexto armazenado selecionado.")
                 context_history = connection.execute(
                     """SELECT id, execution_id AS contexto_execucao_id, registered_at AS registrado_em
                        FROM context_runs WHERE submission_id = ? AND rule_execution_id = ? ORDER BY id DESC""",
@@ -586,7 +662,7 @@ def create_app(config=None):
                     "SELECT id, preparation_id AS preparacao_id FROM preparations WHERE submission_id = ? ORDER BY id DESC",
                     (record_id,),
                 ).fetchall()
-            except (ErroPreparacao, ErroSegmentacao, ErroAnotacao, ErroAnalise, ErroRegras, ErroContexto) as error:
+            except SOURCE_ERRORS + VECTOR_ERRORS as error:
                 return {"erro": str(error)}, 409
         record = dict(row)
         record["created_at"] = datetime.fromisoformat(record["created_at"]).astimezone(
@@ -600,6 +676,8 @@ def create_app(config=None):
             analyzed=analyzed, analysis_history=[dict(item) for item in analysis_history],
             ruled=ruled, rule_history=[dict(item) for item in rule_history],
             contextualized=contextualized, context_history=[dict(item) for item in context_history],
+            vector_job=vector_job, vectorized=vectorized, vector_history=vector_history,
+            vector_profiles=VECTOR_PROFILES,
         )
 
     @app.post("/envios/<int:record_id>/preparacoes")
@@ -1006,6 +1084,166 @@ def create_app(config=None):
             except (ErroPreparacao, ErroSegmentacao, ErroAnotacao, ErroAnalise, ErroRegras, ErroContexto) as error:
                 return {"erro": str(error)}, 409
         return Response(json.dumps(unit, ensure_ascii=False, allow_nan=False), mimetype="application/json")
+
+    @app.post("/envios/<int:record_id>/vetorizacoes")
+    def vector_submission(record_id):
+        if request.is_json:
+            payload = request.get_json(silent=True)
+            allowed = {"contexto_execucao_id", "perfil_id", "opcoes", "execucao_id", "registrado_em"}
+            if not isinstance(payload, dict) or payload.keys() - allowed:
+                return {"erro": "Envie um objeto JSON com a origem contextual e o perfil de vetorização."}, 400
+            options = dict(payload)
+            if "opcoes" in options and not isinstance(options["opcoes"], dict):
+                return {"erro": "opcoes deve ser um objeto JSON."}, 400
+        else:
+            allowed = {"contexto_execucao_id", "perfil_id", "dispositivo", "lote", "formato_armazenamento"}
+            if (
+                set(request.form) - allowed or "contexto_execucao_id" not in request.form
+                or any(len(request.form.getlist(field)) != 1 for field in request.form)
+            ):
+                return {"erro": "Selecione uma única origem contextual e configuração de vetorização."}, 400
+            options = {field: request.form[field] for field in ("contexto_execucao_id", "perfil_id") if field in request.form}
+            profile_options = {field: request.form[field] for field in ("dispositivo", "formato_armazenamento") if request.form.get(field, "").strip()}
+            if request.form.get("lote", "").strip():
+                value = request.form["lote"]
+                if not value.isascii() or not value.isdecimal():
+                    return {"erro": "lote deve ser um inteiro positivo."}, 400
+                try:
+                    profile_options["lote"] = int(value)
+                except ValueError:
+                    return {"erro": "lote excedeu o tamanho permitido."}, 400
+            if profile_options:
+                options["opcoes"] = profile_options
+        for field in ("contexto_execucao_id", "perfil_id", "execucao_id", "registrado_em"):
+            if field in options and (not isinstance(options[field], str) or not options[field].strip()):
+                return {"erro": f"{field} deve ser uma string não vazia."}, 400
+        context_execution_id = options.pop("contexto_execucao_id", None)
+        try:
+            carregar_perfil(options.get("perfil_id", "e5_simetrico"), opcoes=options.get("opcoes"))
+        except ErroPerfil as error:
+            return {"erro": str(error)}, 400
+        try:
+            with closing(connect_database(app.config["DATABASE"])) as connection:
+                document = connection.execute("SELECT * FROM submissions WHERE id = ?", (record_id,)).fetchone()
+                if document is None:
+                    abort(404)
+                contextualized = latest_context_run(connection, document, execution_id=context_execution_id)
+                if contextualized is None:
+                    return {"erro": "Execução de contexto não encontrada. Conclua a etapa 08 antes de vetorizar."}, 404
+                report = validar_unidades_contexto(contextualized)
+                if report.get("pronto_para_etapa_09") is not True:
+                    return {"erro": "A execução de contexto ainda não está pronta para a etapa 09."}, 409
+                job = enfileirar_vetorizacao(connection, record_id, contextualized, **options)
+                connection.commit()
+        except SOURCE_ERRORS as error:
+            return {"erro": str(error)}, 409
+        except (ErroPerfil, ErroVetorizacao, ErroTrabalhoVetorizacao) as error:
+            return {"erro": str(error)}, 400
+        except (ErroPersistenciaVetores, sqlite3.IntegrityError) as error:
+            return {"erro": "Esse identificador de vetorização já existe ou a origem armazenada está inconsistente."}, 409
+        start_vector_job(job["execucao_id"])
+        if request.is_json:
+            return vector_status_payload(job, record_id), 202
+        return redirect(url_for("submission", record_id=record_id, vetorizacao_execucao_id=job["execucao_id"]), code=303)
+
+    @app.get("/envios/<int:record_id>/vetorizacoes/<path:execution_id>")
+    def vector_status(record_id, execution_id):
+        if request.args:
+            return {"erro": "O status é selecionado pelo identificador na URL."}, 400
+        with closing(connect_database(app.config["DATABASE"])) as connection:
+            if connection.execute("SELECT 1 FROM submissions WHERE id = ?", (record_id,)).fetchone() is None:
+                abort(404)
+            try:
+                job = obter_trabalho(connection, execution_id, documento_id=record_id)
+                if job is None:
+                    abort(404)
+                load_vector_context(connection, record_id, job["contexto_execucao_id"])
+            except SOURCE_ERRORS + VECTOR_ERRORS as error:
+                return {"erro": str(error)}, 409
+        return vector_status_payload(job, record_id)
+
+    @app.post("/envios/<int:record_id>/vetorizacoes/<path:execution_id>/retomar")
+    def resume_vector_submission(record_id, execution_id):
+        if request.is_json:
+            payload = request.get_json(silent=True)
+            if not isinstance(payload, dict) or payload:
+                return {"erro": "A retomada usa a configuração já registrada; envie um objeto JSON vazio."}, 400
+        elif request.form or request.args:
+            return {"erro": "A retomada usa a configuração já registrada."}, 400
+        with closing(connect_database(app.config["DATABASE"])) as connection:
+            if connection.execute("SELECT 1 FROM submissions WHERE id = ?", (record_id,)).fetchone() is None:
+                abort(404)
+            try:
+                job = obter_trabalho(connection, execution_id, documento_id=record_id)
+                if job is None:
+                    abort(404)
+                load_vector_context(connection, record_id, job["contexto_execucao_id"])
+                if job["estado"] not in {"falhou", "interrompida"}:
+                    return {"erro": "Somente trabalhos com falha ou interrompidos podem ser retomados."}, 409
+                job = retomar_trabalho(connection, execution_id, documento_id=record_id)
+                connection.commit()
+            except SOURCE_ERRORS + VECTOR_ERRORS as error:
+                return {"erro": str(error)}, 409
+        start_vector_job(execution_id)
+        if request.is_json:
+            return vector_status_payload(job, record_id), 202
+        return redirect(url_for("submission", record_id=record_id, vetorizacao_execucao_id=execution_id), code=303)
+
+    def selected_vector_record(record_id, *, require_representation=False):
+        allowed = {"vetorizacao_execucao_id", "representacao_id"} if require_representation else {"vetorizacao_execucao_id"}
+        if set(request.args) - allowed or any(len(request.args.getlist(field)) != 1 or not request.args[field].strip() for field in request.args):
+            return None, ({"erro": "Selecione uma única execução de vetorização."}, 400)
+        if require_representation and not allowed <= set(request.args):
+            return None, ({"erro": "Informe vetorizacao_execucao_id e representacao_id."}, 400)
+        execution_id = request.args.get("vetorizacao_execucao_id")
+        with closing(connect_database(app.config["DATABASE"])) as connection:
+            if connection.execute("SELECT 1 FROM submissions WHERE id = ?", (record_id,)).fetchone() is None:
+                abort(404)
+            try:
+                if execution_id is None:
+                    jobs = listar_trabalhos(connection, record_id)
+                    job = jobs[0] if jobs else None
+                else:
+                    job = obter_trabalho(connection, execution_id, documento_id=record_id)
+                if job is None:
+                    return None, ({"erro": "Nenhuma execução de vetorização encontrada."}, 404)
+                contextualized = load_vector_context(connection, record_id, job["contexto_execucao_id"])
+                if job["estado"] != "concluida":
+                    return None, ({"erro": "A vetorização ainda não possui um resultado completo.", "estado": job["estado"]}, 409)
+                vectorized = obter_vetorizacao(connection, record_id, execucao_id=job["execucao_id"])
+                if vectorized is None or vectorized["contexto"] != contextualized:
+                    raise ErroPersistenciaVetores("A vetorização não corresponde ao contexto original armazenado.")
+            except SOURCE_ERRORS + VECTOR_ERRORS as error:
+                return None, ({"erro": str(error)}, 409)
+        return vectorized, None
+
+    @app.get("/envios/<int:record_id>/vetorizacao.json")
+    def vector_json(record_id):
+        vectorized, error = selected_vector_record(record_id)
+        if error:
+            return error
+        return Response(
+            json.dumps(vectorized, ensure_ascii=False, indent=2, allow_nan=False), mimetype="application/json",
+            headers={"Content-Disposition": f'attachment; filename="vetorizacao-{record_id}.json"'},
+        )
+
+    @app.get("/envios/<int:record_id>/representacao-vetorial.json")
+    def vector_representation_json(record_id):
+        vectorized, error = selected_vector_record(record_id, require_representation=True)
+        if error:
+            return error
+        representation_id = request.args["representacao_id"]
+        if not any(item["id"] == representation_id for item in vectorized["representacoes"]):
+            return {"erro": "Representação não encontrada nesta execução."}, 404
+        try:
+            representation = consultar_representacao(vectorized, representacao_id=representation_id)
+        except ErroVetorizacao as error:
+            return {"erro": str(error)}, 409
+        representation.update({field: vectorized[field] for field in ("schema_version", "documento_id", "registrado_em", "contexto", "contexto_sha256", "perfil", "processamento")})
+        return Response(
+            json.dumps(representation, ensure_ascii=False, indent=2, allow_nan=False), mimetype="application/json",
+            headers={"Content-Disposition": f'attachment; filename="representacao-vetorial-{record_id}.json"'},
+        )
 
     @app.get("/envios/<int:record_id>/segmentacoes/<segmentacao_id>/periodos/<periodo_id>/contexto.json")
     @app.get("/envios/<int:record_id>/contexto-periodo.json")

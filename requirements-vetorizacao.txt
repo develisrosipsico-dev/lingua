@@ -1,0 +1,6 @@
+# Dependências opcionais da etapa 09; instalar após requirements.txt.
+# Linux CPU: instalar torch pelo índice CPU oficial antes deste arquivo.
+torch==2.10.0
+transformers==4.57.3
+sentence-transformers==5.2.0
+huggingface-hub==0.36.0

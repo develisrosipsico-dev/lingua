@@ -1,0 +1,854 @@
+{
+  "schema_version": "1.0.0",
+  "tipo": "avaliacao_recuperacao",
+  "consultas": {
+    "execucao_id": "715cdda2-721d-419a-9621-42b5fed10639",
+    "documento_id": 1,
+    "contexto_execucao_id": "6de03fb1-3375-48f6-a5ce-528686018ae5",
+    "contexto_sha256": "dd6fa865aad1f935512f85184ec83ff0c076a30c658bdfbfd63cefdc172f98ef",
+    "configuracao_sha256": "78c96753295113199e3d922b4997bde5ae3a7504fb877b22d173a05a28beea2c",
+    "espaco_vetorial_id": "sha256:5c9be0793589a52c69ea59a926f5b789abbb1f0b2472757d118f870320b8a0c2",
+    "registro_sha256": "5be071d048cf63783e19e1b2fc4591548fdccf8de75f326025185f2a7d9b7fd1"
+  },
+  "conteudos": {
+    "execucao_id": "15e33a4d-27dd-4e3b-a811-4d24af6f6aae",
+    "documento_id": 1,
+    "contexto_execucao_id": "6de03fb1-3375-48f6-a5ce-528686018ae5",
+    "contexto_sha256": "dd6fa865aad1f935512f85184ec83ff0c076a30c658bdfbfd63cefdc172f98ef",
+    "configuracao_sha256": "2dba0322eb50b3e4f23804d12728f5b0d6f87b47ca2adbd8a630d51686d9b6d3",
+    "espaco_vetorial_id": "sha256:4e9c182e90d47e351395243d13155b017a34ad59175ea78c1494e2c305033497",
+    "registro_sha256": "654786751d29d3316615fae38e5f180ae250b722230118d1619db025bd2a380e"
+  },
+  "compatibilidade": {
+    "operacao": "recuperacao",
+    "compativel": true,
+    "contrato": "e5_consulta_conteudo_1.0.0",
+    "motivo": "Configuração e papéis autorizados.",
+    "espaco_a": "sha256:5c9be0793589a52c69ea59a926f5b789abbb1f0b2472757d118f870320b8a0c2",
+    "espaco_b": "sha256:4e9c182e90d47e351395243d13155b017a34ad59175ea78c1494e2c305033497"
+  },
+  "configuracao": {
+    "metrica": "cosseno_com_normas_nas_duas_pontas",
+    "ks": [
+      1,
+      3,
+      4
+    ],
+    "desempate": "ordem_corpus",
+    "media": "macro_por_consulta",
+    "ganho_ndcg": "2**grau-1",
+    "desconto_ndcg": "log2(posicao+1)",
+    "ranking_retido": "ate_maior_k",
+    "corpus_ids": [
+      "15e33a4d-27dd-4e3b-a811-4d24af6f6aae:representacao:0",
+      "15e33a4d-27dd-4e3b-a811-4d24af6f6aae:representacao:2",
+      "15e33a4d-27dd-4e3b-a811-4d24af6f6aae:representacao:4",
+      "15e33a4d-27dd-4e3b-a811-4d24af6f6aae:representacao:6"
+    ],
+    "consulta_ids": [
+      "715cdda2-721d-419a-9621-42b5fed10639:representacao:0",
+      "715cdda2-721d-419a-9621-42b5fed10639:representacao:2",
+      "715cdda2-721d-419a-9621-42b5fed10639:representacao:4",
+      "715cdda2-721d-419a-9621-42b5fed10639:representacao:6"
+    ]
+  },
+  "referencias": {
+    "715cdda2-721d-419a-9621-42b5fed10639:representacao:0": {
+      "15e33a4d-27dd-4e3b-a811-4d24af6f6aae:representacao:0": 1
+    },
+    "715cdda2-721d-419a-9621-42b5fed10639:representacao:2": {
+      "15e33a4d-27dd-4e3b-a811-4d24af6f6aae:representacao:2": 1
+    },
+    "715cdda2-721d-419a-9621-42b5fed10639:representacao:4": {
+      "15e33a4d-27dd-4e3b-a811-4d24af6f6aae:representacao:4": 1
+    },
+    "715cdda2-721d-419a-9621-42b5fed10639:representacao:6": {
+      "15e33a4d-27dd-4e3b-a811-4d24af6f6aae:representacao:6": 1
+    }
+  },
+  "referencias_sha256": "2472038d7df7c43e5b38ab4540cc59e624576c434d14717d717d8b9c093c03de",
+  "quantidades": {
+    "consultas": 4,
+    "conteudos": 4
+  },
+  "medias": {
+    "1": {
+      "recall": 1.0,
+      "mrr": 1.0,
+      "ndcg": 1.0
+    },
+    "3": {
+      "recall": 1.0,
+      "mrr": 1.0,
+      "ndcg": 1.0
+    },
+    "4": {
+      "recall": 1.0,
+      "mrr": 1.0,
+      "ndcg": 1.0
+    }
+  },
+  "resultados": [
+    {
+      "consulta_id": "715cdda2-721d-419a-9621-42b5fed10639:representacao:0",
+      "relevantes": {
+        "15e33a4d-27dd-4e3b-a811-4d24af6f6aae:representacao:0": 1
+      },
+      "ranking": [
+        {
+          "conteudo_id": "15e33a4d-27dd-4e3b-a811-4d24af6f6aae:representacao:0",
+          "posicao": 1,
+          "cosseno": 0.9027948455162493,
+          "relevancia": 1
+        },
+        {
+          "conteudo_id": "15e33a4d-27dd-4e3b-a811-4d24af6f6aae:representacao:4",
+          "posicao": 2,
+          "cosseno": 0.8710246297785393,
+          "relevancia": 0
+        },
+        {
+          "conteudo_id": "15e33a4d-27dd-4e3b-a811-4d24af6f6aae:representacao:6",
+          "posicao": 3,
+          "cosseno": 0.8240607002006451,
+          "relevancia": 0
+        },
+        {
+          "conteudo_id": "15e33a4d-27dd-4e3b-a811-4d24af6f6aae:representacao:2",
+          "posicao": 4,
+          "cosseno": 0.7958323266689681,
+          "relevancia": 0
+        }
+      ],
+      "metricas": {
+        "1": {
+          "recall": 1.0,
+          "mrr": 1.0,
+          "ndcg": 1.0
+        },
+        "3": {
+          "recall": 1.0,
+          "mrr": 1.0,
+          "ndcg": 1.0
+        },
+        "4": {
+          "recall": 1.0,
+          "mrr": 1.0,
+          "ndcg": 1.0
+        }
+      }
+    },
+    {
+      "consulta_id": "715cdda2-721d-419a-9621-42b5fed10639:representacao:2",
+      "relevantes": {
+        "15e33a4d-27dd-4e3b-a811-4d24af6f6aae:representacao:2": 1
+      },
+      "ranking": [
+        {
+          "conteudo_id": "15e33a4d-27dd-4e3b-a811-4d24af6f6aae:representacao:2",
+          "posicao": 1,
+          "cosseno": 0.9269111579578618,
+          "relevancia": 1
+        },
+        {
+          "conteudo_id": "15e33a4d-27dd-4e3b-a811-4d24af6f6aae:representacao:6",
+          "posicao": 2,
+          "cosseno": 0.8863503066526082,
+          "relevancia": 0
+        },
+        {
+          "conteudo_id": "15e33a4d-27dd-4e3b-a811-4d24af6f6aae:representacao:0",
+          "posicao": 3,
+          "cosseno": 0.8079832903692599,
+          "relevancia": 0
+        },
+        {
+          "conteudo_id": "15e33a4d-27dd-4e3b-a811-4d24af6f6aae:representacao:4",
+          "posicao": 4,
+          "cosseno": 0.8078203201066964,
+          "relevancia": 0
+        }
+      ],
+      "metricas": {
+        "1": {
+          "recall": 1.0,
+          "mrr": 1.0,
+          "ndcg": 1.0
+        },
+        "3": {
+          "recall": 1.0,
+          "mrr": 1.0,
+          "ndcg": 1.0
+        },
+        "4": {
+          "recall": 1.0,
+          "mrr": 1.0,
+          "ndcg": 1.0
+        }
+      }
+    },
+    {
+      "consulta_id": "715cdda2-721d-419a-9621-42b5fed10639:representacao:4",
+      "relevantes": {
+        "15e33a4d-27dd-4e3b-a811-4d24af6f6aae:representacao:4": 1
+      },
+      "ranking": [
+        {
+          "conteudo_id": "15e33a4d-27dd-4e3b-a811-4d24af6f6aae:representacao:4",
+          "posicao": 1,
+          "cosseno": 0.9502307061072156,
+          "relevancia": 1
+        },
+        {
+          "conteudo_id": "15e33a4d-27dd-4e3b-a811-4d24af6f6aae:representacao:0",
+          "posicao": 2,
+          "cosseno": 0.867661704492646,
+          "relevancia": 0
+        },
+        {
+          "conteudo_id": "15e33a4d-27dd-4e3b-a811-4d24af6f6aae:representacao:6",
+          "posicao": 3,
+          "cosseno": 0.8554591737152423,
+          "relevancia": 0
+        },
+        {
+          "conteudo_id": "15e33a4d-27dd-4e3b-a811-4d24af6f6aae:representacao:2",
+          "posicao": 4,
+          "cosseno": 0.7960258224312191,
+          "relevancia": 0
+        }
+      ],
+      "metricas": {
+        "1": {
+          "recall": 1.0,
+          "mrr": 1.0,
+          "ndcg": 1.0
+        },
+        "3": {
+          "recall": 1.0,
+          "mrr": 1.0,
+          "ndcg": 1.0
+        },
+        "4": {
+          "recall": 1.0,
+          "mrr": 1.0,
+          "ndcg": 1.0
+        }
+      }
+    },
+    {
+      "consulta_id": "715cdda2-721d-419a-9621-42b5fed10639:representacao:6",
+      "relevantes": {
+        "15e33a4d-27dd-4e3b-a811-4d24af6f6aae:representacao:6": 1
+      },
+      "ranking": [
+        {
+          "conteudo_id": "15e33a4d-27dd-4e3b-a811-4d24af6f6aae:representacao:6",
+          "posicao": 1,
+          "cosseno": 0.9579508448131477,
+          "relevancia": 1
+        },
+        {
+          "conteudo_id": "15e33a4d-27dd-4e3b-a811-4d24af6f6aae:representacao:2",
+          "posicao": 2,
+          "cosseno": 0.8652603295927987,
+          "relevancia": 0
+        },
+        {
+          "conteudo_id": "15e33a4d-27dd-4e3b-a811-4d24af6f6aae:representacao:4",
+          "posicao": 3,
+          "cosseno": 0.842330486020758,
+          "relevancia": 0
+        },
+        {
+          "conteudo_id": "15e33a4d-27dd-4e3b-a811-4d24af6f6aae:representacao:0",
+          "posicao": 4,
+          "cosseno": 0.8073508345241499,
+          "relevancia": 0
+        }
+      ],
+      "metricas": {
+        "1": {
+          "recall": 1.0,
+          "mrr": 1.0,
+          "ndcg": 1.0
+        },
+        "3": {
+          "recall": 1.0,
+          "mrr": 1.0,
+          "ndcg": 1.0
+        },
+        "4": {
+          "recall": 1.0,
+          "mrr": 1.0,
+          "ndcg": 1.0
+        }
+      }
+    }
+  ],
+  "limitacao": "As métricas descrevem somente o corpus e as relevâncias fornecidos; não certificam outros usos.",
+  "configuracao_avaliacao_sha256": "8ad8c5edeb5971d9bf48d3c78c71fd077abd453c9068d6134c8b886f3ddd523d",
+  "desenho_avaliacao": "Sanidade controlada: cada período literal é uma consulta e o mesmo período é o único conteúdo relevante entre quatro períodos. Não é um benchmark de recuperação em produção.",
+  "recursos": [
+    {
+      "schema_version": "1.0.0",
+      "tipo": "caracterizacao_execucao",
+      "origem": {
+        "execucao_id": "715cdda2-721d-419a-9621-42b5fed10639",
+        "documento_id": 1,
+        "contexto_execucao_id": "6de03fb1-3375-48f6-a5ce-528686018ae5",
+        "contexto_sha256": "dd6fa865aad1f935512f85184ec83ff0c076a30c658bdfbfd63cefdc172f98ef",
+        "configuracao_sha256": "78c96753295113199e3d922b4997bde5ae3a7504fb877b22d173a05a28beea2c",
+        "espaco_vetorial_id": "sha256:5c9be0793589a52c69ea59a926f5b789abbb1f0b2472757d118f870320b8a0c2",
+        "registro_sha256": "5be071d048cf63783e19e1b2fc4591548fdccf8de75f326025185f2a7d9b7fd1"
+      },
+      "perfil": {
+        "id": "e5_consulta",
+        "versao": "1.0.0",
+        "finalidade": "consulta",
+        "modelo": {
+          "identificacao": "intfloat/multilingual-e5-large",
+          "revisao": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3"
+        },
+        "tokenizador": {
+          "identificacao": "intfloat/multilingual-e5-large",
+          "revisao": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3"
+        },
+        "backend": "sentence_transformers",
+        "dispositivo": "cpu",
+        "lote": 16,
+        "precisao_inferencia": "float32",
+        "formato_armazenamento": "float32",
+        "limite_tokens": null,
+        "pooling": "mean",
+        "normalizacao": "l2",
+        "prefixo": "query: ",
+        "fragmentacao": "sem_sobreposicao",
+        "agregacao": "media_ponderada_tokens",
+        "texto_documento": "trabalho",
+        "cache_modelos": "/workspace/lingua/instance/modelos",
+        "somente_local": true,
+        "legado": null
+      },
+      "processamento": {
+        "backend": "sentence_transformers",
+        "versao_backend": "5.2.0",
+        "modelo": {
+          "identificacao": "intfloat/multilingual-e5-large",
+          "revisao": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3"
+        },
+        "tokenizador": {
+          "identificacao": "intfloat/multilingual-e5-large",
+          "revisao": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3"
+        },
+        "dimensao": 1024,
+        "limite_tokens": 512,
+        "limite_tokens_selecionado": 512,
+        "max_seq_length_wrapper": 512,
+        "pooling": "mean",
+        "pooling_configuracao": [
+          {
+            "word_embedding_dimension": 1024,
+            "pooling_mode_cls_token": false,
+            "pooling_mode_mean_tokens": true,
+            "pooling_mode_max_tokens": false,
+            "pooling_mode_mean_sqrt_len_tokens": false,
+            "pooling_mode_weightedmean_tokens": false,
+            "pooling_mode_lasttoken": false,
+            "include_prompt": true
+          }
+        ],
+        "dispositivo": "cpu",
+        "precisao_inferencia": "float32",
+        "normalizacao_interna": "nenhuma",
+        "prefixo_automatico": false,
+        "truncamento_automatico": false,
+        "bibliotecas": {
+          "torch": "2.10.0+cpu",
+          "transformers": "4.57.3",
+          "sentence-transformers": "5.2.0",
+          "tokenizers": "0.22.2",
+          "huggingface-hub": "0.36.0"
+        },
+        "artefatos": {
+          "modelo": {
+            "commit": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3",
+            "arquivos": {
+              "1_Pooling/config.json": "56c469dba9e31869bb7dfceb9b3d76ac06549d1ba869509d8eb4e8aeb31d62d1",
+              "config.json": "e42d98d0c211928d788467aa951000391017f647c76ca8ce2ef6dd8d0c9ce5ca",
+              "model.safetensors": "020afdebf2762b29fcaf286629a96c3b3b65af241f6a08226b1cfee60a21def6",
+              "modules.json": "c6e29747481e8b5dd2b58401966aeac910de39092f90cda9a704b1545f902b04",
+              "sentence_bert_config.json": "948201d8329907aae938fa62f9ceeed53f5694dacc2b87b9f3b78b37ee986529",
+              "sentencepiece.bpe.model": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865",
+              "special_tokens_map.json": "06e405a36dfe4b9604f484f6a1e619af1a7f7d09e34a8555eb0b77b66318067f",
+              "tokenizer.json": "62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626",
+              "tokenizer_config.json": "efb5c0d09722e5fe59a462cd2a9976ee216d55b037597d997cd3fe833216da15"
+            }
+          },
+          "tokenizador": {
+            "commit": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3",
+            "arquivos": {
+              "1_Pooling/config.json": "56c469dba9e31869bb7dfceb9b3d76ac06549d1ba869509d8eb4e8aeb31d62d1",
+              "config.json": "e42d98d0c211928d788467aa951000391017f647c76ca8ce2ef6dd8d0c9ce5ca",
+              "modules.json": "c6e29747481e8b5dd2b58401966aeac910de39092f90cda9a704b1545f902b04",
+              "sentence_bert_config.json": "948201d8329907aae938fa62f9ceeed53f5694dacc2b87b9f3b78b37ee986529",
+              "sentencepiece.bpe.model": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865",
+              "special_tokens_map.json": "06e405a36dfe4b9604f484f6a1e619af1a7f7d09e34a8555eb0b77b66318067f",
+              "tokenizer.json": "62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626",
+              "tokenizer_config.json": "efb5c0d09722e5fe59a462cd2a9976ee216d55b037597d997cd3fe833216da15"
+            }
+          }
+        },
+        "limite_modelo_tokens": 512,
+        "adaptador": {
+          "backend": "sentence_transformers",
+          "versao_backend": "5.2.0",
+          "modelo": {
+            "identificacao": "intfloat/multilingual-e5-large",
+            "revisao": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3"
+          },
+          "tokenizador": {
+            "identificacao": "intfloat/multilingual-e5-large",
+            "revisao": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3"
+          },
+          "dimensao": 1024,
+          "limite_tokens": 512,
+          "limite_tokens_selecionado": 512,
+          "max_seq_length_wrapper": 512,
+          "pooling": "mean",
+          "pooling_configuracao": [
+            {
+              "word_embedding_dimension": 1024,
+              "pooling_mode_cls_token": false,
+              "pooling_mode_mean_tokens": true,
+              "pooling_mode_max_tokens": false,
+              "pooling_mode_mean_sqrt_len_tokens": false,
+              "pooling_mode_weightedmean_tokens": false,
+              "pooling_mode_lasttoken": false,
+              "include_prompt": true
+            }
+          ],
+          "dispositivo": "cpu",
+          "precisao_inferencia": "float32",
+          "normalizacao_interna": "nenhuma",
+          "prefixo_automatico": false,
+          "truncamento_automatico": false,
+          "bibliotecas": {
+            "torch": "2.10.0+cpu",
+            "transformers": "4.57.3",
+            "sentence-transformers": "5.2.0",
+            "tokenizers": "0.22.2",
+            "huggingface-hub": "0.36.0"
+          },
+          "artefatos": {
+            "modelo": {
+              "commit": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3",
+              "arquivos": {
+                "1_Pooling/config.json": "56c469dba9e31869bb7dfceb9b3d76ac06549d1ba869509d8eb4e8aeb31d62d1",
+                "config.json": "e42d98d0c211928d788467aa951000391017f647c76ca8ce2ef6dd8d0c9ce5ca",
+                "model.safetensors": "020afdebf2762b29fcaf286629a96c3b3b65af241f6a08226b1cfee60a21def6",
+                "modules.json": "c6e29747481e8b5dd2b58401966aeac910de39092f90cda9a704b1545f902b04",
+                "sentence_bert_config.json": "948201d8329907aae938fa62f9ceeed53f5694dacc2b87b9f3b78b37ee986529",
+                "sentencepiece.bpe.model": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865",
+                "special_tokens_map.json": "06e405a36dfe4b9604f484f6a1e619af1a7f7d09e34a8555eb0b77b66318067f",
+                "tokenizer.json": "62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626",
+                "tokenizer_config.json": "efb5c0d09722e5fe59a462cd2a9976ee216d55b037597d997cd3fe833216da15"
+              }
+            },
+            "tokenizador": {
+              "commit": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3",
+              "arquivos": {
+                "1_Pooling/config.json": "56c469dba9e31869bb7dfceb9b3d76ac06549d1ba869509d8eb4e8aeb31d62d1",
+                "config.json": "e42d98d0c211928d788467aa951000391017f647c76ca8ce2ef6dd8d0c9ce5ca",
+                "modules.json": "c6e29747481e8b5dd2b58401966aeac910de39092f90cda9a704b1545f902b04",
+                "sentence_bert_config.json": "948201d8329907aae938fa62f9ceeed53f5694dacc2b87b9f3b78b37ee986529",
+                "sentencepiece.bpe.model": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865",
+                "special_tokens_map.json": "06e405a36dfe4b9604f484f6a1e619af1a7f7d09e34a8555eb0b77b66318067f",
+                "tokenizer.json": "62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626",
+                "tokenizer_config.json": "efb5c0d09722e5fe59a462cd2a9976ee216d55b037597d997cd3fe833216da15"
+              }
+            }
+          }
+        },
+        "modulo": {
+          "nome": "vetorizacao",
+          "versao": "1.0.0"
+        }
+      },
+      "representacoes": {
+        "total": 9,
+        "com_vetor": 9
+      },
+      "vetores": {
+        "artefatos_unicos": 9,
+        "bytes_total": 36864,
+        "dimensoes": [
+          1024
+        ],
+        "formatos": {
+          "float32": {
+            "artefatos": 9,
+            "bytes": 36864
+          }
+        },
+        "artefatos": [
+          {
+            "id": "sha256:b43d6ac6cf3c05ce7dba6d860dded701702d1b30508be598ef2166641df91869",
+            "dimensao": 1024,
+            "formato": "float32",
+            "bytes": 4096,
+            "sha256_bytes": "0e3d5a1779b073ca8f8443ad8f619e9fcd32211ba32d13668fb5a6b4323c34d5"
+          },
+          {
+            "id": "sha256:a9d83222e0201418105af3f891b8160af068bd07d627ccff4e998cb568104146",
+            "dimensao": 1024,
+            "formato": "float32",
+            "bytes": 4096,
+            "sha256_bytes": "42e93c51d46892a6033d4c063b7468942d2dc91d87dfb8bac402965636846aa6"
+          },
+          {
+            "id": "sha256:ecd46584e302aacd10cdeb13e53ba2a09a1df2748f1fa8b7cca636efccd3ee2a",
+            "dimensao": 1024,
+            "formato": "float32",
+            "bytes": 4096,
+            "sha256_bytes": "155b89f9359097dd7604147659776155bee325a6fe8db1579ac7e1704cc3e36f"
+          },
+          {
+            "id": "sha256:9e6179960a24d4c76010a228c0a86d03847f1bb580745894e46c3afbb85d1af0",
+            "dimensao": 1024,
+            "formato": "float32",
+            "bytes": 4096,
+            "sha256_bytes": "d11723df04603a5468b8fb669b96035d9ebee9280d78f096c1afe6b436599482"
+          },
+          {
+            "id": "sha256:5da9be1461afc8255f49b038a237560d9f3130cf08af90309980719e91c15924",
+            "dimensao": 1024,
+            "formato": "float32",
+            "bytes": 4096,
+            "sha256_bytes": "f2d22052d2e0a72c1f0177f4788d36a7bcecd9af6f916d9bea287b1b30692b2c"
+          },
+          {
+            "id": "sha256:c32af679a0ed6bcb532135ea68e5aeed663ae34d73a06507f32a3731c3d99722",
+            "dimensao": 1024,
+            "formato": "float32",
+            "bytes": 4096,
+            "sha256_bytes": "19936b163577c3df3fed3a36bcdc0dddd673b2cdd9131f498a567a99950960d5"
+          },
+          {
+            "id": "sha256:1d868ab5262b2945ae720cf863b3780d06152e6ef361470a94b3dd89fc235c45",
+            "dimensao": 1024,
+            "formato": "float32",
+            "bytes": 4096,
+            "sha256_bytes": "1d4bd9deef211ad9e2e27ef6074c129dfb8a4dce9bc849b6857e15f01377b59e"
+          },
+          {
+            "id": "sha256:39d15def08cc764b32fff022d2c3e27d7d2260d2a96535d95ecd3262e73d0724",
+            "dimensao": 1024,
+            "formato": "float32",
+            "bytes": 4096,
+            "sha256_bytes": "0712d97128093710c2d13b0ec6d2978b818441227a1dd0de7e07d86145567f36"
+          },
+          {
+            "id": "sha256:ea8cbc298cc9e3b3f52f759abaacbc952f7951ca81065216dcda9ab5a06d11dc",
+            "dimensao": 1024,
+            "formato": "float32",
+            "bytes": 4096,
+            "sha256_bytes": "842776309a6ebb1a4e063ab15fb202ddc453f12eed8d5de07f8ca2d518036d6e"
+          }
+        ]
+      },
+      "medicoes": {
+        "tempo_total_segundos": 8.046558533998905,
+        "tempo_carregamento_segundos": null,
+        "pico_memoria_bytes": 2291519488,
+        "memoria_gpu_bytes": null
+      },
+      "medicoes_fornecidas": [
+        "tempo_total_segundos",
+        "pico_memoria_bytes"
+      ],
+      "escopo_bytes": "Somente bytes dos vetores únicos; exclui metadados, índices e modelo.",
+      "escopo_medicoes": "Processo Linux de validação: RSS máximo inclui bibliotecas e recursos anteriores; duração inclui preparação, resolução/carregamento e inferência desta execução em CPU."
+    },
+    {
+      "schema_version": "1.0.0",
+      "tipo": "caracterizacao_execucao",
+      "origem": {
+        "execucao_id": "15e33a4d-27dd-4e3b-a811-4d24af6f6aae",
+        "documento_id": 1,
+        "contexto_execucao_id": "6de03fb1-3375-48f6-a5ce-528686018ae5",
+        "contexto_sha256": "dd6fa865aad1f935512f85184ec83ff0c076a30c658bdfbfd63cefdc172f98ef",
+        "configuracao_sha256": "2dba0322eb50b3e4f23804d12728f5b0d6f87b47ca2adbd8a630d51686d9b6d3",
+        "espaco_vetorial_id": "sha256:4e9c182e90d47e351395243d13155b017a34ad59175ea78c1494e2c305033497",
+        "registro_sha256": "654786751d29d3316615fae38e5f180ae250b722230118d1619db025bd2a380e"
+      },
+      "perfil": {
+        "id": "e5_conteudo",
+        "versao": "1.0.0",
+        "finalidade": "conteudo",
+        "modelo": {
+          "identificacao": "intfloat/multilingual-e5-large",
+          "revisao": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3"
+        },
+        "tokenizador": {
+          "identificacao": "intfloat/multilingual-e5-large",
+          "revisao": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3"
+        },
+        "backend": "sentence_transformers",
+        "dispositivo": "cpu",
+        "lote": 16,
+        "precisao_inferencia": "float32",
+        "formato_armazenamento": "float32",
+        "limite_tokens": null,
+        "pooling": "mean",
+        "normalizacao": "l2",
+        "prefixo": "passage: ",
+        "fragmentacao": "sem_sobreposicao",
+        "agregacao": "media_ponderada_tokens",
+        "texto_documento": "trabalho",
+        "cache_modelos": "/workspace/lingua/instance/modelos",
+        "somente_local": true,
+        "legado": null
+      },
+      "processamento": {
+        "backend": "sentence_transformers",
+        "versao_backend": "5.2.0",
+        "modelo": {
+          "identificacao": "intfloat/multilingual-e5-large",
+          "revisao": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3"
+        },
+        "tokenizador": {
+          "identificacao": "intfloat/multilingual-e5-large",
+          "revisao": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3"
+        },
+        "dimensao": 1024,
+        "limite_tokens": 512,
+        "limite_tokens_selecionado": 512,
+        "max_seq_length_wrapper": 512,
+        "pooling": "mean",
+        "pooling_configuracao": [
+          {
+            "word_embedding_dimension": 1024,
+            "pooling_mode_cls_token": false,
+            "pooling_mode_mean_tokens": true,
+            "pooling_mode_max_tokens": false,
+            "pooling_mode_mean_sqrt_len_tokens": false,
+            "pooling_mode_weightedmean_tokens": false,
+            "pooling_mode_lasttoken": false,
+            "include_prompt": true
+          }
+        ],
+        "dispositivo": "cpu",
+        "precisao_inferencia": "float32",
+        "normalizacao_interna": "nenhuma",
+        "prefixo_automatico": false,
+        "truncamento_automatico": false,
+        "bibliotecas": {
+          "torch": "2.10.0+cpu",
+          "transformers": "4.57.3",
+          "sentence-transformers": "5.2.0",
+          "tokenizers": "0.22.2",
+          "huggingface-hub": "0.36.0"
+        },
+        "artefatos": {
+          "modelo": {
+            "commit": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3",
+            "arquivos": {
+              "1_Pooling/config.json": "56c469dba9e31869bb7dfceb9b3d76ac06549d1ba869509d8eb4e8aeb31d62d1",
+              "config.json": "e42d98d0c211928d788467aa951000391017f647c76ca8ce2ef6dd8d0c9ce5ca",
+              "model.safetensors": "020afdebf2762b29fcaf286629a96c3b3b65af241f6a08226b1cfee60a21def6",
+              "modules.json": "c6e29747481e8b5dd2b58401966aeac910de39092f90cda9a704b1545f902b04",
+              "sentence_bert_config.json": "948201d8329907aae938fa62f9ceeed53f5694dacc2b87b9f3b78b37ee986529",
+              "sentencepiece.bpe.model": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865",
+              "special_tokens_map.json": "06e405a36dfe4b9604f484f6a1e619af1a7f7d09e34a8555eb0b77b66318067f",
+              "tokenizer.json": "62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626",
+              "tokenizer_config.json": "efb5c0d09722e5fe59a462cd2a9976ee216d55b037597d997cd3fe833216da15"
+            }
+          },
+          "tokenizador": {
+            "commit": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3",
+            "arquivos": {
+              "1_Pooling/config.json": "56c469dba9e31869bb7dfceb9b3d76ac06549d1ba869509d8eb4e8aeb31d62d1",
+              "config.json": "e42d98d0c211928d788467aa951000391017f647c76ca8ce2ef6dd8d0c9ce5ca",
+              "modules.json": "c6e29747481e8b5dd2b58401966aeac910de39092f90cda9a704b1545f902b04",
+              "sentence_bert_config.json": "948201d8329907aae938fa62f9ceeed53f5694dacc2b87b9f3b78b37ee986529",
+              "sentencepiece.bpe.model": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865",
+              "special_tokens_map.json": "06e405a36dfe4b9604f484f6a1e619af1a7f7d09e34a8555eb0b77b66318067f",
+              "tokenizer.json": "62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626",
+              "tokenizer_config.json": "efb5c0d09722e5fe59a462cd2a9976ee216d55b037597d997cd3fe833216da15"
+            }
+          }
+        },
+        "limite_modelo_tokens": 512,
+        "adaptador": {
+          "backend": "sentence_transformers",
+          "versao_backend": "5.2.0",
+          "modelo": {
+            "identificacao": "intfloat/multilingual-e5-large",
+            "revisao": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3"
+          },
+          "tokenizador": {
+            "identificacao": "intfloat/multilingual-e5-large",
+            "revisao": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3"
+          },
+          "dimensao": 1024,
+          "limite_tokens": 512,
+          "limite_tokens_selecionado": 512,
+          "max_seq_length_wrapper": 512,
+          "pooling": "mean",
+          "pooling_configuracao": [
+            {
+              "word_embedding_dimension": 1024,
+              "pooling_mode_cls_token": false,
+              "pooling_mode_mean_tokens": true,
+              "pooling_mode_max_tokens": false,
+              "pooling_mode_mean_sqrt_len_tokens": false,
+              "pooling_mode_weightedmean_tokens": false,
+              "pooling_mode_lasttoken": false,
+              "include_prompt": true
+            }
+          ],
+          "dispositivo": "cpu",
+          "precisao_inferencia": "float32",
+          "normalizacao_interna": "nenhuma",
+          "prefixo_automatico": false,
+          "truncamento_automatico": false,
+          "bibliotecas": {
+            "torch": "2.10.0+cpu",
+            "transformers": "4.57.3",
+            "sentence-transformers": "5.2.0",
+            "tokenizers": "0.22.2",
+            "huggingface-hub": "0.36.0"
+          },
+          "artefatos": {
+            "modelo": {
+              "commit": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3",
+              "arquivos": {
+                "1_Pooling/config.json": "56c469dba9e31869bb7dfceb9b3d76ac06549d1ba869509d8eb4e8aeb31d62d1",
+                "config.json": "e42d98d0c211928d788467aa951000391017f647c76ca8ce2ef6dd8d0c9ce5ca",
+                "model.safetensors": "020afdebf2762b29fcaf286629a96c3b3b65af241f6a08226b1cfee60a21def6",
+                "modules.json": "c6e29747481e8b5dd2b58401966aeac910de39092f90cda9a704b1545f902b04",
+                "sentence_bert_config.json": "948201d8329907aae938fa62f9ceeed53f5694dacc2b87b9f3b78b37ee986529",
+                "sentencepiece.bpe.model": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865",
+                "special_tokens_map.json": "06e405a36dfe4b9604f484f6a1e619af1a7f7d09e34a8555eb0b77b66318067f",
+                "tokenizer.json": "62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626",
+                "tokenizer_config.json": "efb5c0d09722e5fe59a462cd2a9976ee216d55b037597d997cd3fe833216da15"
+              }
+            },
+            "tokenizador": {
+              "commit": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3",
+              "arquivos": {
+                "1_Pooling/config.json": "56c469dba9e31869bb7dfceb9b3d76ac06549d1ba869509d8eb4e8aeb31d62d1",
+                "config.json": "e42d98d0c211928d788467aa951000391017f647c76ca8ce2ef6dd8d0c9ce5ca",
+                "modules.json": "c6e29747481e8b5dd2b58401966aeac910de39092f90cda9a704b1545f902b04",
+                "sentence_bert_config.json": "948201d8329907aae938fa62f9ceeed53f5694dacc2b87b9f3b78b37ee986529",
+                "sentencepiece.bpe.model": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865",
+                "special_tokens_map.json": "06e405a36dfe4b9604f484f6a1e619af1a7f7d09e34a8555eb0b77b66318067f",
+                "tokenizer.json": "62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626",
+                "tokenizer_config.json": "efb5c0d09722e5fe59a462cd2a9976ee216d55b037597d997cd3fe833216da15"
+              }
+            }
+          }
+        },
+        "modulo": {
+          "nome": "vetorizacao",
+          "versao": "1.0.0"
+        }
+      },
+      "representacoes": {
+        "total": 9,
+        "com_vetor": 9
+      },
+      "vetores": {
+        "artefatos_unicos": 9,
+        "bytes_total": 36864,
+        "dimensoes": [
+          1024
+        ],
+        "formatos": {
+          "float32": {
+            "artefatos": 9,
+            "bytes": 36864
+          }
+        },
+        "artefatos": [
+          {
+            "id": "sha256:ebf252b18795c81937587b23c714c15a84df65fd92e493a707d4f87d555b415a",
+            "dimensao": 1024,
+            "formato": "float32",
+            "bytes": 4096,
+            "sha256_bytes": "6669a55241d5dc4e58034d2bf14d797253ccc8f5fdcf3e1da8509f4ab29125be"
+          },
+          {
+            "id": "sha256:b62ec16f11334d75c19338c91f1d0527dfa51cd57d4458db82278b2edc400a66",
+            "dimensao": 1024,
+            "formato": "float32",
+            "bytes": 4096,
+            "sha256_bytes": "909455a2387913189a1d48b6b08748ffce45704093ff60a734f9d071483ca311"
+          },
+          {
+            "id": "sha256:2853189ecf4f7e93008b43ac8ecfd9ed854bb823159d861f82017c15882ca81e",
+            "dimensao": 1024,
+            "formato": "float32",
+            "bytes": 4096,
+            "sha256_bytes": "d0b89b17c4edd7722b615a0276eb0bea2e91862de782b446353fcf9329f412cf"
+          },
+          {
+            "id": "sha256:2cbd4d59526ab04537ff1ceacd5ade9c5cb0975de681606b47ed325c027c4c28",
+            "dimensao": 1024,
+            "formato": "float32",
+            "bytes": 4096,
+            "sha256_bytes": "af30cfb12cd9ceefe3a213f89d1b9e8eb4585e5566dec93713a04f29c805c334"
+          },
+          {
+            "id": "sha256:34b081b62104d4b295b858741ee8c57a2325ff4e0d6189daa8f40983791d842b",
+            "dimensao": 1024,
+            "formato": "float32",
+            "bytes": 4096,
+            "sha256_bytes": "8830de4a9cd55348e634d243d5e6d0f030d5f83b60df254d2ff5c072cfd891de"
+          },
+          {
+            "id": "sha256:786a1c0ac132668ff4e8e69ec0522f16366a6aff7f4c3e30c9bd352f875a94b4",
+            "dimensao": 1024,
+            "formato": "float32",
+            "bytes": 4096,
+            "sha256_bytes": "15f373290cff1e09f65f728a9d39e005952b7b0f41db8f3b2098a33c5028a29f"
+          },
+          {
+            "id": "sha256:e71ba134260e5fe8461929754eaf1cd5fdee70e80f54a533c5363ac539a5b3b0",
+            "dimensao": 1024,
+            "formato": "float32",
+            "bytes": 4096,
+            "sha256_bytes": "fe8f1513f9c006ad59c2bfcc892e5f4f0f504554aa52ef350dc6f917635c8d8b"
+          },
+          {
+            "id": "sha256:8ffc3ded76d8dbaec78ac42c481e4006e6bab9bd0d33b4842f0b8e97047dd96b",
+            "dimensao": 1024,
+            "formato": "float32",
+            "bytes": 4096,
+            "sha256_bytes": "dbf6573cf3c1bf6bb068e5a96eb946149315fc90a526b63ef2b535fd5b64a64e"
+          },
+          {
+            "id": "sha256:980a5aa2d65fd2ad047fd9721d48893219e80bdac00d7fefd7443a944d7936b3",
+            "dimensao": 1024,
+            "formato": "float32",
+            "bytes": 4096,
+            "sha256_bytes": "7874781b14377e2904afd738bb67f421d33bea72f6698549bd61d8b504b8067a"
+          }
+        ]
+      },
+      "medicoes": {
+        "tempo_total_segundos": 0.9593912419950357,
+        "tempo_carregamento_segundos": null,
+        "pico_memoria_bytes": 2291519488,
+        "memoria_gpu_bytes": null
+      },
+      "medicoes_fornecidas": [
+        "tempo_total_segundos",
+        "pico_memoria_bytes"
+      ],
+      "escopo_bytes": "Somente bytes dos vetores únicos; exclui metadados, índices e modelo.",
+      "escopo_medicoes": "Processo Linux de validação: RSS máximo inclui bibliotecas e recursos anteriores; duração inclui preparação, resolução/carregamento e inferência desta execução em CPU."
+    }
+  ]
+}

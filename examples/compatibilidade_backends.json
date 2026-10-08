@@ -1,0 +1,2494 @@
+{
+  "schema_version": "1.0.0",
+  "tipo": "avaliacao_compatibilidade_backends",
+  "estado": "compatibilidade_aproximada_amostral",
+  "descricoes": {
+    "a": {
+      "backend": "sentence_transformers",
+      "versao_backend": "5.2.0",
+      "modelo": {
+        "identificacao": "intfloat/multilingual-e5-large",
+        "revisao": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3"
+      },
+      "tokenizador": {
+        "identificacao": "intfloat/multilingual-e5-large",
+        "revisao": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3"
+      },
+      "dimensao": 1024,
+      "limite_tokens": 512,
+      "limite_tokens_selecionado": 512,
+      "max_seq_length_wrapper": 512,
+      "pooling": "mean",
+      "pooling_configuracao": [
+        {
+          "word_embedding_dimension": 1024,
+          "pooling_mode_cls_token": false,
+          "pooling_mode_mean_tokens": true,
+          "pooling_mode_max_tokens": false,
+          "pooling_mode_mean_sqrt_len_tokens": false,
+          "pooling_mode_weightedmean_tokens": false,
+          "pooling_mode_lasttoken": false,
+          "include_prompt": true
+        }
+      ],
+      "dispositivo": "cpu",
+      "precisao_inferencia": "float32",
+      "normalizacao_interna": "nenhuma",
+      "prefixo_automatico": false,
+      "truncamento_automatico": false,
+      "bibliotecas": {
+        "torch": "2.10.0+cpu",
+        "transformers": "4.57.3",
+        "sentence-transformers": "5.2.0",
+        "tokenizers": "0.22.2",
+        "huggingface-hub": "0.36.0"
+      },
+      "artefatos": {
+        "modelo": {
+          "commit": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3",
+          "arquivos": {
+            "1_Pooling/config.json": "56c469dba9e31869bb7dfceb9b3d76ac06549d1ba869509d8eb4e8aeb31d62d1",
+            "config.json": "e42d98d0c211928d788467aa951000391017f647c76ca8ce2ef6dd8d0c9ce5ca",
+            "model.safetensors": "020afdebf2762b29fcaf286629a96c3b3b65af241f6a08226b1cfee60a21def6",
+            "modules.json": "c6e29747481e8b5dd2b58401966aeac910de39092f90cda9a704b1545f902b04",
+            "sentence_bert_config.json": "948201d8329907aae938fa62f9ceeed53f5694dacc2b87b9f3b78b37ee986529",
+            "sentencepiece.bpe.model": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865",
+            "special_tokens_map.json": "06e405a36dfe4b9604f484f6a1e619af1a7f7d09e34a8555eb0b77b66318067f",
+            "tokenizer.json": "62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626",
+            "tokenizer_config.json": "efb5c0d09722e5fe59a462cd2a9976ee216d55b037597d997cd3fe833216da15"
+          }
+        },
+        "tokenizador": {
+          "commit": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3",
+          "arquivos": {
+            "1_Pooling/config.json": "56c469dba9e31869bb7dfceb9b3d76ac06549d1ba869509d8eb4e8aeb31d62d1",
+            "config.json": "e42d98d0c211928d788467aa951000391017f647c76ca8ce2ef6dd8d0c9ce5ca",
+            "modules.json": "c6e29747481e8b5dd2b58401966aeac910de39092f90cda9a704b1545f902b04",
+            "sentence_bert_config.json": "948201d8329907aae938fa62f9ceeed53f5694dacc2b87b9f3b78b37ee986529",
+            "sentencepiece.bpe.model": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865",
+            "special_tokens_map.json": "06e405a36dfe4b9604f484f6a1e619af1a7f7d09e34a8555eb0b77b66318067f",
+            "tokenizer.json": "62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626",
+            "tokenizer_config.json": "efb5c0d09722e5fe59a462cd2a9976ee216d55b037597d997cd3fe833216da15"
+          }
+        }
+      }
+    },
+    "b": {
+      "backend": "fastembed",
+      "versao_backend": "0.7.4",
+      "modelo": {
+        "identificacao": "intfloat/multilingual-e5-large",
+        "revisao": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3"
+      },
+      "tokenizador": {
+        "identificacao": "intfloat/multilingual-e5-large",
+        "revisao": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3"
+      },
+      "dimensao": 1024,
+      "limite_tokens": 512,
+      "limite_tokens_selecionado": 512,
+      "pooling": "mean",
+      "dispositivo": "cpu",
+      "precisao_inferencia": "float32",
+      "normalizacao_interna": "nenhuma",
+      "prefixo_automatico": false,
+      "truncamento_automatico": false,
+      "bibliotecas": {
+        "fastembed": "0.7.4",
+        "onnxruntime": "1.30.0",
+        "transformers": "4.57.3",
+        "tokenizers": "0.22.2",
+        "numpy": "2.5.3"
+      },
+      "artefatos": {
+        "modelo": {
+          "commit": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3",
+          "arquivos": {
+            "1_Pooling/config.json": "56c469dba9e31869bb7dfceb9b3d76ac06549d1ba869509d8eb4e8aeb31d62d1",
+            "config.json": "e42d98d0c211928d788467aa951000391017f647c76ca8ce2ef6dd8d0c9ce5ca",
+            "modules.json": "c6e29747481e8b5dd2b58401966aeac910de39092f90cda9a704b1545f902b04",
+            "sentence_bert_config.json": "948201d8329907aae938fa62f9ceeed53f5694dacc2b87b9f3b78b37ee986529",
+            "sentencepiece.bpe.model": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865",
+            "special_tokens_map.json": "06e405a36dfe4b9604f484f6a1e619af1a7f7d09e34a8555eb0b77b66318067f",
+            "tokenizer.json": "62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626",
+            "tokenizer_config.json": "efb5c0d09722e5fe59a462cd2a9976ee216d55b037597d997cd3fe833216da15"
+          }
+        },
+        "tokenizador": {
+          "commit": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3",
+          "arquivos": {
+            "1_Pooling/config.json": "56c469dba9e31869bb7dfceb9b3d76ac06549d1ba869509d8eb4e8aeb31d62d1",
+            "config.json": "e42d98d0c211928d788467aa951000391017f647c76ca8ce2ef6dd8d0c9ce5ca",
+            "modules.json": "c6e29747481e8b5dd2b58401966aeac910de39092f90cda9a704b1545f902b04",
+            "sentence_bert_config.json": "948201d8329907aae938fa62f9ceeed53f5694dacc2b87b9f3b78b37ee986529",
+            "sentencepiece.bpe.model": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865",
+            "special_tokens_map.json": "06e405a36dfe4b9604f484f6a1e619af1a7f7d09e34a8555eb0b77b66318067f",
+            "tokenizer.json": "62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626",
+            "tokenizer_config.json": "efb5c0d09722e5fe59a462cd2a9976ee216d55b037597d997cd3fe833216da15"
+          }
+        },
+        "onnx": {
+          "arquivo": "/workspace/lingua/instance/modelos/models--intfloat--multilingual-e5-large/snapshots/3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3/onnx/model.onnx",
+          "sha256": "bb5a52503a3ef35247f5b5ae6c473aaae60505dd3ffaef56d7b69e2f84683c05",
+          "arquivos_sha256": {
+            "model.onnx": "bb5a52503a3ef35247f5b5ae6c473aaae60505dd3ffaef56d7b69e2f84683c05",
+            "model.onnx_data": "0cf1883fee81c63819a44e2ba0efa51d4043d9759685a4ebebbde97e0623d15c"
+          }
+        }
+      },
+      "compatibilidade_sentence_transformers": "nao_verificada"
+    }
+  },
+  "limiar_cosseno": 0.99,
+  "criterio_cosseno": "estritamente_maior",
+  "verificacoes_metadata": [
+    {
+      "campo": "modelo.identificacao",
+      "a": "intfloat/multilingual-e5-large",
+      "b": "intfloat/multilingual-e5-large",
+      "igual": true
+    },
+    {
+      "campo": "modelo.revisao",
+      "a": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3",
+      "b": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3",
+      "igual": true
+    },
+    {
+      "campo": "tokenizador.identificacao",
+      "a": "intfloat/multilingual-e5-large",
+      "b": "intfloat/multilingual-e5-large",
+      "igual": true
+    },
+    {
+      "campo": "tokenizador.revisao",
+      "a": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3",
+      "b": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3",
+      "igual": true
+    },
+    {
+      "campo": "dimensao",
+      "a": 1024,
+      "b": 1024,
+      "igual": true
+    },
+    {
+      "campo": "pooling",
+      "a": "mean",
+      "b": "mean",
+      "igual": true
+    }
+  ],
+  "verificacoes_configuracao": [
+    {
+      "campo": "limite_tokens",
+      "caminho": [
+        "limite_tokens"
+      ],
+      "presente_a": true,
+      "presente_b": true,
+      "a": 512,
+      "b": 512,
+      "igual": true
+    },
+    {
+      "campo": "limite_tokens_selecionado",
+      "caminho": [
+        "limite_tokens_selecionado"
+      ],
+      "presente_a": true,
+      "presente_b": true,
+      "a": 512,
+      "b": 512,
+      "igual": true
+    },
+    {
+      "campo": "precisao_inferencia",
+      "caminho": [
+        "precisao_inferencia"
+      ],
+      "presente_a": true,
+      "presente_b": true,
+      "a": "float32",
+      "b": "float32",
+      "igual": true
+    },
+    {
+      "campo": "normalizacao_interna",
+      "caminho": [
+        "normalizacao_interna"
+      ],
+      "presente_a": true,
+      "presente_b": true,
+      "a": "nenhuma",
+      "b": "nenhuma",
+      "igual": true
+    },
+    {
+      "campo": "dispositivo",
+      "caminho": [
+        "dispositivo"
+      ],
+      "presente_a": true,
+      "presente_b": true,
+      "a": "cpu",
+      "b": "cpu",
+      "igual": true
+    },
+    {
+      "campo": "prefixo_automatico",
+      "caminho": [
+        "prefixo_automatico"
+      ],
+      "presente_a": true,
+      "presente_b": true,
+      "a": false,
+      "b": false,
+      "igual": true
+    },
+    {
+      "campo": "truncamento_automatico",
+      "caminho": [
+        "truncamento_automatico"
+      ],
+      "presente_a": true,
+      "presente_b": true,
+      "a": false,
+      "b": false,
+      "igual": true
+    },
+    {
+      "campo": "artefatos",
+      "caminho": [
+        "artefatos"
+      ],
+      "presente_a": true,
+      "presente_b": true,
+      "a": {
+        "modelo": {
+          "commit": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3",
+          "arquivos": {
+            "1_Pooling/config.json": "56c469dba9e31869bb7dfceb9b3d76ac06549d1ba869509d8eb4e8aeb31d62d1",
+            "config.json": "e42d98d0c211928d788467aa951000391017f647c76ca8ce2ef6dd8d0c9ce5ca",
+            "model.safetensors": "020afdebf2762b29fcaf286629a96c3b3b65af241f6a08226b1cfee60a21def6",
+            "modules.json": "c6e29747481e8b5dd2b58401966aeac910de39092f90cda9a704b1545f902b04",
+            "sentence_bert_config.json": "948201d8329907aae938fa62f9ceeed53f5694dacc2b87b9f3b78b37ee986529",
+            "sentencepiece.bpe.model": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865",
+            "special_tokens_map.json": "06e405a36dfe4b9604f484f6a1e619af1a7f7d09e34a8555eb0b77b66318067f",
+            "tokenizer.json": "62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626",
+            "tokenizer_config.json": "efb5c0d09722e5fe59a462cd2a9976ee216d55b037597d997cd3fe833216da15"
+          }
+        },
+        "tokenizador": {
+          "commit": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3",
+          "arquivos": {
+            "1_Pooling/config.json": "56c469dba9e31869bb7dfceb9b3d76ac06549d1ba869509d8eb4e8aeb31d62d1",
+            "config.json": "e42d98d0c211928d788467aa951000391017f647c76ca8ce2ef6dd8d0c9ce5ca",
+            "modules.json": "c6e29747481e8b5dd2b58401966aeac910de39092f90cda9a704b1545f902b04",
+            "sentence_bert_config.json": "948201d8329907aae938fa62f9ceeed53f5694dacc2b87b9f3b78b37ee986529",
+            "sentencepiece.bpe.model": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865",
+            "special_tokens_map.json": "06e405a36dfe4b9604f484f6a1e619af1a7f7d09e34a8555eb0b77b66318067f",
+            "tokenizer.json": "62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626",
+            "tokenizer_config.json": "efb5c0d09722e5fe59a462cd2a9976ee216d55b037597d997cd3fe833216da15"
+          }
+        }
+      },
+      "b": {
+        "modelo": {
+          "commit": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3",
+          "arquivos": {
+            "1_Pooling/config.json": "56c469dba9e31869bb7dfceb9b3d76ac06549d1ba869509d8eb4e8aeb31d62d1",
+            "config.json": "e42d98d0c211928d788467aa951000391017f647c76ca8ce2ef6dd8d0c9ce5ca",
+            "modules.json": "c6e29747481e8b5dd2b58401966aeac910de39092f90cda9a704b1545f902b04",
+            "sentence_bert_config.json": "948201d8329907aae938fa62f9ceeed53f5694dacc2b87b9f3b78b37ee986529",
+            "sentencepiece.bpe.model": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865",
+            "special_tokens_map.json": "06e405a36dfe4b9604f484f6a1e619af1a7f7d09e34a8555eb0b77b66318067f",
+            "tokenizer.json": "62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626",
+            "tokenizer_config.json": "efb5c0d09722e5fe59a462cd2a9976ee216d55b037597d997cd3fe833216da15"
+          }
+        },
+        "tokenizador": {
+          "commit": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3",
+          "arquivos": {
+            "1_Pooling/config.json": "56c469dba9e31869bb7dfceb9b3d76ac06549d1ba869509d8eb4e8aeb31d62d1",
+            "config.json": "e42d98d0c211928d788467aa951000391017f647c76ca8ce2ef6dd8d0c9ce5ca",
+            "modules.json": "c6e29747481e8b5dd2b58401966aeac910de39092f90cda9a704b1545f902b04",
+            "sentence_bert_config.json": "948201d8329907aae938fa62f9ceeed53f5694dacc2b87b9f3b78b37ee986529",
+            "sentencepiece.bpe.model": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865",
+            "special_tokens_map.json": "06e405a36dfe4b9604f484f6a1e619af1a7f7d09e34a8555eb0b77b66318067f",
+            "tokenizer.json": "62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626",
+            "tokenizer_config.json": "efb5c0d09722e5fe59a462cd2a9976ee216d55b037597d997cd3fe833216da15"
+          }
+        },
+        "onnx": {
+          "arquivo": "/workspace/lingua/instance/modelos/models--intfloat--multilingual-e5-large/snapshots/3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3/onnx/model.onnx",
+          "sha256": "bb5a52503a3ef35247f5b5ae6c473aaae60505dd3ffaef56d7b69e2f84683c05",
+          "arquivos_sha256": {
+            "model.onnx": "bb5a52503a3ef35247f5b5ae6c473aaae60505dd3ffaef56d7b69e2f84683c05",
+            "model.onnx_data": "0cf1883fee81c63819a44e2ba0efa51d4043d9759685a4ebebbde97e0623d15c"
+          }
+        }
+      },
+      "igual": false
+    },
+    {
+      "campo": "artefatos.modelo.arquivos.1_Pooling/config.json",
+      "caminho": [
+        "artefatos",
+        "modelo",
+        "arquivos",
+        "1_Pooling/config.json"
+      ],
+      "presente_a": true,
+      "presente_b": true,
+      "a": "56c469dba9e31869bb7dfceb9b3d76ac06549d1ba869509d8eb4e8aeb31d62d1",
+      "b": "56c469dba9e31869bb7dfceb9b3d76ac06549d1ba869509d8eb4e8aeb31d62d1",
+      "igual": true
+    },
+    {
+      "campo": "artefatos.modelo.arquivos.config.json",
+      "caminho": [
+        "artefatos",
+        "modelo",
+        "arquivos",
+        "config.json"
+      ],
+      "presente_a": true,
+      "presente_b": true,
+      "a": "e42d98d0c211928d788467aa951000391017f647c76ca8ce2ef6dd8d0c9ce5ca",
+      "b": "e42d98d0c211928d788467aa951000391017f647c76ca8ce2ef6dd8d0c9ce5ca",
+      "igual": true
+    },
+    {
+      "campo": "artefatos.modelo.arquivos.model.safetensors",
+      "caminho": [
+        "artefatos",
+        "modelo",
+        "arquivos",
+        "model.safetensors"
+      ],
+      "presente_a": true,
+      "presente_b": false,
+      "a": "020afdebf2762b29fcaf286629a96c3b3b65af241f6a08226b1cfee60a21def6",
+      "b": null,
+      "igual": null
+    },
+    {
+      "campo": "artefatos.modelo.arquivos.modules.json",
+      "caminho": [
+        "artefatos",
+        "modelo",
+        "arquivos",
+        "modules.json"
+      ],
+      "presente_a": true,
+      "presente_b": true,
+      "a": "c6e29747481e8b5dd2b58401966aeac910de39092f90cda9a704b1545f902b04",
+      "b": "c6e29747481e8b5dd2b58401966aeac910de39092f90cda9a704b1545f902b04",
+      "igual": true
+    },
+    {
+      "campo": "artefatos.modelo.arquivos.sentence_bert_config.json",
+      "caminho": [
+        "artefatos",
+        "modelo",
+        "arquivos",
+        "sentence_bert_config.json"
+      ],
+      "presente_a": true,
+      "presente_b": true,
+      "a": "948201d8329907aae938fa62f9ceeed53f5694dacc2b87b9f3b78b37ee986529",
+      "b": "948201d8329907aae938fa62f9ceeed53f5694dacc2b87b9f3b78b37ee986529",
+      "igual": true
+    },
+    {
+      "campo": "artefatos.modelo.arquivos.sentencepiece.bpe.model",
+      "caminho": [
+        "artefatos",
+        "modelo",
+        "arquivos",
+        "sentencepiece.bpe.model"
+      ],
+      "presente_a": true,
+      "presente_b": true,
+      "a": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865",
+      "b": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865",
+      "igual": true
+    },
+    {
+      "campo": "artefatos.modelo.arquivos.special_tokens_map.json",
+      "caminho": [
+        "artefatos",
+        "modelo",
+        "arquivos",
+        "special_tokens_map.json"
+      ],
+      "presente_a": true,
+      "presente_b": true,
+      "a": "06e405a36dfe4b9604f484f6a1e619af1a7f7d09e34a8555eb0b77b66318067f",
+      "b": "06e405a36dfe4b9604f484f6a1e619af1a7f7d09e34a8555eb0b77b66318067f",
+      "igual": true
+    },
+    {
+      "campo": "artefatos.modelo.arquivos.tokenizer.json",
+      "caminho": [
+        "artefatos",
+        "modelo",
+        "arquivos",
+        "tokenizer.json"
+      ],
+      "presente_a": true,
+      "presente_b": true,
+      "a": "62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626",
+      "b": "62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626",
+      "igual": true
+    },
+    {
+      "campo": "artefatos.modelo.arquivos.tokenizer_config.json",
+      "caminho": [
+        "artefatos",
+        "modelo",
+        "arquivos",
+        "tokenizer_config.json"
+      ],
+      "presente_a": true,
+      "presente_b": true,
+      "a": "efb5c0d09722e5fe59a462cd2a9976ee216d55b037597d997cd3fe833216da15",
+      "b": "efb5c0d09722e5fe59a462cd2a9976ee216d55b037597d997cd3fe833216da15",
+      "igual": true
+    },
+    {
+      "campo": "artefatos.modelo.commit",
+      "caminho": [
+        "artefatos",
+        "modelo",
+        "commit"
+      ],
+      "presente_a": true,
+      "presente_b": true,
+      "a": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3",
+      "b": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3",
+      "igual": true
+    },
+    {
+      "campo": "artefatos.onnx.arquivo",
+      "caminho": [
+        "artefatos",
+        "onnx",
+        "arquivo"
+      ],
+      "presente_a": false,
+      "presente_b": true,
+      "a": null,
+      "b": "/workspace/lingua/instance/modelos/models--intfloat--multilingual-e5-large/snapshots/3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3/onnx/model.onnx",
+      "igual": null
+    },
+    {
+      "campo": "artefatos.onnx.arquivos_sha256.model.onnx",
+      "caminho": [
+        "artefatos",
+        "onnx",
+        "arquivos_sha256",
+        "model.onnx"
+      ],
+      "presente_a": false,
+      "presente_b": true,
+      "a": null,
+      "b": "bb5a52503a3ef35247f5b5ae6c473aaae60505dd3ffaef56d7b69e2f84683c05",
+      "igual": null
+    },
+    {
+      "campo": "artefatos.onnx.arquivos_sha256.model.onnx_data",
+      "caminho": [
+        "artefatos",
+        "onnx",
+        "arquivos_sha256",
+        "model.onnx_data"
+      ],
+      "presente_a": false,
+      "presente_b": true,
+      "a": null,
+      "b": "0cf1883fee81c63819a44e2ba0efa51d4043d9759685a4ebebbde97e0623d15c",
+      "igual": null
+    },
+    {
+      "campo": "artefatos.onnx.sha256",
+      "caminho": [
+        "artefatos",
+        "onnx",
+        "sha256"
+      ],
+      "presente_a": false,
+      "presente_b": true,
+      "a": null,
+      "b": "bb5a52503a3ef35247f5b5ae6c473aaae60505dd3ffaef56d7b69e2f84683c05",
+      "igual": null
+    },
+    {
+      "campo": "artefatos.tokenizador.arquivos.1_Pooling/config.json",
+      "caminho": [
+        "artefatos",
+        "tokenizador",
+        "arquivos",
+        "1_Pooling/config.json"
+      ],
+      "presente_a": true,
+      "presente_b": true,
+      "a": "56c469dba9e31869bb7dfceb9b3d76ac06549d1ba869509d8eb4e8aeb31d62d1",
+      "b": "56c469dba9e31869bb7dfceb9b3d76ac06549d1ba869509d8eb4e8aeb31d62d1",
+      "igual": true
+    },
+    {
+      "campo": "artefatos.tokenizador.arquivos.config.json",
+      "caminho": [
+        "artefatos",
+        "tokenizador",
+        "arquivos",
+        "config.json"
+      ],
+      "presente_a": true,
+      "presente_b": true,
+      "a": "e42d98d0c211928d788467aa951000391017f647c76ca8ce2ef6dd8d0c9ce5ca",
+      "b": "e42d98d0c211928d788467aa951000391017f647c76ca8ce2ef6dd8d0c9ce5ca",
+      "igual": true
+    },
+    {
+      "campo": "artefatos.tokenizador.arquivos.modules.json",
+      "caminho": [
+        "artefatos",
+        "tokenizador",
+        "arquivos",
+        "modules.json"
+      ],
+      "presente_a": true,
+      "presente_b": true,
+      "a": "c6e29747481e8b5dd2b58401966aeac910de39092f90cda9a704b1545f902b04",
+      "b": "c6e29747481e8b5dd2b58401966aeac910de39092f90cda9a704b1545f902b04",
+      "igual": true
+    },
+    {
+      "campo": "artefatos.tokenizador.arquivos.sentence_bert_config.json",
+      "caminho": [
+        "artefatos",
+        "tokenizador",
+        "arquivos",
+        "sentence_bert_config.json"
+      ],
+      "presente_a": true,
+      "presente_b": true,
+      "a": "948201d8329907aae938fa62f9ceeed53f5694dacc2b87b9f3b78b37ee986529",
+      "b": "948201d8329907aae938fa62f9ceeed53f5694dacc2b87b9f3b78b37ee986529",
+      "igual": true
+    },
+    {
+      "campo": "artefatos.tokenizador.arquivos.sentencepiece.bpe.model",
+      "caminho": [
+        "artefatos",
+        "tokenizador",
+        "arquivos",
+        "sentencepiece.bpe.model"
+      ],
+      "presente_a": true,
+      "presente_b": true,
+      "a": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865",
+      "b": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865",
+      "igual": true
+    },
+    {
+      "campo": "artefatos.tokenizador.arquivos.special_tokens_map.json",
+      "caminho": [
+        "artefatos",
+        "tokenizador",
+        "arquivos",
+        "special_tokens_map.json"
+      ],
+      "presente_a": true,
+      "presente_b": true,
+      "a": "06e405a36dfe4b9604f484f6a1e619af1a7f7d09e34a8555eb0b77b66318067f",
+      "b": "06e405a36dfe4b9604f484f6a1e619af1a7f7d09e34a8555eb0b77b66318067f",
+      "igual": true
+    },
+    {
+      "campo": "artefatos.tokenizador.arquivos.tokenizer.json",
+      "caminho": [
+        "artefatos",
+        "tokenizador",
+        "arquivos",
+        "tokenizer.json"
+      ],
+      "presente_a": true,
+      "presente_b": true,
+      "a": "62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626",
+      "b": "62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626",
+      "igual": true
+    },
+    {
+      "campo": "artefatos.tokenizador.arquivos.tokenizer_config.json",
+      "caminho": [
+        "artefatos",
+        "tokenizador",
+        "arquivos",
+        "tokenizer_config.json"
+      ],
+      "presente_a": true,
+      "presente_b": true,
+      "a": "efb5c0d09722e5fe59a462cd2a9976ee216d55b037597d997cd3fe833216da15",
+      "b": "efb5c0d09722e5fe59a462cd2a9976ee216d55b037597d997cd3fe833216da15",
+      "igual": true
+    },
+    {
+      "campo": "artefatos.tokenizador.commit",
+      "caminho": [
+        "artefatos",
+        "tokenizador",
+        "commit"
+      ],
+      "presente_a": true,
+      "presente_b": true,
+      "a": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3",
+      "b": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3",
+      "igual": true
+    }
+  ],
+  "entradas": [
+    {
+      "indice": 0,
+      "texto": "query: Eu não queria sair.\r\nMas fiquei.",
+      "sha256_utf8": "37a4f5a80f55b1b0f24ad3a71bbf613293e0f2eeac6394dc3a0bfa3e18e3ae32",
+      "tokenizacao": {
+        "a": {
+          "input_ids": [
+            0,
+            41,
+            1294,
+            12,
+            5177,
+            1027,
+            102989,
+            68378,
+            5,
+            3010,
+            136514,
+            5,
+            2
+          ],
+          "attention_mask": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "special_tokens_mask": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "offsets": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              10,
+              13
+            ],
+            [
+              14,
+              20
+            ],
+            [
+              21,
+              25
+            ],
+            [
+              25,
+              26
+            ],
+            [
+              28,
+              31
+            ],
+            [
+              32,
+              38
+            ],
+            [
+              38,
+              39
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        },
+        "b": {
+          "input_ids": [
+            0,
+            41,
+            1294,
+            12,
+            5177,
+            1027,
+            102989,
+            68378,
+            5,
+            3010,
+            136514,
+            5,
+            2
+          ],
+          "attention_mask": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "special_tokens_mask": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "offsets": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              10,
+              13
+            ],
+            [
+              14,
+              20
+            ],
+            [
+              21,
+              25
+            ],
+            [
+              25,
+              26
+            ],
+            [
+              28,
+              31
+            ],
+            [
+              32,
+              38
+            ],
+            [
+              38,
+              39
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "token_type_ids": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "campos_iguais": {
+          "input_ids": true,
+          "attention_mask": true,
+          "special_tokens_mask": true,
+          "offsets": true
+        },
+        "token_type_ids": {
+          "presente_a": false,
+          "presente_b": true,
+          "igual": null
+        },
+        "identica_campos_verificados": true
+      },
+      "numerica": {
+        "estado": "calculada",
+        "normalizacao_comparacao": "l2_ambos",
+        "norma_a": 29.67339172329877,
+        "norma_b": 29.673392451244318,
+        "cosseno": 0.9999999999993604,
+        "acima_limiar": true,
+        "erro_maximo_absoluto": 3.1246588780287077e-06,
+        "erro_rms": 1.048972391993402e-06,
+        "erro_maximo_absoluto_normalizado": 1.0489051168252606e-07,
+        "erro_rms_normalizado": 3.534229241564005e-08,
+        "bytes_float32_iguais": false,
+        "sha256_float32_a": "005a9e9538c9e954a56b42355aeeefcdc076b1472f866771d05912797d32317c",
+        "sha256_float32_b": "27079309e490c51e69638f8866e39ec087bd78e19be37e3f6c6b9403a7e5d29b",
+        "bytes_float32_normalizados_iguais": false
+      }
+    },
+    {
+      "indice": 1,
+      "texto": "passage: Eu não queria sair.\nMas fiquei.",
+      "sha256_utf8": "6f16046c8ea45f4ace14c860ca26b44ae7552e12599d5f82bf9892d533992a8b",
+      "tokenizacao": {
+        "a": {
+          "input_ids": [
+            0,
+            46692,
+            12,
+            5177,
+            1027,
+            102989,
+            68378,
+            5,
+            3010,
+            136514,
+            5,
+            2
+          ],
+          "attention_mask": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "special_tokens_mask": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "offsets": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              7
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              9,
+              11
+            ],
+            [
+              12,
+              15
+            ],
+            [
+              16,
+              22
+            ],
+            [
+              23,
+              27
+            ],
+            [
+              27,
+              28
+            ],
+            [
+              29,
+              32
+            ],
+            [
+              33,
+              39
+            ],
+            [
+              39,
+              40
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        },
+        "b": {
+          "input_ids": [
+            0,
+            46692,
+            12,
+            5177,
+            1027,
+            102989,
+            68378,
+            5,
+            3010,
+            136514,
+            5,
+            2
+          ],
+          "attention_mask": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "special_tokens_mask": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "offsets": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              7
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              9,
+              11
+            ],
+            [
+              12,
+              15
+            ],
+            [
+              16,
+              22
+            ],
+            [
+              23,
+              27
+            ],
+            [
+              27,
+              28
+            ],
+            [
+              29,
+              32
+            ],
+            [
+              33,
+              39
+            ],
+            [
+              39,
+              40
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "token_type_ids": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "campos_iguais": {
+          "input_ids": true,
+          "attention_mask": true,
+          "special_tokens_mask": true,
+          "offsets": true
+        },
+        "token_type_ids": {
+          "presente_a": false,
+          "presente_b": true,
+          "igual": null
+        },
+        "identica_campos_verificados": true
+      },
+      "numerica": {
+        "estado": "calculada",
+        "normalizacao_comparacao": "l2_ambos",
+        "norma_a": 30.107387413365558,
+        "norma_b": 30.10738777508493,
+        "cosseno": 0.9999999999994076,
+        "acima_limiar": true,
+        "erro_maximo_absoluto": 3.6209821701049805e-06,
+        "erro_rms": 1.024135365613911e-06,
+        "erro_maximo_absoluto_normalizado": 1.1992697776519456e-07,
+        "erro_rms_normalizado": 3.4014009981746095e-08,
+        "bytes_float32_iguais": false,
+        "sha256_float32_a": "6010b4a97d602f70dcaac85ae94987f0d3b1c93dbc8e5340900209e61cb1701d",
+        "sha256_float32_b": "06964ee391eac6ea4e472ecaafb16bae91725e9a0f3d17760708481131ade8ee",
+        "bytes_float32_normalizados_iguais": false
+      }
+    },
+    {
+      "indice": 2,
+      "texto": "query: Ação e café. 😀",
+      "sha256_utf8": "059d4e4bbf1fba7c5c16f98921fcdf78dccec296c0ec831e3bca36f3a4e57e29",
+      "tokenizacao": {
+        "a": {
+          "input_ids": [
+            0,
+            41,
+            1294,
+            12,
+            62,
+            1156,
+            28,
+            26216,
+            5,
+            21119,
+            2
+          ],
+          "attention_mask": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "special_tokens_mask": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "offsets": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              8,
+              11
+            ],
+            [
+              12,
+              13
+            ],
+            [
+              14,
+              18
+            ],
+            [
+              19,
+              20
+            ],
+            [
+              21,
+              22
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        },
+        "b": {
+          "input_ids": [
+            0,
+            41,
+            1294,
+            12,
+            62,
+            1156,
+            28,
+            26216,
+            5,
+            21119,
+            2
+          ],
+          "attention_mask": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "special_tokens_mask": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "offsets": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              8,
+              11
+            ],
+            [
+              12,
+              13
+            ],
+            [
+              14,
+              18
+            ],
+            [
+              19,
+              20
+            ],
+            [
+              21,
+              22
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "token_type_ids": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "campos_iguais": {
+          "input_ids": true,
+          "attention_mask": true,
+          "special_tokens_mask": true,
+          "offsets": true
+        },
+        "token_type_ids": {
+          "presente_a": false,
+          "presente_b": true,
+          "igual": null
+        },
+        "identica_campos_verificados": true
+      },
+      "numerica": {
+        "estado": "calculada",
+        "normalizacao_comparacao": "l2_ambos",
+        "norma_a": 29.396502921681737,
+        "norma_b": 29.396502293293867,
+        "cosseno": 0.9999999999996245,
+        "acima_limiar": true,
+        "erro_maximo_absoluto": 2.6420774785207435e-06,
+        "erro_rms": 7.962320873868142e-07,
+        "erro_maximo_absoluto_normalizado": 8.968000159148559e-08,
+        "erro_rms_normalizado": 2.7077707520253187e-08,
+        "bytes_float32_iguais": false,
+        "sha256_float32_a": "edd79b90a4f9920e313fa597530ab669a4c039b450dee9a3459fdd3ab3bc61bf",
+        "sha256_float32_b": "6c03181480f1cce9a36e9beaeac982beef50e7fe5205a1b4f0beec9222dfad98",
+        "bytes_float32_normalizados_iguais": false
+      }
+    },
+    {
+      "indice": 3,
+      "texto": "passage: Ele disse: “não vou”.",
+      "sha256_utf8": "20953960a12b5c986385ae948d03ad7aae0c453ba1af9e47a3c726afa523aef6",
+      "tokenizacao": {
+        "a": {
+          "input_ids": [
+            0,
+            46692,
+            12,
+            12701,
+            4504,
+            12,
+            52,
+            126125,
+            22320,
+            792,
+            2
+          ],
+          "attention_mask": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "special_tokens_mask": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "offsets": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              7
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              9,
+              12
+            ],
+            [
+              13,
+              18
+            ],
+            [
+              18,
+              19
+            ],
+            [
+              20,
+              21
+            ],
+            [
+              21,
+              24
+            ],
+            [
+              25,
+              28
+            ],
+            [
+              28,
+              30
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        },
+        "b": {
+          "input_ids": [
+            0,
+            46692,
+            12,
+            12701,
+            4504,
+            12,
+            52,
+            126125,
+            22320,
+            792,
+            2
+          ],
+          "attention_mask": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "special_tokens_mask": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "offsets": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              7
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              9,
+              12
+            ],
+            [
+              13,
+              18
+            ],
+            [
+              18,
+              19
+            ],
+            [
+              20,
+              21
+            ],
+            [
+              21,
+              24
+            ],
+            [
+              25,
+              28
+            ],
+            [
+              28,
+              30
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "token_type_ids": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "campos_iguais": {
+          "input_ids": true,
+          "attention_mask": true,
+          "special_tokens_mask": true,
+          "offsets": true
+        },
+        "token_type_ids": {
+          "presente_a": false,
+          "presente_b": true,
+          "igual": null
+        },
+        "identica_campos_verificados": true
+      },
+      "numerica": {
+        "estado": "calculada",
+        "normalizacao_comparacao": "l2_ambos",
+        "norma_a": 29.945288347151205,
+        "norma_b": 29.945289527274767,
+        "cosseno": 0.9999999999996118,
+        "acima_limiar": true,
+        "erro_maximo_absoluto": 3.099018199878567e-06,
+        "erro_rms": 8.254013203212659e-07,
+        "erro_maximo_absoluto_normalizado": 1.0342316014689233e-07,
+        "erro_rms_normalizado": 2.7536118895144952e-08,
+        "bytes_float32_iguais": false,
+        "sha256_float32_a": "c1145f135bc8f7cd6e8b2781ca0d4ddb1d6cc58dad715da89d92d3a52f4186a4",
+        "sha256_float32_b": "010920d7dfe92bcac47ae7f64a28a807f5ca13925c49c0bacb15d5a40faddff6",
+        "bytes_float32_normalizados_iguais": false
+      }
+    },
+    {
+      "indice": 4,
+      "texto": "query:   espaços\t e\n\nlinhas vazias.",
+      "sha256_utf8": "e613f94d15bb4ee9fae2f9f46dd09a36a25f9bd1692225c5e6eb7b00eb469ccd",
+      "tokenizacao": {
+        "a": {
+          "input_ids": [
+            0,
+            41,
+            1294,
+            12,
+            32518,
+            7,
+            28,
+            51195,
+            7,
+            307,
+            5320,
+            7,
+            5,
+            2
+          ],
+          "attention_mask": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "special_tokens_mask": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "offsets": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              9,
+              15
+            ],
+            [
+              15,
+              16
+            ],
+            [
+              18,
+              19
+            ],
+            [
+              21,
+              26
+            ],
+            [
+              26,
+              27
+            ],
+            [
+              28,
+              30
+            ],
+            [
+              30,
+              33
+            ],
+            [
+              33,
+              34
+            ],
+            [
+              34,
+              35
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        },
+        "b": {
+          "input_ids": [
+            0,
+            41,
+            1294,
+            12,
+            32518,
+            7,
+            28,
+            51195,
+            7,
+            307,
+            5320,
+            7,
+            5,
+            2
+          ],
+          "attention_mask": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "special_tokens_mask": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "offsets": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              9,
+              15
+            ],
+            [
+              15,
+              16
+            ],
+            [
+              18,
+              19
+            ],
+            [
+              21,
+              26
+            ],
+            [
+              26,
+              27
+            ],
+            [
+              28,
+              30
+            ],
+            [
+              30,
+              33
+            ],
+            [
+              33,
+              34
+            ],
+            [
+              34,
+              35
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "token_type_ids": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "campos_iguais": {
+          "input_ids": true,
+          "attention_mask": true,
+          "special_tokens_mask": true,
+          "offsets": true
+        },
+        "token_type_ids": {
+          "presente_a": false,
+          "presente_b": true,
+          "igual": null
+        },
+        "identica_campos_verificados": true
+      },
+      "numerica": {
+        "estado": "calculada",
+        "normalizacao_comparacao": "l2_ambos",
+        "norma_a": 29.804680498546105,
+        "norma_b": 29.804679119491116,
+        "cosseno": 0.9999999999996771,
+        "acima_limiar": true,
+        "erro_maximo_absoluto": 2.7460711342630617e-06,
+        "erro_rms": 7.496274538500429e-07,
+        "erro_maximo_absoluto_normalizado": 9.33933973767953e-08,
+        "erro_rms_normalizado": 2.5109736854663797e-08,
+        "bytes_float32_iguais": false,
+        "sha256_float32_a": "8432facbda2f4f115c554e822e227ff7b689a1212a34a2dbd27bda3c8dccbaa4",
+        "sha256_float32_b": "08cec0cfebe62847176f8378f904d94107b952466dbf081516dfbe0e58571ff4",
+        "bytes_float32_normalizados_iguais": false
+      }
+    },
+    {
+      "indice": 5,
+      "texto": "passage: João chegou. Maria saiu.",
+      "sha256_utf8": "ffc98b2cc3c50a2a4078978a01c1a8c0b0cc860f067fe01ee11f9ca767aea535",
+      "tokenizacao": {
+        "a": {
+          "input_ids": [
+            0,
+            46692,
+            12,
+            63742,
+            48161,
+            5,
+            5379,
+            5630,
+            34,
+            5,
+            2
+          ],
+          "attention_mask": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "special_tokens_mask": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "offsets": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              7
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              9,
+              13
+            ],
+            [
+              14,
+              20
+            ],
+            [
+              20,
+              21
+            ],
+            [
+              22,
+              27
+            ],
+            [
+              28,
+              31
+            ],
+            [
+              31,
+              32
+            ],
+            [
+              32,
+              33
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        },
+        "b": {
+          "input_ids": [
+            0,
+            46692,
+            12,
+            63742,
+            48161,
+            5,
+            5379,
+            5630,
+            34,
+            5,
+            2
+          ],
+          "attention_mask": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "special_tokens_mask": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "offsets": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              7
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              9,
+              13
+            ],
+            [
+              14,
+              20
+            ],
+            [
+              20,
+              21
+            ],
+            [
+              22,
+              27
+            ],
+            [
+              28,
+              31
+            ],
+            [
+              31,
+              32
+            ],
+            [
+              32,
+              33
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "token_type_ids": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "campos_iguais": {
+          "input_ids": true,
+          "attention_mask": true,
+          "special_tokens_mask": true,
+          "offsets": true
+        },
+        "token_type_ids": {
+          "presente_a": false,
+          "presente_b": true,
+          "igual": null
+        },
+        "identica_campos_verificados": true
+      },
+      "numerica": {
+        "estado": "calculada",
+        "normalizacao_comparacao": "l2_ambos",
+        "norma_a": 29.44823046589292,
+        "norma_b": 29.448230262314162,
+        "cosseno": 0.9999999999995537,
+        "acima_limiar": true,
+        "erro_maximo_absoluto": 2.9016624797373325e-06,
+        "erro_rms": 8.694823133216964e-07,
+        "erro_maximo_absoluto_normalizado": 9.839297467756358e-08,
+        "erro_rms_normalizado": 2.952500126796716e-08,
+        "bytes_float32_iguais": false,
+        "sha256_float32_a": "71e7aee6df089d8b9c409fcbe440b10fa3a43b730f00b1d1f64cec7a58200d6d",
+        "sha256_float32_b": "39065ea0e59e8b2891108e4e94b6a51a4b8d204acdb1ede51ca662b832c66f3e",
+        "bytes_float32_normalizados_iguais": false
+      }
+    },
+    {
+      "indice": 6,
+      "texto": "query: João não chegou hoje.",
+      "sha256_utf8": "f9067fc822a4b65e85c23981f94c071b9cd3c73003178b0ee284f7eb59263869",
+      "tokenizacao": {
+        "a": {
+          "input_ids": [
+            0,
+            41,
+            1294,
+            12,
+            63742,
+            1027,
+            48161,
+            17967,
+            5,
+            2
+          ],
+          "attention_mask": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "special_tokens_mask": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "offsets": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              7,
+              11
+            ],
+            [
+              12,
+              15
+            ],
+            [
+              16,
+              22
+            ],
+            [
+              23,
+              27
+            ],
+            [
+              27,
+              28
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        },
+        "b": {
+          "input_ids": [
+            0,
+            41,
+            1294,
+            12,
+            63742,
+            1027,
+            48161,
+            17967,
+            5,
+            2
+          ],
+          "attention_mask": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "special_tokens_mask": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "offsets": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              7,
+              11
+            ],
+            [
+              12,
+              15
+            ],
+            [
+              16,
+              22
+            ],
+            [
+              23,
+              27
+            ],
+            [
+              27,
+              28
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "token_type_ids": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "campos_iguais": {
+          "input_ids": true,
+          "attention_mask": true,
+          "special_tokens_mask": true,
+          "offsets": true
+        },
+        "token_type_ids": {
+          "presente_a": false,
+          "presente_b": true,
+          "igual": null
+        },
+        "identica_campos_verificados": true
+      },
+      "numerica": {
+        "estado": "calculada",
+        "normalizacao_comparacao": "l2_ambos",
+        "norma_a": 30.071559730929476,
+        "norma_b": 30.07155922049278,
+        "cosseno": 0.9999999999997609,
+        "acima_limiar": true,
+        "erro_maximo_absoluto": 2.2530555725541745e-06,
+        "erro_rms": 6.501766841013517e-07,
+        "erro_maximo_absoluto_normalizado": 7.60126281362794e-08,
+        "erro_rms_normalizado": 2.161447549777712e-08,
+        "bytes_float32_iguais": false,
+        "sha256_float32_a": "f04a85c06a0424096b9d1b2023892d56ddd2cd534ac3e8044d21c22dbb4cd834",
+        "sha256_float32_b": "3b42306517400ca7d66c5b7be237b63623e606c98fd9ef982811c3e589687f25",
+        "bytes_float32_normalizados_iguais": false
+      }
+    },
+    {
+      "indice": 7,
+      "texto": "passage: Maria pode sair amanhã.",
+      "sha256_utf8": "df44fe9835ae090300dfccf7cb5433ce001eb5b983604d87aa5cff800426ba8a",
+      "tokenizacao": {
+        "a": {
+          "input_ids": [
+            0,
+            46692,
+            12,
+            5379,
+            2911,
+            68378,
+            197429,
+            5,
+            2
+          ],
+          "attention_mask": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "special_tokens_mask": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "offsets": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              7
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              9,
+              14
+            ],
+            [
+              15,
+              19
+            ],
+            [
+              20,
+              24
+            ],
+            [
+              25,
+              31
+            ],
+            [
+              31,
+              32
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        },
+        "b": {
+          "input_ids": [
+            0,
+            46692,
+            12,
+            5379,
+            2911,
+            68378,
+            197429,
+            5,
+            2
+          ],
+          "attention_mask": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "special_tokens_mask": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "offsets": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              7
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              9,
+              14
+            ],
+            [
+              15,
+              19
+            ],
+            [
+              20,
+              24
+            ],
+            [
+              25,
+              31
+            ],
+            [
+              31,
+              32
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "token_type_ids": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "campos_iguais": {
+          "input_ids": true,
+          "attention_mask": true,
+          "special_tokens_mask": true,
+          "offsets": true
+        },
+        "token_type_ids": {
+          "presente_a": false,
+          "presente_b": true,
+          "igual": null
+        },
+        "identica_campos_verificados": true
+      },
+      "numerica": {
+        "estado": "calculada",
+        "normalizacao_comparacao": "l2_ambos",
+        "norma_a": 29.797637273455415,
+        "norma_b": 29.79763762100019,
+        "cosseno": 0.9999999999995807,
+        "acima_limiar": true,
+        "erro_maximo_absoluto": 3.2856025629635077e-06,
+        "erro_rms": 8.527782390218494e-07,
+        "erro_maximo_absoluto_normalizado": 1.1037351169140841e-07,
+        "erro_rms_normalizado": 2.8616667265892685e-08,
+        "bytes_float32_iguais": false,
+        "sha256_float32_a": "652ee52010eddd264cde40ebe7f02ae291485f0b4f0e235c5b4fb912803dea6e",
+        "sha256_float32_b": "4430cf833b895ec60561cdbe8240088aa6967621689517312b490c6c863f24d4",
+        "bytes_float32_normalizados_iguais": false
+      }
+    }
+  ],
+  "resumo": {
+    "entradas_total": 8,
+    "metadados_compativeis": true,
+    "tokenizacoes_verificadas_iguais": true,
+    "todos_cossenos_acima_limiar": true,
+    "cosseno_minimo": 0.9999999999993604,
+    "cosseno_medio": 0.9999999999995721
+  },
+  "compatibilidade_global": "nao_comprovada",
+  "autoriza_operacoes_similaridade": false,
+  "limitacoes": [
+    "Conclusão limitada às entradas e configurações registradas nesta amostra.",
+    "Igualdade de bytes FP32 nesta amostra não prova identidade de pesos, tokenizador ou execução futura.",
+    "O relatório não cria nem altera contratos de comparação ou registros vetoriais.",
+    "Campos opcionais ausentes em um backend não são inventados nem equiparados implicitamente.",
+    "Diferenças de precisão, dispositivo, limites ou artefatos ficam registradas; a classificação amostral não demonstra equivalência global dessas configurações."
+  ],
+  "tempo_comparacao_segundos": 4.931760931998724
+}
