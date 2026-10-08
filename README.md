@@ -6,7 +6,9 @@ e segmenta sua cópia de trabalho em tokens, períodos e parágrafos. Um modelo
 português local acrescenta lemas, classes gramaticais, traços morfológicos e
 vocabulário do documento, relações sintáticas e entidades nomeadas. Regras
 versionadas acrescentam ocorrências de orações, negação, tempo, modalidade
-e conectores, com evidências e propostas de alcance.
+e conectores, com evidências e propostas de alcance. Cada período recebe
+uma unidade de contexto, com o foco, os vizinhos selecionados e as referências
+às anotações existentes.
 Os registros JSON contêm versões, hashes SHA-256,
 metadados e posições que apontam até o original.
 
@@ -140,11 +142,34 @@ exata usada, e pode ser exportada em **Baixar regras JSON**. Um diagnóstico
 incompleto também fica no histórico: a interface diferencia regras sem
 ocorrências, desabilitadas, impedidas por anotações ausentes e com falha.
 Somente uma execução completa e validada recebe `pronto_para_etapa_08: true`.
-A construção de unidades de contexto da etapa 08 ainda não é executada.
 
 Veja [catálogo, decisões, limitações e API HTTP](docs/regras_linguisticas.md)
 e os exemplos com [preservação literal](examples/regras_linguisticas_literal.json)
 e [normalização opcional de CRLF](examples/regras_linguisticas_normalizada.json).
+
+## Construir unidades de contexto
+
+Escolha uma execução de regras pronta e clique em **Construir unidades de
+contexto**. A configuração inicial seleciona até um período anterior e um
+seguinte, dentro do mesmo parágrafo. Você pode alterar os raios e permitir
+explicitamente a passagem entre parágrafos. O painel destaca o foco, mostra
+os vizinhos e mantém acesso ao parágrafo, ao documento e às anotações de origem.
+
+A etapa 08 usa somente a biblioteca padrão, preserva a saída completa da
+etapa 07 e acrescenta uma unidade por período. Ela organiza as evidências,
+ambiguidades e necessidades de contexto existentes. Não cria interpretações
+semânticas novas nem declara ambiguidades resolvidas por incluir mais texto.
+
+Cada execução possui seu próprio ID e fica no histórico. Os textos exatos do
+foco e da janela recebem hashes SHA-256, e a seleção recebe uma identidade
+lógica estável, independente do ID e da data da execução. Somente um registro
+validado recebe `pronto_para_etapa_09: true`. A vetorização da etapa 09 ainda
+não é executada.
+
+Veja [uso direto, identidade, limites e API HTTP](docs/unidades_contexto.md),
+a [especificação consolidada](docs/especificacao_etapa08.md) e os exemplos com
+[preservação literal](examples/unidades_contexto_literal.json) e
+[normalização opcional de CRLF](examples/unidades_contexto_normalizada.json).
 
 ## Dados locais
 
@@ -171,6 +196,9 @@ As execuções da etapa 07 ficam na tabela `rule_runs`, vinculadas à análise
 sintática exata. O registro inclui a origem completa, o catálogo e a
 configuração utilizados, preservando também os diagnósticos incompletos.
 A tabela é criada automaticamente sem apagar registros anteriores.
+As execuções da etapa 08 ficam na tabela `context_runs`, vinculadas à execução
+exata de regras. Cada linha conserva sua política e origem; gerar novas
+análises, regras ou janelas não altera o histórico contextual.
 
 ## Sincronizar o código
 
@@ -203,6 +231,7 @@ O Git sincroniza o código; o banco e o ambiente virtual permanecem locais.
 Depois de atualizar para a etapa 05, instale as dependências e o modelo português.
 As etapas 05 e 06 compartilham esse modelo; a etapa 06 não exige um novo download
 quando as dependências já estão instaladas. A etapa 07 não acrescenta dependências.
+A etapa 08 também não acrescenta dependências nem exige outro modelo.
 Na raiz `linguaSpike`, no macOS ou Linux:
 
 ```bash
@@ -244,6 +273,11 @@ histórico e falhas explícitas, além da execução com o modelo real. A etapa 
 verifica regras com anotações controladas independentes do modelo, exceções,
 ambiguidade, fragmentos descontínuos, vínculos, estados de execução, adulterações
 do JSON, histórico e API HTTP. Os testes de integração com o modelo real
-conferem alinhamento e preservação, sem usá-lo como gabarito linguístico. O relato
+conferem alinhamento e preservação, sem usá-lo como gabarito linguístico.
+A etapa 08 verifica seleções contextuais com referências independentes,
+fronteiras de parágrafos, raios e tipos estritos, recortes e hashes exatos,
+identidade lógica estável, anotações por proprietário, pendências herdadas,
+limites de recursos, adulterações, consultas e histórico com bancos temporários.
+O relato
 de três parágrafos e dezesseis períodos ainda
 não foi fornecido e suas contagens não foram verificadas.

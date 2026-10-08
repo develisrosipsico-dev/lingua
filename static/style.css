@@ -293,6 +293,24 @@ button:hover { background: #1e483d; }
 .new-text span { margin-left: 8px; }
 .notice-error { margin: 0 0 20px; border-color: #e6c8c2; background: #fff4f1; color: #873127; font-size: 14px; }
 .site-footer { padding: 26px 0 40px; color: var(--muted); font-size: 12px; }
+.context-panel { margin-bottom: 20px; }
+.context-options { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 12px; }
+.context-options label { flex: 1 1 180px; }
+.context-options input { display: block; width: 100%; max-width: 220px; margin-top: 6px; padding: 9px 12px; border: 1px solid #c8d3cb; border-radius: 7px; color: var(--ink); font: inherit; }
+.context-options input:focus-visible { outline: 3px solid #a2cbb5; outline-offset: 3px; }
+.context-result { margin-top: 24px; }
+.context-policy, .context-neighbor-count { color: var(--muted); font-size: 14px; }
+.context-unit { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--line); }
+.context-unit h3 { margin: 0 0 10px; font-size: 16px; }
+.context-window { margin: 0; padding: 14px 16px; border-radius: 8px; background: #f7f8f4; white-space: pre-wrap; overflow-wrap: anywhere; }
+.context-window mark { padding: 2px 0; background: #d7e9da; color: var(--ink); font-weight: 650; }
+.context-neighbors, .context-paragraph, .context-references, .context-document { margin-top: 12px; }
+.context-neighbors summary, .context-paragraph summary, .context-references summary, .context-document summary, .context-history summary { color: var(--accent); cursor: pointer; }
+.context-neighbors h4, .context-pending h4 { margin: 12px 0 4px; font-size: 14px; }
+.context-pending ul { margin: 6px 0; padding-left: 20px; }
+.context-history { margin-top: 24px; }
+.context-history ul { padding-left: 20px; }
+.context-history time { margin-left: 8px; color: var(--muted); font-size: 12px; }
 
 @media (max-width: 600px) {
   .page { padding: 0 18px; }
@@ -308,7 +326,7 @@ button:hover { background: #1e483d; }
   .notice-success { flex-wrap: wrap; gap: 10px; }
   .new-text { margin-left: 40px; }
   button { width: 100%; }
-  .annotation-panel button, .syntax-panel button, .rules-panel button { white-space: normal; }
+  .annotation-panel button, .syntax-panel button, .rules-panel button, .context-panel button { white-space: normal; }
   .occurrence-summary { grid-template-columns: 1fr; gap: 3px; }
   .occurrence-summary dd { margin-bottom: 7px; }
 }

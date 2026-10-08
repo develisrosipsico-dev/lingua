@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Regras linguísticas · Análise linguística</title>
+    <title>Unidades de contexto · Análise linguística</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   </head>
   <body>
@@ -13,7 +13,7 @@
           <span class="brand-mark" aria-hidden="true">a<span>l</span></span>
           <span>Análise linguística</span>
         </a>
-        <span class="stage">Textos e regras linguísticas</span>
+        <span class="stage">Textos, regras e contexto</span>
       </header>
 
       <main>
@@ -555,6 +555,94 @@
           </details>
           {% endif %}
         </section>
+        {% if ruled|default(none) %}
+        <section class="editor context-panel" aria-labelledby="context-title">
+          <div class="editor-heading">
+            <h2 id="context-title">Unidades de contexto</h2>
+            <p>Organize cada período com seus vizinhos e as anotações salvas, mantendo acesso ao parágrafo e ao documento completo.</p>
+          </div>
+          {% if ruled.validacao.pronto_para_etapa_08 %}
+          <form method="post" action="{{ url_for('contextualize_submission', record_id=record.id) }}">
+            <input type="hidden" name="regras_execucao_id" value="{{ ruled.execucao_id }}">
+            <div class="context-options">
+              <label for="raio-anterior">Períodos anteriores
+                <input id="raio-anterior" type="number" name="raio_anterior" min="0" step="1" value="1" required>
+              </label>
+              <label for="raio-seguinte">Períodos seguintes
+                <input id="raio-seguinte" type="number" name="raio_seguinte" min="0" step="1" value="1" required>
+              </label>
+            </div>
+            <label class="technical-option"><input type="checkbox" name="atravessar_paragrafos"> Permitir vizinhos de outros parágrafos</label>
+            <button type="submit">Construir unidades de contexto <span aria-hidden="true">→</span></button>
+          </form>
+          {% else %}
+          <p class="rule-pending">Conclua as regras desta execução antes de construir unidades de contexto.</p>
+          {% endif %}
+
+          {% if contextualized|default(none) %}
+          {% set context_work = contextualized.regras.analise.anotacao.segmentacao.preparacao.trabalho.texto %}
+          <div class="context-result">
+            <p class="rule-readiness" role="status">Registro validado e pronto para a etapa 09.</p>
+            <p class="context-policy"><strong>Política aplicada:</strong> até {{ contextualized.configuracao.raio_anterior }} período(s) anterior(es) e {{ contextualized.configuracao.raio_seguinte }} seguinte(s). {% if contextualized.configuracao.atravessar_paragrafos %}Pode atravessar parágrafos.{% else %}Limitada ao parágrafo do foco.{% endif %}</p>
+            <p class="annotation-note">O contexto disponível não resolve automaticamente ambiguidades. As anotações e suas limitações permanecem preservadas.</p>
+            <a class="download-link" href="{{ url_for('context_json', record_id=record.id, contexto_execucao_id=contextualized.execucao_id) }}">Baixar contexto JSON <span aria-hidden="true">↓</span></a>
+            <details class="context-document">
+              <summary>Documento completo de origem</summary>
+              <p class="period-text">{{ original_text }}</p>
+            </details>
+            {% for unit in contextualized.unidades %}
+            {% set paragraph = paragraphs_by_id[unit.paragrafo_foco_id] %}
+            <article class="context-unit" aria-labelledby="context-unit-title-{{ loop.index }}">
+              <h3 id="context-unit-title-{{ loop.index }}">Período {{ loop.index }} — foco destacado</h3>
+              <p class="context-window">{{ context_work[unit.janela.trabalho.inicio:unit.foco.trabalho.inicio] }}<mark>{{ unit.foco.texto }}</mark>{{ context_work[unit.foco.trabalho.fim:unit.janela.trabalho.fim] }}</p>
+              <p class="context-neighbor-count">{{ unit.anteriores|length }} anterior(es) · {{ unit.seguintes|length }} seguinte(s)</p>
+              <details class="context-neighbors">
+                <summary>Vizinhos selecionados</summary>
+                {% if unit.anteriores %}<h4>Anteriores</h4>{% for period_id in unit.anteriores %}<p class="period-text">{{ periods_by_id[period_id].texto }}</p>{% endfor %}{% endif %}
+                {% if unit.seguintes %}<h4>Seguintes</h4>{% for period_id in unit.seguintes %}<p class="period-text">{{ periods_by_id[period_id].texto }}</p>{% endfor %}{% endif %}
+                {% if not unit.anteriores and not unit.seguintes %}<p class="empty-result">Somente o foco foi selecionado.</p>{% endif %}
+              </details>
+              <details class="context-paragraph">
+                <summary>Parágrafo completo do foco</summary>
+                <p class="period-text">{{ original_text[paragraph.original.inicio:paragraph.original.fim] }}</p>
+              </details>
+              {% if unit.pendencias %}
+              <div class="context-pending">
+                <h4>Pendências herdadas</h4>
+                <ul>{% for pending in unit.pendencias %}<li>{{ pending.texto }} <span class="unavailable">({% if pending.localizacao == 'na_janela' %}referência na janela{% elif pending.localizacao == 'fora_da_janela' %}referência fora da janela{% else %}localização indeterminada{% endif %})</span></li>{% endfor %}</ul>
+              </div>
+              {% endif %}
+              <details class="context-references">
+                <summary>Anotações, origem e integridade</summary>
+                <p>Foco: {{ unit.foco.anotacoes.morfologia|length }} referência(s) morfológica(s), {{ unit.foco.anotacoes.sintaxe|length }} sintática(s), {{ unit.foco.anotacoes.entidades|length }} entidade(s), {{ unit.foco.anotacoes.regras|length }} ocorrência(s) de regras. As anotações dos vizinhos têm referências próprias no JSON.</p>
+                <dl class="context-positions">
+                  <dt>ID da unidade</dt><dd>{{ unit.id }}</dd>
+                  <dt>ID do período</dt><dd>{{ unit.periodo_foco_id }}</dd>
+                  <dt>Identificação lógica da janela</dt><dd>{{ unit.janela_logica_id }}</dd>
+                  <dt>Hash SHA-256 do foco</dt><dd>{{ unit.foco.sha256_texto }}</dd>
+                  <dt>Hash SHA-256 da janela</dt><dd>{{ unit.janela.sha256_texto }}</dd>
+                  <dt>Foco no original</dt><dd>[{{ unit.foco.original.inicio }}, {{ unit.foco.original.fim }})</dd>
+                  <dt>Janela no original</dt><dd>[{{ unit.janela.original.inicio }}, {{ unit.janela.original.fim }})</dd>
+                </dl>
+                <a href="{{ url_for('context_unit_json', record_id=record.id, contexto_execucao_id=contextualized.execucao_id, unidade_id=unit.id) }}">Consultar esta unidade JSON</a>
+              </details>
+            </article>
+            {% else %}
+            <p class="empty-result">Nenhum período na origem; nenhuma unidade contextual foi criada.</p>
+            {% endfor %}
+          </div>
+          {% endif %}
+
+          {% if context_history|default([])|length > 1 %}
+          <details class="context-history">
+            <summary>Execuções de contexto salvas ({{ context_history|length }})</summary>
+            <ul>{% for history in context_history %}
+              <li><a href="{{ url_for('submission', record_id=record.id, contexto_execucao_id=history.contexto_execucao_id) }}"{% if contextualized and history.contexto_execucao_id == contextualized.execucao_id %} aria-current="page"{% endif %}>Contexto #{{ history.id }}</a> <time datetime="{{ history.registrado_em }}">{{ history.registrado_em|horario_brasilia }} (horário de Brasília)</time>{% if contextualized and history.contexto_execucao_id == contextualized.execucao_id %} <span class="current-analysis">Em exibição</span>{% endif %}</li>
+            {% endfor %}</ul>
+          </details>
+          {% endif %}
+        </section>
+        {% endif %}
         {% endif %}
         {% endif %}
         {% endif %}

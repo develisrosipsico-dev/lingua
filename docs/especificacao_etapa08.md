@@ -1,8 +1,8 @@
 # Etapa 08 — Construir unidades de contexto
 
-Especificação consolidada com as decisões da revisão aprovadas pelo usuário. A etapa 08 ainda não está implementada; este documento define o trabalho futuro.
+Especificação consolidada com as decisões da revisão aprovadas pelo usuário e implementada na etapa 08. Consulte [uso, contratos e reprodução local](unidades_contexto.md) para executar e consultar os resultados.
 
-Implemente a etapa 08 sobre a saída validada da etapa 07. Organize cada período junto de suas unidades vizinhas, seu parágrafo e suas anotações linguísticas, mantendo acesso ao documento completo.
+A etapa 08 trabalha sobre a saída validada e pronta da etapa 07. Organiza cada período junto de suas unidades vizinhas, seu parágrafo e suas anotações linguísticas, mantendo acesso ao documento completo.
 
 O produto é um conjunto de unidades com contexto explícito, rastreável e reproduzível, disponível para a etapa 09 — Vetorizar conteúdo e unidades. Esta etapa organiza os dados já produzidos para que um trecho possa ser recuperado junto ao seu contexto.
 

@@ -31,6 +31,14 @@ from regras_linguisticas import (
     aplicar_regras_linguisticas,
     validar_regras_linguisticas,
 )
+from unidades_contexto import (
+    ErroContexto,
+    ErroEntrada as ErroContextoEntrada,
+    ErroLimite as ErroContextoLimite,
+    construir_unidades_contexto,
+    consultar_unidade_contexto,
+    validar_unidades_contexto,
+)
 
 
 BASE = Path(__file__).resolve().parent
@@ -274,6 +282,54 @@ def latest_rule_run(connection, document, analysis_id=None, execution_id=None):
     return ruled
 
 
+def save_context_run(connection, document, ruled, **options):
+    """Acrescenta contexto da execução exata de regras, sem substituir a origem."""
+    contextualized = construir_unidades_contexto(ruled, **options)
+    validar_unidades_contexto(contextualized)
+    if contextualized["regras"] != ruled or contextualized["documento_id"] != document["id"]:
+        raise ErroContexto("O contexto não corresponde à execução de regras selecionada.")
+    connection.execute(
+        """INSERT INTO context_runs
+           (execution_id, rule_execution_id, submission_id, registered_at, record_json)
+           VALUES (?, ?, ?, ?, ?)""",
+        (
+            contextualized["execucao_id"], ruled["execucao_id"], document["id"],
+            contextualized["registrado_em"], json.dumps(contextualized, ensure_ascii=False, allow_nan=False),
+        ),
+    )
+    return contextualized
+
+
+def latest_context_run(connection, document, rule_execution_id=None, execution_id=None):
+    sql = "SELECT * FROM context_runs WHERE submission_id = ?"
+    parameters = [document["id"]]
+    if rule_execution_id is not None:
+        sql += " AND rule_execution_id = ?"
+        parameters.append(rule_execution_id)
+    if execution_id is not None:
+        sql += " AND execution_id = ?"
+        parameters.append(execution_id)
+    row = connection.execute(sql + " ORDER BY id DESC LIMIT 1", parameters).fetchone()
+    if row is None:
+        return None
+    try:
+        contextualized = json.loads(row["record_json"])
+    except (ValueError, TypeError) as error:
+        raise ErroContexto("O JSON das unidades de contexto armazenadas é inválido.") from error
+    validar_unidades_contexto(contextualized)
+    ruled = latest_rule_run(connection, document, execution_id=row["rule_execution_id"])
+    if (
+        ruled is None
+        or contextualized["documento_id"] != document["id"]
+        or contextualized["execucao_id"] != row["execution_id"]
+        or contextualized["regras_execucao_id"] != row["rule_execution_id"]
+        or contextualized["registrado_em"] != row["registered_at"]
+        or contextualized["regras"] != ruled
+    ):
+        raise ErroContexto("O contexto não corresponde à execução de regras original armazenada.")
+    return contextualized
+
+
 def create_app(config=None):
     app = Flask(__name__)
     app.config.from_mapping(
@@ -364,6 +420,19 @@ def create_app(config=None):
         connection.execute(
             "CREATE INDEX IF NOT EXISTS rule_runs_analysis ON rule_runs (submission_id, analysis_id, id)"
         )
+        connection.execute(
+            """CREATE TABLE IF NOT EXISTS context_runs (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                execution_id TEXT NOT NULL UNIQUE,
+                rule_execution_id TEXT NOT NULL REFERENCES rule_runs(execution_id),
+                submission_id INTEGER NOT NULL REFERENCES submissions(id),
+                registered_at TEXT NOT NULL,
+                record_json TEXT NOT NULL
+            )"""
+        )
+        connection.execute(
+            "CREATE INDEX IF NOT EXISTS context_runs_rules ON context_runs (submission_id, rule_execution_id, id)"
+        )
         connection.commit()
 
     @app.get("/")
@@ -413,9 +482,23 @@ def create_app(config=None):
                 annotation_id = request.args.get("anotacao_id")
                 analysis_id = request.args.get("analise_id")
                 execution_id = request.args.get("execucao_id")
+                context_execution_id = request.args.get("contexto_execucao_id")
+                contextualized = None
+                if execution_id is not None and (len(request.args.getlist("execucao_id")) != 1 or not execution_id.strip()):
+                    return {"erro": "Selecione uma única execução de regras."}, 400
+                if context_execution_id is not None:
+                    if len(request.args.getlist("contexto_execucao_id")) != 1 or not context_execution_id.strip():
+                        return {"erro": "Selecione uma única execução de contexto."}, 400
+                    for field in ("preparacao_id", "segmentacao_id", "anotacao_id", "analise_id"):
+                        if field in request.args and (len(request.args.getlist(field)) != 1 or not request.args[field].strip()):
+                            return {"erro": f"Selecione um único {field} para consultar o contexto."}, 400
+                    contextualized = latest_context_run(connection, row, execution_id=context_execution_id)
+                    if contextualized is None:
+                        abort(404)
+                    if execution_id is not None and execution_id != contextualized["regras_execucao_id"]:
+                        return {"erro": "O contexto pertence a outra execução de regras."}, 400
+                    execution_id = contextualized["regras_execucao_id"]
                 if execution_id is not None:
-                    if len(request.args.getlist("execucao_id")) != 1 or not execution_id.strip():
-                        return {"erro": "Selecione uma única execução de regras."}, 400
                     ruled = latest_rule_run(connection, row, execution_id=execution_id)
                     if ruled is None:
                         abort(404)
@@ -472,6 +555,13 @@ def create_app(config=None):
                     analyzed = latest_analysis(connection, row, annotated["anotacao_id"]) if annotated else None
                 if execution_id is None:
                     ruled = latest_rule_run(connection, row, analysis_id=analyzed["analise_id"]) if analyzed else None
+                if context_execution_id is None:
+                    contextualized = latest_context_run(connection, row, rule_execution_id=ruled["execucao_id"]) if ruled else None
+                context_history = connection.execute(
+                    """SELECT id, execution_id AS contexto_execucao_id, registered_at AS registrado_em
+                       FROM context_runs WHERE submission_id = ? AND rule_execution_id = ? ORDER BY id DESC""",
+                    (record_id, ruled["execucao_id"]),
+                ).fetchall() if ruled else []
                 rule_history = connection.execute(
                     """SELECT id, execution_id AS execucao_id, registered_at AS registrado_em
                        FROM rule_runs WHERE submission_id = ? AND analysis_id = ? ORDER BY id DESC""",
@@ -496,7 +586,7 @@ def create_app(config=None):
                     "SELECT id, preparation_id AS preparacao_id FROM preparations WHERE submission_id = ? ORDER BY id DESC",
                     (record_id,),
                 ).fetchall()
-            except (ErroPreparacao, ErroSegmentacao, ErroAnotacao, ErroAnalise, ErroRegras) as error:
+            except (ErroPreparacao, ErroSegmentacao, ErroAnotacao, ErroAnalise, ErroRegras, ErroContexto) as error:
                 return {"erro": str(error)}, 409
         record = dict(row)
         record["created_at"] = datetime.fromisoformat(record["created_at"]).astimezone(
@@ -509,6 +599,7 @@ def create_app(config=None):
             annotated=annotated, annotation_history=[dict(item) for item in annotation_history],
             analyzed=analyzed, analysis_history=[dict(item) for item in analysis_history],
             ruled=ruled, rule_history=[dict(item) for item in rule_history],
+            contextualized=contextualized, context_history=[dict(item) for item in context_history],
         )
 
     @app.post("/envios/<int:record_id>/preparacoes")
@@ -810,6 +901,111 @@ def create_app(config=None):
             json.dumps(ruled, ensure_ascii=False, indent=2, allow_nan=False), mimetype="application/json",
             headers={"Content-Disposition": f'attachment; filename="regras-{record_id}.json"'},
         )
+
+    @app.post("/envios/<int:record_id>/contextos")
+    def contextualize_submission(record_id):
+        if request.is_json:
+            payload = request.get_json(silent=True)
+            allowed = {"regras_execucao_id", "execucao_id", "registrado_em", "raio_anterior", "raio_seguinte", "atravessar_paragrafos"}
+            if not isinstance(payload, dict) or payload.keys() - allowed:
+                return {"erro": "Envie um objeto JSON com a execução de regras e a política de contexto."}, 400
+            options = dict(payload)
+        else:
+            allowed = {"regras_execucao_id", "raio_anterior", "raio_seguinte", "atravessar_paragrafos"}
+            if (
+                set(request.form) - allowed or "regras_execucao_id" not in request.form
+                or any(len(request.form.getlist(field)) != 1 for field in request.form)
+            ):
+                return {"erro": "Selecione uma única execução de regras e uma política de contexto."}, 400
+            options = {"regras_execucao_id": request.form["regras_execucao_id"]}
+            for field in ("raio_anterior", "raio_seguinte"):
+                if field in request.form:
+                    value = request.form[field]
+                    if not value.isascii() or not value.isdecimal():
+                        return {"erro": f"{field} deve ser um inteiro não negativo."}, 400
+                    try:
+                        options[field] = int(value)
+                    except ValueError:
+                        return {"erro": f"{field} excedeu o tamanho permitido."}, 400
+            if "atravessar_paragrafos" in request.form:
+                if request.form["atravessar_paragrafos"] != "on":
+                    return {"erro": "A passagem entre parágrafos deve ser uma caixa de seleção."}, 400
+                options["atravessar_paragrafos"] = True
+        for field in ("regras_execucao_id", "execucao_id", "registrado_em"):
+            if field in options and (not isinstance(options[field], str) or not options[field].strip()):
+                return {"erro": f"{field} deve ser uma string não vazia."}, 400
+        rule_execution_id = options.pop("regras_execucao_id", None)
+        try:
+            with closing(connect_database(app.config["DATABASE"])) as connection:
+                document = connection.execute("SELECT * FROM submissions WHERE id = ?", (record_id,)).fetchone()
+                if document is None:
+                    abort(404)
+                ruled = latest_rule_run(connection, document, execution_id=rule_execution_id)
+                if ruled is None:
+                    return {"erro": "Execução de regras não encontrada. Conclua as regras antes de construir contexto."}, 404
+                contextualized = save_context_run(connection, document, ruled, **options)
+                connection.commit()
+        except (ErroPreparacao, ErroSegmentacao, ErroAnotacao, ErroAnalise, ErroRegras, ErroContextoEntrada) as error:
+            return {"erro": str(error)}, 409
+        except ErroContextoLimite as error:
+            return {"erro": str(error)}, 413
+        except ErroContexto as error:
+            return {"erro": str(error)}, 400
+        except sqlite3.IntegrityError:
+            return {"erro": "Esse identificador de contexto já existe. Gere uma nova execução."}, 409
+        if request.is_json:
+            return Response(json.dumps(contextualized, ensure_ascii=False, allow_nan=False), status=201, mimetype="application/json")
+        return redirect(
+            url_for("submission", record_id=record_id, contexto_execucao_id=contextualized["execucao_id"]), code=303,
+        )
+
+    @app.get("/envios/<int:record_id>/contexto.json")
+    def context_json(record_id):
+        if set(request.args) - {"contexto_execucao_id"}:
+            return {"erro": "Use contexto_execucao_id para selecionar uma execução contextual."}, 400
+        execution_id = request.args.get("contexto_execucao_id")
+        if execution_id is not None and (len(request.args.getlist("contexto_execucao_id")) != 1 or not execution_id.strip()):
+            return {"erro": "Selecione uma única execução de contexto."}, 400
+        with closing(connect_database(app.config["DATABASE"])) as connection:
+            document = connection.execute("SELECT * FROM submissions WHERE id = ?", (record_id,)).fetchone()
+            if document is None:
+                abort(404)
+            try:
+                contextualized = latest_context_run(connection, document, execution_id=execution_id)
+            except (ErroPreparacao, ErroSegmentacao, ErroAnotacao, ErroAnalise, ErroRegras, ErroContexto) as error:
+                return {"erro": str(error)}, 409
+        if contextualized is None:
+            return {"erro": "Nenhum contexto encontrado. Construa unidades a partir de uma execução de regras pronta."}, 404
+        return Response(
+            json.dumps(contextualized, ensure_ascii=False, indent=2, allow_nan=False), mimetype="application/json",
+            headers={"Content-Disposition": f'attachment; filename="contexto-{record_id}.json"'},
+        )
+
+    @app.get("/envios/<int:record_id>/unidade-contexto.json")
+    def context_unit_json(record_id):
+        allowed = {"contexto_execucao_id", "unidade_id", "periodo_id"}
+        if set(request.args) - allowed or "contexto_execucao_id" not in request.args:
+            return {"erro": "Informe a execução contextual e um único identificador de unidade ou período."}, 400
+        selectors = set(request.args) & {"unidade_id", "periodo_id"}
+        if len(selectors) != 1 or any(len(request.args.getlist(field)) != 1 or not request.args[field].strip() for field in request.args):
+            return {"erro": "Informe a execução contextual e um único identificador de unidade ou período."}, 400
+        execution_id = request.args["contexto_execucao_id"]
+        selector = next(iter(selectors))
+        with closing(connect_database(app.config["DATABASE"])) as connection:
+            document = connection.execute("SELECT * FROM submissions WHERE id = ?", (record_id,)).fetchone()
+            if document is None:
+                abort(404)
+            try:
+                contextualized = latest_context_run(connection, document, execution_id=execution_id)
+                if contextualized is None:
+                    return {"erro": "Execução de contexto não encontrada."}, 404
+                field = "id" if selector == "unidade_id" else "periodo_foco_id"
+                if not any(unit[field] == request.args[selector] for unit in contextualized["unidades"]):
+                    return {"erro": "Unidade ou período não encontrado nesta execução contextual."}, 404
+                unit = consultar_unidade_contexto(contextualized, **{selector: request.args[selector]})
+            except (ErroPreparacao, ErroSegmentacao, ErroAnotacao, ErroAnalise, ErroRegras, ErroContexto) as error:
+                return {"erro": str(error)}, 409
+        return Response(json.dumps(unit, ensure_ascii=False, allow_nan=False), mimetype="application/json")
 
     @app.get("/envios/<int:record_id>/segmentacoes/<segmentacao_id>/periodos/<periodo_id>/contexto.json")
     @app.get("/envios/<int:record_id>/contexto-periodo.json")
