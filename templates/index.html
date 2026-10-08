@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Texto e segmentação · Análise linguística</title>
+    <title>Morfologia e vocabulário · Análise linguística</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   </head>
   <body>
@@ -13,14 +13,14 @@
           <span class="brand-mark" aria-hidden="true">a<span>l</span></span>
           <span>Análise linguística</span>
         </a>
-        <span class="stage">Textos e segmentação</span>
+        <span class="stage">Textos e vocabulário</span>
       </header>
 
       <main>
         <div class="intro">
           <p class="eyebrow">Seu ponto de partida</p>
           <h1>Prepare seu texto para análise.</h1>
-          <p class="intro-description">Registre seu texto e preserve o conteúdo original. Quando quiser, separe o texto de trabalho em parágrafos, períodos e tokens.</p>
+          <p class="intro-description">Registre seu texto, separe suas unidades e consulte sugestões de morfologia e vocabulário, preservando o conteúdo original.</p>
         </div>
 
         {% if record %}
@@ -122,7 +122,7 @@
               {% for history in segmentation_history %}
               <li>
                 <a href="{{ url_for('submission', record_id=record.id, preparacao_id=prepared.preparacao_id, segmentacao_id=history.segmentacao_id) }}"{% if segmented and history.segmentacao_id == segmented.segmentacao_id %} aria-current="page"{% endif %}>Segmentação {{ loop.index }}</a>
-                <time datetime="{{ history.registrado_em }}">{{ history.registrado_em }}</time>
+                <time datetime="{{ history.registrado_em }}">{{ history.registrado_em|horario_brasilia }} (horário de Brasília)</time>
                 {% if segmented and history.segmentacao_id == segmented.segmentacao_id %}<span class="current-segmentation">Em exibição</span>{% endif %}
               </li>
               {% endfor %}
@@ -130,6 +130,139 @@
           </details>
           {% endif %}
         </section>
+
+        {% if segmented %}
+        <section class="editor annotation-panel" aria-labelledby="annotation-title">
+          <div class="editor-heading">
+            <h2 id="annotation-title">Morfologia e vocabulário</h2>
+            <p>Gere sugestões de lema, classe gramatical e atributos para os tokens desta segmentação.</p>
+          </div>
+          <form method="post" action="{{ url_for('annotate_submission', record_id=record.id) }}">
+            <input type="hidden" name="segmentacao_id" value="{{ segmented.segmentacao_id }}">
+            <button type="submit">Anotar morfologia e vocabulário <span aria-hidden="true">→</span></button>
+          </form>
+          <p class="local-processing">A anotação é feita localmente, sem enviar o texto a serviços externos.</p>
+
+          {% if annotated %}
+          <div class="annotation-result">
+            <p class="annotation-note">Lemas, classes e atributos são sugestões do modelo e precisam de revisão linguística.</p>
+            <dl class="unit-counts annotation-counts" aria-label="Resumo da anotação">
+              <div>
+                <dt>Tokens no registro</dt>
+                <dd>{{ annotated.anotacoes_tokens|length }}</dd>
+              </div>
+              <div>
+                <dt>Entradas de vocabulário</dt>
+                <dd>{{ annotated.vocabulario|length }}</dd>
+              </div>
+            </dl>
+            <a class="download-link" href="{{ url_for('annotation_json', record_id=record.id, anotacao_id=annotated.anotacao_id) }}">Baixar anotações JSON <span aria-hidden="true">↓</span></a>
+
+            <h3 id="token-annotations-title" class="annotation-table-title">Anotações dos tokens</h3>
+            <div class="table-scroll" role="region" aria-labelledby="token-annotations-title" tabindex="0">
+              <table class="analysis-table token-table">
+                <caption class="visually-hidden">Sugestões de lema, classe e morfologia para cada token.</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Token</th>
+                    <th scope="col">Lema</th>
+                    <th scope="col">Classe</th>
+                    <th scope="col">Morfologia</th>
+                    <th scope="col">Detalhes</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for token in annotated.anotacoes_tokens %}
+                  <tr>
+                    <td class="token-text">{{ token.texto }}</td>
+                    <td>{% if token.lema is none %}<span class="unavailable">Não disponível</span>{% else %}{{ token.lema }}{% endif %}</td>
+                    <td>{% if token.pos is none %}<span class="unavailable">Não disponível</span>{% else %}{{ token.pos }}{% endif %}</td>
+                    <td>
+                      {% if token.morfologia is none %}
+                      <span class="unavailable">Não disponível</span>
+                      {% elif not token.morfologia %}
+                      <span class="unavailable">Sem atributos</span>
+                      {% else %}
+                      <dl class="morph-attributes">
+                        {% for feature, value in token.morfologia|dictsort %}
+                        <div><dt>{{ feature }}</dt><dd>{{ value }}</dd></div>
+                        {% endfor %}
+                      </dl>
+                      {% endif %}
+                    </td>
+                    <td>
+                      <details class="token-details">
+                        <summary>Ver detalhes</summary>
+                        <dl>
+                          <dt>TAG do modelo</dt>
+                          <dd>{% if token.tag is none %}Não disponível{% else %}{{ token.tag }}{% endif %}</dd>
+                          <dt>ID do token</dt><dd>{{ token.token_id }}</dd>
+                          <dt>ID do período</dt><dd>{{ token.periodo_id }}</dd>
+                          <dt>ID do parágrafo</dt><dd>{{ token.paragrafo_id }}</dd>
+                          <dt>Posição no texto de trabalho</dt><dd>{{ token.trabalho.inicio }} a {{ token.trabalho.fim }}</dd>
+                          <dt>Posição no original</dt><dd>{{ token.original.inicio }} a {{ token.original.fim }}</dd>
+                        </dl>
+                        <p>As posições começam em zero e o limite final é exclusivo.</p>
+                      </details>
+                    </td>
+                  </tr>
+                  {% else %}
+                  <tr><td colspan="5" class="empty-result">Nenhum token disponível nesta anotação.</td></tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+
+            <h3 id="vocabulary-title" class="annotation-table-title">Vocabulário</h3>
+            <p class="table-description">Formas encontradas no texto e suas frequências nesta anotação.</p>
+            <div class="table-scroll" role="region" aria-labelledby="vocabulary-title" tabindex="0">
+              <table class="analysis-table vocabulary-table">
+                <caption class="visually-hidden">Entradas de vocabulário, formas encontradas e quantidade de ocorrências.</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Lema ou forma</th>
+                    <th scope="col">Classe</th>
+                    <th scope="col">Formas no texto</th>
+                    <th scope="col">Ocorrências</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for entry in annotated.vocabulario %}
+                  <tr>
+                    <td>{{ entry.lema if entry.lema is not none else entry.forma_agrupamento }}</td>
+                    <td>{% if entry.pos is none %}<span class="unavailable">Não disponível</span>{% else %}{{ entry.pos }}{% endif %}</td>
+                    <td>
+                      <ul class="word-forms">
+                        {% for form in entry.formas %}<li>{{ form }}</li>{% endfor %}
+                      </ul>
+                    </td>
+                    <td class="frequency">{{ entry.quantidade }}</td>
+                  </tr>
+                  {% else %}
+                  <tr><td colspan="4" class="empty-result">Nenhuma entrada de vocabulário nesta anotação.</td></tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          {% endif %}
+
+          {% if annotation_history|length > 1 %}
+          <details class="annotation-history">
+            <summary>Anotações salvas ({{ annotation_history|length }})</summary>
+            <ul>
+              {% for history in annotation_history %}
+              <li>
+                <a href="{{ url_for('submission', record_id=record.id, preparacao_id=prepared.preparacao_id, segmentacao_id=segmented.segmentacao_id, anotacao_id=history.anotacao_id) }}"{% if annotated and history.anotacao_id == annotated.anotacao_id %} aria-current="page"{% endif %}>Anotação #{{ history.id }}</a>
+                <time datetime="{{ history.registrado_em }}">{{ history.registrado_em|horario_brasilia }} (horário de Brasília)</time>
+                {% if annotated and history.anotacao_id == annotated.anotacao_id %}<span class="current-annotation">Em exibição</span>{% endif %}
+              </li>
+              {% endfor %}
+            </ul>
+          </details>
+          {% endif %}
+        </section>
+        {% endif %}
         {% endif %}
         {% endif %}
 

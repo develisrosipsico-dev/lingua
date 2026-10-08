@@ -1,0 +1,764 @@
+{
+  "schema_version": "1.0.0",
+  "etapa": "avaliacao_linguistica_05",
+  "gerado_em": "2026-10-07T21:04:12.145097-03:00",
+  "referencia": {
+    "schema_version": "1.0.0",
+    "identificacao": "referencia_manual_morfologia_05",
+    "versao": "1.0.0",
+    "coordenadas": {
+      "unidade": "pontos_de_codigo_unicode",
+      "base": 0,
+      "fim_exclusivo": true
+    },
+    "escopo": "15 tokens selecionados em cinco frases. Artigos, pontuação e morfologia flexional não são avaliados nesta referência.",
+    "casos": [
+      {
+        "id": "guardar-passado",
+        "texto": "Eu guardei o dinheiro.",
+        "alvos": [
+          {
+            "texto": "Eu",
+            "original": {
+              "inicio": 0,
+              "fim": 2
+            },
+            "lema": "eu",
+            "pos": "PRON"
+          },
+          {
+            "texto": "guardei",
+            "original": {
+              "inicio": 3,
+              "fim": 10
+            },
+            "lema": "guardar",
+            "pos": "VERB"
+          },
+          {
+            "texto": "dinheiro",
+            "original": {
+              "inicio": 13,
+              "fim": 21
+            },
+            "lema": "dinheiro",
+            "pos": "NOUN"
+          }
+        ]
+      },
+      {
+        "id": "plural",
+        "texto": "As meninas chegaram cedo.",
+        "alvos": [
+          {
+            "texto": "meninas",
+            "original": {
+              "inicio": 3,
+              "fim": 10
+            },
+            "lema": "menina",
+            "pos": "NOUN"
+          },
+          {
+            "texto": "chegaram",
+            "original": {
+              "inicio": 11,
+              "fim": 19
+            },
+            "lema": "chegar",
+            "pos": "VERB"
+          },
+          {
+            "texto": "cedo",
+            "original": {
+              "inicio": 20,
+              "fim": 24
+            },
+            "lema": "cedo",
+            "pos": "ADV"
+          }
+        ]
+      },
+      {
+        "id": "guarda-verbo",
+        "texto": "Ele guarda o recibo.",
+        "alvos": [
+          {
+            "texto": "Ele",
+            "original": {
+              "inicio": 0,
+              "fim": 3
+            },
+            "lema": "ele",
+            "pos": "PRON"
+          },
+          {
+            "texto": "guarda",
+            "original": {
+              "inicio": 4,
+              "fim": 10
+            },
+            "lema": "guardar",
+            "pos": "VERB"
+          },
+          {
+            "texto": "recibo",
+            "original": {
+              "inicio": 13,
+              "fim": 19
+            },
+            "lema": "recibo",
+            "pos": "NOUN"
+          }
+        ]
+      },
+      {
+        "id": "guarda-substantivo",
+        "texto": "A guarda chegou.",
+        "alvos": [
+          {
+            "texto": "guarda",
+            "original": {
+              "inicio": 2,
+              "fim": 8
+            },
+            "lema": "guarda",
+            "pos": "NOUN"
+          },
+          {
+            "texto": "chegou",
+            "original": {
+              "inicio": 9,
+              "fim": 15
+            },
+            "lema": "chegar",
+            "pos": "VERB"
+          }
+        ]
+      },
+      {
+        "id": "negacao",
+        "texto": "Eu não queria sair.",
+        "alvos": [
+          {
+            "texto": "Eu",
+            "original": {
+              "inicio": 0,
+              "fim": 2
+            },
+            "lema": "eu",
+            "pos": "PRON"
+          },
+          {
+            "texto": "não",
+            "original": {
+              "inicio": 3,
+              "fim": 6
+            },
+            "lema": "não",
+            "pos": "ADV"
+          },
+          {
+            "texto": "queria",
+            "original": {
+              "inicio": 7,
+              "fim": 13
+            },
+            "lema": "querer",
+            "pos": "VERB"
+          },
+          {
+            "texto": "sair",
+            "original": {
+              "inicio": 14,
+              "fim": 18
+            },
+            "lema": "sair",
+            "pos": "VERB"
+          }
+        ]
+      }
+    ]
+  },
+  "casos": [
+    {
+      "id": "guardar-passado",
+      "texto": "Eu guardei o dinheiro.",
+      "documento_id": "11580c67-0615-4b37-b842-00d7010dd8f9",
+      "preparacao_id": "fd35ef74-bc6d-49b2-9d35-77ad849aa586",
+      "segmentacao_id": "40921bc7-b50c-433b-acd8-7c51253ff2be",
+      "anotacao_id": "cb6fc97f-9082-40c1-9d1c-6c19da5f65b9",
+      "sha256_original": "c0a5e1ae69f1d4834c47ff8061f0859dffc18877351adeb0e48ef082a0808ae1",
+      "processamento": {
+        "ferramenta": "spacy",
+        "versao": "3.8.16",
+        "idioma": "pt",
+        "modelo": {
+          "nome": "pt_core_news_sm",
+          "versao": "3.8.0",
+          "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+        },
+        "componentes_executados": [
+          "tok2vec",
+          "morphologizer",
+          "lemmatizer"
+        ],
+        "componentes_desativados": [
+          "parser",
+          "senter",
+          "attribute_ruler",
+          "ner"
+        ],
+        "componentes_disponiveis": [
+          "tok2vec",
+          "morphologizer",
+          "parser",
+          "lemmatizer",
+          "senter",
+          "attribute_ruler",
+          "ner"
+        ],
+        "configuracoes": {
+          "tokenizador": {
+            "identificacao": "spacy.blank(pt)",
+            "versao_origem": "3.8.16",
+            "versao_execucao": "3.8.16",
+            "ajustes": []
+          },
+          "max_caracteres": 50000,
+          "max_tokens_internos": 10000,
+          "fronteiras_periodos": "herdadas_da_etapa_04",
+          "vocabulario": {
+            "pos_excluidas": [
+              "PUNCT",
+              "SYM"
+            ],
+            "remover_stopwords": false
+          },
+          "embeddings_exportados": false
+        }
+      },
+      "resultados": [
+        {
+          "texto": "Eu",
+          "token_id": "40921bc7-b50c-433b-acd8-7c51253ff2be:token:0",
+          "original": {
+            "inicio": 0,
+            "fim": 2
+          },
+          "esperado": {
+            "lema": "eu",
+            "pos": "PRON"
+          },
+          "obtido": {
+            "lema": "eu",
+            "pos": "PRON"
+          },
+          "acerto_lema": true,
+          "acerto_pos": true
+        },
+        {
+          "texto": "guardei",
+          "token_id": "40921bc7-b50c-433b-acd8-7c51253ff2be:token:1",
+          "original": {
+            "inicio": 3,
+            "fim": 10
+          },
+          "esperado": {
+            "lema": "guardar",
+            "pos": "VERB"
+          },
+          "obtido": {
+            "lema": "guardar",
+            "pos": "VERB"
+          },
+          "acerto_lema": true,
+          "acerto_pos": true
+        },
+        {
+          "texto": "dinheiro",
+          "token_id": "40921bc7-b50c-433b-acd8-7c51253ff2be:token:3",
+          "original": {
+            "inicio": 13,
+            "fim": 21
+          },
+          "esperado": {
+            "lema": "dinheiro",
+            "pos": "NOUN"
+          },
+          "obtido": {
+            "lema": "dinheiro",
+            "pos": "NOUN"
+          },
+          "acerto_lema": true,
+          "acerto_pos": true
+        }
+      ]
+    },
+    {
+      "id": "plural",
+      "texto": "As meninas chegaram cedo.",
+      "documento_id": "2c5ceb38-7ca9-4d4b-8423-34be3c234607",
+      "preparacao_id": "26f46b72-bfbd-478a-82fe-f44f3f6689d8",
+      "segmentacao_id": "9d8a9bc6-4cd4-4aa7-820e-ef5a41607e32",
+      "anotacao_id": "d65669f0-fdc1-497c-a3aa-d7c9193c38ee",
+      "sha256_original": "471e38b479391508e4411ea12a0edbc03f05f7728bb95dcb44bbd56a110f6afc",
+      "processamento": {
+        "ferramenta": "spacy",
+        "versao": "3.8.16",
+        "idioma": "pt",
+        "modelo": {
+          "nome": "pt_core_news_sm",
+          "versao": "3.8.0",
+          "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+        },
+        "componentes_executados": [
+          "tok2vec",
+          "morphologizer",
+          "lemmatizer"
+        ],
+        "componentes_desativados": [
+          "parser",
+          "senter",
+          "attribute_ruler",
+          "ner"
+        ],
+        "componentes_disponiveis": [
+          "tok2vec",
+          "morphologizer",
+          "parser",
+          "lemmatizer",
+          "senter",
+          "attribute_ruler",
+          "ner"
+        ],
+        "configuracoes": {
+          "tokenizador": {
+            "identificacao": "spacy.blank(pt)",
+            "versao_origem": "3.8.16",
+            "versao_execucao": "3.8.16",
+            "ajustes": []
+          },
+          "max_caracteres": 50000,
+          "max_tokens_internos": 10000,
+          "fronteiras_periodos": "herdadas_da_etapa_04",
+          "vocabulario": {
+            "pos_excluidas": [
+              "PUNCT",
+              "SYM"
+            ],
+            "remover_stopwords": false
+          },
+          "embeddings_exportados": false
+        }
+      },
+      "resultados": [
+        {
+          "texto": "meninas",
+          "token_id": "9d8a9bc6-4cd4-4aa7-820e-ef5a41607e32:token:1",
+          "original": {
+            "inicio": 3,
+            "fim": 10
+          },
+          "esperado": {
+            "lema": "menina",
+            "pos": "NOUN"
+          },
+          "obtido": {
+            "lema": "menina",
+            "pos": "NOUN"
+          },
+          "acerto_lema": true,
+          "acerto_pos": true
+        },
+        {
+          "texto": "chegaram",
+          "token_id": "9d8a9bc6-4cd4-4aa7-820e-ef5a41607e32:token:2",
+          "original": {
+            "inicio": 11,
+            "fim": 19
+          },
+          "esperado": {
+            "lema": "chegar",
+            "pos": "VERB"
+          },
+          "obtido": {
+            "lema": "chegar",
+            "pos": "VERB"
+          },
+          "acerto_lema": true,
+          "acerto_pos": true
+        },
+        {
+          "texto": "cedo",
+          "token_id": "9d8a9bc6-4cd4-4aa7-820e-ef5a41607e32:token:3",
+          "original": {
+            "inicio": 20,
+            "fim": 24
+          },
+          "esperado": {
+            "lema": "cedo",
+            "pos": "ADV"
+          },
+          "obtido": {
+            "lema": "cedo",
+            "pos": "ADV"
+          },
+          "acerto_lema": true,
+          "acerto_pos": true
+        }
+      ]
+    },
+    {
+      "id": "guarda-verbo",
+      "texto": "Ele guarda o recibo.",
+      "documento_id": "d73133cc-a8d1-42f1-8928-1e0040cc8725",
+      "preparacao_id": "3e030035-1a75-4cba-9623-c94320709acf",
+      "segmentacao_id": "049baf34-8b85-40d5-bec3-7d7d4889c7c2",
+      "anotacao_id": "f8f109a6-9458-4033-add2-f19a192f6475",
+      "sha256_original": "d9c1fbbf6d133a3d603bec8c866e57533e43bd4dd7f284cf52e4ae328df9bd01",
+      "processamento": {
+        "ferramenta": "spacy",
+        "versao": "3.8.16",
+        "idioma": "pt",
+        "modelo": {
+          "nome": "pt_core_news_sm",
+          "versao": "3.8.0",
+          "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+        },
+        "componentes_executados": [
+          "tok2vec",
+          "morphologizer",
+          "lemmatizer"
+        ],
+        "componentes_desativados": [
+          "parser",
+          "senter",
+          "attribute_ruler",
+          "ner"
+        ],
+        "componentes_disponiveis": [
+          "tok2vec",
+          "morphologizer",
+          "parser",
+          "lemmatizer",
+          "senter",
+          "attribute_ruler",
+          "ner"
+        ],
+        "configuracoes": {
+          "tokenizador": {
+            "identificacao": "spacy.blank(pt)",
+            "versao_origem": "3.8.16",
+            "versao_execucao": "3.8.16",
+            "ajustes": []
+          },
+          "max_caracteres": 50000,
+          "max_tokens_internos": 10000,
+          "fronteiras_periodos": "herdadas_da_etapa_04",
+          "vocabulario": {
+            "pos_excluidas": [
+              "PUNCT",
+              "SYM"
+            ],
+            "remover_stopwords": false
+          },
+          "embeddings_exportados": false
+        }
+      },
+      "resultados": [
+        {
+          "texto": "Ele",
+          "token_id": "049baf34-8b85-40d5-bec3-7d7d4889c7c2:token:0",
+          "original": {
+            "inicio": 0,
+            "fim": 3
+          },
+          "esperado": {
+            "lema": "ele",
+            "pos": "PRON"
+          },
+          "obtido": {
+            "lema": "ele",
+            "pos": "PRON"
+          },
+          "acerto_lema": true,
+          "acerto_pos": true
+        },
+        {
+          "texto": "guarda",
+          "token_id": "049baf34-8b85-40d5-bec3-7d7d4889c7c2:token:1",
+          "original": {
+            "inicio": 4,
+            "fim": 10
+          },
+          "esperado": {
+            "lema": "guardar",
+            "pos": "VERB"
+          },
+          "obtido": {
+            "lema": "guardar",
+            "pos": "VERB"
+          },
+          "acerto_lema": true,
+          "acerto_pos": true
+        },
+        {
+          "texto": "recibo",
+          "token_id": "049baf34-8b85-40d5-bec3-7d7d4889c7c2:token:3",
+          "original": {
+            "inicio": 13,
+            "fim": 19
+          },
+          "esperado": {
+            "lema": "recibo",
+            "pos": "NOUN"
+          },
+          "obtido": {
+            "lema": "recibo",
+            "pos": "NOUN"
+          },
+          "acerto_lema": true,
+          "acerto_pos": true
+        }
+      ]
+    },
+    {
+      "id": "guarda-substantivo",
+      "texto": "A guarda chegou.",
+      "documento_id": "c1b18268-71f5-4740-a4c6-6c637e286dff",
+      "preparacao_id": "9b31c751-ea34-4abd-983f-854ceec57034",
+      "segmentacao_id": "9f96a8d6-e831-42ad-9ff6-b393a6b8c932",
+      "anotacao_id": "11631c2f-477e-4d24-9006-a4e86572457f",
+      "sha256_original": "ba4cfbaff603a201be570606694323de4a3b95cde48dd478654ec1c52bd1b30f",
+      "processamento": {
+        "ferramenta": "spacy",
+        "versao": "3.8.16",
+        "idioma": "pt",
+        "modelo": {
+          "nome": "pt_core_news_sm",
+          "versao": "3.8.0",
+          "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+        },
+        "componentes_executados": [
+          "tok2vec",
+          "morphologizer",
+          "lemmatizer"
+        ],
+        "componentes_desativados": [
+          "parser",
+          "senter",
+          "attribute_ruler",
+          "ner"
+        ],
+        "componentes_disponiveis": [
+          "tok2vec",
+          "morphologizer",
+          "parser",
+          "lemmatizer",
+          "senter",
+          "attribute_ruler",
+          "ner"
+        ],
+        "configuracoes": {
+          "tokenizador": {
+            "identificacao": "spacy.blank(pt)",
+            "versao_origem": "3.8.16",
+            "versao_execucao": "3.8.16",
+            "ajustes": []
+          },
+          "max_caracteres": 50000,
+          "max_tokens_internos": 10000,
+          "fronteiras_periodos": "herdadas_da_etapa_04",
+          "vocabulario": {
+            "pos_excluidas": [
+              "PUNCT",
+              "SYM"
+            ],
+            "remover_stopwords": false
+          },
+          "embeddings_exportados": false
+        }
+      },
+      "resultados": [
+        {
+          "texto": "guarda",
+          "token_id": "9f96a8d6-e831-42ad-9ff6-b393a6b8c932:token:1",
+          "original": {
+            "inicio": 2,
+            "fim": 8
+          },
+          "esperado": {
+            "lema": "guarda",
+            "pos": "NOUN"
+          },
+          "obtido": {
+            "lema": "guarda",
+            "pos": "NOUN"
+          },
+          "acerto_lema": true,
+          "acerto_pos": true
+        },
+        {
+          "texto": "chegou",
+          "token_id": "9f96a8d6-e831-42ad-9ff6-b393a6b8c932:token:2",
+          "original": {
+            "inicio": 9,
+            "fim": 15
+          },
+          "esperado": {
+            "lema": "chegar",
+            "pos": "VERB"
+          },
+          "obtido": {
+            "lema": "chegar",
+            "pos": "VERB"
+          },
+          "acerto_lema": true,
+          "acerto_pos": true
+        }
+      ]
+    },
+    {
+      "id": "negacao",
+      "texto": "Eu não queria sair.",
+      "documento_id": "940344f3-ca46-4d4b-9b72-2e2771b36b55",
+      "preparacao_id": "05eda5ee-1e6f-4817-87d9-0cea383dc6d7",
+      "segmentacao_id": "a7023560-4c24-4de5-b31d-82b73f2aa0c1",
+      "anotacao_id": "1b68dbf0-64e2-4144-bcbb-938b8b3edcb7",
+      "sha256_original": "2481b8bfc3e0c42f685adb6524349bc3f871fea5bc6332935f581d320bd8ad47",
+      "processamento": {
+        "ferramenta": "spacy",
+        "versao": "3.8.16",
+        "idioma": "pt",
+        "modelo": {
+          "nome": "pt_core_news_sm",
+          "versao": "3.8.0",
+          "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+        },
+        "componentes_executados": [
+          "tok2vec",
+          "morphologizer",
+          "lemmatizer"
+        ],
+        "componentes_desativados": [
+          "parser",
+          "senter",
+          "attribute_ruler",
+          "ner"
+        ],
+        "componentes_disponiveis": [
+          "tok2vec",
+          "morphologizer",
+          "parser",
+          "lemmatizer",
+          "senter",
+          "attribute_ruler",
+          "ner"
+        ],
+        "configuracoes": {
+          "tokenizador": {
+            "identificacao": "spacy.blank(pt)",
+            "versao_origem": "3.8.16",
+            "versao_execucao": "3.8.16",
+            "ajustes": []
+          },
+          "max_caracteres": 50000,
+          "max_tokens_internos": 10000,
+          "fronteiras_periodos": "herdadas_da_etapa_04",
+          "vocabulario": {
+            "pos_excluidas": [
+              "PUNCT",
+              "SYM"
+            ],
+            "remover_stopwords": false
+          },
+          "embeddings_exportados": false
+        }
+      },
+      "resultados": [
+        {
+          "texto": "Eu",
+          "token_id": "a7023560-4c24-4de5-b31d-82b73f2aa0c1:token:0",
+          "original": {
+            "inicio": 0,
+            "fim": 2
+          },
+          "esperado": {
+            "lema": "eu",
+            "pos": "PRON"
+          },
+          "obtido": {
+            "lema": "eu",
+            "pos": "PRON"
+          },
+          "acerto_lema": true,
+          "acerto_pos": true
+        },
+        {
+          "texto": "não",
+          "token_id": "a7023560-4c24-4de5-b31d-82b73f2aa0c1:token:1",
+          "original": {
+            "inicio": 3,
+            "fim": 6
+          },
+          "esperado": {
+            "lema": "não",
+            "pos": "ADV"
+          },
+          "obtido": {
+            "lema": "não",
+            "pos": "ADV"
+          },
+          "acerto_lema": true,
+          "acerto_pos": true
+        },
+        {
+          "texto": "queria",
+          "token_id": "a7023560-4c24-4de5-b31d-82b73f2aa0c1:token:2",
+          "original": {
+            "inicio": 7,
+            "fim": 13
+          },
+          "esperado": {
+            "lema": "querer",
+            "pos": "VERB"
+          },
+          "obtido": {
+            "lema": "querer",
+            "pos": "VERB"
+          },
+          "acerto_lema": true,
+          "acerto_pos": true
+        },
+        {
+          "texto": "sair",
+          "token_id": "a7023560-4c24-4de5-b31d-82b73f2aa0c1:token:3",
+          "original": {
+            "inicio": 14,
+            "fim": 18
+          },
+          "esperado": {
+            "lema": "sair",
+            "pos": "VERB"
+          },
+          "obtido": {
+            "lema": "sair",
+            "pos": "VERB"
+          },
+          "acerto_lema": true,
+          "acerto_pos": true
+        }
+      ]
+    }
+  ],
+  "resumo": {
+    "frases": 5,
+    "tokens_avaliados": 15,
+    "acertos_lema": 15,
+    "acertos_pos": 15,
+    "taxa_acerto_lema": 1.0,
+    "taxa_acerto_pos": 1.0,
+    "tokens_com_divergencia": 0
+  }
+}

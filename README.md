@@ -2,9 +2,10 @@
 
 Projeto independente de análise linguística, em Python com interface HTML.
 Recebe um texto, registra o original em SQLite, gera uma preparação validada
-e segmenta sua cópia de trabalho em tokens, períodos e parágrafos. Os registros
-JSON contêm versões, hashes SHA-256, metadados e posições que apontam até o
-original. A interpretação linguística será uma etapa posterior.
+e segmenta sua cópia de trabalho em tokens, períodos e parágrafos. Um modelo
+português local acrescenta lemas, classes gramaticais, traços morfológicos e
+vocabulário do documento. Os registros JSON contêm versões, hashes SHA-256,
+metadados e posições que apontam até o original.
 
 ## Obter uma cópia local
 
@@ -68,10 +69,34 @@ acrescenta um registro ao histórico, vinculado à preparação escolhida, sem
 modificar o texto original ou resultados anteriores.
 
 A etapa 04 usa `spacy.blank("pt")` e regras próprias versionadas para períodos,
-sem baixar um modelo linguístico. Ela prepara a estrutura para a etapa 05;
+com o tokenizador português. Ela prepara a estrutura para a etapa 05;
 suas fronteiras podem precisar de revisão em textos ambíguos.
 Veja [uso direto, regras e API HTTP](docs/segmentacao.md) e o
 [exemplo de segmentação](examples/segmentacao.json).
+
+## Anotar morfologia e vocabulário
+
+Escolha uma segmentação salva e clique em **Anotar morfologia e vocabulário**.
+O resultado mostra os tokens com lema, classe gramatical e morfologia, além
+do vocabulário agrupado por lema e classe. Cada anotação entra no histórico;
+use **Baixar anotações JSON** para exportar o registro completo.
+
+A etapa 05 usa spaCy 3.8.16 com o modelo treinado português `pt_core_news_sm`
+3.8.0. A instalação por `requirements.txt` inclui o modelo, com download de
+aproximadamente 13 MB na primeira vez. Depois de instalado, o processamento
+funciona localmente em CPU e o texto permanece no computador.
+
+Esta etapa admite até **50.000 pontos de código** e **10.000 tokens internos**
+do modelo, incluindo espaços. Entradas maiores geram erro explícito, sem
+truncamento. Os limites são menores que os das etapas anteriores para conter
+o consumo de memória do modelo. Fronteiras e previsões linguísticas podem
+precisar de revisão humana.
+
+Veja [uso direto, campos, limites e API HTTP](docs/anotacao.md), o
+[exemplo completo](examples/anotacao.json) e a
+[avaliação sobre referência manual](docs/avaliacao_morfologia.md).
+O [relatório calculado](docs/avaliacao_morfologia_resultado.md) descreve o
+desempenho do modelo nesse conjunto de referência.
 
 ## Dados locais
 
@@ -88,6 +113,9 @@ As preparações ficam na tabela `preparations`, no mesmo banco, sem sobrescreve
 os textos recebidos. A nova tabela é criada automaticamente ao atualizar o app.
 As segmentações ficam na tabela `segmentations`, também local e criada
 automaticamente. Cada uma preserva a preparação exata que foi utilizada.
+As anotações ficam na tabela `annotations`, acrescentando registros ligados
+à segmentação exata utilizada. Atualizar ou gerar outra análise preserva o
+original e todos os registros anteriores.
 
 ## Sincronizar o código
 
@@ -117,7 +145,7 @@ Se o rebase apontar conflitos, resolva-os antes de continuar com
 ao rebase. Evite `push --force` para preservar o histórico compartilhado.
 
 O Git sincroniza o código; o banco e o ambiente virtual permanecem locais.
-Depois de atualizar para a etapa 04, instale a nova dependência spaCy.
+Depois de atualizar para a etapa 05, instale as dependências e o modelo português.
 Na raiz `lingua`, no macOS ou Linux:
 
 ```bash
@@ -150,6 +178,8 @@ No Windows:
 Os testes usam bancos temporários e verificam persistência após reiniciar,
 preservação literal e Unicode, mapas CRLF, metadados/hashes, ida e volta pelo
 JSON, histórico de preparações e segmentações, contexto dos períodos, erros
-explícitos e exibição segura de HTML. Os exemplos curtos anotados manualmente
+explícitos e exibição segura de HTML. A etapa 05 também verifica alinhamento
+com os tokens existentes, vocabulário, metadados do modelo e histórico de
+anotações. Os exemplos curtos anotados manualmente
 servem como referência; o relato de três parágrafos e dezesseis períodos ainda
 não foi fornecido e suas contagens não foram verificadas.

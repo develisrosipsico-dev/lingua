@@ -1,0 +1,178 @@
+{
+  "schema_version": "1.0.0",
+  "identificacao": "referencia_manual_morfologia_05",
+  "versao": "1.0.0",
+  "coordenadas": {
+    "unidade": "pontos_de_codigo_unicode",
+    "base": 0,
+    "fim_exclusivo": true
+  },
+  "escopo": "15 tokens selecionados em cinco frases. Artigos, pontuação e morfologia flexional não são avaliados nesta referência.",
+  "casos": [
+    {
+      "id": "guardar-passado",
+      "texto": "Eu guardei o dinheiro.",
+      "alvos": [
+        {
+          "texto": "Eu",
+          "original": {
+            "inicio": 0,
+            "fim": 2
+          },
+          "lema": "eu",
+          "pos": "PRON"
+        },
+        {
+          "texto": "guardei",
+          "original": {
+            "inicio": 3,
+            "fim": 10
+          },
+          "lema": "guardar",
+          "pos": "VERB"
+        },
+        {
+          "texto": "dinheiro",
+          "original": {
+            "inicio": 13,
+            "fim": 21
+          },
+          "lema": "dinheiro",
+          "pos": "NOUN"
+        }
+      ]
+    },
+    {
+      "id": "plural",
+      "texto": "As meninas chegaram cedo.",
+      "alvos": [
+        {
+          "texto": "meninas",
+          "original": {
+            "inicio": 3,
+            "fim": 10
+          },
+          "lema": "menina",
+          "pos": "NOUN"
+        },
+        {
+          "texto": "chegaram",
+          "original": {
+            "inicio": 11,
+            "fim": 19
+          },
+          "lema": "chegar",
+          "pos": "VERB"
+        },
+        {
+          "texto": "cedo",
+          "original": {
+            "inicio": 20,
+            "fim": 24
+          },
+          "lema": "cedo",
+          "pos": "ADV"
+        }
+      ]
+    },
+    {
+      "id": "guarda-verbo",
+      "texto": "Ele guarda o recibo.",
+      "alvos": [
+        {
+          "texto": "Ele",
+          "original": {
+            "inicio": 0,
+            "fim": 3
+          },
+          "lema": "ele",
+          "pos": "PRON"
+        },
+        {
+          "texto": "guarda",
+          "original": {
+            "inicio": 4,
+            "fim": 10
+          },
+          "lema": "guardar",
+          "pos": "VERB"
+        },
+        {
+          "texto": "recibo",
+          "original": {
+            "inicio": 13,
+            "fim": 19
+          },
+          "lema": "recibo",
+          "pos": "NOUN"
+        }
+      ]
+    },
+    {
+      "id": "guarda-substantivo",
+      "texto": "A guarda chegou.",
+      "alvos": [
+        {
+          "texto": "guarda",
+          "original": {
+            "inicio": 2,
+            "fim": 8
+          },
+          "lema": "guarda",
+          "pos": "NOUN"
+        },
+        {
+          "texto": "chegou",
+          "original": {
+            "inicio": 9,
+            "fim": 15
+          },
+          "lema": "chegar",
+          "pos": "VERB"
+        }
+      ]
+    },
+    {
+      "id": "negacao",
+      "texto": "Eu não queria sair.",
+      "alvos": [
+        {
+          "texto": "Eu",
+          "original": {
+            "inicio": 0,
+            "fim": 2
+          },
+          "lema": "eu",
+          "pos": "PRON"
+        },
+        {
+          "texto": "não",
+          "original": {
+            "inicio": 3,
+            "fim": 6
+          },
+          "lema": "não",
+          "pos": "ADV"
+        },
+        {
+          "texto": "queria",
+          "original": {
+            "inicio": 7,
+            "fim": 13
+          },
+          "lema": "querer",
+          "pos": "VERB"
+        },
+        {
+          "texto": "sair",
+          "original": {
+            "inicio": 14,
+            "fim": 18
+          },
+          "lema": "sair",
+          "pos": "VERB"
+        }
+      ]
+    }
+  ]
+}

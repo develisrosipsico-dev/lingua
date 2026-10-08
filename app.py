@@ -12,6 +12,9 @@ from flask import Flask, Response, abort, redirect, render_template, request, ur
 
 from preparacao import ErroPreparacao, preparar_texto, validar_registro
 from segmentacao import ErroSegmentacao, contexto_periodo, segmentar_preparacao, validar_segmentacao
+from anotacao import (
+    ErroAlinhamento, ErroAnotacao, ErroLimite, ErroModelo, anotar_segmentacao, validar_anotacao,
+)
 
 
 BASE = Path(__file__).resolve().parent
@@ -117,6 +120,51 @@ def latest_segmentation(connection, document, preparation_id=None, segmentation_
     return segmented
 
 
+def save_annotation(connection, document, segmented, **options):
+    """Acrescenta anotações da segmentação escolhida, sem substituir o histórico."""
+    annotated = anotar_segmentacao(segmented, **options)
+    connection.execute(
+        """INSERT INTO annotations
+           (annotation_id, segmentation_id, submission_id, registered_at, record_json)
+           VALUES (?, ?, ?, ?, ?)""",
+        (
+            annotated["anotacao_id"], segmented["segmentacao_id"], document["id"],
+            annotated["registrado_em"], json.dumps(annotated, ensure_ascii=False, allow_nan=False),
+        ),
+    )
+    return annotated
+
+
+def latest_annotation(connection, document, segmentation_id=None, annotation_id=None):
+    sql = "SELECT * FROM annotations WHERE submission_id = ?"
+    parameters = [document["id"]]
+    if segmentation_id is not None:
+        sql += " AND segmentation_id = ?"
+        parameters.append(segmentation_id)
+    if annotation_id is not None:
+        sql += " AND annotation_id = ?"
+        parameters.append(annotation_id)
+    row = connection.execute(sql + " ORDER BY id DESC LIMIT 1", parameters).fetchone()
+    if row is None:
+        return None
+    try:
+        annotated = json.loads(row["record_json"])
+    except (ValueError, TypeError) as error:
+        raise ErroAnotacao("O JSON da anotação armazenada é inválido.") from error
+    validar_anotacao(annotated)
+    segmented = latest_segmentation(connection, document, segmentation_id=row["segmentation_id"])
+    if (
+        segmented is None
+        or annotated["documento_id"] != document["id"]
+        or annotated["anotacao_id"] != row["annotation_id"]
+        or annotated["segmentacao_id"] != row["segmentation_id"]
+        or annotated["registrado_em"] != row["registered_at"]
+        or annotated["segmentacao"] != segmented
+    ):
+        raise ErroAnotacao("A anotação não corresponde à segmentação original armazenada.")
+    return annotated
+
+
 def create_app(config=None):
     app = Flask(__name__)
     app.config.from_mapping(
@@ -125,6 +173,16 @@ def create_app(config=None):
     )
     if config:
         app.config.update(config)
+
+    @app.template_filter("horario_brasilia")
+    def display_time(value):
+        try:
+            instant = datetime.fromisoformat(value.replace("Z", "+00:00"))
+            if instant.utcoffset() is None:
+                return "Data indisponível"
+            return instant.astimezone(ZoneInfo("America/Sao_Paulo")).strftime("%d/%m/%Y às %H:%M:%S")
+        except (AttributeError, TypeError, ValueError):
+            return "Data indisponível"
 
     database = Path(app.config["DATABASE"]).expanduser().resolve()
     database.parent.mkdir(parents=True, exist_ok=True)
@@ -157,6 +215,19 @@ def create_app(config=None):
         )
         connection.execute(
             "CREATE INDEX IF NOT EXISTS segmentations_preparation ON segmentations (submission_id, preparation_id, id)"
+        )
+        connection.execute(
+            """CREATE TABLE IF NOT EXISTS annotations (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                annotation_id TEXT NOT NULL UNIQUE,
+                segmentation_id TEXT NOT NULL REFERENCES segmentations(segmentation_id),
+                submission_id INTEGER NOT NULL REFERENCES submissions(id),
+                registered_at TEXT NOT NULL,
+                record_json TEXT NOT NULL
+            )"""
+        )
+        connection.execute(
+            "CREATE INDEX IF NOT EXISTS annotations_segmentation ON annotations (submission_id, segmentation_id, id)"
         )
         connection.commit()
 
@@ -204,6 +275,18 @@ def create_app(config=None):
             try:
                 preparation_id = request.args.get("preparacao_id")
                 segmentation_id = request.args.get("segmentacao_id")
+                annotation_id = request.args.get("anotacao_id")
+                if annotation_id is not None:
+                    annotated = latest_annotation(connection, row, annotation_id=annotation_id)
+                    if annotated is None:
+                        abort(404)
+                    if (
+                        segmentation_id is not None and segmentation_id != annotated["segmentacao_id"]
+                        or preparation_id is not None and preparation_id != annotated["preparacao_id"]
+                    ):
+                        return {"erro": "A anotação pertence a outra segmentação ou preparação."}, 400
+                    segmentation_id = annotated["segmentacao_id"]
+                    preparation_id = annotated["preparacao_id"]
                 if segmentation_id is not None:
                     segmented = latest_segmentation(connection, row, segmentation_id=segmentation_id)
                     if segmented is None:
@@ -216,6 +299,13 @@ def create_app(config=None):
                     abort(404)
                 if segmentation_id is None:
                     segmented = latest_segmentation(connection, row, prepared["preparacao_id"]) if prepared else None
+                if annotation_id is None:
+                    annotated = latest_annotation(connection, row, segmented["segmentacao_id"]) if segmented else None
+                annotation_history = connection.execute(
+                    """SELECT id, annotation_id AS anotacao_id, registered_at AS registrado_em
+                       FROM annotations WHERE submission_id = ? AND segmentation_id = ? ORDER BY id DESC""",
+                    (record_id, segmented["segmentacao_id"]),
+                ).fetchall() if segmented else []
                 history = connection.execute(
                     """SELECT segmentation_id AS segmentacao_id, registered_at AS registrado_em
                        FROM segmentations WHERE submission_id = ? AND preparation_id = ? ORDER BY id DESC""",
@@ -225,7 +315,7 @@ def create_app(config=None):
                     "SELECT id, preparation_id AS preparacao_id FROM preparations WHERE submission_id = ? ORDER BY id DESC",
                     (record_id,),
                 ).fetchall()
-            except (ErroPreparacao, ErroSegmentacao) as error:
+            except (ErroPreparacao, ErroSegmentacao, ErroAnotacao) as error:
                 return {"erro": str(error)}, 409
         record = dict(row)
         record["created_at"] = datetime.fromisoformat(record["created_at"]).astimezone(
@@ -235,6 +325,7 @@ def create_app(config=None):
             "index.html", content=row["content"], error=None, record=record, prepared=prepared,
             segmented=segmented, segmentation_history=[dict(item) for item in history],
             preparation_history=[dict(item) for item in preparation_history],
+            annotated=annotated, annotation_history=[dict(item) for item in annotation_history],
         )
 
     @app.post("/envios/<int:record_id>/preparacoes")
@@ -338,6 +429,71 @@ def create_app(config=None):
         return Response(
             json.dumps(segmented, ensure_ascii=False, indent=2, allow_nan=False), mimetype="application/json",
             headers={"Content-Disposition": f'attachment; filename="segmentacao-{record_id}.json"'},
+        )
+
+    @app.post("/envios/<int:record_id>/anotacoes")
+    def annotate_submission(record_id):
+        if request.is_json:
+            payload = request.get_json(silent=True)
+            allowed = {"segmentacao_id", "anotacao_id", "registrado_em"}
+            if not isinstance(payload, dict) or payload.keys() - allowed:
+                return {"erro": "Envie um objeto JSON com segmentacao_id, anotacao_id ou registrado_em."}, 400
+            options = dict(payload)
+        else:
+            if set(request.form) != {"segmentacao_id"} or len(request.form.getlist("segmentacao_id")) != 1:
+                return {"erro": "Selecione uma única segmentação para anotar."}, 400
+            options = {"segmentacao_id": request.form["segmentacao_id"]}
+        for field in ("segmentacao_id", "anotacao_id", "registrado_em"):
+            if field in options and (not isinstance(options[field], str) or not options[field].strip()):
+                return {"erro": f"{field} deve ser uma string não vazia."}, 400
+        segmentation_id = options.pop("segmentacao_id", None)
+        try:
+            with closing(connect_database(app.config["DATABASE"])) as connection:
+                document = connection.execute("SELECT * FROM submissions WHERE id = ?", (record_id,)).fetchone()
+                if document is None:
+                    abort(404)
+                segmented = latest_segmentation(connection, document, segmentation_id=segmentation_id)
+                if segmented is None:
+                    return {"erro": "Segmentação não encontrada. Segmente uma preparação antes de anotar."}, 404
+                annotated = save_annotation(connection, document, segmented, **options)
+                connection.commit()
+        except (ErroPreparacao, ErroSegmentacao) as error:
+            return {"erro": str(error)}, 409
+        except ErroModelo as error:
+            return {"erro": str(error)}, 503
+        except ErroAlinhamento as error:
+            return {"erro": str(error)}, 422
+        except ErroLimite as error:
+            return {"erro": str(error)}, 413
+        except ErroAnotacao as error:
+            return {"erro": str(error)}, 400
+        except sqlite3.IntegrityError:
+            return {"erro": "Esse identificador de anotação já existe. Gere uma nova execução."}, 409
+        if request.is_json:
+            return Response(json.dumps(annotated, ensure_ascii=False, allow_nan=False), status=201, mimetype="application/json")
+        return redirect(
+            url_for(
+                "submission", record_id=record_id, preparacao_id=annotated["preparacao_id"],
+                segmentacao_id=annotated["segmentacao_id"], anotacao_id=annotated["anotacao_id"],
+            ),
+            code=303,
+        )
+
+    @app.get("/envios/<int:record_id>/anotacao.json")
+    def annotation_json(record_id):
+        with closing(connect_database(app.config["DATABASE"])) as connection:
+            document = connection.execute("SELECT * FROM submissions WHERE id = ?", (record_id,)).fetchone()
+            if document is None:
+                abort(404)
+            try:
+                annotated = latest_annotation(connection, document, annotation_id=request.args.get("anotacao_id"))
+            except (ErroPreparacao, ErroSegmentacao, ErroAnotacao) as error:
+                return {"erro": str(error)}, 409
+        if annotated is None:
+            return {"erro": "Nenhuma anotação encontrada. Anote uma segmentação deste documento."}, 404
+        return Response(
+            json.dumps(annotated, ensure_ascii=False, indent=2, allow_nan=False), mimetype="application/json",
+            headers={"Content-Disposition": f'attachment; filename="anotacao-{record_id}.json"'},
         )
 
     @app.get("/envios/<int:record_id>/segmentacoes/<segmentacao_id>/periodos/<periodo_id>/contexto.json")
