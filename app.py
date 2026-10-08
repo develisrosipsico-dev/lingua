@@ -15,6 +15,16 @@ from segmentacao import ErroSegmentacao, contexto_periodo, segmentar_preparacao,
 from anotacao import (
     ErroAlinhamento, ErroAnotacao, ErroLimite, ErroModelo, anotar_segmentacao, validar_anotacao,
 )
+from sintaxe_entidades import (
+    ErroAnalise,
+    ErroEntrada as ErroAnaliseEntrada,
+    ErroModelo as ErroAnaliseModelo,
+    ErroAlinhamento as ErroAnaliseAlinhamento,
+    ErroLimite as ErroAnaliseLimite,
+    ErroPrevisao as ErroAnalisePrevisao,
+    analisar_sintaxe_entidades,
+    validar_analise_sintaxe_entidades,
+)
 
 
 BASE = Path(__file__).resolve().parent
@@ -165,6 +175,51 @@ def latest_annotation(connection, document, segmentation_id=None, annotation_id=
     return annotated
 
 
+def save_analysis(connection, document, annotated, **options):
+    """Acrescenta sintaxe e entidades da anotação escolhida, preservando as versões anteriores."""
+    analyzed = analisar_sintaxe_entidades(annotated, **options)
+    connection.execute(
+        """INSERT INTO analyses
+           (analysis_id, annotation_id, submission_id, registered_at, record_json)
+           VALUES (?, ?, ?, ?, ?)""",
+        (
+            analyzed["analise_id"], annotated["anotacao_id"], document["id"],
+            analyzed["registrado_em"], json.dumps(analyzed, ensure_ascii=False, allow_nan=False),
+        ),
+    )
+    return analyzed
+
+
+def latest_analysis(connection, document, annotation_id=None, analysis_id=None):
+    sql = "SELECT * FROM analyses WHERE submission_id = ?"
+    parameters = [document["id"]]
+    if annotation_id is not None:
+        sql += " AND annotation_id = ?"
+        parameters.append(annotation_id)
+    if analysis_id is not None:
+        sql += " AND analysis_id = ?"
+        parameters.append(analysis_id)
+    row = connection.execute(sql + " ORDER BY id DESC LIMIT 1", parameters).fetchone()
+    if row is None:
+        return None
+    try:
+        analyzed = json.loads(row["record_json"])
+    except (ValueError, TypeError) as error:
+        raise ErroAnalise("O JSON da análise armazenada é inválido.") from error
+    validar_analise_sintaxe_entidades(analyzed)
+    annotated = latest_annotation(connection, document, annotation_id=row["annotation_id"])
+    if (
+        annotated is None
+        or analyzed["documento_id"] != document["id"]
+        or analyzed["analise_id"] != row["analysis_id"]
+        or analyzed["anotacao_id"] != row["annotation_id"]
+        or analyzed["registrado_em"] != row["registered_at"]
+        or analyzed["anotacao"] != annotated
+    ):
+        raise ErroAnalise("A análise não corresponde à anotação original armazenada.")
+    return analyzed
+
+
 def create_app(config=None):
     app = Flask(__name__)
     app.config.from_mapping(
@@ -229,6 +284,19 @@ def create_app(config=None):
         connection.execute(
             "CREATE INDEX IF NOT EXISTS annotations_segmentation ON annotations (submission_id, segmentation_id, id)"
         )
+        connection.execute(
+            """CREATE TABLE IF NOT EXISTS analyses (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                analysis_id TEXT NOT NULL UNIQUE,
+                annotation_id TEXT NOT NULL REFERENCES annotations(annotation_id),
+                submission_id INTEGER NOT NULL REFERENCES submissions(id),
+                registered_at TEXT NOT NULL,
+                record_json TEXT NOT NULL
+            )"""
+        )
+        connection.execute(
+            "CREATE INDEX IF NOT EXISTS analyses_annotation ON analyses (submission_id, annotation_id, id)"
+        )
         connection.commit()
 
     @app.get("/")
@@ -276,6 +344,20 @@ def create_app(config=None):
                 preparation_id = request.args.get("preparacao_id")
                 segmentation_id = request.args.get("segmentacao_id")
                 annotation_id = request.args.get("anotacao_id")
+                analysis_id = request.args.get("analise_id")
+                if analysis_id is not None:
+                    analyzed = latest_analysis(connection, row, analysis_id=analysis_id)
+                    if analyzed is None:
+                        abort(404)
+                    if (
+                        annotation_id is not None and annotation_id != analyzed["anotacao_id"]
+                        or segmentation_id is not None and segmentation_id != analyzed["segmentacao_id"]
+                        or preparation_id is not None and preparation_id != analyzed["preparacao_id"]
+                    ):
+                        return {"erro": "A análise pertence a outra anotação, segmentação ou preparação."}, 400
+                    annotation_id = analyzed["anotacao_id"]
+                    segmentation_id = analyzed["segmentacao_id"]
+                    preparation_id = analyzed["preparacao_id"]
                 if annotation_id is not None:
                     annotated = latest_annotation(connection, row, annotation_id=annotation_id)
                     if annotated is None:
@@ -301,6 +383,13 @@ def create_app(config=None):
                     segmented = latest_segmentation(connection, row, prepared["preparacao_id"]) if prepared else None
                 if annotation_id is None:
                     annotated = latest_annotation(connection, row, segmented["segmentacao_id"]) if segmented else None
+                if analysis_id is None:
+                    analyzed = latest_analysis(connection, row, annotated["anotacao_id"]) if annotated else None
+                analysis_history = connection.execute(
+                    """SELECT id, analysis_id AS analise_id, registered_at AS registrado_em
+                       FROM analyses WHERE submission_id = ? AND annotation_id = ? ORDER BY id DESC""",
+                    (record_id, annotated["anotacao_id"]),
+                ).fetchall() if annotated else []
                 annotation_history = connection.execute(
                     """SELECT id, annotation_id AS anotacao_id, registered_at AS registrado_em
                        FROM annotations WHERE submission_id = ? AND segmentation_id = ? ORDER BY id DESC""",
@@ -315,7 +404,7 @@ def create_app(config=None):
                     "SELECT id, preparation_id AS preparacao_id FROM preparations WHERE submission_id = ? ORDER BY id DESC",
                     (record_id,),
                 ).fetchall()
-            except (ErroPreparacao, ErroSegmentacao, ErroAnotacao) as error:
+            except (ErroPreparacao, ErroSegmentacao, ErroAnotacao, ErroAnalise) as error:
                 return {"erro": str(error)}, 409
         record = dict(row)
         record["created_at"] = datetime.fromisoformat(record["created_at"]).astimezone(
@@ -326,6 +415,7 @@ def create_app(config=None):
             segmented=segmented, segmentation_history=[dict(item) for item in history],
             preparation_history=[dict(item) for item in preparation_history],
             annotated=annotated, annotation_history=[dict(item) for item in annotation_history],
+            analyzed=analyzed, analysis_history=[dict(item) for item in analysis_history],
         )
 
     @app.post("/envios/<int:record_id>/preparacoes")
@@ -494,6 +584,72 @@ def create_app(config=None):
         return Response(
             json.dumps(annotated, ensure_ascii=False, indent=2, allow_nan=False), mimetype="application/json",
             headers={"Content-Disposition": f'attachment; filename="anotacao-{record_id}.json"'},
+        )
+
+    @app.post("/envios/<int:record_id>/analises")
+    def analyze_submission(record_id):
+        if request.is_json:
+            payload = request.get_json(silent=True)
+            allowed = {"anotacao_id", "analise_id", "registrado_em"}
+            if not isinstance(payload, dict) or payload.keys() - allowed:
+                return {"erro": "Envie um objeto JSON com anotacao_id, analise_id ou registrado_em."}, 400
+            options = dict(payload)
+        else:
+            if set(request.form) != {"anotacao_id"} or len(request.form.getlist("anotacao_id")) != 1:
+                return {"erro": "Selecione uma única anotação para analisar."}, 400
+            options = {"anotacao_id": request.form["anotacao_id"]}
+        for field in ("anotacao_id", "analise_id", "registrado_em"):
+            if field in options and (not isinstance(options[field], str) or not options[field].strip()):
+                return {"erro": f"{field} deve ser uma string não vazia."}, 400
+        annotation_id = options.pop("anotacao_id", None)
+        try:
+            with closing(connect_database(app.config["DATABASE"])) as connection:
+                document = connection.execute("SELECT * FROM submissions WHERE id = ?", (record_id,)).fetchone()
+                if document is None:
+                    abort(404)
+                annotated = latest_annotation(connection, document, annotation_id=annotation_id)
+                if annotated is None:
+                    return {"erro": "Anotação não encontrada. Anote uma segmentação antes de analisar."}, 404
+                analyzed = save_analysis(connection, document, annotated, **options)
+                connection.commit()
+        except (ErroPreparacao, ErroSegmentacao, ErroAnotacao, ErroAnaliseEntrada) as error:
+            return {"erro": str(error)}, 409
+        except ErroAnaliseModelo as error:
+            return {"erro": str(error)}, 503
+        except (ErroAnaliseAlinhamento, ErroAnalisePrevisao) as error:
+            return {"erro": str(error)}, 422
+        except ErroAnaliseLimite as error:
+            return {"erro": str(error)}, 413
+        except ErroAnalise as error:
+            return {"erro": str(error)}, 400
+        except sqlite3.IntegrityError:
+            return {"erro": "Esse identificador de análise já existe. Gere uma nova execução."}, 409
+        if request.is_json:
+            return Response(json.dumps(analyzed, ensure_ascii=False, allow_nan=False), status=201, mimetype="application/json")
+        return redirect(
+            url_for(
+                "submission", record_id=record_id, preparacao_id=analyzed["preparacao_id"],
+                segmentacao_id=analyzed["segmentacao_id"], anotacao_id=analyzed["anotacao_id"],
+                analise_id=analyzed["analise_id"],
+            ),
+            code=303,
+        )
+
+    @app.get("/envios/<int:record_id>/analise.json")
+    def analysis_json(record_id):
+        with closing(connect_database(app.config["DATABASE"])) as connection:
+            document = connection.execute("SELECT * FROM submissions WHERE id = ?", (record_id,)).fetchone()
+            if document is None:
+                abort(404)
+            try:
+                analyzed = latest_analysis(connection, document, analysis_id=request.args.get("analise_id"))
+            except (ErroPreparacao, ErroSegmentacao, ErroAnotacao, ErroAnalise) as error:
+                return {"erro": str(error)}, 409
+        if analyzed is None:
+            return {"erro": "Nenhuma análise encontrada. Analise a sintaxe e as entidades de uma anotação deste documento."}, 404
+        return Response(
+            json.dumps(analyzed, ensure_ascii=False, indent=2, allow_nan=False), mimetype="application/json",
+            headers={"Content-Disposition": f'attachment; filename="analise-{record_id}.json"'},
         )
 
     @app.get("/envios/<int:record_id>/segmentacoes/<segmentacao_id>/periodos/<periodo_id>/contexto.json")

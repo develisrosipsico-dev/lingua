@@ -120,17 +120,17 @@ h1 {
 .period-list li::marker { color: var(--muted); font-size: 14px; font-weight: 600; }
 .period-text { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
 .period-location { margin-top: 8px; color: var(--muted); font-size: 12px; }
-.period-location summary, .segmentation-history summary, .preparation-history summary, .annotation-history summary { cursor: pointer; }
+.period-location summary, .segmentation-history summary, .preparation-history summary, .annotation-history summary, .analysis-history summary { cursor: pointer; }
 .period-location p { margin: 6px 0 0; }
 .empty-result { margin: 0; color: var(--muted); font-size: 14px; }
-.segmentation-history, .preparation-history, .annotation-history { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--line); font-size: 14px; }
-.segmentation-history ul, .preparation-history ul, .annotation-history ul { margin: 12px 0 0; padding: 0; list-style: none; }
-.segmentation-history li, .preparation-history li, .annotation-history li { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 12px; padding: 8px 0; }
-.segmentation-history time, .annotation-history time { color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
-.current-segmentation, .current-preparation, .current-annotation { padding: 1px 7px; border-radius: 5px; background: var(--success); color: var(--accent); font-size: 11px; }
-.annotation-panel { margin-bottom: 20px; }
+.segmentation-history, .preparation-history, .annotation-history, .analysis-history { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--line); font-size: 14px; }
+.segmentation-history ul, .preparation-history ul, .annotation-history ul, .analysis-history ul { margin: 12px 0 0; padding: 0; list-style: none; }
+.segmentation-history li, .preparation-history li, .annotation-history li, .analysis-history li { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 12px; padding: 8px 0; }
+.segmentation-history time, .annotation-history time, .analysis-history time { color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
+.current-segmentation, .current-preparation, .current-annotation, .current-analysis { padding: 1px 7px; border-radius: 5px; background: var(--success); color: var(--accent); font-size: 11px; }
+.annotation-panel, .syntax-panel { margin-bottom: 20px; }
 .local-processing { margin: 12px 0 0; color: var(--muted); font-size: 13px; }
-.annotation-result { margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--line); }
+.annotation-result, .syntax-result { margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--line); }
 .annotation-note { margin: 0 0 18px; padding: 12px 14px; border-left: 3px solid #a2cbb5; background: #f3f8f2; color: var(--muted); font-size: 14px; }
 .annotation-counts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .annotation-table-title { margin: 28px 0 12px; font-size: 15px; font-weight: 650; }
@@ -156,6 +156,20 @@ h1 {
 .word-forms { display: flex; flex-wrap: wrap; gap: 4px 8px; margin: 0; padding: 0; list-style: none; }
 .word-forms li { padding: 0 6px; border-radius: 4px; background: #f3f6f0; white-space: pre-wrap; }
 .frequency { font-variant-numeric: tabular-nums; }
+.syntax-period { margin-top: 24px; }
+.syntax-period + .syntax-period { padding-top: 24px; border-top: 1px solid var(--line); }
+.syntax-period h4 { margin: 0 0 10px; font-size: 14px; font-weight: 650; }
+.syntax-context { margin-top: 10px; }
+.syntax-context > .period-text { margin-top: 10px; padding: 10px 12px; border-left: 2px solid var(--line); }
+.context-positions { margin: 12px 0 0; }
+.context-positions dt { margin-top: 6px; }
+.context-positions dd { margin: 0; overflow-wrap: anywhere; }
+.syntax-table-scroll { margin-top: 14px; }
+.syntax-table, .entities-table { min-width: 530px; }
+.root-label { display: inline-block; margin-left: 4px; padding: 0 6px; border-radius: 4px; background: var(--success); color: var(--accent); font-size: 11px; white-space: nowrap; }
+.entity-details { max-width: 380px; }
+.entity-token-ids { margin: 0; padding-left: 18px; }
+.entity-token-ids li + li { margin-top: 4px; }
 .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 650; }
 
@@ -262,5 +276,5 @@ button:hover { background: #1e483d; }
   .notice-success { flex-wrap: wrap; gap: 10px; }
   .new-text { margin-left: 40px; }
   button { width: 100%; }
-  .annotation-panel button { white-space: normal; }
+  .annotation-panel button, .syntax-panel button { white-space: normal; }
 }

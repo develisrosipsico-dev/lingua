@@ -4,7 +4,8 @@ Projeto independente de análise linguística, em Python com interface HTML.
 Recebe um texto, registra o original em SQLite, gera uma preparação validada
 e segmenta sua cópia de trabalho em tokens, períodos e parágrafos. Um modelo
 português local acrescenta lemas, classes gramaticais, traços morfológicos e
-vocabulário do documento. Os registros JSON contêm versões, hashes SHA-256,
+vocabulário do documento, relações sintáticas e entidades nomeadas.
+Os registros JSON contêm versões, hashes SHA-256,
 metadados e posições que apontam até o original.
 
 ## Obter uma cópia local
@@ -98,6 +99,28 @@ Veja [uso direto, campos, limites e API HTTP](docs/anotacao.md), o
 O [relatório calculado](docs/avaliacao_morfologia_resultado.md) descreve o
 desempenho do modelo nesse conjunto de referência.
 
+## Analisar sintaxe e entidades
+
+Escolha uma anotação morfológica salva e clique em **Analisar sintaxe e
+entidades**. O resultado apresenta a relação sintática e a cabeça de cada
+token, além das ocorrências de entidades nomeadas. Uma lista vazia de entidades
+é um resultado válido. Use **Baixar análise JSON** para exportar o registro
+completo; cada execução acrescenta uma análise ao histórico, vinculada à
+anotação exata utilizada.
+
+A etapa 06 usa o mesmo modelo português instalado pela etapa 05, com os
+componentes `tok2vec`, `parser` e `ner`. As anotações morfológicas anteriores
+permanecem intactas. Os limites continuam em **50.000 pontos de código** e
+**10.000 tokens internos**. Uma divergência de tokens, períodos, árvore ou
+entidades gera um erro explícito; o aplicativo preserva a previsão do modelo
+sem corrigir relações ou recortar entidades para ajustar o resultado.
+
+Veja [uso direto, convenções e API HTTP](docs/sintaxe_entidades.md) e os
+exemplos de análise com [preservação literal](examples/sintaxe_entidades_literal.json)
+e [normalização opcional de CRLF](examples/sintaxe_entidades_normalizada.json).
+Uma análise validada fornece o material para a etapa 07; a aplicação de regras
+linguísticas pertence à próxima etapa.
+
 ## Dados locais
 
 O banco SQLite é criado automaticamente em `instance/textos.sqlite3` e não é
@@ -116,6 +139,9 @@ automaticamente. Cada uma preserva a preparação exata que foi utilizada.
 As anotações ficam na tabela `annotations`, acrescentando registros ligados
 à segmentação exata utilizada. Atualizar ou gerar outra análise preserva o
 original e todos os registros anteriores.
+As análises sintáticas e de entidades ficam na tabela `analyses`, vinculadas
+à anotação morfológica exata. A tabela é criada automaticamente ao iniciar
+o aplicativo atualizado, preservando o banco existente.
 
 ## Sincronizar o código
 
@@ -146,6 +172,8 @@ ao rebase. Evite `push --force` para preservar o histórico compartilhado.
 
 O Git sincroniza o código; o banco e o ambiente virtual permanecem locais.
 Depois de atualizar para a etapa 05, instale as dependências e o modelo português.
+As etapas 05 e 06 compartilham esse modelo; a etapa 06 não exige um novo download
+quando as dependências já estão instaladas.
 Na raiz `lingua`, no macOS ou Linux:
 
 ```bash
@@ -181,5 +209,8 @@ JSON, histórico de preparações e segmentações, contexto dos períodos, erro
 explícitos e exibição segura de HTML. A etapa 05 também verifica alinhamento
 com os tokens existentes, vocabulário, metadados do modelo e histórico de
 anotações. Os exemplos curtos anotados manualmente
-servem como referência; o relato de três parágrafos e dezesseis períodos ainda
+servem como referência de avaliação da etapa 05. A etapa 06 verifica árvores
+sintáticas, entidades, separadores, intervalos literais e normalizados,
+histórico e falhas explícitas, além da execução com o modelo real. O relato
+de três parágrafos e dezesseis períodos ainda
 não foi fornecido e suas contagens não foram verificadas.

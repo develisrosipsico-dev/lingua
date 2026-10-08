@@ -1,0 +1,2456 @@
+{
+  "schema_version": "1.0.0",
+  "etapa": "06_sintaxe_entidades",
+  "documento_id": "77ac7c43-32f8-47ee-a1bf-6341320085c8",
+  "preparacao_id": "bb012b65-501f-4ff7-a673-07d28c7e04bb",
+  "segmentacao_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4",
+  "anotacao_id": "37b0da6c-fcde-4d45-a702-5559104d343d",
+  "analise_id": "c1a78102-81d1-4259-91bc-9d6f56264e3c",
+  "registrado_em": "2026-10-07T21:25:19.558866-03:00",
+  "anotacao": {
+    "schema_version": "1.0.0",
+    "etapa": "05_morfologia_vocabulario",
+    "documento_id": "77ac7c43-32f8-47ee-a1bf-6341320085c8",
+    "preparacao_id": "bb012b65-501f-4ff7-a673-07d28c7e04bb",
+    "segmentacao_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4",
+    "anotacao_id": "37b0da6c-fcde-4d45-a702-5559104d343d",
+    "registrado_em": "2026-10-07T21:25:19.558866-03:00",
+    "segmentacao": {
+      "schema_version": "1.0.0",
+      "etapa": "04_tokenizacao_segmentacao",
+      "documento_id": "77ac7c43-32f8-47ee-a1bf-6341320085c8",
+      "preparacao_id": "bb012b65-501f-4ff7-a673-07d28c7e04bb",
+      "segmentacao_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4",
+      "registrado_em": "2026-10-07T21:25:19.558866-03:00",
+      "preparacao": {
+        "schema_version": "1.0.0",
+        "documento_id": "77ac7c43-32f8-47ee-a1bf-6341320085c8",
+        "preparacao_id": "bb012b65-501f-4ff7-a673-07d28c7e04bb",
+        "registrado_em": "2026-10-07T21:25:19.558866-03:00",
+        "original": {
+          "texto": "  João   Silva entregou uma nota.\r\nMaria foi a São\tPaulo.\r\n\r\nJoão Silva voltou.  ",
+          "versao": 1,
+          "comprimento": 81,
+          "sha256": "8ba83436a3847f260f374709c22310574874542bf0523f2741074d4782cfeefc"
+        },
+        "trabalho": {
+          "texto": "  João   Silva entregou uma nota.\nMaria foi a São\tPaulo.\n\nJoão Silva voltou.  ",
+          "versao": 2,
+          "comprimento": 78,
+          "sha256": "bb95f8478cdd3c92739ad0cfbe6553a4d108470d6011da38ce279644d8d21fcb"
+        },
+        "coordenadas": {
+          "unidade": "pontos_de_codigo_unicode",
+          "base": 0,
+          "fim_exclusivo": true
+        },
+        "politica": {
+          "identificacao": "preservacao_literal",
+          "versao": "1.0.0",
+          "opcoes": {
+            "normalizar_crlf": true
+          }
+        },
+        "metadados_origem": {},
+        "mapa_trechos": [
+          {
+            "tipo": "copia",
+            "trabalho": {
+              "inicio": 0,
+              "fim": 33
+            },
+            "original": {
+              "inicio": 0,
+              "fim": 33
+            },
+            "alteracao_id": null
+          },
+          {
+            "tipo": "transformacao_tecnica",
+            "trabalho": {
+              "inicio": 33,
+              "fim": 34
+            },
+            "original": {
+              "inicio": 33,
+              "fim": 35
+            },
+            "alteracao_id": "bb012b65-501f-4ff7-a673-07d28c7e04bb:alteracao:1"
+          },
+          {
+            "tipo": "copia",
+            "trabalho": {
+              "inicio": 34,
+              "fim": 56
+            },
+            "original": {
+              "inicio": 35,
+              "fim": 57
+            },
+            "alteracao_id": null
+          },
+          {
+            "tipo": "transformacao_tecnica",
+            "trabalho": {
+              "inicio": 56,
+              "fim": 57
+            },
+            "original": {
+              "inicio": 57,
+              "fim": 59
+            },
+            "alteracao_id": "bb012b65-501f-4ff7-a673-07d28c7e04bb:alteracao:2"
+          },
+          {
+            "tipo": "transformacao_tecnica",
+            "trabalho": {
+              "inicio": 57,
+              "fim": 58
+            },
+            "original": {
+              "inicio": 59,
+              "fim": 61
+            },
+            "alteracao_id": "bb012b65-501f-4ff7-a673-07d28c7e04bb:alteracao:3"
+          },
+          {
+            "tipo": "copia",
+            "trabalho": {
+              "inicio": 58,
+              "fim": 78
+            },
+            "original": {
+              "inicio": 61,
+              "fim": 81
+            },
+            "alteracao_id": null
+          }
+        ],
+        "alteracoes": [
+          {
+            "id": "bb012b65-501f-4ff7-a673-07d28c7e04bb:alteracao:1",
+            "operacao": "crlf_para_lf",
+            "versao_regra": "1.0.0",
+            "motivo": "Conversão técnica opcional de CRLF em LF solicitada pelo chamador.",
+            "antes": "\r\n",
+            "depois": "\n",
+            "original": {
+              "inicio": 33,
+              "fim": 35
+            },
+            "trabalho": {
+              "inicio": 33,
+              "fim": 34
+            }
+          },
+          {
+            "id": "bb012b65-501f-4ff7-a673-07d28c7e04bb:alteracao:2",
+            "operacao": "crlf_para_lf",
+            "versao_regra": "1.0.0",
+            "motivo": "Conversão técnica opcional de CRLF em LF solicitada pelo chamador.",
+            "antes": "\r\n",
+            "depois": "\n",
+            "original": {
+              "inicio": 57,
+              "fim": 59
+            },
+            "trabalho": {
+              "inicio": 56,
+              "fim": 57
+            }
+          },
+          {
+            "id": "bb012b65-501f-4ff7-a673-07d28c7e04bb:alteracao:3",
+            "operacao": "crlf_para_lf",
+            "versao_regra": "1.0.0",
+            "motivo": "Conversão técnica opcional de CRLF em LF solicitada pelo chamador.",
+            "antes": "\r\n",
+            "depois": "\n",
+            "original": {
+              "inicio": 59,
+              "fim": 61
+            },
+            "trabalho": {
+              "inicio": 57,
+              "fim": 58
+            }
+          }
+        ],
+        "validacao": {
+          "estado": "pronto_para_etapa_04",
+          "pronto_para_etapa_04": true,
+          "verificacoes": [
+            "estrutura_json",
+            "schema_identificadores_e_data",
+            "metadados_origem",
+            "versoes_comprimentos_e_hashes_utf8",
+            "convencao_de_coordenadas",
+            "politica_e_resultado_permitido",
+            "limites_ordem_e_cobertura_dos_intervalos",
+            "igualdade_dos_trechos_copiados",
+            "transformacoes_e_alteracoes_correspondentes"
+          ]
+        }
+      },
+      "coordenadas": {
+        "unidade": "pontos_de_codigo_unicode",
+        "base": 0,
+        "fim_exclusivo": true
+      },
+      "processamento": {
+        "ferramenta": "spacy",
+        "versao": "3.8.16",
+        "idioma": "pt",
+        "modelo": null,
+        "tokenizador": {
+          "identificacao": "spacy.blank(pt)",
+          "versao": "3.8.16",
+          "ajustes": []
+        },
+        "regras": {
+          "identificacao": "segmentacao_portugues_por_regras",
+          "versao": "1.0.0"
+        },
+        "configuracoes": {
+          "max_caracteres": 2097152,
+          "paragrafos": "linhas_em_branco_lf_ou_crlf_com_espacos_ascii_ou_tabulacoes",
+          "limites_paragrafo": "primeiro_ao_ultimo_token_nao_espacial",
+          "reticencias": "nao_encerram_por_si",
+          "abreviacoes_protegidas": [
+            "Dr.",
+            "Dra.",
+            "Sr.",
+            "Sra."
+          ],
+          "etc": "encerra_antes_de_proxima_palavra_com_inicial_maiuscula_ou_fim_paragrafo",
+          "separadores": "complemento_dos_intervalos_dos_tokens_nao_espaciais",
+          "fechamento_aspas_retas": "adjacente_a_pontuacao_terminal",
+          "segmentador": "componente_proprio_sobre_tokens"
+        }
+      },
+      "paragrafos": [
+        {
+          "id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:0",
+          "ordem": 0,
+          "texto": "João   Silva entregou uma nota.\nMaria foi a São\tPaulo.",
+          "trabalho": {
+            "inicio": 2,
+            "fim": 56
+          },
+          "original": {
+            "inicio": 2,
+            "fim": 57
+          },
+          "periodos": [
+            "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:0",
+            "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:1"
+          ]
+        },
+        {
+          "id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:1",
+          "ordem": 1,
+          "texto": "João Silva voltou.",
+          "trabalho": {
+            "inicio": 58,
+            "fim": 76
+          },
+          "original": {
+            "inicio": 61,
+            "fim": 79
+          },
+          "periodos": [
+            "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:2"
+          ]
+        }
+      ],
+      "periodos": [
+        {
+          "id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:0",
+          "ordem": 0,
+          "texto": "João   Silva entregou uma nota.",
+          "trabalho": {
+            "inicio": 2,
+            "fim": 33
+          },
+          "original": {
+            "inicio": 2,
+            "fim": 33
+          },
+          "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:0",
+          "tokens": [
+            "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:0",
+            "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:1",
+            "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:2",
+            "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:3",
+            "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:4",
+            "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:5"
+          ],
+          "regra_encerramento": "pontuacao_terminal"
+        },
+        {
+          "id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:1",
+          "ordem": 1,
+          "texto": "Maria foi a São\tPaulo.",
+          "trabalho": {
+            "inicio": 34,
+            "fim": 56
+          },
+          "original": {
+            "inicio": 35,
+            "fim": 57
+          },
+          "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:0",
+          "tokens": [
+            "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:6",
+            "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:7",
+            "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:8",
+            "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:9",
+            "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:10",
+            "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:11"
+          ],
+          "regra_encerramento": "pontuacao_terminal"
+        },
+        {
+          "id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:2",
+          "ordem": 2,
+          "texto": "João Silva voltou.",
+          "trabalho": {
+            "inicio": 58,
+            "fim": 76
+          },
+          "original": {
+            "inicio": 61,
+            "fim": 79
+          },
+          "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:1",
+          "tokens": [
+            "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:12",
+            "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:13",
+            "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:14",
+            "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:15"
+          ],
+          "regra_encerramento": "pontuacao_terminal"
+        }
+      ],
+      "tokens": [
+        {
+          "id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:0",
+          "ordem": 0,
+          "texto": "João",
+          "trabalho": {
+            "inicio": 2,
+            "fim": 6
+          },
+          "original": {
+            "inicio": 2,
+            "fim": 6
+          },
+          "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:0",
+          "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:0"
+        },
+        {
+          "id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:1",
+          "ordem": 1,
+          "texto": "Silva",
+          "trabalho": {
+            "inicio": 9,
+            "fim": 14
+          },
+          "original": {
+            "inicio": 9,
+            "fim": 14
+          },
+          "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:0",
+          "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:0"
+        },
+        {
+          "id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:2",
+          "ordem": 2,
+          "texto": "entregou",
+          "trabalho": {
+            "inicio": 15,
+            "fim": 23
+          },
+          "original": {
+            "inicio": 15,
+            "fim": 23
+          },
+          "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:0",
+          "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:0"
+        },
+        {
+          "id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:3",
+          "ordem": 3,
+          "texto": "uma",
+          "trabalho": {
+            "inicio": 24,
+            "fim": 27
+          },
+          "original": {
+            "inicio": 24,
+            "fim": 27
+          },
+          "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:0",
+          "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:0"
+        },
+        {
+          "id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:4",
+          "ordem": 4,
+          "texto": "nota",
+          "trabalho": {
+            "inicio": 28,
+            "fim": 32
+          },
+          "original": {
+            "inicio": 28,
+            "fim": 32
+          },
+          "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:0",
+          "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:0"
+        },
+        {
+          "id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:5",
+          "ordem": 5,
+          "texto": ".",
+          "trabalho": {
+            "inicio": 32,
+            "fim": 33
+          },
+          "original": {
+            "inicio": 32,
+            "fim": 33
+          },
+          "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:0",
+          "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:0"
+        },
+        {
+          "id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:6",
+          "ordem": 6,
+          "texto": "Maria",
+          "trabalho": {
+            "inicio": 34,
+            "fim": 39
+          },
+          "original": {
+            "inicio": 35,
+            "fim": 40
+          },
+          "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:0",
+          "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:1"
+        },
+        {
+          "id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:7",
+          "ordem": 7,
+          "texto": "foi",
+          "trabalho": {
+            "inicio": 40,
+            "fim": 43
+          },
+          "original": {
+            "inicio": 41,
+            "fim": 44
+          },
+          "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:0",
+          "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:1"
+        },
+        {
+          "id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:8",
+          "ordem": 8,
+          "texto": "a",
+          "trabalho": {
+            "inicio": 44,
+            "fim": 45
+          },
+          "original": {
+            "inicio": 45,
+            "fim": 46
+          },
+          "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:0",
+          "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:1"
+        },
+        {
+          "id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:9",
+          "ordem": 9,
+          "texto": "São",
+          "trabalho": {
+            "inicio": 46,
+            "fim": 49
+          },
+          "original": {
+            "inicio": 47,
+            "fim": 50
+          },
+          "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:0",
+          "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:1"
+        },
+        {
+          "id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:10",
+          "ordem": 10,
+          "texto": "Paulo",
+          "trabalho": {
+            "inicio": 50,
+            "fim": 55
+          },
+          "original": {
+            "inicio": 51,
+            "fim": 56
+          },
+          "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:0",
+          "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:1"
+        },
+        {
+          "id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:11",
+          "ordem": 11,
+          "texto": ".",
+          "trabalho": {
+            "inicio": 55,
+            "fim": 56
+          },
+          "original": {
+            "inicio": 56,
+            "fim": 57
+          },
+          "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:0",
+          "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:1"
+        },
+        {
+          "id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:12",
+          "ordem": 12,
+          "texto": "João",
+          "trabalho": {
+            "inicio": 58,
+            "fim": 62
+          },
+          "original": {
+            "inicio": 61,
+            "fim": 65
+          },
+          "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:1",
+          "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:2"
+        },
+        {
+          "id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:13",
+          "ordem": 13,
+          "texto": "Silva",
+          "trabalho": {
+            "inicio": 63,
+            "fim": 68
+          },
+          "original": {
+            "inicio": 66,
+            "fim": 71
+          },
+          "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:1",
+          "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:2"
+        },
+        {
+          "id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:14",
+          "ordem": 14,
+          "texto": "voltou",
+          "trabalho": {
+            "inicio": 69,
+            "fim": 75
+          },
+          "original": {
+            "inicio": 72,
+            "fim": 78
+          },
+          "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:1",
+          "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:2"
+        },
+        {
+          "id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:15",
+          "ordem": 15,
+          "texto": ".",
+          "trabalho": {
+            "inicio": 75,
+            "fim": 76
+          },
+          "original": {
+            "inicio": 78,
+            "fim": 79
+          },
+          "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:1",
+          "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:2"
+        }
+      ],
+      "separadores": [
+        {
+          "id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:separador:0",
+          "ordem": 0,
+          "texto": "  ",
+          "trabalho": {
+            "inicio": 0,
+            "fim": 2
+          },
+          "original": {
+            "inicio": 0,
+            "fim": 2
+          }
+        },
+        {
+          "id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:separador:1",
+          "ordem": 1,
+          "texto": "   ",
+          "trabalho": {
+            "inicio": 6,
+            "fim": 9
+          },
+          "original": {
+            "inicio": 6,
+            "fim": 9
+          }
+        },
+        {
+          "id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:separador:2",
+          "ordem": 2,
+          "texto": " ",
+          "trabalho": {
+            "inicio": 14,
+            "fim": 15
+          },
+          "original": {
+            "inicio": 14,
+            "fim": 15
+          }
+        },
+        {
+          "id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:separador:3",
+          "ordem": 3,
+          "texto": " ",
+          "trabalho": {
+            "inicio": 23,
+            "fim": 24
+          },
+          "original": {
+            "inicio": 23,
+            "fim": 24
+          }
+        },
+        {
+          "id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:separador:4",
+          "ordem": 4,
+          "texto": " ",
+          "trabalho": {
+            "inicio": 27,
+            "fim": 28
+          },
+          "original": {
+            "inicio": 27,
+            "fim": 28
+          }
+        },
+        {
+          "id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:separador:5",
+          "ordem": 5,
+          "texto": "\n",
+          "trabalho": {
+            "inicio": 33,
+            "fim": 34
+          },
+          "original": {
+            "inicio": 33,
+            "fim": 35
+          }
+        },
+        {
+          "id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:separador:6",
+          "ordem": 6,
+          "texto": " ",
+          "trabalho": {
+            "inicio": 39,
+            "fim": 40
+          },
+          "original": {
+            "inicio": 40,
+            "fim": 41
+          }
+        },
+        {
+          "id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:separador:7",
+          "ordem": 7,
+          "texto": " ",
+          "trabalho": {
+            "inicio": 43,
+            "fim": 44
+          },
+          "original": {
+            "inicio": 44,
+            "fim": 45
+          }
+        },
+        {
+          "id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:separador:8",
+          "ordem": 8,
+          "texto": " ",
+          "trabalho": {
+            "inicio": 45,
+            "fim": 46
+          },
+          "original": {
+            "inicio": 46,
+            "fim": 47
+          }
+        },
+        {
+          "id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:separador:9",
+          "ordem": 9,
+          "texto": "\t",
+          "trabalho": {
+            "inicio": 49,
+            "fim": 50
+          },
+          "original": {
+            "inicio": 50,
+            "fim": 51
+          }
+        },
+        {
+          "id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:separador:10",
+          "ordem": 10,
+          "texto": "\n\n",
+          "trabalho": {
+            "inicio": 56,
+            "fim": 58
+          },
+          "original": {
+            "inicio": 57,
+            "fim": 61
+          }
+        },
+        {
+          "id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:separador:11",
+          "ordem": 11,
+          "texto": " ",
+          "trabalho": {
+            "inicio": 62,
+            "fim": 63
+          },
+          "original": {
+            "inicio": 65,
+            "fim": 66
+          }
+        },
+        {
+          "id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:separador:12",
+          "ordem": 12,
+          "texto": " ",
+          "trabalho": {
+            "inicio": 68,
+            "fim": 69
+          },
+          "original": {
+            "inicio": 71,
+            "fim": 72
+          }
+        },
+        {
+          "id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:separador:13",
+          "ordem": 13,
+          "texto": "  ",
+          "trabalho": {
+            "inicio": 76,
+            "fim": 78
+          },
+          "original": {
+            "inicio": 79,
+            "fim": 81
+          }
+        }
+      ],
+      "validacao": {
+        "estado": "pronto_para_etapa_05",
+        "pronto_para_etapa_05": true,
+        "verificacoes": [
+          "estrutura_json_identificadores_e_data",
+          "preparacao_textos_hashes_e_mapa",
+          "coordenadas_e_processamento",
+          "limites_ordem_identificadores_e_textos_exatos",
+          "reconstrucao_por_tokens_e_separadores",
+          "paragrafos_e_periodos_por_regras",
+          "relacoes_e_contencao_das_unidades",
+          "correspondencia_ao_original"
+        ]
+      }
+    },
+    "coordenadas": {
+      "unidade": "pontos_de_codigo_unicode",
+      "base": 0,
+      "fim_exclusivo": true
+    },
+    "processamento": {
+      "ferramenta": "spacy",
+      "versao": "3.8.16",
+      "idioma": "pt",
+      "modelo": {
+        "nome": "pt_core_news_sm",
+        "versao": "3.8.0",
+        "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+      },
+      "componentes_executados": [
+        "tok2vec",
+        "morphologizer",
+        "lemmatizer"
+      ],
+      "componentes_desativados": [
+        "parser",
+        "senter",
+        "attribute_ruler",
+        "ner"
+      ],
+      "componentes_disponiveis": [
+        "tok2vec",
+        "morphologizer",
+        "parser",
+        "lemmatizer",
+        "senter",
+        "attribute_ruler",
+        "ner"
+      ],
+      "configuracoes": {
+        "tokenizador": {
+          "identificacao": "spacy.blank(pt)",
+          "versao_origem": "3.8.16",
+          "versao_execucao": "3.8.16",
+          "ajustes": []
+        },
+        "max_caracteres": 50000,
+        "max_tokens_internos": 10000,
+        "fronteiras_periodos": "herdadas_da_etapa_04",
+        "vocabulario": {
+          "pos_excluidas": [
+            "PUNCT",
+            "SYM"
+          ],
+          "remover_stopwords": false
+        },
+        "embeddings_exportados": false
+      }
+    },
+    "anotacoes_tokens": [
+      {
+        "texto": "João",
+        "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:0",
+        "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:0",
+        "trabalho": {
+          "inicio": 2,
+          "fim": 6
+        },
+        "original": {
+          "inicio": 2,
+          "fim": 6
+        },
+        "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:0",
+        "lema": "João",
+        "pos": "PROPN",
+        "tag": null,
+        "morfologia": {
+          "Gender": "Masc",
+          "Number": "Sing"
+        },
+        "origem": {
+          "ferramenta": "spacy",
+          "versao": "3.8.16",
+          "modelo": {
+            "nome": "pt_core_news_sm",
+            "versao": "3.8.0"
+          },
+          "componentes": [
+            "tok2vec",
+            "morphologizer",
+            "lemmatizer"
+          ]
+        },
+        "campos_nao_resolvidos": [
+          "tag"
+        ]
+      },
+      {
+        "texto": "Silva",
+        "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:0",
+        "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:0",
+        "trabalho": {
+          "inicio": 9,
+          "fim": 14
+        },
+        "original": {
+          "inicio": 9,
+          "fim": 14
+        },
+        "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:1",
+        "lema": "Silva",
+        "pos": "PROPN",
+        "tag": null,
+        "morfologia": {
+          "Number": "Sing"
+        },
+        "origem": {
+          "ferramenta": "spacy",
+          "versao": "3.8.16",
+          "modelo": {
+            "nome": "pt_core_news_sm",
+            "versao": "3.8.0"
+          },
+          "componentes": [
+            "tok2vec",
+            "morphologizer",
+            "lemmatizer"
+          ]
+        },
+        "campos_nao_resolvidos": [
+          "tag"
+        ]
+      },
+      {
+        "texto": "entregou",
+        "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:0",
+        "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:0",
+        "trabalho": {
+          "inicio": 15,
+          "fim": 23
+        },
+        "original": {
+          "inicio": 15,
+          "fim": 23
+        },
+        "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:2",
+        "lema": "entregar",
+        "pos": "VERB",
+        "tag": null,
+        "morfologia": {
+          "Mood": "Ind",
+          "Number": "Sing",
+          "Person": "3",
+          "Tense": "Past",
+          "VerbForm": "Fin"
+        },
+        "origem": {
+          "ferramenta": "spacy",
+          "versao": "3.8.16",
+          "modelo": {
+            "nome": "pt_core_news_sm",
+            "versao": "3.8.0"
+          },
+          "componentes": [
+            "tok2vec",
+            "morphologizer",
+            "lemmatizer"
+          ]
+        },
+        "campos_nao_resolvidos": [
+          "tag"
+        ]
+      },
+      {
+        "texto": "uma",
+        "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:0",
+        "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:0",
+        "trabalho": {
+          "inicio": 24,
+          "fim": 27
+        },
+        "original": {
+          "inicio": 24,
+          "fim": 27
+        },
+        "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:3",
+        "lema": "um",
+        "pos": "DET",
+        "tag": null,
+        "morfologia": {
+          "Definite": "Ind",
+          "Gender": "Fem",
+          "Number": "Sing",
+          "PronType": "Art"
+        },
+        "origem": {
+          "ferramenta": "spacy",
+          "versao": "3.8.16",
+          "modelo": {
+            "nome": "pt_core_news_sm",
+            "versao": "3.8.0"
+          },
+          "componentes": [
+            "tok2vec",
+            "morphologizer",
+            "lemmatizer"
+          ]
+        },
+        "campos_nao_resolvidos": [
+          "tag"
+        ]
+      },
+      {
+        "texto": "nota",
+        "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:0",
+        "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:0",
+        "trabalho": {
+          "inicio": 28,
+          "fim": 32
+        },
+        "original": {
+          "inicio": 28,
+          "fim": 32
+        },
+        "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:4",
+        "lema": "nota",
+        "pos": "NOUN",
+        "tag": null,
+        "morfologia": {
+          "Gender": "Fem",
+          "Number": "Sing"
+        },
+        "origem": {
+          "ferramenta": "spacy",
+          "versao": "3.8.16",
+          "modelo": {
+            "nome": "pt_core_news_sm",
+            "versao": "3.8.0"
+          },
+          "componentes": [
+            "tok2vec",
+            "morphologizer",
+            "lemmatizer"
+          ]
+        },
+        "campos_nao_resolvidos": [
+          "tag"
+        ]
+      },
+      {
+        "texto": ".",
+        "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:0",
+        "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:0",
+        "trabalho": {
+          "inicio": 32,
+          "fim": 33
+        },
+        "original": {
+          "inicio": 32,
+          "fim": 33
+        },
+        "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:5",
+        "lema": ".",
+        "pos": "PUNCT",
+        "tag": null,
+        "morfologia": {},
+        "origem": {
+          "ferramenta": "spacy",
+          "versao": "3.8.16",
+          "modelo": {
+            "nome": "pt_core_news_sm",
+            "versao": "3.8.0"
+          },
+          "componentes": [
+            "tok2vec",
+            "morphologizer",
+            "lemmatizer"
+          ]
+        },
+        "campos_nao_resolvidos": [
+          "tag"
+        ]
+      },
+      {
+        "texto": "Maria",
+        "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:1",
+        "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:0",
+        "trabalho": {
+          "inicio": 34,
+          "fim": 39
+        },
+        "original": {
+          "inicio": 35,
+          "fim": 40
+        },
+        "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:6",
+        "lema": "maria",
+        "pos": "PROPN",
+        "tag": null,
+        "morfologia": {
+          "Gender": "Fem",
+          "Number": "Sing"
+        },
+        "origem": {
+          "ferramenta": "spacy",
+          "versao": "3.8.16",
+          "modelo": {
+            "nome": "pt_core_news_sm",
+            "versao": "3.8.0"
+          },
+          "componentes": [
+            "tok2vec",
+            "morphologizer",
+            "lemmatizer"
+          ]
+        },
+        "campos_nao_resolvidos": [
+          "tag"
+        ]
+      },
+      {
+        "texto": "foi",
+        "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:1",
+        "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:0",
+        "trabalho": {
+          "inicio": 40,
+          "fim": 43
+        },
+        "original": {
+          "inicio": 41,
+          "fim": 44
+        },
+        "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:7",
+        "lema": "ser",
+        "pos": "AUX",
+        "tag": null,
+        "morfologia": {
+          "Mood": "Ind",
+          "Number": "Sing",
+          "Person": "3",
+          "Tense": "Past",
+          "VerbForm": "Fin"
+        },
+        "origem": {
+          "ferramenta": "spacy",
+          "versao": "3.8.16",
+          "modelo": {
+            "nome": "pt_core_news_sm",
+            "versao": "3.8.0"
+          },
+          "componentes": [
+            "tok2vec",
+            "morphologizer",
+            "lemmatizer"
+          ]
+        },
+        "campos_nao_resolvidos": [
+          "tag"
+        ]
+      },
+      {
+        "texto": "a",
+        "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:1",
+        "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:0",
+        "trabalho": {
+          "inicio": 44,
+          "fim": 45
+        },
+        "original": {
+          "inicio": 45,
+          "fim": 46
+        },
+        "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:8",
+        "lema": "o",
+        "pos": "DET",
+        "tag": null,
+        "morfologia": {
+          "Definite": "Def",
+          "Gender": "Fem",
+          "Number": "Sing",
+          "PronType": "Art"
+        },
+        "origem": {
+          "ferramenta": "spacy",
+          "versao": "3.8.16",
+          "modelo": {
+            "nome": "pt_core_news_sm",
+            "versao": "3.8.0"
+          },
+          "componentes": [
+            "tok2vec",
+            "morphologizer",
+            "lemmatizer"
+          ]
+        },
+        "campos_nao_resolvidos": [
+          "tag"
+        ]
+      },
+      {
+        "texto": "São",
+        "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:1",
+        "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:0",
+        "trabalho": {
+          "inicio": 46,
+          "fim": 49
+        },
+        "original": {
+          "inicio": 47,
+          "fim": 50
+        },
+        "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:9",
+        "lema": "São",
+        "pos": "PROPN",
+        "tag": null,
+        "morfologia": {
+          "Gender": "Fem",
+          "Number": "Sing"
+        },
+        "origem": {
+          "ferramenta": "spacy",
+          "versao": "3.8.16",
+          "modelo": {
+            "nome": "pt_core_news_sm",
+            "versao": "3.8.0"
+          },
+          "componentes": [
+            "tok2vec",
+            "morphologizer",
+            "lemmatizer"
+          ]
+        },
+        "campos_nao_resolvidos": [
+          "tag"
+        ]
+      },
+      {
+        "texto": "Paulo",
+        "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:1",
+        "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:0",
+        "trabalho": {
+          "inicio": 50,
+          "fim": 55
+        },
+        "original": {
+          "inicio": 51,
+          "fim": 56
+        },
+        "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:10",
+        "lema": "Paulo",
+        "pos": "PROPN",
+        "tag": null,
+        "morfologia": {
+          "Number": "Sing"
+        },
+        "origem": {
+          "ferramenta": "spacy",
+          "versao": "3.8.16",
+          "modelo": {
+            "nome": "pt_core_news_sm",
+            "versao": "3.8.0"
+          },
+          "componentes": [
+            "tok2vec",
+            "morphologizer",
+            "lemmatizer"
+          ]
+        },
+        "campos_nao_resolvidos": [
+          "tag"
+        ]
+      },
+      {
+        "texto": ".",
+        "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:1",
+        "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:0",
+        "trabalho": {
+          "inicio": 55,
+          "fim": 56
+        },
+        "original": {
+          "inicio": 56,
+          "fim": 57
+        },
+        "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:11",
+        "lema": ".",
+        "pos": "PUNCT",
+        "tag": null,
+        "morfologia": {},
+        "origem": {
+          "ferramenta": "spacy",
+          "versao": "3.8.16",
+          "modelo": {
+            "nome": "pt_core_news_sm",
+            "versao": "3.8.0"
+          },
+          "componentes": [
+            "tok2vec",
+            "morphologizer",
+            "lemmatizer"
+          ]
+        },
+        "campos_nao_resolvidos": [
+          "tag"
+        ]
+      },
+      {
+        "texto": "João",
+        "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:2",
+        "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:1",
+        "trabalho": {
+          "inicio": 58,
+          "fim": 62
+        },
+        "original": {
+          "inicio": 61,
+          "fim": 65
+        },
+        "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:12",
+        "lema": "João",
+        "pos": "PROPN",
+        "tag": null,
+        "morfologia": {
+          "Gender": "Masc",
+          "Number": "Sing"
+        },
+        "origem": {
+          "ferramenta": "spacy",
+          "versao": "3.8.16",
+          "modelo": {
+            "nome": "pt_core_news_sm",
+            "versao": "3.8.0"
+          },
+          "componentes": [
+            "tok2vec",
+            "morphologizer",
+            "lemmatizer"
+          ]
+        },
+        "campos_nao_resolvidos": [
+          "tag"
+        ]
+      },
+      {
+        "texto": "Silva",
+        "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:2",
+        "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:1",
+        "trabalho": {
+          "inicio": 63,
+          "fim": 68
+        },
+        "original": {
+          "inicio": 66,
+          "fim": 71
+        },
+        "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:13",
+        "lema": "Silva",
+        "pos": "PROPN",
+        "tag": null,
+        "morfologia": {
+          "Number": "Sing"
+        },
+        "origem": {
+          "ferramenta": "spacy",
+          "versao": "3.8.16",
+          "modelo": {
+            "nome": "pt_core_news_sm",
+            "versao": "3.8.0"
+          },
+          "componentes": [
+            "tok2vec",
+            "morphologizer",
+            "lemmatizer"
+          ]
+        },
+        "campos_nao_resolvidos": [
+          "tag"
+        ]
+      },
+      {
+        "texto": "voltou",
+        "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:2",
+        "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:1",
+        "trabalho": {
+          "inicio": 69,
+          "fim": 75
+        },
+        "original": {
+          "inicio": 72,
+          "fim": 78
+        },
+        "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:14",
+        "lema": "voltar",
+        "pos": "VERB",
+        "tag": null,
+        "morfologia": {
+          "Mood": "Ind",
+          "Number": "Sing",
+          "Person": "3",
+          "Tense": "Past",
+          "VerbForm": "Fin"
+        },
+        "origem": {
+          "ferramenta": "spacy",
+          "versao": "3.8.16",
+          "modelo": {
+            "nome": "pt_core_news_sm",
+            "versao": "3.8.0"
+          },
+          "componentes": [
+            "tok2vec",
+            "morphologizer",
+            "lemmatizer"
+          ]
+        },
+        "campos_nao_resolvidos": [
+          "tag"
+        ]
+      },
+      {
+        "texto": ".",
+        "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:2",
+        "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:1",
+        "trabalho": {
+          "inicio": 75,
+          "fim": 76
+        },
+        "original": {
+          "inicio": 78,
+          "fim": 79
+        },
+        "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:15",
+        "lema": ".",
+        "pos": "PUNCT",
+        "tag": null,
+        "morfologia": {},
+        "origem": {
+          "ferramenta": "spacy",
+          "versao": "3.8.16",
+          "modelo": {
+            "nome": "pt_core_news_sm",
+            "versao": "3.8.0"
+          },
+          "componentes": [
+            "tok2vec",
+            "morphologizer",
+            "lemmatizer"
+          ]
+        },
+        "campos_nao_resolvidos": [
+          "tag"
+        ]
+      }
+    ],
+    "vocabulario": [
+      {
+        "id": "37b0da6c-fcde-4d45-a702-5559104d343d:vocabulario:0",
+        "ordem": 0,
+        "lema": "João",
+        "pos": "PROPN",
+        "criterio_agrupamento": "lema_pos",
+        "forma_agrupamento": null,
+        "formas": [
+          "João"
+        ],
+        "quantidade": 2,
+        "token_ids": [
+          "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:0",
+          "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:12"
+        ]
+      },
+      {
+        "id": "37b0da6c-fcde-4d45-a702-5559104d343d:vocabulario:1",
+        "ordem": 1,
+        "lema": "Silva",
+        "pos": "PROPN",
+        "criterio_agrupamento": "lema_pos",
+        "forma_agrupamento": null,
+        "formas": [
+          "Silva"
+        ],
+        "quantidade": 2,
+        "token_ids": [
+          "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:1",
+          "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:13"
+        ]
+      },
+      {
+        "id": "37b0da6c-fcde-4d45-a702-5559104d343d:vocabulario:2",
+        "ordem": 2,
+        "lema": "entregar",
+        "pos": "VERB",
+        "criterio_agrupamento": "lema_pos",
+        "forma_agrupamento": null,
+        "formas": [
+          "entregou"
+        ],
+        "quantidade": 1,
+        "token_ids": [
+          "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:2"
+        ]
+      },
+      {
+        "id": "37b0da6c-fcde-4d45-a702-5559104d343d:vocabulario:3",
+        "ordem": 3,
+        "lema": "um",
+        "pos": "DET",
+        "criterio_agrupamento": "lema_pos",
+        "forma_agrupamento": null,
+        "formas": [
+          "uma"
+        ],
+        "quantidade": 1,
+        "token_ids": [
+          "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:3"
+        ]
+      },
+      {
+        "id": "37b0da6c-fcde-4d45-a702-5559104d343d:vocabulario:4",
+        "ordem": 4,
+        "lema": "nota",
+        "pos": "NOUN",
+        "criterio_agrupamento": "lema_pos",
+        "forma_agrupamento": null,
+        "formas": [
+          "nota"
+        ],
+        "quantidade": 1,
+        "token_ids": [
+          "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:4"
+        ]
+      },
+      {
+        "id": "37b0da6c-fcde-4d45-a702-5559104d343d:vocabulario:5",
+        "ordem": 5,
+        "lema": "maria",
+        "pos": "PROPN",
+        "criterio_agrupamento": "lema_pos",
+        "forma_agrupamento": null,
+        "formas": [
+          "Maria"
+        ],
+        "quantidade": 1,
+        "token_ids": [
+          "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:6"
+        ]
+      },
+      {
+        "id": "37b0da6c-fcde-4d45-a702-5559104d343d:vocabulario:6",
+        "ordem": 6,
+        "lema": "ser",
+        "pos": "AUX",
+        "criterio_agrupamento": "lema_pos",
+        "forma_agrupamento": null,
+        "formas": [
+          "foi"
+        ],
+        "quantidade": 1,
+        "token_ids": [
+          "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:7"
+        ]
+      },
+      {
+        "id": "37b0da6c-fcde-4d45-a702-5559104d343d:vocabulario:7",
+        "ordem": 7,
+        "lema": "o",
+        "pos": "DET",
+        "criterio_agrupamento": "lema_pos",
+        "forma_agrupamento": null,
+        "formas": [
+          "a"
+        ],
+        "quantidade": 1,
+        "token_ids": [
+          "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:8"
+        ]
+      },
+      {
+        "id": "37b0da6c-fcde-4d45-a702-5559104d343d:vocabulario:8",
+        "ordem": 8,
+        "lema": "São",
+        "pos": "PROPN",
+        "criterio_agrupamento": "lema_pos",
+        "forma_agrupamento": null,
+        "formas": [
+          "São"
+        ],
+        "quantidade": 1,
+        "token_ids": [
+          "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:9"
+        ]
+      },
+      {
+        "id": "37b0da6c-fcde-4d45-a702-5559104d343d:vocabulario:9",
+        "ordem": 9,
+        "lema": "Paulo",
+        "pos": "PROPN",
+        "criterio_agrupamento": "lema_pos",
+        "forma_agrupamento": null,
+        "formas": [
+          "Paulo"
+        ],
+        "quantidade": 1,
+        "token_ids": [
+          "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:10"
+        ]
+      },
+      {
+        "id": "37b0da6c-fcde-4d45-a702-5559104d343d:vocabulario:10",
+        "ordem": 10,
+        "lema": "voltar",
+        "pos": "VERB",
+        "criterio_agrupamento": "lema_pos",
+        "forma_agrupamento": null,
+        "formas": [
+          "voltou"
+        ],
+        "quantidade": 1,
+        "token_ids": [
+          "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:14"
+        ]
+      }
+    ],
+    "validacao": {
+      "estado": "pronto_para_etapa_06",
+      "pronto_para_etapa_06": true,
+      "verificacoes": [
+        "estrutura_json_identificadores_e_data",
+        "segmentacao_textos_hashes_e_mapa",
+        "coordenadas_e_processamento",
+        "cobertura_ordem_e_vinculos_dos_tokens",
+        "textos_e_intervalos_herdados",
+        "campos_linguisticos_e_pendencias",
+        "agrupamento_contagens_e_vinculos_do_vocabulario"
+      ],
+      "cobertura": {
+        "tokens_total": 16,
+        "tokens_anotados": 16,
+        "tokens_no_vocabulario": 13,
+        "tokens_excluidos_vocabulario": 3
+      },
+      "pendencias": [
+        {
+          "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:0",
+          "campo": "tag",
+          "motivo": "atributo_nao_produzido"
+        },
+        {
+          "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:1",
+          "campo": "tag",
+          "motivo": "atributo_nao_produzido"
+        },
+        {
+          "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:2",
+          "campo": "tag",
+          "motivo": "atributo_nao_produzido"
+        },
+        {
+          "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:3",
+          "campo": "tag",
+          "motivo": "atributo_nao_produzido"
+        },
+        {
+          "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:4",
+          "campo": "tag",
+          "motivo": "atributo_nao_produzido"
+        },
+        {
+          "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:5",
+          "campo": "tag",
+          "motivo": "atributo_nao_produzido"
+        },
+        {
+          "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:6",
+          "campo": "tag",
+          "motivo": "atributo_nao_produzido"
+        },
+        {
+          "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:7",
+          "campo": "tag",
+          "motivo": "atributo_nao_produzido"
+        },
+        {
+          "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:8",
+          "campo": "tag",
+          "motivo": "atributo_nao_produzido"
+        },
+        {
+          "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:9",
+          "campo": "tag",
+          "motivo": "atributo_nao_produzido"
+        },
+        {
+          "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:10",
+          "campo": "tag",
+          "motivo": "atributo_nao_produzido"
+        },
+        {
+          "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:11",
+          "campo": "tag",
+          "motivo": "atributo_nao_produzido"
+        },
+        {
+          "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:12",
+          "campo": "tag",
+          "motivo": "atributo_nao_produzido"
+        },
+        {
+          "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:13",
+          "campo": "tag",
+          "motivo": "atributo_nao_produzido"
+        },
+        {
+          "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:14",
+          "campo": "tag",
+          "motivo": "atributo_nao_produzido"
+        },
+        {
+          "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:15",
+          "campo": "tag",
+          "motivo": "atributo_nao_produzido"
+        }
+      ]
+    }
+  },
+  "coordenadas": {
+    "unidade": "pontos_de_codigo_unicode",
+    "base": 0,
+    "fim_exclusivo": true
+  },
+  "processamento": {
+    "ferramenta": "spacy",
+    "versao": "3.8.16",
+    "idioma": "pt",
+    "modulo": {
+      "nome": "sintaxe_entidades",
+      "versao": "1.0.0"
+    },
+    "modelo": {
+      "nome": "pt_core_news_sm",
+      "versao": "3.8.0",
+      "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+    },
+    "componentes_executados": [
+      "tok2vec",
+      "parser",
+      "ner"
+    ],
+    "componentes_desativados": [
+      "morphologizer",
+      "lemmatizer",
+      "senter",
+      "attribute_ruler"
+    ],
+    "componentes_disponiveis": [
+      "tok2vec",
+      "morphologizer",
+      "parser",
+      "lemmatizer",
+      "senter",
+      "attribute_ruler",
+      "ner"
+    ],
+    "rotulos_dependencias": [
+      "ROOT",
+      "acl",
+      "acl:relcl",
+      "advcl",
+      "advmod",
+      "amod",
+      "appos",
+      "aux",
+      "aux:pass",
+      "case",
+      "cc",
+      "ccomp",
+      "compound",
+      "conj",
+      "cop",
+      "csubj",
+      "dep",
+      "det",
+      "discourse",
+      "expl",
+      "fixed",
+      "flat",
+      "flat:foreign",
+      "flat:name",
+      "iobj",
+      "mark",
+      "nmod",
+      "nsubj",
+      "nsubj:pass",
+      "nummod",
+      "obj",
+      "obl",
+      "obl:agent",
+      "parataxis",
+      "punct",
+      "xcomp"
+    ],
+    "rotulos_entidades": [
+      "LOC",
+      "MISC",
+      "ORG",
+      "PER"
+    ],
+    "natureza": "previsoes_do_modelo",
+    "configuracoes": {
+      "tokenizador": {
+        "identificacao": "spacy.blank(pt)",
+        "versao_origem": "3.8.16",
+        "versao_execucao": "3.8.16",
+        "ajustes": []
+      },
+      "max_caracteres": 50000,
+      "max_tokens_internos": 10000,
+      "fronteiras_periodos": "herdadas_da_etapa_04_nos_tokens_de_conteudo",
+      "separadores": "preservados_no_documento_interno_sem_ids_linguisticos",
+      "morfologia": "herdada_da_etapa_05_sem_reanotacao",
+      "raiz": {
+        "dependencia": "ROOT",
+        "cabeca": "proprio_token"
+      },
+      "mapa_original": "lote_equivalente_a_mapear_intervalo",
+      "embeddings_exportados": false
+    }
+  },
+  "sintaxe": [
+    {
+      "texto": "João",
+      "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:0",
+      "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:0",
+      "trabalho": {
+        "inicio": 2,
+        "fim": 6
+      },
+      "original": {
+        "inicio": 2,
+        "fim": 6
+      },
+      "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:0",
+      "dependencia": "nsubj",
+      "cabeca_token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:2",
+      "origem": {
+        "ferramenta": "spacy",
+        "versao": "3.8.16",
+        "modelo": {
+          "nome": "pt_core_news_sm",
+          "versao": "3.8.0",
+          "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+        },
+        "componentes": [
+          "tok2vec",
+          "parser",
+          "ner"
+        ],
+        "natureza": "previsoes_do_modelo"
+      }
+    },
+    {
+      "texto": "Silva",
+      "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:0",
+      "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:0",
+      "trabalho": {
+        "inicio": 9,
+        "fim": 14
+      },
+      "original": {
+        "inicio": 9,
+        "fim": 14
+      },
+      "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:1",
+      "dependencia": "flat:name",
+      "cabeca_token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:0",
+      "origem": {
+        "ferramenta": "spacy",
+        "versao": "3.8.16",
+        "modelo": {
+          "nome": "pt_core_news_sm",
+          "versao": "3.8.0",
+          "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+        },
+        "componentes": [
+          "tok2vec",
+          "parser",
+          "ner"
+        ],
+        "natureza": "previsoes_do_modelo"
+      }
+    },
+    {
+      "texto": "entregou",
+      "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:0",
+      "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:0",
+      "trabalho": {
+        "inicio": 15,
+        "fim": 23
+      },
+      "original": {
+        "inicio": 15,
+        "fim": 23
+      },
+      "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:2",
+      "dependencia": "ROOT",
+      "cabeca_token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:2",
+      "origem": {
+        "ferramenta": "spacy",
+        "versao": "3.8.16",
+        "modelo": {
+          "nome": "pt_core_news_sm",
+          "versao": "3.8.0",
+          "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+        },
+        "componentes": [
+          "tok2vec",
+          "parser",
+          "ner"
+        ],
+        "natureza": "previsoes_do_modelo"
+      }
+    },
+    {
+      "texto": "uma",
+      "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:0",
+      "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:0",
+      "trabalho": {
+        "inicio": 24,
+        "fim": 27
+      },
+      "original": {
+        "inicio": 24,
+        "fim": 27
+      },
+      "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:3",
+      "dependencia": "det",
+      "cabeca_token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:4",
+      "origem": {
+        "ferramenta": "spacy",
+        "versao": "3.8.16",
+        "modelo": {
+          "nome": "pt_core_news_sm",
+          "versao": "3.8.0",
+          "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+        },
+        "componentes": [
+          "tok2vec",
+          "parser",
+          "ner"
+        ],
+        "natureza": "previsoes_do_modelo"
+      }
+    },
+    {
+      "texto": "nota",
+      "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:0",
+      "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:0",
+      "trabalho": {
+        "inicio": 28,
+        "fim": 32
+      },
+      "original": {
+        "inicio": 28,
+        "fim": 32
+      },
+      "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:4",
+      "dependencia": "obj",
+      "cabeca_token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:2",
+      "origem": {
+        "ferramenta": "spacy",
+        "versao": "3.8.16",
+        "modelo": {
+          "nome": "pt_core_news_sm",
+          "versao": "3.8.0",
+          "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+        },
+        "componentes": [
+          "tok2vec",
+          "parser",
+          "ner"
+        ],
+        "natureza": "previsoes_do_modelo"
+      }
+    },
+    {
+      "texto": ".",
+      "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:0",
+      "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:0",
+      "trabalho": {
+        "inicio": 32,
+        "fim": 33
+      },
+      "original": {
+        "inicio": 32,
+        "fim": 33
+      },
+      "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:5",
+      "dependencia": "punct",
+      "cabeca_token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:2",
+      "origem": {
+        "ferramenta": "spacy",
+        "versao": "3.8.16",
+        "modelo": {
+          "nome": "pt_core_news_sm",
+          "versao": "3.8.0",
+          "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+        },
+        "componentes": [
+          "tok2vec",
+          "parser",
+          "ner"
+        ],
+        "natureza": "previsoes_do_modelo"
+      }
+    },
+    {
+      "texto": "Maria",
+      "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:1",
+      "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:0",
+      "trabalho": {
+        "inicio": 34,
+        "fim": 39
+      },
+      "original": {
+        "inicio": 35,
+        "fim": 40
+      },
+      "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:6",
+      "dependencia": "nsubj",
+      "cabeca_token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:9",
+      "origem": {
+        "ferramenta": "spacy",
+        "versao": "3.8.16",
+        "modelo": {
+          "nome": "pt_core_news_sm",
+          "versao": "3.8.0",
+          "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+        },
+        "componentes": [
+          "tok2vec",
+          "parser",
+          "ner"
+        ],
+        "natureza": "previsoes_do_modelo"
+      }
+    },
+    {
+      "texto": "foi",
+      "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:1",
+      "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:0",
+      "trabalho": {
+        "inicio": 40,
+        "fim": 43
+      },
+      "original": {
+        "inicio": 41,
+        "fim": 44
+      },
+      "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:7",
+      "dependencia": "cop",
+      "cabeca_token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:9",
+      "origem": {
+        "ferramenta": "spacy",
+        "versao": "3.8.16",
+        "modelo": {
+          "nome": "pt_core_news_sm",
+          "versao": "3.8.0",
+          "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+        },
+        "componentes": [
+          "tok2vec",
+          "parser",
+          "ner"
+        ],
+        "natureza": "previsoes_do_modelo"
+      }
+    },
+    {
+      "texto": "a",
+      "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:1",
+      "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:0",
+      "trabalho": {
+        "inicio": 44,
+        "fim": 45
+      },
+      "original": {
+        "inicio": 45,
+        "fim": 46
+      },
+      "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:8",
+      "dependencia": "det",
+      "cabeca_token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:9",
+      "origem": {
+        "ferramenta": "spacy",
+        "versao": "3.8.16",
+        "modelo": {
+          "nome": "pt_core_news_sm",
+          "versao": "3.8.0",
+          "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+        },
+        "componentes": [
+          "tok2vec",
+          "parser",
+          "ner"
+        ],
+        "natureza": "previsoes_do_modelo"
+      }
+    },
+    {
+      "texto": "São",
+      "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:1",
+      "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:0",
+      "trabalho": {
+        "inicio": 46,
+        "fim": 49
+      },
+      "original": {
+        "inicio": 47,
+        "fim": 50
+      },
+      "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:9",
+      "dependencia": "ROOT",
+      "cabeca_token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:9",
+      "origem": {
+        "ferramenta": "spacy",
+        "versao": "3.8.16",
+        "modelo": {
+          "nome": "pt_core_news_sm",
+          "versao": "3.8.0",
+          "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+        },
+        "componentes": [
+          "tok2vec",
+          "parser",
+          "ner"
+        ],
+        "natureza": "previsoes_do_modelo"
+      }
+    },
+    {
+      "texto": "Paulo",
+      "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:1",
+      "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:0",
+      "trabalho": {
+        "inicio": 50,
+        "fim": 55
+      },
+      "original": {
+        "inicio": 51,
+        "fim": 56
+      },
+      "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:10",
+      "dependencia": "flat:name",
+      "cabeca_token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:9",
+      "origem": {
+        "ferramenta": "spacy",
+        "versao": "3.8.16",
+        "modelo": {
+          "nome": "pt_core_news_sm",
+          "versao": "3.8.0",
+          "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+        },
+        "componentes": [
+          "tok2vec",
+          "parser",
+          "ner"
+        ],
+        "natureza": "previsoes_do_modelo"
+      }
+    },
+    {
+      "texto": ".",
+      "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:1",
+      "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:0",
+      "trabalho": {
+        "inicio": 55,
+        "fim": 56
+      },
+      "original": {
+        "inicio": 56,
+        "fim": 57
+      },
+      "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:11",
+      "dependencia": "punct",
+      "cabeca_token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:9",
+      "origem": {
+        "ferramenta": "spacy",
+        "versao": "3.8.16",
+        "modelo": {
+          "nome": "pt_core_news_sm",
+          "versao": "3.8.0",
+          "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+        },
+        "componentes": [
+          "tok2vec",
+          "parser",
+          "ner"
+        ],
+        "natureza": "previsoes_do_modelo"
+      }
+    },
+    {
+      "texto": "João",
+      "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:2",
+      "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:1",
+      "trabalho": {
+        "inicio": 58,
+        "fim": 62
+      },
+      "original": {
+        "inicio": 61,
+        "fim": 65
+      },
+      "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:12",
+      "dependencia": "nsubj",
+      "cabeca_token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:14",
+      "origem": {
+        "ferramenta": "spacy",
+        "versao": "3.8.16",
+        "modelo": {
+          "nome": "pt_core_news_sm",
+          "versao": "3.8.0",
+          "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+        },
+        "componentes": [
+          "tok2vec",
+          "parser",
+          "ner"
+        ],
+        "natureza": "previsoes_do_modelo"
+      }
+    },
+    {
+      "texto": "Silva",
+      "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:2",
+      "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:1",
+      "trabalho": {
+        "inicio": 63,
+        "fim": 68
+      },
+      "original": {
+        "inicio": 66,
+        "fim": 71
+      },
+      "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:13",
+      "dependencia": "flat:name",
+      "cabeca_token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:12",
+      "origem": {
+        "ferramenta": "spacy",
+        "versao": "3.8.16",
+        "modelo": {
+          "nome": "pt_core_news_sm",
+          "versao": "3.8.0",
+          "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+        },
+        "componentes": [
+          "tok2vec",
+          "parser",
+          "ner"
+        ],
+        "natureza": "previsoes_do_modelo"
+      }
+    },
+    {
+      "texto": "voltou",
+      "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:2",
+      "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:1",
+      "trabalho": {
+        "inicio": 69,
+        "fim": 75
+      },
+      "original": {
+        "inicio": 72,
+        "fim": 78
+      },
+      "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:14",
+      "dependencia": "ROOT",
+      "cabeca_token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:14",
+      "origem": {
+        "ferramenta": "spacy",
+        "versao": "3.8.16",
+        "modelo": {
+          "nome": "pt_core_news_sm",
+          "versao": "3.8.0",
+          "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+        },
+        "componentes": [
+          "tok2vec",
+          "parser",
+          "ner"
+        ],
+        "natureza": "previsoes_do_modelo"
+      }
+    },
+    {
+      "texto": ".",
+      "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:2",
+      "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:1",
+      "trabalho": {
+        "inicio": 75,
+        "fim": 76
+      },
+      "original": {
+        "inicio": 78,
+        "fim": 79
+      },
+      "token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:15",
+      "dependencia": "punct",
+      "cabeca_token_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:14",
+      "origem": {
+        "ferramenta": "spacy",
+        "versao": "3.8.16",
+        "modelo": {
+          "nome": "pt_core_news_sm",
+          "versao": "3.8.0",
+          "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+        },
+        "componentes": [
+          "tok2vec",
+          "parser",
+          "ner"
+        ],
+        "natureza": "previsoes_do_modelo"
+      }
+    }
+  ],
+  "entidades": [
+    {
+      "texto": "João   Silva",
+      "rotulo": "PER",
+      "token_ids": [
+        "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:0",
+        "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:1"
+      ],
+      "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:0",
+      "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:0",
+      "trabalho": {
+        "inicio": 2,
+        "fim": 14
+      },
+      "original": {
+        "inicio": 2,
+        "fim": 14
+      },
+      "origem": {
+        "ferramenta": "spacy",
+        "versao": "3.8.16",
+        "modelo": {
+          "nome": "pt_core_news_sm",
+          "versao": "3.8.0",
+          "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+        },
+        "componentes": [
+          "tok2vec",
+          "parser",
+          "ner"
+        ],
+        "natureza": "previsoes_do_modelo"
+      },
+      "id": "c1a78102-81d1-4259-91bc-9d6f56264e3c:entidade:0",
+      "ordem": 0
+    },
+    {
+      "texto": "Maria",
+      "rotulo": "PER",
+      "token_ids": [
+        "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:6"
+      ],
+      "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:1",
+      "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:0",
+      "trabalho": {
+        "inicio": 34,
+        "fim": 39
+      },
+      "original": {
+        "inicio": 35,
+        "fim": 40
+      },
+      "origem": {
+        "ferramenta": "spacy",
+        "versao": "3.8.16",
+        "modelo": {
+          "nome": "pt_core_news_sm",
+          "versao": "3.8.0",
+          "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+        },
+        "componentes": [
+          "tok2vec",
+          "parser",
+          "ner"
+        ],
+        "natureza": "previsoes_do_modelo"
+      },
+      "id": "c1a78102-81d1-4259-91bc-9d6f56264e3c:entidade:1",
+      "ordem": 1
+    },
+    {
+      "texto": "São\tPaulo",
+      "rotulo": "ORG",
+      "token_ids": [
+        "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:9",
+        "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:10"
+      ],
+      "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:1",
+      "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:0",
+      "trabalho": {
+        "inicio": 46,
+        "fim": 55
+      },
+      "original": {
+        "inicio": 47,
+        "fim": 56
+      },
+      "origem": {
+        "ferramenta": "spacy",
+        "versao": "3.8.16",
+        "modelo": {
+          "nome": "pt_core_news_sm",
+          "versao": "3.8.0",
+          "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+        },
+        "componentes": [
+          "tok2vec",
+          "parser",
+          "ner"
+        ],
+        "natureza": "previsoes_do_modelo"
+      },
+      "id": "c1a78102-81d1-4259-91bc-9d6f56264e3c:entidade:2",
+      "ordem": 2
+    },
+    {
+      "texto": "João Silva",
+      "rotulo": "PER",
+      "token_ids": [
+        "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:12",
+        "274154e2-24ad-4ddf-9005-2872bbb6e5e4:token:13"
+      ],
+      "periodo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:periodo:2",
+      "paragrafo_id": "274154e2-24ad-4ddf-9005-2872bbb6e5e4:paragrafo:1",
+      "trabalho": {
+        "inicio": 58,
+        "fim": 68
+      },
+      "original": {
+        "inicio": 61,
+        "fim": 71
+      },
+      "origem": {
+        "ferramenta": "spacy",
+        "versao": "3.8.16",
+        "modelo": {
+          "nome": "pt_core_news_sm",
+          "versao": "3.8.0",
+          "compatibilidade_spacy": ">=3.8.0,<3.9.0"
+        },
+        "componentes": [
+          "tok2vec",
+          "parser",
+          "ner"
+        ],
+        "natureza": "previsoes_do_modelo"
+      },
+      "id": "c1a78102-81d1-4259-91bc-9d6f56264e3c:entidade:3",
+      "ordem": 3
+    }
+  ],
+  "validacao": {
+    "estado": "pronto_para_etapa_07",
+    "pronto_para_etapa_07": true,
+    "verificacoes": [
+      "estrutura_json_identificadores_e_data",
+      "anotacao_e_registros_de_origem",
+      "coordenadas_e_processamento",
+      "cobertura_alinhamento_e_vinculos_dos_tokens",
+      "arvores_raizes_cabecas_e_ausencia_de_ciclos",
+      "entidades_ordem_textos_tokens_unidades_e_mapa_original"
+    ],
+    "cobertura": {
+      "tokens_total": 16,
+      "tokens_analisados": 16,
+      "periodos_total": 3,
+      "entidades_total": 4
+    }
+  }
+}

@@ -14,6 +14,7 @@ tokeniza, classifica ou interpreta o conteúdo. A única transformação permiti
 é a conversão opcional de CRLF em LF, com rastreabilidade até o original.
 """
 
+from bisect import bisect_right
 from datetime import datetime, timezone
 import hashlib
 import json
@@ -552,6 +553,59 @@ def mapear_intervalo(registro, inicio, fim):
         fim_original = of
     _exigir(inicio_original is not None, "O mapa não contém o intervalo solicitado.")
     return _intervalo(inicio_original, fim_original)
+
+
+def mapear_intervalos(registro, intervalos):
+    """Mapeie uma lista ou tupla de pares ``(inicio, fim)`` ao original.
+
+    Os resultados são uma lista de objetos ``{inicio, fim}``, na mesma ordem
+    dos pares recebidos. A convenção e o tratamento das transformações e dos
+    intervalos vazios são exatamente os de :func:`mapear_intervalo`.
+
+    Valida o registro uma única vez, inclusive para um lote vazio, e confere
+    todos os pares antes de produzir os resultados. O índice usa busca binária
+    nas bordas do mapa, sem percorrer novamente o texto para cada intervalo.
+    O registro e os pares recebidos permanecem intactos.
+    """
+    validar_registro(registro)
+    _exigir(
+        isinstance(intervalos, (list, tuple)),
+        "intervalos deve ser uma lista ou tupla de pares (inicio, fim).",
+    )
+    comprimento = registro["trabalho"]["comprimento"]
+    for numero, par in enumerate(intervalos):
+        nome = f"intervalos[{numero}]"
+        _exigir(
+            isinstance(par, (list, tuple)) and len(par) == 2,
+            f"{nome} deve ser um par (inicio, fim).",
+        )
+        _conferir_intervalo(_intervalo(par[0], par[1]), nome, comprimento)
+
+    trechos = registro["mapa_trechos"]
+    inicios = [trecho["trabalho"]["inicio"] for trecho in trechos]
+    resultados = []
+    for inicio, fim in intervalos:
+        if inicio == fim:
+            if inicio == comprimento:
+                ponto = registro["original"]["comprimento"]
+            else:
+                trecho = trechos[bisect_right(inicios, inicio) - 1]
+                ponto = trecho["original"]["inicio"]
+                if trecho["tipo"] == "copia":
+                    ponto += inicio - trecho["trabalho"]["inicio"]
+            resultados.append(_intervalo(ponto, ponto))
+            continue
+
+        primeiro = trechos[bisect_right(inicios, inicio) - 1]
+        ultimo = trechos[bisect_right(inicios, fim - 1) - 1]
+        inicio_original = primeiro["original"]["inicio"]
+        if primeiro["tipo"] == "copia":
+            inicio_original += inicio - primeiro["trabalho"]["inicio"]
+        fim_original = ultimo["original"]["fim"]
+        if ultimo["tipo"] == "copia":
+            fim_original = ultimo["original"]["inicio"] + fim - ultimo["trabalho"]["inicio"]
+        resultados.append(_intervalo(inicio_original, fim_original))
+    return resultados
 
 
 def ler_texto_original(caminho, *, encoding="utf-8"):
