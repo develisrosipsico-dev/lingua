@@ -53,6 +53,18 @@
         }
 
         if (finalStates.has(job.estado)) {
+          const stagePanel = panel.closest("[data-stage-panel]");
+          if (stagePanel?.hidden) {
+            // Outra etapa pode conter uma edição em andamento: preserve a página.
+            const result = document.createElement("a");
+            detailUrl.hash = "etapa-vetorizacao";
+            result.href = detailUrl.href;
+            result.className = "download-link";
+            result.textContent = job.estado === "concluida" ? "Ver resultado da vetorização →" : "Ver detalhes da vetorização →";
+            panel.append(result);
+            return;
+          }
+          if (stagePanel) detailUrl.hash = "etapa-vetorizacao";
           window.location.assign(detailUrl.href);
           return;
         }

@@ -3,8 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Unidades de contexto · Análise linguística</title>
+    <title>Língua · Análise linguística</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='etapas.js') }}" defer></script>
     <script src="{{ url_for('static', filename='vetorizacao.js') }}" defer></script>
   </head>
   <body>
@@ -14,14 +15,19 @@
           <span class="brand-mark" aria-hidden="true">a<span>l</span></span>
           <span>Análise linguística</span>
         </a>
-        <span class="stage">Textos, regras e contexto</span>
+        <span class="stage">Etapas da análise</span>
       </header>
 
       <main>
-        <div class="intro">
+        <div class="intro{% if record %} intro-analysis{% endif %}">
           <p class="eyebrow">Seu ponto de partida</p>
+          {% if record %}
+          <h1>Analise seu texto, etapa por etapa.</h1>
+          <p class="intro-description">Escolha uma aba para preparar o texto e consultar seus resultados.</p>
+          {% else %}
           <h1>Prepare seu texto para análise.</h1>
           <p class="intro-description">Registre seu texto, separe suas unidades e consulte sugestões de morfologia, sintaxe, entidades e regras linguísticas, preservando o conteúdo original.</p>
+          {% endif %}
         </div>
 
         {% if record %}
@@ -34,7 +40,32 @@
           <a class="new-text" href="{{ url_for('index') }}">Novo texto <span aria-hidden="true">→</span></a>
         </section>
 
-        <section class="editor preparation-panel" aria-labelledby="preparation-title">
+        {% set stages = [
+          {'id': 'texto', 'numero': '01', 'nome': 'Texto', 'titulo': 'Conteúdo do texto', 'disponivel': true, 'concluida': true},
+          {'id': 'preparacao', 'numero': '03', 'nome': 'Preparação', 'titulo': 'Preparação para análise', 'disponivel': true, 'concluida': prepared|default(none)},
+          {'id': 'segmentacao', 'numero': '04', 'nome': 'Segmentação', 'titulo': 'Tokenização e segmentação', 'disponivel': prepared|default(none), 'concluida': segmented|default(none), 'anterior': 'preparacao', 'requisito': 'Gere uma preparação para tokenizar e segmentar o texto.'},
+          {'id': 'morfologia', 'numero': '05', 'nome': 'Morfologia', 'titulo': 'Morfologia e vocabulário', 'disponivel': segmented|default(none), 'concluida': annotated|default(none), 'anterior': 'segmentacao', 'requisito': 'Conclua a segmentação para anotar morfologia e vocabulário.'},
+          {'id': 'sintaxe', 'numero': '06', 'nome': 'Sintaxe', 'titulo': 'Sintaxe e entidades', 'disponivel': annotated|default(none), 'concluida': analyzed|default(none), 'anterior': 'morfologia', 'requisito': 'Gere a anotação morfológica para analisar sintaxe e entidades.'},
+          {'id': 'regras', 'numero': '07', 'nome': 'Regras', 'titulo': 'Regras linguísticas', 'disponivel': analyzed|default(none), 'concluida': ruled|default(none), 'anterior': 'sintaxe', 'requisito': 'Conclua a análise sintática para aplicar as regras linguísticas.'},
+          {'id': 'contexto', 'numero': '08', 'nome': 'Contexto', 'titulo': 'Unidades de contexto', 'disponivel': ruled|default(none), 'concluida': contextualized|default(none), 'anterior': 'regras', 'requisito': 'Aplique as regras linguísticas para construir as unidades de contexto.'},
+          {'id': 'vetorizacao', 'numero': '09', 'nome': 'Vetores', 'titulo': 'Vetorização', 'disponivel': contextualized|default(none), 'concluida': vectorized|default(none), 'anterior': 'contexto', 'requisito': 'Construa as unidades de contexto para gerar os vetores.'}
+        ] %}
+        {% set default_stage = 'vetorizacao' if vector_job|default(none) else 'contexto' if contextualized|default(none) else 'regras' if ruled|default(none) else 'sintaxe' if analyzed|default(none) else 'morfologia' if annotated|default(none) else 'segmentacao' if segmented|default(none) else 'preparacao' %}
+        <div data-stage-start aria-hidden="true"></div>
+        <nav class="stage-navigation" aria-label="Etapas da análise" data-stage-navigation>
+          <div class="stage-tabs" data-stage-tabs data-default-stage="{{ default_stage }}">
+            {% for stage in stages %}
+            <a class="stage-tab" id="aba-{{ stage.id }}" href="#etapa-{{ stage.id }}" data-stage-tab="{{ stage.id }}">
+              <span class="stage-tab-number">{{ stage.numero }}</span>
+              <span class="stage-tab-name">{{ stage.nome }}</span>
+              <span class="stage-tab-status">{% if stage.concluida %}Salva{% elif stage.disponivel %}Disponível{% else %}Pendente{% endif %}</span>
+            </a>
+            {% endfor %}
+          </div>
+          <p class="stage-navigation-help" data-stage-help>Selecione uma etapa para consultar o conteúdo.</p>
+        </nav>
+
+        <section class="editor preparation-panel stage-panel" id="etapa-preparacao" data-stage-panel="preparacao" aria-labelledby="preparation-title">
           <div class="editor-heading">
             <h2 id="preparation-title">Preparação para análise</h2>
             {% if prepared %}
@@ -68,7 +99,7 @@
         </section>
 
         {% if prepared %}
-        <section class="editor segmentation-panel" aria-labelledby="segmentation-title">
+        <section class="editor segmentation-panel stage-panel" id="etapa-segmentacao" data-stage-panel="segmentacao" aria-labelledby="segmentation-title">
           <div class="editor-heading">
             <h2 id="segmentation-title">Tokenização e segmentação</h2>
             <p>Separe o texto de trabalho em unidades. Cada execução gera um novo registro e preserva o original.</p>
@@ -133,7 +164,7 @@
         </section>
 
         {% if segmented %}
-        <section class="editor annotation-panel" aria-labelledby="annotation-title">
+        <section class="editor annotation-panel stage-panel" id="etapa-morfologia" data-stage-panel="morfologia" aria-labelledby="annotation-title">
           <div class="editor-heading">
             <h2 id="annotation-title">Morfologia e vocabulário</h2>
             <p>Gere sugestões de lema, classe gramatical e atributos para os tokens desta segmentação.</p>
@@ -265,7 +296,7 @@
         </section>
 
         {% if annotated %}
-        <section class="editor syntax-panel" aria-labelledby="syntax-title">
+        <section class="editor syntax-panel stage-panel" id="etapa-sintaxe" data-stage-panel="sintaxe" aria-labelledby="syntax-title">
           <div class="editor-heading">
             <h2 id="syntax-title">Sintaxe e entidades</h2>
             <p>Analise as relações entre os tokens e encontre entidades nesta anotação, mantendo os períodos e as posições registrados.</p>
@@ -432,7 +463,7 @@
           {% endif %}
         </section>
         {% if analyzed|default(none) %}
-        <section class="editor rules-panel" aria-labelledby="rules-title">
+        <section class="editor rules-panel stage-panel" id="etapa-regras" data-stage-panel="regras" aria-labelledby="rules-title">
           <div class="editor-heading">
             <h2 id="rules-title">Regras linguísticas</h2>
             <p>Identifique construções a partir desta análise. Cada execução preserva as anotações recebidas e o catálogo utilizado.</p>
@@ -557,7 +588,7 @@
           {% endif %}
         </section>
         {% if ruled|default(none) %}
-        <section class="editor context-panel" aria-labelledby="context-title">
+        <section class="editor context-panel stage-panel" id="etapa-contexto" data-stage-panel="contexto" aria-labelledby="context-title">
           <div class="editor-heading">
             <h2 id="context-title">Unidades de contexto</h2>
             <p>Organize cada período com seus vizinhos e as anotações salvas, mantendo acesso ao parágrafo e ao documento completo.</p>
@@ -654,7 +685,7 @@
           {'id': 'e5_legado', 'nome': 'Compatibilidade histórica — pode ter cobertura parcial'}
         ], true) %}
         {% set vector_state_labels = {'enfileirada': 'Na fila', 'executando': 'Gerando vetores', 'concluida': 'Concluída', 'falhou': 'Falhou', 'interrompida': 'Interrompida'} %}
-        <section class="editor vector-panel" aria-labelledby="vector-title">
+        <section class="editor vector-panel stage-panel" id="etapa-vetorizacao" data-stage-panel="vetorizacao" aria-labelledby="vector-title">
           <div class="editor-heading">
             <h2 id="vector-title">Vetorização</h2>
             <p>Gere representações do período, de seu contexto e do documento, preservando o texto e as referências de origem.</p>
@@ -799,10 +830,24 @@
         {% endif %}
         {% endif %}
 
-        <section class="editor" aria-labelledby="editor-title">
+        {% if record %}
+        {% for stage in stages if not stage.disponivel %}
+        <section class="editor stage-panel stage-pending" id="etapa-{{ stage.id }}" data-stage-panel="{{ stage.id }}" aria-labelledby="pending-title-{{ stage.id }}">
+          <div class="editor-heading">
+            <p class="eyebrow">Etapa {{ stage.numero }}</p>
+            <h2 id="pending-title-{{ stage.id }}">{{ stage.titulo }}</h2>
+            <p>{{ stage.requisito }}</p>
+          </div>
+          <a class="stage-continue" href="#etapa-{{ stage.anterior }}" data-stage-link>Ir para a etapa anterior <span aria-hidden="true">→</span></a>
+        </section>
+        {% endfor %}
+        {% endif %}
+
+        <section class="editor{% if record %} stage-panel{% endif %}"{% if record %} id="etapa-texto" data-stage-panel="texto"{% endif %} aria-labelledby="editor-title">
           <div class="editor-heading">
             <h2 id="editor-title">Conteúdo do texto</h2>
             <p>O conteúdo será guardado como foi enviado.</p>
+            {% if record %}<p class="original-record-note">Este é o texto do registro #{{ record.id }}. Registrar novamente cria um novo documento.</p>{% endif %}
           </div>
 
           {% if error %}

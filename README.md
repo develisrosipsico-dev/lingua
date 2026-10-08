@@ -53,6 +53,22 @@ clique em **Registrar texto**. A confirmação mostra o identificador do registr
 e a data em horário de Brasília. Atualizar a confirmação não repete o envio.
 Mantenha o terminal aberto durante o uso e pressione `Ctrl+C` para encerrar.
 
+## Navegar pelas etapas
+
+Depois de registrar um texto, use as abas **Texto**, **Preparação**,
+**Segmentação**, **Morfologia**, **Sintaxe**, **Regras**, **Contexto** e
+**Vetores**. Uma etapa aparece por vez, com seus formulários, resultados e
+histórico. Etapas pendentes indicam o que precisa ser concluído antes.
+
+As setas esquerda/direita, Home e End mudam de aba; Tab entra no conteúdo.
+A barra facilita alternar entre as etapas durante a leitura. O endereço
+identifica a aba selecionada e permite voltar ou avançar pelo histórico do navegador.
+Sem JavaScript, os links continuam disponíveis e as etapas aparecem na página.
+
+Se a vetorização terminar enquanto você consulta outra aba, suas edições
+permanecem na página. Abra **Vetores** e use **Ver resultado da vetorização**
+para consultar a execução concluída.
+
 ## Preparar o registro para análise
 
 Por padrão, o texto de trabalho é idêntico ao original. A opção técnica de
@@ -69,8 +85,8 @@ exemplos de [preservação literal](examples/preservacao_literal.json) e
 ## Tokenizar e segmentar
 
 Depois de registrar o texto, escolha a preparação em **Preparações salvas**,
-quando houver versões anteriores, e clique em **Tokenizar e segmentar** no
-painel dessa preparação. O resultado mostra as contagens e os
+quando houver versões anteriores. Abra a aba **Segmentação** e clique em
+**Tokenizar e segmentar**. O resultado mostra as contagens e os
 períodos; **Baixar segmentação JSON** exporta o registro completo. Cada geração
 acrescenta um registro ao histórico, vinculado à preparação escolhida, sem
 modificar o texto original ou resultados anteriores.
