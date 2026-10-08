@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Sintaxe e entidades · Análise linguística</title>
+    <title>Regras linguísticas · Análise linguística</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   </head>
   <body>
@@ -13,14 +13,14 @@
           <span class="brand-mark" aria-hidden="true">a<span>l</span></span>
           <span>Análise linguística</span>
         </a>
-        <span class="stage">Textos, sintaxe e entidades</span>
+        <span class="stage">Textos e regras linguísticas</span>
       </header>
 
       <main>
         <div class="intro">
           <p class="eyebrow">Seu ponto de partida</p>
           <h1>Prepare seu texto para análise.</h1>
-          <p class="intro-description">Registre seu texto, separe suas unidades e consulte sugestões de morfologia, sintaxe e entidades, preservando o conteúdo original.</p>
+          <p class="intro-description">Registre seu texto, separe suas unidades e consulte sugestões de morfologia, sintaxe, entidades e regras linguísticas, preservando o conteúdo original.</p>
         </div>
 
         {% if record %}
@@ -430,6 +430,132 @@
           </details>
           {% endif %}
         </section>
+        {% if analyzed|default(none) %}
+        <section class="editor rules-panel" aria-labelledby="rules-title">
+          <div class="editor-heading">
+            <h2 id="rules-title">Regras linguísticas</h2>
+            <p>Identifique construções a partir desta análise. Cada execução preserva as anotações recebidas e o catálogo utilizado.</p>
+          </div>
+          <form method="post" action="{{ url_for('apply_submission_rules', record_id=record.id) }}">
+            <input type="hidden" name="analise_id" value="{{ analyzed.analise_id }}">
+            <button type="submit">Aplicar regras linguísticas <span aria-hidden="true">→</span></button>
+          </form>
+          <p class="local-processing">Orações, negação, modalidade, tempo e conectores. As regras usam as anotações salvas, sem executar novamente o modelo.</p>
+
+          {% if ruled|default(none) %}
+          {% set family_names = {'oracoes': 'Orações', 'negacao': 'Negação', 'modalidade': 'Modalidade', 'tempo': 'Tempo', 'conectores': 'Conectores'} %}
+          {% set rule_states = {'executada': 'Executada', 'desabilitada': 'Desabilitada', 'impedida': 'Anotação insuficiente', 'executada_com_pendencias': 'Executada com pendências', 'falhou': 'Falha na execução'} %}
+          {% set catalogue_by_id = {} %}
+          {% for rule in ruled.catalogo.regras %}{% set _ = catalogue_by_id.update({rule.id: rule}) %}{% endfor %}
+          <div class="rules-result">
+            <p class="annotation-note">Os resultados são propostas baseadas nas anotações anteriores. Ambiguidades e limitações ficam explícitas; não representam interpretações definitivas do texto.</p>
+            {% if ruled.validacao.pronto_para_etapa_08 %}
+            <p class="rule-readiness" role="status">Registro validado e pronto para a etapa 08.</p>
+            {% else %}
+            <p class="notice notice-error" role="status">Execução salva com diagnóstico incompleto. Ainda não está pronta para a etapa 08. Consulte o estado das regras abaixo.</p>
+            {% endif %}
+            <a class="download-link" href="{{ url_for('rules_json', record_id=record.id, execucao_id=ruled.execucao_id) }}">Baixar regras JSON <span aria-hidden="true">↓</span></a>
+
+            <details class="rule-catalogue">
+              <summary>Catálogo e estado de cada regra</summary>
+              <p class="table-description">Catálogo {{ ruled.catalogo.id }}, versão {{ ruled.catalogo.versao }}. Uma regra executada sem ocorrências difere de uma regra desabilitada, impedida ou com falha.</p>
+              {% for execution in ruled.execucoes_regras %}
+              {% set rule = catalogue_by_id[execution.regra_id] %}
+              <details class="catalogue-rule">
+                <summary>{{ family_names.get(rule.familia, rule.familia) }} — {{ rule.descricao }} <span class="rule-state rule-state-{{ execution.estado }}">{{ rule_states.get(execution.estado, execution.estado) }}</span></summary>
+                <p>{{ execution.ocorrencias_total }} ocorrência{% if execution.ocorrencias_total != 1 %}s{% endif %}.</p>
+                {% if execution.estado == 'desabilitada' %}<p class="empty-result">Esta regra não foi executada nesta configuração.</p>{% endif %}
+                {% if execution.estado == 'executada' and not execution.ocorrencias_total %}<p class="empty-result">Regra executada sem ocorrências.</p>{% endif %}
+                {% for pending in execution.pendencias %}
+                <p class="rule-pending">{{ pending.motivo }}{% if pending.campos %} Campos necessários: {{ pending.campos|join(', ') }}.{% endif %}</p>
+                {% endfor %}
+                {% if execution.erro %}<p class="rule-pending">{{ execution.erro.mensagem }}</p>{% endif %}
+                <dl class="rule-definition">
+                  <dt>Regra e versão</dt><dd>{{ rule.id }} · {{ rule.versao }}</dd>
+                  <dt>Condições</dt><dd><ul>{% for condition in rule.condicoes %}<li>{{ condition }}</li>{% endfor %}</ul></dd>
+                  <dt>Resultado</dt><dd>{{ rule.resultado }}</dd>
+                  <dt>Alcance</dt><dd>{{ rule.alcance }}</dd>
+                  <dt>Exceções</dt><dd><ul>{% for exception in rule.excecoes %}<li>{{ exception }}</li>{% endfor %}</ul></dd>
+                  <dt>Cobertura e limites</dt><dd>{{ rule.cobertura }}</dd>
+                </dl>
+              </details>
+              {% endfor %}
+            </details>
+
+            {% for family, label in family_names.items() %}
+            {% set occurrences = ruled.ocorrencias|selectattr('familia', 'equalto', family)|list %}
+            {% set family_status = namespace(executed=false, disabled=true, pending=false, failed=false) %}
+            {% for execution in ruled.execucoes_regras %}
+            {% if catalogue_by_id[execution.regra_id].familia == family %}
+              {% if execution.estado != 'desabilitada' %}{% set family_status.disabled = false %}{% endif %}
+              {% if execution.estado in ['executada', 'executada_com_pendencias'] %}{% set family_status.executed = true %}{% endif %}
+              {% if execution.estado in ['impedida', 'executada_com_pendencias'] %}{% set family_status.pending = true %}{% endif %}
+              {% if execution.estado == 'falhou' %}{% set family_status.failed = true %}{% endif %}
+            {% endif %}
+            {% endfor %}
+            <section class="rule-family" aria-labelledby="rules-family-{{ family }}">
+              <h3 id="rules-family-{{ family }}">{{ label }} <span class="rule-count">{{ occurrences|length }}</span></h3>
+              {% if family_status.disabled %}<p class="empty-result">Regras desta família desabilitadas; nenhuma execução realizada.</p>{% endif %}
+              {% if family_status.failed %}<p class="rule-pending">Uma regra desta família falhou. Consulte seu diagnóstico no catálogo.</p>{% endif %}
+              {% if family_status.pending %}<p class="rule-pending">Há anotações insuficientes nesta família. Consulte as pendências no catálogo.</p>{% endif %}
+              {% if not occurrences and family_status.executed %}<p class="empty-result">Nenhuma ocorrência nas regras executadas desta família.{% if family_status.pending or family_status.failed %} A cobertura tem limitações registradas acima.{% endif %}</p>{% endif %}
+              {% for occurrence in occurrences %}
+              <article class="rule-occurrence" id="rule-occurrence-{{ occurrence.ordem }}">
+                <h4>{{ occurrence.categoria|replace('_', ' ')|capitalize }}</h4>
+                <p>{{ occurrence.explicacao }}</p>
+                <dl class="occurrence-summary">
+                  <dt>Marcador</dt><dd>{% for token_id in occurrence.marcador_token_ids %}{{ syntax_by_id[token_id].texto }}{% if not loop.last %} · {% endif %}{% else %}Sem marcador independente{% endfor %}</dd>
+                  <dt>Núcleo</dt><dd>{% for token_id in occurrence.nucleo_token_ids %}{{ syntax_by_id[token_id].texto }}{% if not loop.last %} · {% endif %}{% else %}Indeterminado{% endfor %}</dd>
+                  <dt>Evidências</dt><dd>{% for piece in occurrence.evidencias %}<span class="rule-fragment">{{ piece.texto }}</span>{% if not loop.last %}<span class="fragment-divider" aria-label="trecho descontínuo"> … </span>{% endif %}{% endfor %}</dd>
+                  <dt>Alcance proposto</dt><dd>{% if occurrence.alcance %}{% for piece in occurrence.alcance.trechos %}<span class="rule-fragment">{{ piece.texto }}</span>{% if not loop.last %}<span class="fragment-divider" aria-label="trecho descontínuo"> … </span>{% endif %}{% endfor %}{% else %}Indeterminado; consulte as limitações{% endif %}</dd>
+                </dl>
+                {% if occurrence.ambiguidades %}<p class="rule-pending"><strong>Ambiguidades:</strong> {{ occurrence.ambiguidades|join(' · ') }}</p>{% endif %}
+                {% if occurrence.alternativas %}<p><strong>Leituras possíveis:</strong> {{ occurrence.alternativas|join(' · ') }}</p>{% endif %}
+                {% if occurrence.necessidade_contexto %}<p class="rule-pending"><strong>Precisa de contexto:</strong> {{ occurrence.necessidade_contexto|join(' · ') }}</p>{% endif %}
+                <details class="occurrence-details">
+                  <summary>Regra, contexto e posições</summary>
+                  <dl class="rule-definition">
+                    <dt>Regra e versão</dt><dd>{{ occurrence.regra.id }} · {{ occurrence.regra.versao }}</dd>
+                    <dt>Ocorrência</dt><dd>{{ occurrence.id }}</dd>
+                    <dt>Período</dt><dd class="period-text">{{ original_text[periods_by_id[occurrence.periodo_id].original.inicio:periods_by_id[occurrence.periodo_id].original.fim] }}</dd>
+                    <dt>Parágrafo</dt><dd class="period-text">{{ original_text[paragraphs_by_id[occurrence.paragrafo_id].original.inicio:paragraphs_by_id[occurrence.paragrafo_id].original.fim] }}</dd>
+                    <dt>Tokens do marcador</dt><dd>{{ occurrence.marcador_token_ids|join(', ') }}</dd>
+                    <dt>Tokens do núcleo</dt><dd>{{ occurrence.nucleo_token_ids|join(', ') }}</dd>
+                    {% for piece in occurrence.evidencias %}
+                    <dt>Evidência {{ loop.index }}</dt><dd class="period-text">{{ piece.texto }} — trabalho [{{ piece.trabalho.inicio }}, {{ piece.trabalho.fim }}), original [{{ piece.original.inicio }}, {{ piece.original.fim }}) · tokens {{ piece.token_ids|join(', ') }}</dd>
+                    {% endfor %}
+                    {% if occurrence.alcance %}{% for piece in occurrence.alcance.trechos %}
+                    <dt>Alcance {{ loop.index }}</dt><dd class="period-text">{{ piece.texto }} — trabalho [{{ piece.trabalho.inicio }}, {{ piece.trabalho.fim }}), original [{{ piece.original.inicio }}, {{ piece.original.fim }}) · tokens {{ piece.token_ids|join(', ') }}</dd>
+                    {% endfor %}{% endif %}
+                    {% for link in occurrence.vinculos %}
+                    <dt>Vínculo: {{ link.tipo|replace('_', ' ') }}</dt><dd>{{ link.alvo_tipo }}: {{ link.alvo_id }}</dd>
+                    {% endfor %}
+                  </dl>
+                  <p class="local-processing">As posições usam pontos de código Unicode, começam em zero e têm limite final exclusivo. Os fragmentos descontínuos mostram apenas os tokens selecionados.</p>
+                </details>
+              </article>
+              {% endfor %}
+            </section>
+            {% endfor %}
+          </div>
+          {% endif %}
+
+          {% if rule_history|default([])|length > 1 %}
+          <details class="rule-history">
+            <summary>Execuções de regras salvas ({{ rule_history|length }})</summary>
+            <ul>
+              {% for history in rule_history %}
+              <li>
+                <a href="{{ url_for('submission', record_id=record.id, execucao_id=history.execucao_id) }}"{% if ruled|default(none) and history.execucao_id == ruled.execucao_id %} aria-current="page"{% endif %}>Execução #{{ history.id }}</a>
+                <time datetime="{{ history.registrado_em }}">{{ history.registrado_em|horario_brasilia }} (horário de Brasília)</time>
+                {% if ruled|default(none) and history.execucao_id == ruled.execucao_id %}<span class="current-analysis">Em exibição</span>{% endif %}
+              </li>
+              {% endfor %}
+            </ul>
+          </details>
+          {% endif %}
+        </section>
+        {% endif %}
         {% endif %}
         {% endif %}
         {% endif %}

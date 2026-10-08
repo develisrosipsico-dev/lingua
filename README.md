@@ -4,7 +4,9 @@ Projeto independente de análise linguística, em Python com interface HTML.
 Recebe um texto, registra o original em SQLite, gera uma preparação validada
 e segmenta sua cópia de trabalho em tokens, períodos e parágrafos. Um modelo
 português local acrescenta lemas, classes gramaticais, traços morfológicos e
-vocabulário do documento, relações sintáticas e entidades nomeadas.
+vocabulário do documento, relações sintáticas e entidades nomeadas. Regras
+versionadas acrescentam ocorrências de orações, negação, tempo, modalidade
+e conectores, com evidências e propostas de alcance.
 Os registros JSON contêm versões, hashes SHA-256,
 metadados e posições que apontam até o original.
 
@@ -14,8 +16,8 @@ Requer Git e Python de 3.10 a 3.14, com `pip`. A dependência spaCy 3.8.16
 aceita Python anterior a 3.15. No terminal:
 
 ```bash
-git clone --branch main https://github.com/develisrosipsico-dev/lingua.git
-cd lingua
+git clone --branch main https://github.com/spikeSpy13/lingua.git linguaSpike
+cd linguaSpike
 ```
 
 O repositório público pode ser clonado sem login; para enviar alterações, autentique
@@ -23,7 +25,7 @@ sua conta no GitHub Desktop ou configure a autenticação Git no terminal.
 
 ## Executar
 
-Execute os comandos na pasta `lingua`. A instalação inicial das dependências
+Execute os comandos na pasta `linguaSpike`. A instalação inicial das dependências
 precisa de internet; depois, o aplicativo funciona localmente, sem serviços externos.
 
 ### macOS ou Linux
@@ -118,8 +120,31 @@ sem corrigir relações ou recortar entidades para ajustar o resultado.
 Veja [uso direto, convenções e API HTTP](docs/sintaxe_entidades.md) e os
 exemplos de análise com [preservação literal](examples/sintaxe_entidades_literal.json)
 e [normalização opcional de CRLF](examples/sintaxe_entidades_normalizada.json).
-Uma análise validada fornece o material para a etapa 07; a aplicação de regras
-linguísticas pertence à próxima etapa.
+Uma análise validada fornece o material para a etapa 07.
+
+## Aplicar regras linguísticas
+
+Escolha uma análise sintática salva e clique em **Aplicar regras linguísticas**.
+O resultado reúne cinco famílias: orações e núcleos verbais, negação, tempo
+linguístico, modalidade e conectores. Cada ocorrência mostra a regra, seus
+marcadores, núcleos, evidências, fragmentos de alcance, vínculos e ambiguidades.
+O catálogo e o estado de cada regra ficam disponíveis no mesmo painel.
+
+A etapa 07 usa somente a biblioteca padrão sobre o JSON validado da etapa 06.
+Não executa novamente o modelo nem modifica as previsões anteriores. Ela
+conserva as hipóteses linguísticas e suas limitações; a validação estrutural
+não certifica que uma previsão do modelo ou uma interpretação esteja correta.
+
+Cada execução entra em **Execuções de regras salvas**, vinculada à análise
+exata usada, e pode ser exportada em **Baixar regras JSON**. Um diagnóstico
+incompleto também fica no histórico: a interface diferencia regras sem
+ocorrências, desabilitadas, impedidas por anotações ausentes e com falha.
+Somente uma execução completa e validada recebe `pronto_para_etapa_08: true`.
+A construção de unidades de contexto da etapa 08 ainda não é executada.
+
+Veja [catálogo, decisões, limitações e API HTTP](docs/regras_linguisticas.md)
+e os exemplos com [preservação literal](examples/regras_linguisticas_literal.json)
+e [normalização opcional de CRLF](examples/regras_linguisticas_normalizada.json).
 
 ## Dados locais
 
@@ -142,6 +167,10 @@ original e todos os registros anteriores.
 As análises sintáticas e de entidades ficam na tabela `analyses`, vinculadas
 à anotação morfológica exata. A tabela é criada automaticamente ao iniciar
 o aplicativo atualizado, preservando o banco existente.
+As execuções da etapa 07 ficam na tabela `rule_runs`, vinculadas à análise
+sintática exata. O registro inclui a origem completa, o catálogo e a
+configuração utilizados, preservando também os diagnósticos incompletos.
+A tabela é criada automaticamente sem apagar registros anteriores.
 
 ## Sincronizar o código
 
@@ -173,8 +202,8 @@ ao rebase. Evite `push --force` para preservar o histórico compartilhado.
 O Git sincroniza o código; o banco e o ambiente virtual permanecem locais.
 Depois de atualizar para a etapa 05, instale as dependências e o modelo português.
 As etapas 05 e 06 compartilham esse modelo; a etapa 06 não exige um novo download
-quando as dependências já estão instaladas.
-Na raiz `lingua`, no macOS ou Linux:
+quando as dependências já estão instaladas. A etapa 07 não acrescenta dependências.
+Na raiz `linguaSpike`, no macOS ou Linux:
 
 ```bash
 .venv/bin/python -m pip install -r requirements.txt
@@ -190,7 +219,7 @@ Repita a instalação quando `requirements.txt` mudar.
 
 ## Verificar
 
-Na raiz `lingua`, execute os testes com o Python do ambiente virtual.
+Na raiz `linguaSpike`, execute os testes com o Python do ambiente virtual.
 No macOS ou Linux:
 
 ```bash
@@ -211,6 +240,10 @@ com os tokens existentes, vocabulário, metadados do modelo e histórico de
 anotações. Os exemplos curtos anotados manualmente
 servem como referência de avaliação da etapa 05. A etapa 06 verifica árvores
 sintáticas, entidades, separadores, intervalos literais e normalizados,
-histórico e falhas explícitas, além da execução com o modelo real. O relato
+histórico e falhas explícitas, além da execução com o modelo real. A etapa 07
+verifica regras com anotações controladas independentes do modelo, exceções,
+ambiguidade, fragmentos descontínuos, vínculos, estados de execução, adulterações
+do JSON, histórico e API HTTP. Os testes de integração com o modelo real
+conferem alinhamento e preservação, sem usá-lo como gabarito linguístico. O relato
 de três parágrafos e dezesseis períodos ainda
 não foi fornecido e suas contagens não foram verificadas.

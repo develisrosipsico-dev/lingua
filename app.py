@@ -25,6 +25,12 @@ from sintaxe_entidades import (
     analisar_sintaxe_entidades,
     validar_analise_sintaxe_entidades,
 )
+from regras_linguisticas import (
+    ErroRegras,
+    ErroEntrada as ErroRegrasEntrada,
+    aplicar_regras_linguisticas,
+    validar_regras_linguisticas,
+)
 
 
 BASE = Path(__file__).resolve().parent
@@ -220,6 +226,54 @@ def latest_analysis(connection, document, annotation_id=None, analysis_id=None):
     return analyzed
 
 
+def save_rule_run(connection, document, analyzed, **options):
+    """Acrescenta regras da análise exata, inclusive diagnósticos incompletos."""
+    ruled = aplicar_regras_linguisticas(analyzed, **options)
+    validar_regras_linguisticas(ruled)
+    if ruled["analise"] != analyzed or ruled["documento_id"] != document["id"]:
+        raise ErroRegras("A execução de regras não corresponde à análise selecionada.")
+    connection.execute(
+        """INSERT INTO rule_runs
+           (execution_id, analysis_id, submission_id, registered_at, record_json)
+           VALUES (?, ?, ?, ?, ?)""",
+        (
+            ruled["execucao_id"], analyzed["analise_id"], document["id"],
+            ruled["registrado_em"], json.dumps(ruled, ensure_ascii=False, allow_nan=False),
+        ),
+    )
+    return ruled
+
+
+def latest_rule_run(connection, document, analysis_id=None, execution_id=None):
+    sql = "SELECT * FROM rule_runs WHERE submission_id = ?"
+    parameters = [document["id"]]
+    if analysis_id is not None:
+        sql += " AND analysis_id = ?"
+        parameters.append(analysis_id)
+    if execution_id is not None:
+        sql += " AND execution_id = ?"
+        parameters.append(execution_id)
+    row = connection.execute(sql + " ORDER BY id DESC LIMIT 1", parameters).fetchone()
+    if row is None:
+        return None
+    try:
+        ruled = json.loads(row["record_json"])
+    except (ValueError, TypeError) as error:
+        raise ErroRegras("O JSON das regras armazenadas é inválido.") from error
+    validar_regras_linguisticas(ruled)
+    analyzed = latest_analysis(connection, document, analysis_id=row["analysis_id"])
+    if (
+        analyzed is None
+        or ruled["documento_id"] != document["id"]
+        or ruled["execucao_id"] != row["execution_id"]
+        or ruled["analise_id"] != row["analysis_id"]
+        or ruled["registrado_em"] != row["registered_at"]
+        or ruled["analise"] != analyzed
+    ):
+        raise ErroRegras("As regras não correspondem à análise original armazenada.")
+    return ruled
+
+
 def create_app(config=None):
     app = Flask(__name__)
     app.config.from_mapping(
@@ -297,6 +351,19 @@ def create_app(config=None):
         connection.execute(
             "CREATE INDEX IF NOT EXISTS analyses_annotation ON analyses (submission_id, annotation_id, id)"
         )
+        connection.execute(
+            """CREATE TABLE IF NOT EXISTS rule_runs (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                execution_id TEXT NOT NULL UNIQUE,
+                analysis_id TEXT NOT NULL REFERENCES analyses(analysis_id),
+                submission_id INTEGER NOT NULL REFERENCES submissions(id),
+                registered_at TEXT NOT NULL,
+                record_json TEXT NOT NULL
+            )"""
+        )
+        connection.execute(
+            "CREATE INDEX IF NOT EXISTS rule_runs_analysis ON rule_runs (submission_id, analysis_id, id)"
+        )
         connection.commit()
 
     @app.get("/")
@@ -345,6 +412,24 @@ def create_app(config=None):
                 segmentation_id = request.args.get("segmentacao_id")
                 annotation_id = request.args.get("anotacao_id")
                 analysis_id = request.args.get("analise_id")
+                execution_id = request.args.get("execucao_id")
+                if execution_id is not None:
+                    if len(request.args.getlist("execucao_id")) != 1 or not execution_id.strip():
+                        return {"erro": "Selecione uma única execução de regras."}, 400
+                    ruled = latest_rule_run(connection, row, execution_id=execution_id)
+                    if ruled is None:
+                        abort(404)
+                    if (
+                        analysis_id is not None and analysis_id != ruled["analise_id"]
+                        or annotation_id is not None and annotation_id != ruled["anotacao_id"]
+                        or segmentation_id is not None and segmentation_id != ruled["segmentacao_id"]
+                        or preparation_id is not None and preparation_id != ruled["preparacao_id"]
+                    ):
+                        return {"erro": "As regras pertencem a outra análise ou origem."}, 400
+                    analysis_id = ruled["analise_id"]
+                    annotation_id = ruled["anotacao_id"]
+                    segmentation_id = ruled["segmentacao_id"]
+                    preparation_id = ruled["preparacao_id"]
                 if analysis_id is not None:
                     analyzed = latest_analysis(connection, row, analysis_id=analysis_id)
                     if analyzed is None:
@@ -385,6 +470,13 @@ def create_app(config=None):
                     annotated = latest_annotation(connection, row, segmented["segmentacao_id"]) if segmented else None
                 if analysis_id is None:
                     analyzed = latest_analysis(connection, row, annotated["anotacao_id"]) if annotated else None
+                if execution_id is None:
+                    ruled = latest_rule_run(connection, row, analysis_id=analyzed["analise_id"]) if analyzed else None
+                rule_history = connection.execute(
+                    """SELECT id, execution_id AS execucao_id, registered_at AS registrado_em
+                       FROM rule_runs WHERE submission_id = ? AND analysis_id = ? ORDER BY id DESC""",
+                    (record_id, analyzed["analise_id"]),
+                ).fetchall() if analyzed else []
                 analysis_history = connection.execute(
                     """SELECT id, analysis_id AS analise_id, registered_at AS registrado_em
                        FROM analyses WHERE submission_id = ? AND annotation_id = ? ORDER BY id DESC""",
@@ -404,7 +496,7 @@ def create_app(config=None):
                     "SELECT id, preparation_id AS preparacao_id FROM preparations WHERE submission_id = ? ORDER BY id DESC",
                     (record_id,),
                 ).fetchall()
-            except (ErroPreparacao, ErroSegmentacao, ErroAnotacao, ErroAnalise) as error:
+            except (ErroPreparacao, ErroSegmentacao, ErroAnotacao, ErroAnalise, ErroRegras) as error:
                 return {"erro": str(error)}, 409
         record = dict(row)
         record["created_at"] = datetime.fromisoformat(record["created_at"]).astimezone(
@@ -416,6 +508,7 @@ def create_app(config=None):
             preparation_history=[dict(item) for item in preparation_history],
             annotated=annotated, annotation_history=[dict(item) for item in annotation_history],
             analyzed=analyzed, analysis_history=[dict(item) for item in analysis_history],
+            ruled=ruled, rule_history=[dict(item) for item in rule_history],
         )
 
     @app.post("/envios/<int:record_id>/preparacoes")
@@ -650,6 +743,72 @@ def create_app(config=None):
         return Response(
             json.dumps(analyzed, ensure_ascii=False, indent=2, allow_nan=False), mimetype="application/json",
             headers={"Content-Disposition": f'attachment; filename="analise-{record_id}.json"'},
+        )
+
+    @app.post("/envios/<int:record_id>/regras")
+    def apply_submission_rules(record_id):
+        if request.is_json:
+            payload = request.get_json(silent=True)
+            allowed = {"analise_id", "execucao_id", "registrado_em", "regras_habilitadas"}
+            if not isinstance(payload, dict) or payload.keys() - allowed:
+                return {"erro": "Envie um objeto JSON com analise_id, execucao_id, registrado_em ou regras_habilitadas."}, 400
+            options = dict(payload)
+        else:
+            if set(request.form) != {"analise_id"} or len(request.form.getlist("analise_id")) != 1:
+                return {"erro": "Selecione uma única análise para aplicar as regras."}, 400
+            options = {"analise_id": request.form["analise_id"]}
+        for field in ("analise_id", "execucao_id", "registrado_em"):
+            if field in options and (not isinstance(options[field], str) or not options[field].strip()):
+                return {"erro": f"{field} deve ser uma string não vazia."}, 400
+        if "regras_habilitadas" in options and not isinstance(options["regras_habilitadas"], list):
+            return {"erro": "regras_habilitadas deve ser uma lista de identificadores de regras."}, 400
+        analysis_id = options.pop("analise_id", None)
+        try:
+            with closing(connect_database(app.config["DATABASE"])) as connection:
+                document = connection.execute("SELECT * FROM submissions WHERE id = ?", (record_id,)).fetchone()
+                if document is None:
+                    abort(404)
+                analyzed = latest_analysis(connection, document, analysis_id=analysis_id)
+                if analyzed is None:
+                    return {"erro": "Análise não encontrada. Analise a sintaxe e as entidades antes de aplicar as regras."}, 404
+                ruled = save_rule_run(connection, document, analyzed, **options)
+                connection.commit()
+        except (ErroPreparacao, ErroSegmentacao, ErroAnotacao, ErroAnalise, ErroRegrasEntrada) as error:
+            return {"erro": str(error)}, 409
+        except ErroRegras as error:
+            return {"erro": str(error)}, 400
+        except sqlite3.IntegrityError:
+            return {"erro": "Esse identificador de execução já existe. Aplique as regras em uma nova execução."}, 409
+        if request.is_json:
+            status = 201 if ruled["validacao"]["pronto_para_etapa_08"] else 422
+            return Response(json.dumps(ruled, ensure_ascii=False, allow_nan=False), status=status, mimetype="application/json")
+        return redirect(
+            url_for(
+                "submission", record_id=record_id, preparacao_id=ruled["preparacao_id"],
+                segmentacao_id=ruled["segmentacao_id"], anotacao_id=ruled["anotacao_id"],
+                analise_id=ruled["analise_id"], execucao_id=ruled["execucao_id"],
+            ),
+            code=303,
+        )
+
+    @app.get("/envios/<int:record_id>/regras.json")
+    def rules_json(record_id):
+        execution_id = request.args.get("execucao_id")
+        if execution_id is not None and (len(request.args.getlist("execucao_id")) != 1 or not execution_id.strip()):
+            return {"erro": "Selecione uma única execução de regras."}, 400
+        with closing(connect_database(app.config["DATABASE"])) as connection:
+            document = connection.execute("SELECT * FROM submissions WHERE id = ?", (record_id,)).fetchone()
+            if document is None:
+                abort(404)
+            try:
+                ruled = latest_rule_run(connection, document, execution_id=execution_id)
+            except (ErroPreparacao, ErroSegmentacao, ErroAnotacao, ErroAnalise, ErroRegras) as error:
+                return {"erro": str(error)}, 409
+        if ruled is None:
+            return {"erro": "Nenhuma execução encontrada. Aplique as regras linguísticas a uma análise deste documento."}, 404
+        return Response(
+            json.dumps(ruled, ensure_ascii=False, indent=2, allow_nan=False), mimetype="application/json",
+            headers={"Content-Disposition": f'attachment; filename="regras-{record_id}.json"'},
         )
 
     @app.get("/envios/<int:record_id>/segmentacoes/<segmentacao_id>/periodos/<periodo_id>/contexto.json")

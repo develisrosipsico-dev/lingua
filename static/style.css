@@ -129,6 +129,38 @@ h1 {
 .segmentation-history time, .annotation-history time, .analysis-history time { color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
 .current-segmentation, .current-preparation, .current-annotation, .current-analysis { padding: 1px 7px; border-radius: 5px; background: var(--success); color: var(--accent); font-size: 11px; }
 .annotation-panel, .syntax-panel { margin-bottom: 20px; }
+.rules-panel { margin-bottom: 20px; }
+.rules-result { margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--line); }
+.rule-readiness { color: var(--accent); font-size: 14px; font-weight: 600; }
+.rule-catalogue { margin-top: 24px; padding: 16px; border: 1px solid var(--line); border-radius: 9px; font-size: 14px; }
+.rule-catalogue summary, .occurrence-details summary, .rule-history summary { cursor: pointer; }
+.rule-catalogue > .table-description { margin-top: 12px; }
+.catalogue-rule { margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--line); }
+.catalogue-rule > p { margin: 10px 0 0; }
+.rule-state { display: inline-block; margin: 0 4px; padding: 1px 7px; border-radius: 5px; background: #f3f6f0; color: var(--muted); font-size: 12px; }
+.rule-state-executada { background: var(--success); color: var(--accent); }
+.rule-state-falhou, .rule-state-impedida, .rule-state-executada_com_pendencias { background: #fff4f1; color: #873127; }
+.rule-pending { color: #873127; font-size: 13px; }
+.rule-family { margin-top: 28px; }
+.rule-family h3 { margin: 0 0 14px; font-size: 16px; }
+.rule-count { margin-left: 6px; color: var(--muted); font-size: 13px; font-weight: 400; }
+.rule-occurrence { margin-top: 14px; padding: 16px; border: 1px solid var(--line); border-radius: 9px; }
+.rule-occurrence h4 { margin: 0; font-size: 14px; }
+.rule-occurrence > p { margin: 8px 0; font-size: 13px; }
+.occurrence-summary { display: grid; grid-template-columns: minmax(110px, 1fr) minmax(0, 4fr); gap: 8px 14px; margin: 14px 0; font-size: 13px; }
+.occurrence-summary dt { color: var(--muted); }
+.occurrence-summary dd { margin: 0; overflow-wrap: anywhere; }
+.rule-fragment { white-space: pre-wrap; }
+.fragment-divider { color: var(--muted); }
+.occurrence-details { margin-top: 14px; font-size: 12px; }
+.rule-definition { margin: 12px 0 0; font-size: 12px; }
+.rule-definition dt { margin-top: 8px; color: var(--muted); }
+.rule-definition dd { margin: 0; overflow-wrap: anywhere; }
+.rule-definition ul { margin: 0; padding-left: 18px; }
+.rule-history { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--line); font-size: 14px; }
+.rule-history ul { margin: 12px 0 0; padding: 0; list-style: none; }
+.rule-history li { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 12px; padding: 8px 0; }
+.rule-history time { color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
 .local-processing { margin: 12px 0 0; color: var(--muted); font-size: 13px; }
 .annotation-result, .syntax-result { margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--line); }
 .annotation-note { margin: 0 0 18px; padding: 12px 14px; border-left: 3px solid #a2cbb5; background: #f3f8f2; color: var(--muted); font-size: 14px; }
@@ -276,5 +308,7 @@ button:hover { background: #1e483d; }
   .notice-success { flex-wrap: wrap; gap: 10px; }
   .new-text { margin-left: 40px; }
   button { width: 100%; }
-  .annotation-panel button, .syntax-panel button { white-space: normal; }
+  .annotation-panel button, .syntax-panel button, .rules-panel button { white-space: normal; }
+  .occurrence-summary { grid-template-columns: 1fr; gap: 3px; }
+  .occurrence-summary dd { margin-bottom: 7px; }
 }
