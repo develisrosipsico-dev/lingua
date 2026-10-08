@@ -40,6 +40,7 @@ from unidades_contexto import (
     validar_unidades_contexto,
 )
 from perfis_vetorizacao import ErroPerfil, carregar_perfil
+from colab_notebook import ErroNotebookColab, gerar_notebook_colab
 from vetorizacao import ErroVetorizacao, consultar_representacao
 from persistencia_vetores import (
     ErroPersistenciaVetores,
@@ -1084,6 +1085,81 @@ def create_app(config=None):
             except (ErroPreparacao, ErroSegmentacao, ErroAnotacao, ErroAnalise, ErroRegras, ErroContexto) as error:
                 return {"erro": str(error)}, 409
         return Response(json.dumps(unit, ensure_ascii=False, allow_nan=False), mimetype="application/json")
+
+    @app.post("/envios/<int:record_id>/notebook-colab.ipynb")
+    def notebook_colab_submission(record_id):
+        """Exporta a origem validada e o código, sem modelo local ou nova execução."""
+        if request.args:
+            return {"erro": "Selecione a origem e o perfil no corpo da solicitação."}, 400
+        if request.is_json:
+            def unique_fields(pairs):
+                result = {}
+                for key, value in pairs:
+                    if key in result:
+                        raise ValueError("O JSON contém campos repetidos.")
+                    result[key] = value
+                return result
+
+            try:
+                payload = json.loads(request.get_data(), object_pairs_hook=unique_fields)
+            except (ValueError, UnicodeError, RecursionError):
+                return {"erro": "Envie JSON válido, sem campos repetidos."}, 400
+            allowed = {"contexto_execucao_id", "perfil_id", "opcoes"}
+            if not isinstance(payload, dict) or payload.keys() - allowed:
+                return {"erro": "Envie um objeto JSON com a origem contextual e o perfil do notebook."}, 400
+            options = dict(payload)
+            if "opcoes" in options and not isinstance(options["opcoes"], dict):
+                return {"erro": "opcoes deve ser um objeto JSON."}, 400
+        else:
+            allowed = {"contexto_execucao_id", "perfil_id", "dispositivo", "lote", "formato_armazenamento"}
+            if (
+                set(request.form) - allowed or "contexto_execucao_id" not in request.form
+                or any(len(request.form.getlist(field)) != 1 for field in request.form)
+            ):
+                return {"erro": "Selecione uma única origem contextual e configuração do notebook."}, 400
+            options = {field: request.form[field] for field in ("contexto_execucao_id", "perfil_id") if field in request.form}
+            profile_options = {field: request.form[field] for field in ("dispositivo", "formato_armazenamento") if request.form.get(field, "").strip()}
+            if request.form.get("lote", "").strip():
+                value = request.form["lote"]
+                if not value.isascii() or not value.isdecimal():
+                    return {"erro": "lote deve ser um inteiro positivo."}, 400
+                try:
+                    profile_options["lote"] = int(value)
+                except ValueError:
+                    return {"erro": "lote excedeu o tamanho permitido."}, 400
+            if profile_options:
+                options["opcoes"] = profile_options
+        for field in ("contexto_execucao_id", "perfil_id"):
+            if field in options and (not isinstance(options[field], str) or not options[field].strip()):
+                return {"erro": f"{field} deve ser uma string não vazia."}, 400
+        context_execution_id = options.pop("contexto_execucao_id", None)
+        try:
+            carregar_perfil(options.get("perfil_id", "e5_simetrico"), opcoes=options.get("opcoes"))
+        except ErroPerfil as error:
+            return {"erro": str(error)}, 400
+        try:
+            with closing(connect_database(app.config["DATABASE"])) as connection:
+                document = connection.execute("SELECT * FROM submissions WHERE id = ?", (record_id,)).fetchone()
+                if document is None:
+                    abort(404)
+                contextualized = latest_context_run(connection, document, execution_id=context_execution_id)
+                if contextualized is None:
+                    return {"erro": "Execução de contexto não encontrada. Conclua a etapa 08 antes de gerar o notebook."}, 404
+                report = validar_unidades_contexto(contextualized)
+                if report.get("pronto_para_etapa_09") is not True:
+                    return {"erro": "A execução de contexto ainda não está pronta para a etapa 09."}, 409
+                source_document = dict(document)
+        except SOURCE_ERRORS as error:
+            return {"erro": str(error)}, 409
+        try:
+            notebook = gerar_notebook_colab(contextualized, documento=source_document, **options)
+        except (ErroNotebookColab, ErroPerfil) as error:
+            return {"erro": str(error)}, 400
+        return Response(
+            json.dumps(notebook, ensure_ascii=False, allow_nan=False),
+            mimetype="application/x-ipynb+json",
+            headers={"Content-Disposition": f'attachment; filename="lingua-documento-{record_id}-colab.ipynb"'},
+        )
 
     @app.post("/envios/<int:record_id>/vetorizacoes")
     def vector_submission(record_id):

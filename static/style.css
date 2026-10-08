@@ -336,6 +336,9 @@ button:hover { background: #1e483d; }
 .vector-settings { margin-bottom: 18px; }
 .vector-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 14px; }
 .vector-options label { min-width: 0; font-size: 13px; }
+.vector-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.vector-colab-button { border: 1px solid var(--accent); background: #f6faf5; color: var(--accent); white-space: normal; }
+.vector-colab-button:hover { background: #e5f0e3; }
 .vector-job, .vector-result { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--line); }
 .vector-job h3 { margin: 0 0 8px; font-size: 15px; }
 .vector-status { margin: 0 0 8px; font-weight: 600; font-size: 14px; }

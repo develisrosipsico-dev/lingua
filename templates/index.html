@@ -720,7 +720,12 @@
               <p id="vector-device-help" class="option-help">CPU é o padrão. GPU pode ser selecionada quando disponível; use <code>cuda:N</code> para escolher um dispositivo CUDA.</p>
               <p class="option-help">O perfil histórico pode usar apenas parte da entrada. A cobertura e as omissões são registradas no resultado.</p>
             </details>
-            <button type="submit">Gerar vetores <span aria-hidden="true">→</span></button>
+            <div class="vector-actions">
+              <button type="submit">Gerar vetores <span aria-hidden="true">→</span></button>
+              <button type="submit" class="vector-colab-button" formaction="{{ url_for('notebook_colab_submission', record_id=record.id) }}" aria-describedby="vector-colab-help vector-colab-data">Gerar notebook para o Colab</button>
+            </div>
+            <p id="vector-colab-help" class="option-help">Sem o E5 instalado? Baixe o notebook com o texto original e o histórico das etapas 03–08. Ele usa a finalidade, o lote e o formato selecionados, baixa o modelo no Colab e escolhe GPU quando disponível ou CPU. O dispositivo acima vale para a execução local.</p>
+            <p id="vector-colab-data" class="option-help">Ao abrir o notebook no Colab, você envia o texto e seus registros ao Google. Ao terminar, baixe o pacote com os vetores e o histórico; os resultados não são importados automaticamente no Língua.</p>
           </form>
           {% else %}
           <p class="rule-pending">Valide esta execução de contexto antes de gerar vetores.</p>

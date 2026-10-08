@@ -8,9 +8,9 @@ vocabulário do documento, relações sintáticas e entidades nomeadas. Regras
 versionadas acrescentam ocorrências de orações, negação, tempo, modalidade
 e conectores, com evidências e propostas de alcance. Cada período recebe
 uma unidade de contexto, com o foco, os vizinhos selecionados e as referências
-às anotações existentes. A etapa 09 permite gerar embeddings locais do
-período, da janela contextual e do documento, com modelo e perfil
-configuráveis, sem substituir os resultados anteriores.
+às anotações existentes. A etapa 09 permite gerar embeddings do período,
+da janela contextual e do documento, localmente ou no Colab, com modelo
+e perfil configuráveis, sem substituir os resultados anteriores.
 Os registros JSON contêm versões, hashes SHA-256,
 metadados e posições que apontam até o original.
 
@@ -212,8 +212,9 @@ Falhas podem ser retomadas; um resultado parcial não é disponibilizado como
 pronto. O histórico e os downloads recuperam a origem contextual exata,
 os textos preservados, a configuração, os vetores e seus hashes.
 
-As dependências de embeddings e os pesos são opcionais. Com o aplicativo
-encerrado, instale e baixe explicitamente o modelo antes do primeiro uso:
+As dependências de embeddings e os pesos são opcionais. Para vetorizar no
+próprio computador, com o aplicativo encerrado, instale e baixe explicitamente
+o modelo antes do primeiro uso:
 
 ```bash
 .venv/bin/python -m pip install -r requirements-vetorizacao.txt
@@ -239,6 +240,53 @@ de recuperação sobre relevâncias fornecidas e caracteriza armazenamento;
 Os [exemplos de vetorização](examples/vetorizacao.json) e
 [fragmentação](examples/vetorizacao_fragmentada.json) conservam sua origem e
 as configurações efetivas. As instruções completas estão no documento da etapa.
+
+### Vetorizar no Colab sem instalar o E5 no Mac
+
+Se o aplicativo ainda estiver aberto, encerre-o com `Ctrl+C`. Na pasta
+`lingua`, atualize o código e reinicie:
+
+```bash
+git pull --ff-only origin main
+.venv/bin/python app.py
+```
+
+1. Abra <http://127.0.0.1:5001>, selecione o documento e conclua a etapa
+   **Contexto**. Na aba **Vetores**, escolha o perfil e clique em
+   **Gerar notebook para o Colab**. O navegador baixa um arquivo `.ipynb`.
+2. Abra <https://colab.research.google.com> e use **Arquivo → Fazer upload de notebook**
+   para enviar o arquivo baixado.
+3. Se desejar GPU, escolha **Ambiente de execução → Alterar tipo de ambiente
+   de execução** antes de executar. A GPU é opcional: a configuração `auto`
+   utiliza uma GPU disponível ou CPU. O lote pode ser reduzido na célula de
+   configuração para diminuir o consumo de memória.
+4. Use **Ambiente de execução → Executar tudo**. O notebook instala as
+   dependências em um ambiente próprio, baixa a revisão fixa do E5 Large e
+   vetoriza o registro contextual validado. A primeira execução requer
+   internet e pode levar alguns minutos para instalar e baixar os pesos.
+5. Ao concluir, baixe o ZIP oferecido pelo notebook. Ele contém
+   `vetorizacao.json`, `contexto_etapa08.json`, `manifesto_colab.json`,
+   `original.txt` e `trabalho.txt`. O JSON completo também fica disponível
+   na pasta de resultados do notebook.
+
+O notebook leva o texto original, seus metadados e os registros completos
+das etapas 03–08, com seus identificadores, intervalos e hashes. Inclui uma
+cópia dos módulos necessários do Língua, conferida por SHA-256, e o perfil
+selecionado; gerar o arquivo dispensa o E5 instalado localmente e não cria
+um trabalho de vetorização no Mac. Ao carregar o notebook no Colab, o texto
+e esse histórico também são enviados ao Google.
+
+Cada execução cria uma pasta de resultados com um novo identificador,
+preservando os resultados anteriores. O manifesto registra a origem e a
+configuração efetiva da execução. O pacote baixado não é importado
+automaticamente para o banco do aplicativo; seu JSON pode ser usado nos
+outros aplicativos que consumirem esse formato.
+
+Na célula de configuração, `DISPOSITIVO`, `LOTE` e `OPCOES_MODELO` permitem
+ajustar a execução. O notebook inicial utiliza o adaptador
+`sentence_transformers`; a escolha de outro modelo exige sua revisão e
+um perfil compatível. Essa opção de exportação não altera os contratos
+multimodelo nem a separação entre espaços vetoriais da etapa 09.
 
 ## Dados locais
 
@@ -313,6 +361,8 @@ quando as dependências já estão instaladas. A etapa 07 não acrescenta depend
 A etapa 08 também não acrescenta dependências nem exige outro modelo.
 A etapa 09 usa o conjunto opcional `requirements-vetorizacao.txt` e um
 download explícito dos pesos, conforme as instruções de vetorização acima.
+Para a opção de notebook Colab, esse conjunto e os pesos são instalados no
+Colab; não precisam ser instalados no Mac.
 Na raiz `lingua`, no macOS ou Linux:
 
 ```bash
