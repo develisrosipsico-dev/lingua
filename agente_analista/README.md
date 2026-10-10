@@ -13,7 +13,9 @@ importar código ou manter a análise linguística aberta. Para cada relato,
 importe somente **vetorizacao.json** pelo controle **Importar vetorização**.
 O texto e os metadados incluídos nesse arquivo permitem conferir os vetores e
 as posições das passagens; não é necessário carregar outros arquivos da
-análise linguística.
+análise linguística. Esse upload é a única entrada de novos relatos na página.
+Depois de importar ou abrir um registro salvo, o relato aparece em uma prévia
+de leitura, sem caixa de texto editável.
 
 ## Executar no Mac Intel
 
@@ -43,7 +45,7 @@ do acervo, mas não carrega o E5 nem baixa seus pesos para realizar consultas.
 Na análise linguística, gere a vetorização do relato e exporte o arquivo
 completo **vetorizacao.json**. Na seção **Importar vetorização**,
 selecione esse arquivo. O agente confere os dados, guarda a importação no banco
-local, preenche o texto e mostra a quantidade de vetores por tipo. O limite do
+local, exibe a prévia do relato e mostra a quantidade de vetores por tipo. O limite do
 arquivo é 32 MiB. O arquivo exportado reúne os vetores e as informações do
 relato necessárias para a busca.
 
@@ -51,9 +53,8 @@ Na seção **Justificativas**, escolha o provedor, cole a chave de API no campo
 oculto e use **+** para incluir o identificador de um modelo. O seletor começa
 sem modelo selecionado, sem modelos predefinidos. Ao incluir um modelo, ele
 é selecionado para a próxima busca. Depois de importar a vetorização, clique
-em **Buscar ligações**. Editar o texto invalida a associação aos vetores;
-nesse caso, faça a vetorização do texto atualizado na análise linguística e
-importe o novo arquivo antes de buscar. O relato original, inclusive suas
+em **Buscar ligações**. Para usar outro texto, faça sua vetorização na análise
+linguística e importe o novo arquivo. O relato original, inclusive suas
 quebras de linha, é preservado no servidor.
 
 Os vetores precisam usar o mesmo espaço do índice do acervo. A importação
@@ -93,7 +94,7 @@ O índice e os vetores importados são consultados localmente. Para construir as
 provedor recebe o relato e os blocos recuperados por HTTPS; essa chamada usa
 a conta do provedor e pode consumir créditos. A busca é liberada após informar
 a chave, selecionar o modelo e importar a vetorização de um relato válido. **Salvar relato**
-guarda o texto e, quando houver, o vínculo com a vetorização importada, sem enviar dados ao provedor ou consumir
+guarda o texto importado e seu vínculo com a vetorização, sem enviar dados ao provedor ou consumir
 créditos. O relato precisa seguir os mesmos limites de dois parágrafos e até
 400 palavras. Uma busca também salva automaticamente o relato e seu resultado
 no banco local. As chaves de API não fazem parte dos registros salvos.
@@ -224,8 +225,8 @@ parciais e descartadas são preservadas. Propostas rejeitadas por falharem nas
 conferências não se tornam registros nessa tabela; ficam disponíveis para
 inspeção no resultado original.
 
-Use **Salvar relato** para guardar um texto antes de configurar a busca.
-Salvar novamente sem editar não cria outra cópia. Ao buscar um relato salvo
+Use **Salvar relato** para guardar o relato importado antes de configurar a busca.
+Salvar novamente o mesmo relato não cria outra cópia. Ao buscar um relato salvo
 que ainda não tem busca, o resultado é associado àquele registro. Repetir
 uma busca já realizada cria um novo registro e preserva o resultado anterior.
 
@@ -234,8 +235,11 @@ mais** e **Abrir**. Abrir um registro recupera o texto e a tabela sem fazer
 outra chamada ao provedor e sem chave de API. Quando existe uma vetorização
 associada, ela também é recuperada e fica disponível para uma nova busca sem
 importar o arquivo novamente. Registros antigos sem vetorização continuam
-acessíveis; para uma nova busca, importe a exportação correspondente. **Limpar**
-limpa apenas o formulário e o resultado exibido; não exclui registros do banco.
+acessíveis na prévia e no histórico; para uma nova busca, importe a exportação
+correspondente. A API de registros continua aceitando texto sem vetorização
+para preservar a compatibilidade com integrações existentes; a página recebe
+novos relatos somente por upload. **Limpar** limpa apenas a prévia, os dados da
+importação e o resultado exibido; não exclui registros do banco.
 Não há exclusão automática dos relatos salvos. Para fazer um backup, encerre
 o aplicativo e copie o arquivo SQLite. O arquivo permanece no computador
 onde o servidor está sendo executado.

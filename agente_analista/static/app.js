@@ -9,7 +9,7 @@
   const headings = ["Passagem do relato", "Trecho de Freud", "Ligação proposta", "Justificativa", "Referência", "Limites/situação"];
   const $ = (id) => document.getElementById(id);
   const elements = Object.fromEntries([
-    "search-form", "relato", "word-count", "paragraph-count", "input-error", "search-button", "clear-button",
+    "search-form", "relato", "story-preview", "word-count", "paragraph-count", "input-error", "search-button", "clear-button",
     "refresh-status", "environment-badge", "environment-description", "environment-problems", "processing",
     "processing-spinner", "processing-title", "processing-detail", "request-error", "results", "results-title",
     "results-summary", "result-message", "connections-table", "copy-button", "export-button", "export-feedback",
@@ -35,7 +35,7 @@
   let openingRecord = false;
   let importing = false;
   let importedVectorization = null;
-  let importedText = null;
+  let currentText = "";
   let savedId = null;
   let savedState = null;
   let historyRecords = [];
@@ -51,14 +51,26 @@
     return String(value);
   };
   const countFormat = (value) => Number(value).toLocaleString("pt-BR");
-  const visibleText = (text) => text.replace(/\r\n?|\n/gu, "\n");
-  const storyText = () => importedText !== null && elements.relato.value === visibleText(importedText) ? importedText : elements.relato.value;
+  // Preserve the source text, including CRLF, independently of its read-only display.
+  const storyText = () => currentText;
   const node = (tag, text = "", className = "") => {
     const element = document.createElement(tag);
     if (text !== "") element.textContent = display(text);
     if (className) element.className = className;
     return element;
   };
+
+  function showStory(text) {
+    currentText = text;
+    elements.relato.textContent = text;
+    elements["story-preview"].hidden = !text;
+    elements["story-preview"].open = false;
+  }
+
+  function focusStory() {
+    if (elements["story-preview"].hidden) elements["vetorizacao-file"].focus();
+    else elements["story-preview"].querySelector("summary").focus();
+  }
 
   function readModels() {
     try {
@@ -147,9 +159,9 @@
     const words = trimmed ? trimmed.split(whitespaceRun).length : 0;
     const paragraphs = text.split(paragraphSeparator).map(trimWhitespace).filter(Boolean).length;
     let error = "";
-    if (!trimmed) error = "Cole um relato com dois parágrafos para iniciar a busca.";
+    if (!trimmed) error = "Importe a vetorização de um relato para iniciar a busca.";
     else if (paragraphs !== 2) error = `O relato precisa ter exatamente dois parágrafos; foram encontrados ${paragraphs}. Separe-os por uma linha em branco.`;
-    else if (words > 400) error = `O relato tem ${words} palavras. Reduza o texto para no máximo 400 palavras.`;
+    else if (words > 400) error = `O relato tem ${words} palavras. Importe um arquivo com no máximo 400 palavras.`;
     return { words, paragraphs, error };
   }
 
@@ -162,16 +174,14 @@
     elements["paragraph-count"].classList.toggle("count-invalid", touched && state.paragraphs !== 2);
     elements["input-error"].textContent = state.error;
     elements["input-error"].hidden = !touched || !state.error;
-    elements.relato.setAttribute("aria-invalid", String(touched && Boolean(state.error)));
     elements["search-button"].disabled = busy || saving || openingRecord || importing || !ready || !importedVectorization || Boolean(state.error) || Boolean(configuration.error);
-    elements["save-story-button"].disabled = busy || saving || openingRecord || importing || Boolean(state.error) || Boolean(savedId);
+    elements["save-story-button"].disabled = busy || saving || openingRecord || importing || !importedVectorization || Boolean(state.error) || Boolean(savedId);
     return state;
   }
 
   function setBusy(value) {
     busy = value;
     const locked = busy || saving || openingRecord || importing;
-    elements.relato.readOnly = locked;
     elements["clear-button"].disabled = locked;
     elements["clear-button"].title = locked ? "Aguarde o término da operação para limpar o relato." : "";
     elements["copy-button"].disabled = locked || !currentResult;
@@ -188,7 +198,6 @@
 
   function forgetVectorization(message = "Importe a vetorização para habilitar a busca.") {
     importedVectorization = null;
-    importedText = null;
     elements["vetorizacao-file"].value = "";
     elements["import-feedback"].className = "field-help";
     elements["import-feedback"].textContent = message;
@@ -199,7 +208,7 @@
       throw new Error("O servidor não retornou a vetorização e o relato importados.");
     }
     importedVectorization = record.id;
-    importedText = record.relato.texto;
+    showStory(record.relato.texto);
     const counts = record.contagens || {};
     elements["import-feedback"].className = "field-help";
     elements["import-feedback"].textContent = `Vetorização disponível: ${countFormat(counts.periodo || 0)} períodos, ${countFormat(counts.contextual || 0)} janelas contextuais e ${countFormat(counts.documento || 0)} documento(s).`;
@@ -212,7 +221,8 @@
     forgetSavedRecord();
     resetResults();
     importedVectorization = null;
-    importedText = null;
+    showStory("");
+    touched = false;
     elements["request-error"].hidden = true;
     importing = true;
     setBusy(busy);
@@ -225,10 +235,9 @@
       catch (_) { throw new Error("O arquivo não contém um JSON válido. Exporte novamente o arquivo completo da análise linguística."); }
       const record = await fetchJSON("/api/vetorizacoes", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
       useVectorization(record);
-      elements.relato.value = importedText;
       touched = true;
       elements.processing.hidden = true;
-      elements.relato.focus();
+      focusStory();
     } catch (error) {
       forgetVectorization();
       elements["import-feedback"].className = "field-error";
@@ -326,17 +335,16 @@
   }
 
   async function saveStory() {
-    if (busy || saving || openingRecord || importing || savedId) return;
+    if (busy || saving || openingRecord || importing || savedId || !importedVectorization) return;
     touched = true;
     const state = updateInput();
-    if (state.error) { elements.relato.focus(); return; }
+    if (state.error) { focusStory(); return; }
     saving = true;
     setBusy(busy);
     elements["save-story-feedback"].className = "field-help";
     elements["save-story-feedback"].textContent = "Salvando o relato neste computador…";
     try {
-      const payload = { texto: storyText() };
-      if (importedVectorization) payload.vetorizacao_id = importedVectorization;
+      const payload = { texto: storyText(), vetorizacao_id: importedVectorization };
       const record = await fetchJSON("/api/relatos", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
       if (!Number.isSafeInteger(record.id)) throw new Error("O servidor não informou o identificador do relato salvo.");
       markSavedRecord(record.id, record.estado);
@@ -373,7 +381,7 @@
         elements["import-feedback"].className = "field-error";
         elements["import-feedback"].textContent += ` ${vectorizationError}`;
       }
-      elements.relato.value = record.texto;
+      showStory(record.texto);
       touched = true;
       elements["request-error"].hidden = true;
       elements.processing.hidden = true;
@@ -384,8 +392,8 @@
         elements["request-error"].hidden = false;
       }
       elements["history-feedback"].textContent = `Relato #${record.id} aberto. ${recordState(record.estado)}.`;
-      elements.relato.focus();
-      elements.relato.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center" });
+      focusStory();
+      elements["story-preview"].scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center" });
     } catch (error) {
       elements["history-feedback"].className = "field-error";
       elements["history-feedback"].textContent = `Não foi possível abrir o relato. ${error.message}`;
@@ -681,20 +689,20 @@
     if (busy || saving || openingRecord || importing) return;
     touched = true;
     configurationTouched = true;
+    if (!importedVectorization) {
+      elements["import-feedback"].className = "field-error";
+      elements["import-feedback"].textContent = "Importe a vetorização correspondente ao relato antes de buscar.";
+      elements["vetorizacao-file"].focus();
+      return;
+    }
     const state = updateInput();
     if (state.error) {
-      elements.relato.focus();
+      focusStory();
       return;
     }
     const configuration = configurationState();
     if (configuration.error) {
       elements[configuration.hasModel ? "api-key" : "model-select"].focus();
-      return;
-    }
-    if (!importedVectorization) {
-      elements["import-feedback"].className = "field-error";
-      elements["import-feedback"].textContent = "Importe a vetorização correspondente ao relato antes de buscar.";
-      elements["vetorizacao-file"].focus();
       return;
     }
     if (!ready) return;
@@ -802,17 +810,9 @@
     if (event.key === "Enter") { event.preventDefault(); addModel(); }
     if (event.key === "Escape") { event.preventDefault(); closeModelPanel(); }
   });
-  elements.relato.addEventListener("input", () => {
-    touched = true;
-    forgetSavedRecord();
-    forgetVectorization("O relato foi editado. Importe a vetorização desse texto atualizado antes de buscar.");
-    resetResults();
-    elements["request-error"].hidden = true;
-    updateInput();
-  });
   elements["clear-button"].addEventListener("click", () => {
     if (busy || saving || openingRecord || importing) return;
-    elements.relato.value = "";
+    showStory("");
     touched = false;
     forgetSavedRecord();
     forgetVectorization();
@@ -820,7 +820,7 @@
     elements["request-error"].hidden = true;
     elements.processing.hidden = true;
     updateInput();
-    elements.relato.focus();
+    elements["vetorizacao-file"].focus();
   });
   elements["refresh-status"].addEventListener("click", checkStatus);
   elements["save-story-button"].addEventListener("click", saveStory);

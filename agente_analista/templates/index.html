@@ -29,16 +29,24 @@
 
       <main>
         <section class="input-card" aria-labelledby="input-title">
-          <div class="section-heading"><span class="step-number" aria-hidden="true">01</span><div><h2 id="input-title">Seu relato</h2><p class="muted">Dois parágrafos, separados por uma linha em branco. Até 400 palavras no total.</p></div></div>
+          <div class="section-heading"><span class="step-number" aria-hidden="true">01</span><div><h2 id="input-title">Importar vetorização</h2><p class="muted">Envie o arquivo produzido pela análise linguística para buscar ligações.</p></div></div>
           <form id="search-form" novalidate>
             <fieldset class="vector-import">
               <legend>Importar vetorização</legend>
               <p class="field-help settings-intro">Selecione o arquivo <strong>vetorizacao.json</strong> exportado pela análise linguística. Esse único arquivo contém o relato e seus vetores de períodos, janelas contextuais e documento.</p>
               <label for="vetorizacao-file">Arquivo de vetorização</label>
               <input id="vetorizacao-file" type="file" accept=".json,application/json" aria-describedby="import-help import-feedback">
-              <p id="import-help" class="field-help">Até 32 MiB. O agente reaproveita os vetores enviados. Se você editar o relato, importe a vetorização do texto atualizado antes de buscar.</p>
+              <p id="import-help" class="field-help">Até 32 MiB. O relato deve ter dois parágrafos e até 400 palavras. O agente usa os vetores enviados; para analisar outro texto, importe outro arquivo.</p>
               <p id="import-feedback" class="field-help" role="status" aria-live="polite">Importe a vetorização para habilitar a busca.</p>
             </fieldset>
+            <details id="story-preview" class="story-preview" hidden>
+              <summary>Ver relato</summary>
+              <div id="relato" class="story-text"></div>
+              <div class="input-meta">
+                <div id="input-counts" class="counts" aria-live="polite" aria-atomic="true"><span id="word-count">0 / 400 palavras</span><span id="paragraph-count">0 / 2 parágrafos</span></div>
+                <span class="field-help">Somente leitura</span>
+              </div>
+            </details>
             <fieldset class="provider-settings">
               <legend>Justificativas</legend>
               <p class="field-help settings-intro">Escolha o provedor da sua chave e inclua o identificador do modelo que deseja usar.</p>
@@ -71,13 +79,7 @@
               <p id="configuration-error" class="field-error" role="alert" hidden></p>
               <p id="model-feedback" class="field-help" role="status" aria-live="polite"></p>
             </fieldset>
-            <label for="relato">Texto do relato</label>
-            <textarea id="relato" name="relato" rows="10" spellcheck="true" aria-describedby="input-help input-counts input-error" placeholder="Cole o primeiro parágrafo aqui.&#10;&#10;Cole o segundo parágrafo aqui."></textarea>
-            <p id="input-help" class="field-help">O relato é preenchido pelo arquivo importado. Você também pode salvar um texto sem fazer uma busca. Ao buscar, o relato e as ligações conferidas ficam salvos neste computador. Para avaliar as ligações, o relato e os trechos recuperados serão enviados ao provedor de IA configurado.</p>
-            <div class="input-meta">
-              <div id="input-counts" class="counts" aria-live="polite" aria-atomic="true"><span id="word-count">0 / 400 palavras</span><span id="paragraph-count">0 / 2 parágrafos</span></div>
-              <span class="field-help">Sem mínimo de palavras</span>
-            </div>
+            <p id="input-help" class="field-help">O relato vem do arquivo importado. Ao buscar, o relato e as ligações conferidas ficam salvos neste computador. Para avaliar as ligações, o relato e os trechos recuperados serão enviados ao provedor de IA configurado.</p>
             <p id="input-error" class="field-error" role="alert" hidden></p>
             <div class="form-actions">
               <button id="search-button" class="button button-primary" type="submit" disabled>Buscar ligações <span aria-hidden="true">→</span></button>

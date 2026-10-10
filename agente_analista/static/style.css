@@ -55,10 +55,8 @@ input:disabled, select:disabled { background: #f4f5f1; opacity: .7; }
 .add-model-panel .form-actions { margin-top: 12px; }
 #model-feedback:empty { display: none; }
 label { display: block; margin-bottom: 8px; font-size: .85rem; font-weight: 650; }
-textarea { display: block; width: 100%; min-height: 210px; resize: vertical; border: 1px solid #c5d1c8; border-radius: 10px; padding: 16px; line-height: 1.65; background: #fcfdfa; color: var(--ink); }
-textarea::placeholder { color: #919b93; }
-textarea[aria-invalid="true"] { border-color: var(--danger); }
-textarea[readonly] { background: #f4f5f1; }
+.story-preview { margin-bottom: 24px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 10px; }
+.story-text { margin-top: 14px; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.65; }
 .field-help { font-size: .77rem; color: var(--muted); margin: 8px 0; }
 .input-meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .counts { display: flex; align-items: center; gap: 16px; color: var(--muted); font-size: .78rem; }
