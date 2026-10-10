@@ -1,6 +1,6 @@
 """Arquivos e vetores fictícios para testar somente o consumidor.
 
-Os três JSONs foram congelados de uma execução do produtor da etapa 09 usando
+Os JSONs foram congelados de uma execução do produtor da etapa 09 usando
 anotações manuais e um adaptador determinístico. Nenhum modelo neural foi
 executado. Este módulo adapta metadados e valores para os casos de teste sem
 importar ou executar o aplicativo produtor.
@@ -27,9 +27,12 @@ def _ler(nome):
 
 def carregar_perfil(perfil_id="e5_simetrico", *, opcoes=None):
     perfil = deepcopy(_ler("exportacao_atual")["perfil"])
-    if perfil_id not in ("e5_simetrico", "e5_consulta"):
+    if perfil_id not in ("e5_simetrico", "e5_consulta", "e5_analista"):
         raise ValueError("Perfil não previsto nas fixtures do agente.")
     perfil.update(id=perfil_id, finalidade="consulta" if perfil_id == "e5_consulta" else "simetrico")
+    if perfil_id == "e5_analista":
+        perfil.update(finalidade="consulta", estrategia_consultas="paragrafos_documento",
+                      limite_tokens=504, agregacao="nenhuma", texto_documento="original")
     perfil.update(deepcopy(opcoes or {}))
     return perfil
 
@@ -60,7 +63,7 @@ def _espaco(perfil, processamento):
 
 
 def construir_exportacao(*, normalizar=False, dimensao=1024, limite=160,
-                        perfil_id="e5_simetrico", opcoes=None):
+                        perfil_id="e5_simetrico", opcoes=None, fragmentar=False):
     """Adapte uma exportação congelada, sem depender de módulos do produtor.
 
     Limites 160/512 cobrem a fixture integral; 23 usa a exportação já recortada.
@@ -68,14 +71,20 @@ def construir_exportacao(*, normalizar=False, dimensao=1024, limite=160,
     """
     if limite not in (23, 160, 512) or (normalizar and limite == 23):
         raise ValueError("Combinação não prevista nas fixtures do agente.")
-    nome = "exportacao_atual_crlf" if normalizar else (
-        "exportacao_atual_fragmentada" if limite == 23 else "exportacao_atual")
+    if perfil_id == "e5_analista":
+        limite = 512
+        nome = "exportacao_analista_crlf" if normalizar else (
+            "exportacao_analista_fragmentada" if fragmentar else "exportacao_analista")
+    else:
+        nome = "exportacao_atual_crlf" if normalizar else (
+            "exportacao_atual_fragmentada" if limite == 23 else "exportacao_atual")
     registro = _ler(nome)
     perfil = carregar_perfil(perfil_id, opcoes=opcoes)
     registro["perfil"] = perfil
     proc = registro["processamento"]
     proc["dimensao"] = proc["adaptador"]["dimensao"] = dimensao
-    proc["limite_tokens"] = proc["limite_modelo_tokens"] = proc["adaptador"]["limite_tokens"] = limite
+    proc["limite_tokens"] = perfil["limite_tokens"] or limite
+    proc["limite_modelo_tokens"] = proc["adaptador"]["limite_tokens"] = limite
     for campo in ("modelo", "tokenizador", "backend", "pooling", "precisao_inferencia"):
         proc[campo] = deepcopy(perfil[campo])
         proc["adaptador"][campo] = deepcopy(perfil[campo])
@@ -110,7 +119,8 @@ def construir_exportacao(*, normalizar=False, dimensao=1024, limite=160,
         substituidos[antigo_id] = artefato["id"]
         por_id[artefato["id"]] = artefato
     for rep in registro["representacoes"]:
-        rep["artefato_id"] = substituidos[rep["artefato_id"]]
+        if rep["artefato_id"] is not None:
+            rep["artefato_id"] = substituidos[rep["artefato_id"]]
         for fragmento in rep["fragmentos"]:
             fragmento["artefato_id"] = substituidos[fragmento["artefato_id"]]
     return registro

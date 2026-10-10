@@ -137,7 +137,8 @@ class VectorAppTests(unittest.TestCase):
         validar_vetorizacao(result)
         self.assertEqual(result["contexto"], context)
         self.assertEqual(result["documento_id"], document_id)
-        self.assertEqual(len(result["representacoes"]), 2 * len(context["unidades"]) + 1)
+        self.assertEqual([r["tipo"] for r in result["representacoes"]], ["paragrafo", "paragrafo", "documento"])
+        self.assertEqual(result["perfil"]["id"], "e5_analista")
         self.assertEqual(len([item for item in result["representacoes"] if item["tipo"] == "documento"]), 1)
         self.assertEqual(self.snapshot(), before)
         restarted = create_app(self.config).test_client()
@@ -217,7 +218,7 @@ class VectorAppTests(unittest.TestCase):
         first = self.enqueue(document_id, execucao_id="identificador-repetido")
         response = self.client.post(f"/envios/{document_id}/vetorizacoes", json={"execucao_id": first["execucao_id"], "perfil_id": "e5_conteudo"})
         self.assertEqual(response.status_code, 409)
-        self.assertEqual(self.status(document_id, first).get_json()["perfil_id"], "e5_simetrico")
+        self.assertEqual(self.status(document_id, first).get_json()["perfil_id"], "e5_analista")
 
     def test_json_options_are_strict_and_cannot_register_test_backend(self):
         document_id, context = self.source()

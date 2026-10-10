@@ -75,6 +75,39 @@ class VetorizacaoTestes(unittest.TestCase):
         self.assertEqual(por_id[doc["artefato_id"]]["entrada"]["texto"], "query: " + TEXTO)
         self.assertTrue(validar_vetorizacao(registro)["pronto"])
 
+    def test_analista_vetoriza_paragrafos_e_relato_original_inclusive_crlf(self):
+        registro, adaptador = self.gerar(contexto=self.normalizado, perfil_id="e5_analista", limite=512)
+        self.assertEqual([r["tipo"] for r in registro["representacoes"]], ["paragrafo", "paragrafo", "documento"])
+        original = self.normalizado["regras"]["analise"]["anotacao"]["segmentacao"]["preparacao"]["original"]["texto"]
+        esperado = [p.strip() for p in original.split("\r\n\r\n")] + [original]
+        self.assertEqual([t for lote in adaptador.chamadas for t in lote], ["query: " + t for t in esperado])
+        self.assertEqual(registro["processamento"]["limite_tokens"], 504)
+        self.assertTrue(all(r["metodo"] == "direto" for r in registro["representacoes"]))
+        self.assertTrue(validar_vetorizacao(registro)["pronto"])
+
+    def test_analista_recortes_longos_independentes_sem_media(self):
+        perfil = carregar_perfil("e5_analista")
+        adaptador = AdaptadorTeste(perfil, limite=512)
+        tokenizar = adaptador.tokenizar
+        def muitos_tokens(texto):
+            t = tokenizar(texto)
+            return {k: [v[0]] + [item for item in v[1:-1] for _ in range(20)] + [v[-1]]
+                    for k, v in t.items()}
+        adaptador.tokenizar = muitos_tokens
+        registro = vetorizar_contexto(self.contexto, perfil_id="e5_analista", adaptador=adaptador)
+        self.assertTrue(all("derivacao" not in a for a in registro["artefatos"]))
+        por_id = {a["id"]: a for a in registro["artefatos"]}
+        for rep in registro["representacoes"]:
+            self.assertEqual(rep["metodo"], "fragmentado" if len(rep["fragmentos"]) > 1 else "direto")
+            if rep["metodo"] == "fragmentado":
+                self.assertIsNone(rep["artefato_id"])
+            recortes = [por_id[f["artefato_id"]]["entrada"]["texto"][7:] for f in rep["fragmentos"]]
+            origem = rep["origem"]["original"]
+            self.assertEqual("".join(recortes), TEXTO[origem["inicio"]:origem["fim"]])
+            self.assertTrue(all(len(t) == 18 for t in recortes[:-1]))
+            self.assertTrue(all(len(por_id[f["artefato_id"]]["entrada"]["input_ids"]) <= 504 for f in rep["fragmentos"]))
+        self.assertTrue(validar_vetorizacao(registro)["pronto"])
+
     def test_dimensao_nao_global_e_formatos_declarados(self):
         for dimensao, formato in ((2, "float16"), (5, "float32"), (7, "float64")):
             with self.subTest(dimensao=dimensao, formato=formato):

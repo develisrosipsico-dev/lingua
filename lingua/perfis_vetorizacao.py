@@ -17,6 +17,7 @@ E5_REVISAO = "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3"
 E5_MODELO = "intfloat/multilingual-e5-large"
 _VERSAO = "1.0.0"
 _FINALIDADES = {
+    "e5_analista": ("consulta", "query: "),
     "e5_consulta": ("consulta", "query: "),
     "e5_conteudo": ("conteudo", "passage: "),
     "e5_simetrico": ("simetrico", "query: "),
@@ -36,7 +37,7 @@ _ENUMS = {
     "pooling": {"mean", "cls", "max", "last_token", "modelo"},
     "normalizacao": {"l2", "nenhuma"},
     "fragmentacao": {"sem_sobreposicao", "erro"},
-    "agregacao": {"media_ponderada_tokens", "media_simples"},
+    "agregacao": {"media_ponderada_tokens", "media_simples", "nenhuma"},
     "texto_documento": {"trabalho", "original"},
 }
 
@@ -138,6 +139,9 @@ def carregar_perfil(perfil_id="e5_simetrico", *, opcoes=None):
         "cache_modelos": str((base_dados / "instance" / "modelos").resolve()),
         "somente_local": True, "legado": None,
     }
+    if perfil_id == "e5_analista":
+        perfil.update(estrategia_consultas="paragrafos_documento", limite_tokens=504,
+                      agregacao="nenhuma", texto_documento="original")
     if perfil_id == "e5_legado":
         perfil["formato_armazenamento"] = "float16"
         perfil["legado"] = {"ativo": True, "corte_caracteres": 2000,
@@ -162,6 +166,18 @@ def carregar_perfil(perfil_id="e5_simetrico", *, opcoes=None):
             if juntar:
                 perfil["legado"]["composicao"] = "cabecalho_mais_lf_mais_paragrafos"
     perfil.update(opcoes)
+    if perfil_id == "e5_analista":
+        fixos = {"modelo": {"identificacao": E5_MODELO, "revisao": E5_REVISAO},
+                 "tokenizador": {"identificacao": E5_MODELO, "revisao": E5_REVISAO},
+                 "backend": "sentence_transformers", "prefixo": "query: ",
+                 "pooling": "mean", "normalizacao": "l2", "precisao_inferencia": "float32",
+                 "formato_armazenamento": "float32", "limite_tokens": 504,
+                 "fragmentacao": "sem_sobreposicao", "agregacao": "nenhuma",
+                 "texto_documento": "original"}
+        if any(perfil[k] != v for k, v in fixos.items()):
+            raise ErroPerfil("O perfil do Agente Analista preserva E5, query:, média, L2, float32 e orçamento de 504 tokens.")
+    elif perfil["agregacao"] == "nenhuma":
+        raise ErroPerfil("A ausência de agregação é exclusiva do perfil do Agente Analista.")
     for nome, permitidos in _ENUMS.items():
         valor = perfil[nome]
         if type(valor) is not str or valor not in permitidos:

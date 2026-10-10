@@ -13,7 +13,7 @@ def main(argv=None):
     parser.add_argument("contexto", type=Path, help="JSON integral da etapa 08.")
     parser.add_argument("--saida", type=Path, required=True,
                         help="Novo JSON; um arquivo existente nunca é sobrescrito.")
-    parser.add_argument("--perfil", default="e5_simetrico")
+    parser.add_argument("--perfil", default="e5_analista")
     parser.add_argument("--opcoes", default="{}", help="Opções do perfil como objeto JSON.")
     parser.add_argument("--execucao-id")
     parser.add_argument("--registrado-em", help="Data ISO 8601 com fuso; omitida usa o instante atual.")

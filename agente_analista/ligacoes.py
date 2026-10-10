@@ -198,6 +198,8 @@ def construir_mensagens(*, relato, recuperacao):
         "Considere o relato completo e o contexto teórico completo antes de propor uma ligação. "
         "Preserve negações, ambiguidades e ressalvas; não infira que algo ocorreu quando o relato o nega. "
         "Distinga observação descritiva do relato, conceito sugerido pela fonte e hipótese interpretativa. "
+        "Não trate como fatos vínculos familiares, morte, luto ou motivações que o relato não confirme; "
+        "se forem necessários à discussão, apresente-os explicitamente como hipóteses incertas. "
         "Uma palavra em comum ou uma pontuação de busca alta não prova pertinência. "
         "As pontuações BM25, similaridade E5 e fusão RRF ordenam candidatos, não são probabilidades de uma interpretação. "
         "Não produza diagnósticos nem conclusões clínicas sobre a pessoa. "
@@ -221,12 +223,16 @@ def construir_mensagens(*, relato, recuperacao):
         fontes.append({
             "bloco_id": candidato["bloco_id"], "texto": candidato["texto"],
             "fragmentos": candidato["fragmentos"], "referencia": candidato["referencia"],
-            "pontuacoes": candidato.get("pontuacoes", []), "rrf": candidato.get("rrf"),
+            # A auditoria das pontuações permanece no resultado e no histórico.
+            # Enviar centenas de contribuições por fonte consumia o orçamento
+            # da avaliação e deixava candidatos inteiros sem exame.
             "passagens_disponiveis": _passagens_disponiveis(candidato["texto"]),
         })
     contexto = {
         "relato_original": relato["texto"], "paragrafos": paragrafos,
-        "consultas_da_busca": recuperacao.get("consultas", []),
+        "consultas_da_busca": [{k: copy.deepcopy(v) for k, v in consulta.items()
+                              if k in ("id", "tipo", "inicio", "fim", "texto", "paragrafo_id")}
+                             for consulta in recuperacao.get("consultas", [])],
         "metodo_fusao": recuperacao.get("metodo_fusao", {}), "fontes_recuperadas": fontes,
         "formato_resposta": {"ligacoes": [esquema_ligacao]},
     }

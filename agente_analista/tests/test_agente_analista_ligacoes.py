@@ -72,6 +72,27 @@ class LigacoesTests(unittest.TestCase):
         linha["referencia"]["paginas"].append(99)
         self.assertEqual((self.relato, self.recuperacao, self.item), antes)
 
+    def test_auditoria_volumosa_nao_exclui_fontes_do_pedido_ao_modelo(self):
+        self.recuperacao["candidatos"] = []
+        for numero in range(12):
+            candidato = copy.deepcopy(self.candidato)
+            candidato["bloco_id"] = f"B{numero}"
+            candidato["pontuacoes"] = [{"consulta_id": "Q1", "metodo": "E5", "score": 0.8,
+                                         "origem": {"auditoria": "x" * 400}} for _ in range(200)]
+            self.recuperacao["candidatos"].append(candidato)
+        antes = copy.deepcopy(self.recuperacao)
+        self.assertGreater(len(json.dumps(antes).encode()), api.LIMITE_PEDIDO_BYTES)
+        transporte = Mock(return_value='{"ligacoes": []}')
+        resultado = self.avaliar(itens=[], transporte=transporte)
+        self.assertEqual(resultado["avaliacao"]["blocos_avaliados_ids"], [f"B{n}" for n in range(12)])
+        self.assertEqual(resultado["avaliacao"]["blocos_nao_avaliados_ids"], [])
+        contexto = transporte.call_args.kwargs["contexto"]
+        mensagens = ligacoes.construir_mensagens(**contexto)
+        fontes = json.loads(mensagens[1]["content"])["fontes_recuperadas"]
+        self.assertTrue(all("pontuacoes" not in f for f in fontes))
+        self.assertEqual([f["texto"] for f in fontes], [c["texto"] for c in antes["candidatos"]])
+        self.assertEqual(self.recuperacao, antes)
+
     def test_prompt_preserva_original_contexto_e_negacao_sem_prompts_narrativos(self):
         mensagens = ligacoes.construir_mensagens(relato=self.relato, recuperacao=self.recuperacao)
         sistema = mensagens[0]["content"]

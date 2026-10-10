@@ -386,7 +386,7 @@ def _celula(tipo, identificador, texto):
     return celula
 
 
-def gerar_notebook_colab(contexto, *, perfil_id="e5_simetrico", opcoes=None,
+def gerar_notebook_colab(contexto, *, perfil_id="e5_analista", opcoes=None,
                          documento=None, notebook_id=None, registrado_em=None):
     """Gere um .ipynb sem inferência local, preservando a cadeia selecionada.
 

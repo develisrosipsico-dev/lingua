@@ -64,6 +64,7 @@ BASE_DADOS = BASE.parent if (BASE.parent / ".git").exists() else BASE
 SOURCE_ERRORS = (ErroPreparacao, ErroSegmentacao, ErroAnotacao, ErroAnalise, ErroRegras, ErroContexto)
 VECTOR_ERRORS = (ErroVetorizacao, ErroPersistenciaVetores, ErroTrabalhoVetorizacao, ErroPerfil)
 VECTOR_PROFILES = [
+    {"id": "e5_analista", "nome": "Agente Analista — parágrafos e relato inteiro", "descricao": "Estratégia anterior: texto original, consultas independentes e E5 float32."},
     {"id": "e5_simetrico", "nome": "Comparação entre textos", "descricao": "Perfil simétrico E5 de referência."},
     {"id": "e5_consulta", "nome": "Consulta de recuperação", "descricao": "Consulta para um índice compatível."},
     {"id": "e5_conteudo", "nome": "Conteúdo para recuperação", "descricao": "Conteúdo para um índice compatível."},
@@ -1137,7 +1138,8 @@ def create_app(config=None):
                 return {"erro": f"{field} deve ser uma string não vazia."}, 400
         context_execution_id = options.pop("contexto_execucao_id", None)
         try:
-            carregar_perfil(options.get("perfil_id", "e5_simetrico"), opcoes=options.get("opcoes"))
+            options.setdefault("perfil_id", "e5_analista")
+            carregar_perfil(options["perfil_id"], opcoes=options.get("opcoes"))
         except ErroPerfil as error:
             return {"erro": str(error)}, 400
         try:
@@ -1198,7 +1200,8 @@ def create_app(config=None):
                 return {"erro": f"{field} deve ser uma string não vazia."}, 400
         context_execution_id = options.pop("contexto_execucao_id", None)
         try:
-            carregar_perfil(options.get("perfil_id", "e5_simetrico"), opcoes=options.get("opcoes"))
+            options.setdefault("perfil_id", "e5_analista")
+            carregar_perfil(options["perfil_id"], opcoes=options.get("opcoes"))
         except ErroPerfil as error:
             return {"erro": str(error)}, 400
         try:

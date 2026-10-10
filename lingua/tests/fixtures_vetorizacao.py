@@ -13,7 +13,7 @@ class AdaptadorControlado:
         return {
             "backend": self.perfil["backend"], "versao_backend": "teste-controlado-1",
             "modelo": self.perfil["modelo"], "tokenizador": self.perfil["tokenizador"],
-            "dimensao": 4, "limite_tokens": 160,
+            "dimensao": 4, "limite_tokens": 512 if self.perfil["id"] == "e5_analista" else 160,
             "pooling": self.perfil["pooling"], "dispositivo": self.perfil["dispositivo"],
             "precisao_inferencia": self.perfil["precisao_inferencia"],
             "bibliotecas": {"fixture": "teste-contrato-sem-inferencia-neural"},

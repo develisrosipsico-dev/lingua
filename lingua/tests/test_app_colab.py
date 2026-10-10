@@ -104,7 +104,7 @@ class ColabAppTests(unittest.TestCase):
         document_id, context = self.fixture.source()
         options = {"modelo": "modelo-controlado/alternativo", "revisao": "a" * 40, "limite_tokens": 2048, "pooling": "modelo"}
         with patch("app.gerar_notebook_colab", wraps=gerar_notebook_colab) as producer:
-            response = self.export(document_id, contexto_execucao_id=context["execucao_id"], opcoes=options)
+            response = self.export(document_id, contexto_execucao_id=context["execucao_id"], perfil_id="e5_simetrico", opcoes=options)
         self.capsule(response)
         self.assertEqual(producer.call_args.kwargs["opcoes"], options)
 

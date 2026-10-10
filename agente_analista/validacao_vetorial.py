@@ -295,8 +295,17 @@ def validar_atual(registro):
            and perfil["pooling"] == "mean" and perfil["normalizacao"] == "l2"
            and perfil["formato_armazenamento"] == "float32" and not perfil.get("legado")
            and perfil["fragmentacao"] in ("sem_sobreposicao", "erro")
-           and perfil["agregacao"] in ("media_simples", "media_ponderada_tokens")
+           and perfil["agregacao"] in ("media_simples", "media_ponderada_tokens", "nenhuma")
            and perfil["texto_documento"] in ("original", "trabalho"), "Perfil de consulta não suportado.")
+    analista = perfil.get("id") == "e5_analista"
+    if analista:
+        exigir(perfil.get("estrategia_consultas") == "paragrafos_documento"
+               and perfil["texto_documento"] == "original" and perfil["limite_tokens"] == 504
+               and perfil["agregacao"] == "nenhuma" and perfil["fragmentacao"] == "sem_sobreposicao"
+               and perfil["precisao_inferencia"] == "float32", "Estratégia anterior do analista inválida.")
+    else:
+        exigir(perfil["agregacao"] != "nenhuma" and "estrategia_consultas" not in perfil,
+               "Estratégia de consulta desconhecida.")
     for campo in ("modelo", "tokenizador"):
         descricao = perfil[campo]
         exigir(type(descricao) is dict and set(descricao) == {"identificacao", "revisao"}, "Descrição do modelo inválida.")
@@ -325,13 +334,21 @@ def validar_atual(registro):
         if "derivacao" in artefato:
             _conferir_media(artefato, por_id, proc["dimensao"])
     descricoes = []
-    for unidade in contexto["unidades"]:
-        for tipo, campo in (("periodo", "foco"), ("contextual", "janela")):
-            bloco = unidade[campo]
-            origem = {"campo": f"unidades.{campo}.texto", "unidade_id": unidade["id"],
-                      "periodo_foco_id": unidade["periodo_foco_id"], "janela_logica_id": unidade["janela_logica_id"],
-                      "trabalho": bloco["trabalho"], "original": bloco["original"]}
-            descricoes.append((tipo, origem, "trabalho", bloco["texto"]))
+    if analista:
+        from .entrada import validar_relato
+        relato = validar_relato(preparacao["original"]["texto"])
+        for paragrafo in relato["paragrafos"]:
+            origem = {"campo": "preparacao.original.texto", "paragrafo_id": paragrafo["id"],
+                      **_mapa(preparacao, paragrafo["inicio"], paragrafo["fim"], "original")}
+            descricoes.append(("paragrafo", origem, "original", paragrafo["texto"]))
+    else:
+        for unidade in contexto["unidades"]:
+            for tipo, campo in (("periodo", "foco"), ("contextual", "janela")):
+                bloco = unidade[campo]
+                origem = {"campo": f"unidades.{campo}.texto", "unidade_id": unidade["id"],
+                          "periodo_foco_id": unidade["periodo_foco_id"], "janela_logica_id": unidade["janela_logica_id"],
+                          "trabalho": bloco["trabalho"], "original": bloco["original"]}
+                descricoes.append((tipo, origem, "trabalho", bloco["texto"]))
     campo = perfil["texto_documento"]
     texto = preparacao[campo]["texto"]
     descricoes.append(("documento", {"campo": f"preparacao.{campo}.texto", **_mapa(preparacao, 0, len(texto), campo)}, campo, texto))
@@ -366,10 +383,14 @@ def validar_atual(registro):
         alvo = rep["artefato_id"]
         if len(componentes) == 1:
             exigir(rep["metodo"] == "direto" and alvo == componentes[0], "Vetor direto divergente.")
+        elif analista:
+            exigir(rep["metodo"] == "fragmentado" and alvo is None,
+                   "Consulta longa do analista deve preservar fragmentos independentes.")
         else:
             exigir(rep["metodo"] == "agregado" and por_id[alvo].get("derivacao") == {
                 "metodo": perfil["agregacao"], "versao": "1.0.0", "componentes_ids": componentes, "pesos": pesos}, "Agregação difere dos fragmentos.")
-        usados.add(alvo)
+        if alvo is not None:
+            usados.add(alvo)
     exigir(usados == set(por_id), "Artefatos órfãos ou omitidos.")
     validacao = registro["validacao"]
     exigir(validacao.get("pronto") is True and validacao.get("estado") == "concluida"

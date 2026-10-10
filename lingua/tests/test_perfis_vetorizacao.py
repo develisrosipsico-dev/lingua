@@ -17,11 +17,24 @@ class TestPerfisVetorizacao(unittest.TestCase):
 
     def test_perfis_distintos_papeis_e_copias(self):
         perfis = listar_perfis()
-        self.assertEqual(len(perfis), 4)
+        self.assertEqual(len(perfis), 5)
         self.assertEqual(carregar_perfil('e5_consulta')['prefixo'], 'query: ')
         self.assertEqual(carregar_perfil('e5_conteudo')['prefixo'], 'passage: ')
         perfis[0]['modelo']['revisao'] = 'alterado'
         self.assertEqual(carregar_perfil('e5_consulta')['modelo']['revisao'], E5_REVISAO)
+
+    def test_analista_preserva_configuracao_da_busca_anterior(self):
+        perfil = carregar_perfil('e5_analista')
+        self.assertEqual(perfil['estrategia_consultas'], 'paragrafos_documento')
+        self.assertEqual(perfil['limite_tokens'], 504)
+        self.assertEqual(perfil['texto_documento'], 'original')
+        self.assertEqual(perfil['agregacao'], 'nenhuma')
+        self.assertEqual(perfil, validar_perfil(perfil))
+        for opcoes in ({'prefixo': 'passage: '}, {'limite_tokens': 512},
+                       {'texto_documento': 'trabalho'}, {'agregacao': 'media_simples'},
+                       {'formato_armazenamento': 'float16'}, {'pooling': 'cls'}):
+            with self.subTest(opcoes=opcoes), self.assertRaises(ErroPerfil):
+                carregar_perfil('e5_analista', opcoes=opcoes)
 
     def test_multimodel_sem_prefixos_ou_limites_e5_obrigatorios(self):
         perfil = carregar_perfil(opcoes={'modelo': 'organizacao/modelo-maior', 'revisao': 'a'*40,

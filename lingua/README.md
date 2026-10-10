@@ -207,12 +207,15 @@ a [especificação consolidada](docs/especificacao_etapa08.md), o
 históricos com [preservação literal](examples/unidades_contexto_literal.json) e
 [normalização opcional de CRLF](examples/unidades_contexto_normalizada.json).
 
-## Vetorizar períodos, contexto e documento
+## Vetorizar para o Agente Analista e outros consumidores
 
 Escolha uma execução contextual pronta e solicite a vetorização no painel
-da etapa 09. O perfil inicial usa `intfloat/multilingual-e5-large` para
-comparação entre textos; CPU é o dispositivo inicial. Modelo, perfil,
-dispositivo e políticas são configuráveis. GPUs são opcionais, e os
+da etapa 09. O perfil inicial **Agente Analista — parágrafos e relato inteiro**
+(`e5_analista`) usa `intfloat/multilingual-e5-large` com `query: ` e produz
+vetores dos dois parágrafos originais e do relato inteiro. Exige dois parágrafos
+e até 400 palavras. CPU é o dispositivo inicial. Outros perfis continuam
+produzindo períodos, janelas contextuais e documento, com modelo e políticas
+configuráveis. GPUs são opcionais, e os
 experimentos de modelos diferentes conservam seus próprios resultados.
 
 A inferência usa um trabalho acompanhado por progresso e diagnóstico.
@@ -235,8 +238,10 @@ pesos automaticamente; as etapas 01–08 continuam usando suas dependências
 existentes. Depois de instalar os recursos, a inferência funciona localmente.
 
 A entrada é enviada integralmente quando cabe no limite efetivo do modelo.
-Quando necessário, fragmentos literais preservam cobertura e intervalos;
-a representação agregada registra componentes e fórmula. Perfis diferentes
+No perfil do Analista, o orçamento é de 504 tokens, contando prefixo e tokens
+especiais. Entradas maiores geram recortes literais independentes, sem vetor
+médio nem truncamento. Nos demais perfis, fragmentos preservam cobertura e
+intervalos, e a representação agregada registra componentes e fórmula. Perfis diferentes
 não são considerados automaticamente comparáveis. O perfil histórico do
 `embed.py` precisa ser solicitado explicitamente e não restringe os demais
 modelos. Veja [arquitetura, perfis, configuração, instalação e API HTTP](docs/vetorizacao.md).
@@ -260,10 +265,13 @@ git pull --ff-only origin organizacao/projetos-20261010
 ```
 
 1. Abra <http://127.0.0.1:5001>, selecione o documento e conclua a etapa
-   **Contexto**. Na aba **Vetores**, escolha o perfil e clique em
+   **Contexto**. Na aba **Vetores**, mantenha o perfil **Agente Analista —
+   parágrafos e relato inteiro** para alimentar o agente e clique em
    **Gerar notebook para o Colab**. O navegador baixa um arquivo `.ipynb`.
 2. Abra <https://colab.research.google.com> e use **Arquivo → Fazer upload de notebook**
    para enviar o arquivo baixado.
+   Depois de atualizar o projeto, gere um novo notebook: notebooks anteriores
+   mantêm o código que foi incorporado quando foram baixados.
 3. Se desejar GPU, escolha **Ambiente de execução → Alterar tipo de ambiente
    de execução** antes de executar. A GPU é opcional: a configuração `auto`
    utiliza uma GPU disponível ou CPU. O lote pode ser reduzido na célula de

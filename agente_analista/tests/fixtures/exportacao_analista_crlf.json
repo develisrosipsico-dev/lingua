@@ -1,0 +1,5159 @@
+{
+  "analise_id": "analise-fixture-07",
+  "anotacao_id": "anotacao-fixture-07",
+  "artefatos": [
+    {
+      "chave_cache": "e5f70b3516723e2d4064ca160a2693c487db71cf2895eae43cc7eea8108d636d",
+      "configuracao_sha256": "8a512562f89dbb1a8773a0df31dc0aa93a60583f1f3a289ef445ce65f91414fc",
+      "dimensao": 3,
+      "entrada": {
+        "attention_mask": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "input_ids": [
+          1,
+          123,
+          127,
+          111,
+          124,
+          131,
+          68,
+          42,
+          203,
+          124,
+          128,
+          121,
+          124,
+          111,
+          19,
+          128,
+          111,
+          124,
+          110,
+          111,
+          56,
+          42,
+          42,
+          77,
+          107,
+          125,
+          107,
+          42,
+          107,
+          132,
+          127,
+          118,
+          43,
+          42,
+          19,
+          42,
+          77,
+          243,
+          127,
+          56,
+          2
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            5,
+            6
+          ],
+          [
+            6,
+            7
+          ],
+          [
+            7,
+            8
+          ],
+          [
+            8,
+            9
+          ],
+          [
+            9,
+            10
+          ],
+          [
+            10,
+            11
+          ],
+          [
+            11,
+            12
+          ],
+          [
+            12,
+            13
+          ],
+          [
+            13,
+            14
+          ],
+          [
+            14,
+            15
+          ],
+          [
+            15,
+            16
+          ],
+          [
+            16,
+            17
+          ],
+          [
+            17,
+            18
+          ],
+          [
+            18,
+            19
+          ],
+          [
+            19,
+            20
+          ],
+          [
+            20,
+            21
+          ],
+          [
+            21,
+            22
+          ],
+          [
+            22,
+            23
+          ],
+          [
+            23,
+            24
+          ],
+          [
+            24,
+            25
+          ],
+          [
+            25,
+            26
+          ],
+          [
+            26,
+            27
+          ],
+          [
+            27,
+            28
+          ],
+          [
+            28,
+            29
+          ],
+          [
+            29,
+            30
+          ],
+          [
+            30,
+            31
+          ],
+          [
+            31,
+            32
+          ],
+          [
+            32,
+            33
+          ],
+          [
+            33,
+            34
+          ],
+          [
+            34,
+            35
+          ],
+          [
+            35,
+            36
+          ],
+          [
+            36,
+            37
+          ],
+          [
+            37,
+            38
+          ],
+          [
+            38,
+            39
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "sha256": "bde9bd7e77a700fe240eb8a307f03b66f8c5259264d989b1b0bfce4ecfaa175f",
+        "sha256_tokens": "746b3d12ffa8da4c3ce3142840f089c8fa0d6d7906f201c146522d699101cd37",
+        "special_tokens_mask": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "texto": "query: Árvore\tverde.  Casa azul! \t Céu."
+      },
+      "formato": "float32",
+      "id": "sha256:2b9fc6bf555098ade1d49902ec88dbf802f892596f1f5b0737f7b4fba9e52434",
+      "normalizacao": "l2",
+      "ordem_bytes": "little-endian",
+      "sha256_bytes": "9b04aecf14eb7db5125436d4f3ca70b47075bfc4a89db31c84b048ca706d3034",
+      "valores": [
+        0.41695016622543335,
+        0.5646200180053711,
+        0.7122898697853088
+      ]
+    },
+    {
+      "chave_cache": "d291acebf534db8ef1a5ff845b514f9864a9d75835067631644fd900fa65066a",
+      "configuracao_sha256": "8a512562f89dbb1a8773a0df31dc0aa93a60583f1f3a289ef445ce65f91414fc",
+      "dimensao": 3,
+      "entrada": {
+        "attention_mask": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "input_ids": [
+          1,
+          123,
+          127,
+          111,
+          124,
+          131,
+          68,
+          42,
+          89,
+          127,
+          126,
+          124,
+          121,
+          56,
+          42,
+          42,
+          84,
+          121,
+          237,
+          121,
+          42,
+          125,
+          107,
+          115,
+          127,
+          56,
+          2
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            5,
+            6
+          ],
+          [
+            6,
+            7
+          ],
+          [
+            7,
+            8
+          ],
+          [
+            8,
+            9
+          ],
+          [
+            9,
+            10
+          ],
+          [
+            10,
+            11
+          ],
+          [
+            11,
+            12
+          ],
+          [
+            12,
+            13
+          ],
+          [
+            13,
+            14
+          ],
+          [
+            14,
+            15
+          ],
+          [
+            15,
+            16
+          ],
+          [
+            16,
+            17
+          ],
+          [
+            17,
+            18
+          ],
+          [
+            18,
+            19
+          ],
+          [
+            19,
+            20
+          ],
+          [
+            20,
+            21
+          ],
+          [
+            21,
+            22
+          ],
+          [
+            22,
+            23
+          ],
+          [
+            23,
+            24
+          ],
+          [
+            24,
+            25
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "sha256": "a662c6a3adbc4cf70d638b730b301ba80e9915db2285a868df68a64193b6ee3a",
+        "sha256_tokens": "d4696fc558fa8957f07321991c3e153be5e78272ca37b6ca69d355230424efc4",
+        "special_tokens_mask": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "texto": "query: Outro.  João saiu."
+      },
+      "formato": "float32",
+      "id": "sha256:99913b50ff5f07bf981bf2eb4de3f413639fb237650bc74b66e477539fbd7e34",
+      "normalizacao": "l2",
+      "ordem_bytes": "little-endian",
+      "sha256_bytes": "e5f6f6e7877b0a9a8e2431cd2c81cfb770d34a2cff3c41ce6ca7c4d27c2b4348",
+      "valores": [
+        0.2580309510231018,
+        0.5321888327598572,
+        0.8063467144966125
+      ]
+    },
+    {
+      "chave_cache": "6e7de4c5620e180c93132acc584ea919db9330552acdbcfeb4382a6b7728198e",
+      "configuracao_sha256": "8a512562f89dbb1a8773a0df31dc0aa93a60583f1f3a289ef445ce65f91414fc",
+      "dimensao": 3,
+      "entrada": {
+        "attention_mask": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "input_ids": [
+          1,
+          123,
+          127,
+          111,
+          124,
+          131,
+          68,
+          42,
+          42,
+          42,
+          203,
+          124,
+          128,
+          121,
+          124,
+          111,
+          19,
+          128,
+          111,
+          124,
+          110,
+          111,
+          56,
+          42,
+          42,
+          77,
+          107,
+          125,
+          107,
+          42,
+          107,
+          132,
+          127,
+          118,
+          43,
+          42,
+          19,
+          42,
+          77,
+          243,
+          127,
+          56,
+          23,
+          20,
+          23,
+          20,
+          89,
+          127,
+          126,
+          124,
+          121,
+          56,
+          42,
+          42,
+          84,
+          121,
+          237,
+          121,
+          42,
+          125,
+          107,
+          115,
+          127,
+          56,
+          42,
+          42,
+          2
+        ],
+        "offsets": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            5,
+            6
+          ],
+          [
+            6,
+            7
+          ],
+          [
+            7,
+            8
+          ],
+          [
+            8,
+            9
+          ],
+          [
+            9,
+            10
+          ],
+          [
+            10,
+            11
+          ],
+          [
+            11,
+            12
+          ],
+          [
+            12,
+            13
+          ],
+          [
+            13,
+            14
+          ],
+          [
+            14,
+            15
+          ],
+          [
+            15,
+            16
+          ],
+          [
+            16,
+            17
+          ],
+          [
+            17,
+            18
+          ],
+          [
+            18,
+            19
+          ],
+          [
+            19,
+            20
+          ],
+          [
+            20,
+            21
+          ],
+          [
+            21,
+            22
+          ],
+          [
+            22,
+            23
+          ],
+          [
+            23,
+            24
+          ],
+          [
+            24,
+            25
+          ],
+          [
+            25,
+            26
+          ],
+          [
+            26,
+            27
+          ],
+          [
+            27,
+            28
+          ],
+          [
+            28,
+            29
+          ],
+          [
+            29,
+            30
+          ],
+          [
+            30,
+            31
+          ],
+          [
+            31,
+            32
+          ],
+          [
+            32,
+            33
+          ],
+          [
+            33,
+            34
+          ],
+          [
+            34,
+            35
+          ],
+          [
+            35,
+            36
+          ],
+          [
+            36,
+            37
+          ],
+          [
+            37,
+            38
+          ],
+          [
+            38,
+            39
+          ],
+          [
+            39,
+            40
+          ],
+          [
+            40,
+            41
+          ],
+          [
+            41,
+            42
+          ],
+          [
+            42,
+            43
+          ],
+          [
+            43,
+            44
+          ],
+          [
+            44,
+            45
+          ],
+          [
+            45,
+            46
+          ],
+          [
+            46,
+            47
+          ],
+          [
+            47,
+            48
+          ],
+          [
+            48,
+            49
+          ],
+          [
+            49,
+            50
+          ],
+          [
+            50,
+            51
+          ],
+          [
+            51,
+            52
+          ],
+          [
+            52,
+            53
+          ],
+          [
+            53,
+            54
+          ],
+          [
+            54,
+            55
+          ],
+          [
+            55,
+            56
+          ],
+          [
+            56,
+            57
+          ],
+          [
+            57,
+            58
+          ],
+          [
+            58,
+            59
+          ],
+          [
+            59,
+            60
+          ],
+          [
+            60,
+            61
+          ],
+          [
+            61,
+            62
+          ],
+          [
+            62,
+            63
+          ],
+          [
+            63,
+            64
+          ],
+          [
+            64,
+            65
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "sha256": "caf2281fabe9d2264655c18365fce5f772ec3832338a1685a46c4578a47d668c",
+        "sha256_tokens": "8e158366fca89418bba3d77f8fa43073774b4ae9bf26fa0c9e474be47e448d30",
+        "special_tokens_mask": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "texto": "query:   Árvore\tverde.  Casa azul! \t Céu.\r\n\r\nOutro.  João saiu.  "
+      },
+      "formato": "float32",
+      "id": "sha256:e61fa440d644a5c033f3912524fee9446ba44b2ffb85e96f844678fd9282286e",
+      "normalizacao": "l2",
+      "ordem_bytes": "little-endian",
+      "sha256_bytes": "b5bd0449af50b3c56614889aedb0aae3ab2e5718bb06730be952a994bd68c7d6",
+      "valores": [
+        0.9762018322944641,
+        0.02270236797630787,
+        0.21567249298095703
+      ]
+    }
+  ],
+  "configuracao_sha256": "8a512562f89dbb1a8773a0df31dc0aa93a60583f1f3a289ef445ce65f91414fc",
+  "contexto": {
+    "analise_id": "analise-fixture-07",
+    "anotacao_id": "anotacao-fixture-07",
+    "configuracao": {
+      "atravessar_paragrafos": false,
+      "raio_anterior": 1,
+      "raio_seguinte": 1
+    },
+    "coordenadas": {
+      "base": 0,
+      "fim_exclusivo": true,
+      "unidade": "pontos_de_codigo_unicode"
+    },
+    "documento_id": "documento-fixture-07",
+    "etapa": "08_unidades_contexto",
+    "execucao_id": "contexto-importacao-fixture",
+    "politica": {
+      "atravessar_paragrafos": false,
+      "identificacao": "janela_periodos_consecutivos",
+      "raio_anterior": 1,
+      "raio_seguinte": 1,
+      "versao": "1.0.0"
+    },
+    "preparacao_id": "preparacao-fixture-07",
+    "processamento": {
+      "ferramenta": "biblioteca_padrao",
+      "identidade_logica": {
+        "algoritmo": "sha256",
+        "serializacao": "json_chaves_ordenadas_separadores_compactos_unicode_utf8",
+        "versao": "1.0.0"
+      },
+      "integridade": {
+        "algoritmo": "sha256",
+        "codificacao": "utf-8"
+      },
+      "limites_recursos": {
+        "max_caracteres_textuais": 16777216,
+        "max_referencias": 500000,
+        "max_referencias_periodos": 100000,
+        "max_unidades": 10000
+      },
+      "modelo_reexecutado": false,
+      "modulo": {
+        "nome": "unidades_contexto",
+        "versao": "1.0.0"
+      },
+      "natureza": "organizacao_de_contexto_sem_inferencia"
+    },
+    "registrado_em": "2026-10-08T09:30:00-03:00",
+    "regras": {
+      "analise": {
+        "analise_id": "analise-fixture-07",
+        "anotacao": {
+          "anotacao_id": "anotacao-fixture-07",
+          "anotacoes_tokens": [
+            {
+              "campos_nao_resolvidos": [
+                "tag"
+              ],
+              "lema": "árvore",
+              "morfologia": {},
+              "origem": {
+                "componentes": [
+                  "tok2vec",
+                  "morphologizer",
+                  "lemmatizer"
+                ],
+                "ferramenta": "spacy",
+                "modelo": {
+                  "nome": "pt_core_news_sm",
+                  "versao": "3.8.0"
+                },
+                "versao": "3.8.16"
+              },
+              "original": {
+                "fim": 8,
+                "inicio": 2
+              },
+              "paragrafo_id": "segmentacao-fixture-07:paragrafo:0",
+              "periodo_id": "segmentacao-fixture-07:periodo:0",
+              "pos": "NOUN",
+              "tag": null,
+              "texto": "Árvore",
+              "token_id": "segmentacao-fixture-07:token:0",
+              "trabalho": {
+                "fim": 8,
+                "inicio": 2
+              }
+            },
+            {
+              "campos_nao_resolvidos": [
+                "tag"
+              ],
+              "lema": "verde",
+              "morfologia": {},
+              "origem": {
+                "componentes": [
+                  "tok2vec",
+                  "morphologizer",
+                  "lemmatizer"
+                ],
+                "ferramenta": "spacy",
+                "modelo": {
+                  "nome": "pt_core_news_sm",
+                  "versao": "3.8.0"
+                },
+                "versao": "3.8.16"
+              },
+              "original": {
+                "fim": 14,
+                "inicio": 9
+              },
+              "paragrafo_id": "segmentacao-fixture-07:paragrafo:0",
+              "periodo_id": "segmentacao-fixture-07:periodo:0",
+              "pos": "ADJ",
+              "tag": null,
+              "texto": "verde",
+              "token_id": "segmentacao-fixture-07:token:1",
+              "trabalho": {
+                "fim": 14,
+                "inicio": 9
+              }
+            },
+            {
+              "campos_nao_resolvidos": [
+                "tag"
+              ],
+              "lema": ".",
+              "morfologia": {},
+              "origem": {
+                "componentes": [
+                  "tok2vec",
+                  "morphologizer",
+                  "lemmatizer"
+                ],
+                "ferramenta": "spacy",
+                "modelo": {
+                  "nome": "pt_core_news_sm",
+                  "versao": "3.8.0"
+                },
+                "versao": "3.8.16"
+              },
+              "original": {
+                "fim": 15,
+                "inicio": 14
+              },
+              "paragrafo_id": "segmentacao-fixture-07:paragrafo:0",
+              "periodo_id": "segmentacao-fixture-07:periodo:0",
+              "pos": "PUNCT",
+              "tag": null,
+              "texto": ".",
+              "token_id": "segmentacao-fixture-07:token:2",
+              "trabalho": {
+                "fim": 15,
+                "inicio": 14
+              }
+            },
+            {
+              "campos_nao_resolvidos": [
+                "tag"
+              ],
+              "lema": "casa",
+              "morfologia": {},
+              "origem": {
+                "componentes": [
+                  "tok2vec",
+                  "morphologizer",
+                  "lemmatizer"
+                ],
+                "ferramenta": "spacy",
+                "modelo": {
+                  "nome": "pt_core_news_sm",
+                  "versao": "3.8.0"
+                },
+                "versao": "3.8.16"
+              },
+              "original": {
+                "fim": 21,
+                "inicio": 17
+              },
+              "paragrafo_id": "segmentacao-fixture-07:paragrafo:0",
+              "periodo_id": "segmentacao-fixture-07:periodo:1",
+              "pos": "NOUN",
+              "tag": null,
+              "texto": "Casa",
+              "token_id": "segmentacao-fixture-07:token:3",
+              "trabalho": {
+                "fim": 21,
+                "inicio": 17
+              }
+            },
+            {
+              "campos_nao_resolvidos": [
+                "tag"
+              ],
+              "lema": "azul",
+              "morfologia": {},
+              "origem": {
+                "componentes": [
+                  "tok2vec",
+                  "morphologizer",
+                  "lemmatizer"
+                ],
+                "ferramenta": "spacy",
+                "modelo": {
+                  "nome": "pt_core_news_sm",
+                  "versao": "3.8.0"
+                },
+                "versao": "3.8.16"
+              },
+              "original": {
+                "fim": 26,
+                "inicio": 22
+              },
+              "paragrafo_id": "segmentacao-fixture-07:paragrafo:0",
+              "periodo_id": "segmentacao-fixture-07:periodo:1",
+              "pos": "ADJ",
+              "tag": null,
+              "texto": "azul",
+              "token_id": "segmentacao-fixture-07:token:4",
+              "trabalho": {
+                "fim": 26,
+                "inicio": 22
+              }
+            },
+            {
+              "campos_nao_resolvidos": [
+                "tag"
+              ],
+              "lema": "!",
+              "morfologia": {},
+              "origem": {
+                "componentes": [
+                  "tok2vec",
+                  "morphologizer",
+                  "lemmatizer"
+                ],
+                "ferramenta": "spacy",
+                "modelo": {
+                  "nome": "pt_core_news_sm",
+                  "versao": "3.8.0"
+                },
+                "versao": "3.8.16"
+              },
+              "original": {
+                "fim": 27,
+                "inicio": 26
+              },
+              "paragrafo_id": "segmentacao-fixture-07:paragrafo:0",
+              "periodo_id": "segmentacao-fixture-07:periodo:1",
+              "pos": "PUNCT",
+              "tag": null,
+              "texto": "!",
+              "token_id": "segmentacao-fixture-07:token:5",
+              "trabalho": {
+                "fim": 27,
+                "inicio": 26
+              }
+            },
+            {
+              "campos_nao_resolvidos": [
+                "tag"
+              ],
+              "lema": "céu",
+              "morfologia": {},
+              "origem": {
+                "componentes": [
+                  "tok2vec",
+                  "morphologizer",
+                  "lemmatizer"
+                ],
+                "ferramenta": "spacy",
+                "modelo": {
+                  "nome": "pt_core_news_sm",
+                  "versao": "3.8.0"
+                },
+                "versao": "3.8.16"
+              },
+              "original": {
+                "fim": 33,
+                "inicio": 30
+              },
+              "paragrafo_id": "segmentacao-fixture-07:paragrafo:0",
+              "periodo_id": "segmentacao-fixture-07:periodo:2",
+              "pos": "NOUN",
+              "tag": null,
+              "texto": "Céu",
+              "token_id": "segmentacao-fixture-07:token:6",
+              "trabalho": {
+                "fim": 33,
+                "inicio": 30
+              }
+            },
+            {
+              "campos_nao_resolvidos": [
+                "tag"
+              ],
+              "lema": ".",
+              "morfologia": {},
+              "origem": {
+                "componentes": [
+                  "tok2vec",
+                  "morphologizer",
+                  "lemmatizer"
+                ],
+                "ferramenta": "spacy",
+                "modelo": {
+                  "nome": "pt_core_news_sm",
+                  "versao": "3.8.0"
+                },
+                "versao": "3.8.16"
+              },
+              "original": {
+                "fim": 34,
+                "inicio": 33
+              },
+              "paragrafo_id": "segmentacao-fixture-07:paragrafo:0",
+              "periodo_id": "segmentacao-fixture-07:periodo:2",
+              "pos": "PUNCT",
+              "tag": null,
+              "texto": ".",
+              "token_id": "segmentacao-fixture-07:token:7",
+              "trabalho": {
+                "fim": 34,
+                "inicio": 33
+              }
+            },
+            {
+              "campos_nao_resolvidos": [
+                "tag"
+              ],
+              "lema": "outro",
+              "morfologia": {},
+              "origem": {
+                "componentes": [
+                  "tok2vec",
+                  "morphologizer",
+                  "lemmatizer"
+                ],
+                "ferramenta": "spacy",
+                "modelo": {
+                  "nome": "pt_core_news_sm",
+                  "versao": "3.8.0"
+                },
+                "versao": "3.8.16"
+              },
+              "original": {
+                "fim": 43,
+                "inicio": 38
+              },
+              "paragrafo_id": "segmentacao-fixture-07:paragrafo:1",
+              "periodo_id": "segmentacao-fixture-07:periodo:3",
+              "pos": "PRON",
+              "tag": null,
+              "texto": "Outro",
+              "token_id": "segmentacao-fixture-07:token:8",
+              "trabalho": {
+                "fim": 41,
+                "inicio": 36
+              }
+            },
+            {
+              "campos_nao_resolvidos": [
+                "tag"
+              ],
+              "lema": ".",
+              "morfologia": {},
+              "origem": {
+                "componentes": [
+                  "tok2vec",
+                  "morphologizer",
+                  "lemmatizer"
+                ],
+                "ferramenta": "spacy",
+                "modelo": {
+                  "nome": "pt_core_news_sm",
+                  "versao": "3.8.0"
+                },
+                "versao": "3.8.16"
+              },
+              "original": {
+                "fim": 44,
+                "inicio": 43
+              },
+              "paragrafo_id": "segmentacao-fixture-07:paragrafo:1",
+              "periodo_id": "segmentacao-fixture-07:periodo:3",
+              "pos": "PUNCT",
+              "tag": null,
+              "texto": ".",
+              "token_id": "segmentacao-fixture-07:token:9",
+              "trabalho": {
+                "fim": 42,
+                "inicio": 41
+              }
+            },
+            {
+              "campos_nao_resolvidos": [
+                "tag"
+              ],
+              "lema": "João",
+              "morfologia": {},
+              "origem": {
+                "componentes": [
+                  "tok2vec",
+                  "morphologizer",
+                  "lemmatizer"
+                ],
+                "ferramenta": "spacy",
+                "modelo": {
+                  "nome": "pt_core_news_sm",
+                  "versao": "3.8.0"
+                },
+                "versao": "3.8.16"
+              },
+              "original": {
+                "fim": 50,
+                "inicio": 46
+              },
+              "paragrafo_id": "segmentacao-fixture-07:paragrafo:1",
+              "periodo_id": "segmentacao-fixture-07:periodo:4",
+              "pos": "PROPN",
+              "tag": null,
+              "texto": "João",
+              "token_id": "segmentacao-fixture-07:token:10",
+              "trabalho": {
+                "fim": 48,
+                "inicio": 44
+              }
+            },
+            {
+              "campos_nao_resolvidos": [
+                "tag"
+              ],
+              "lema": "sair",
+              "morfologia": {
+                "Mood": "Ind",
+                "Tense": "Past",
+                "VerbForm": "Fin"
+              },
+              "origem": {
+                "componentes": [
+                  "tok2vec",
+                  "morphologizer",
+                  "lemmatizer"
+                ],
+                "ferramenta": "spacy",
+                "modelo": {
+                  "nome": "pt_core_news_sm",
+                  "versao": "3.8.0"
+                },
+                "versao": "3.8.16"
+              },
+              "original": {
+                "fim": 55,
+                "inicio": 51
+              },
+              "paragrafo_id": "segmentacao-fixture-07:paragrafo:1",
+              "periodo_id": "segmentacao-fixture-07:periodo:4",
+              "pos": "VERB",
+              "tag": null,
+              "texto": "saiu",
+              "token_id": "segmentacao-fixture-07:token:11",
+              "trabalho": {
+                "fim": 53,
+                "inicio": 49
+              }
+            },
+            {
+              "campos_nao_resolvidos": [
+                "tag"
+              ],
+              "lema": ".",
+              "morfologia": {},
+              "origem": {
+                "componentes": [
+                  "tok2vec",
+                  "morphologizer",
+                  "lemmatizer"
+                ],
+                "ferramenta": "spacy",
+                "modelo": {
+                  "nome": "pt_core_news_sm",
+                  "versao": "3.8.0"
+                },
+                "versao": "3.8.16"
+              },
+              "original": {
+                "fim": 56,
+                "inicio": 55
+              },
+              "paragrafo_id": "segmentacao-fixture-07:paragrafo:1",
+              "periodo_id": "segmentacao-fixture-07:periodo:4",
+              "pos": "PUNCT",
+              "tag": null,
+              "texto": ".",
+              "token_id": "segmentacao-fixture-07:token:12",
+              "trabalho": {
+                "fim": 54,
+                "inicio": 53
+              }
+            }
+          ],
+          "coordenadas": {
+            "base": 0,
+            "fim_exclusivo": true,
+            "unidade": "pontos_de_codigo_unicode"
+          },
+          "documento_id": "documento-fixture-07",
+          "etapa": "05_morfologia_vocabulario",
+          "preparacao_id": "preparacao-fixture-07",
+          "processamento": {
+            "componentes_desativados": [
+              "parser",
+              "senter",
+              "attribute_ruler",
+              "ner"
+            ],
+            "componentes_disponiveis": [
+              "tok2vec",
+              "morphologizer",
+              "parser",
+              "lemmatizer",
+              "senter",
+              "attribute_ruler",
+              "ner"
+            ],
+            "componentes_executados": [
+              "tok2vec",
+              "morphologizer",
+              "lemmatizer"
+            ],
+            "configuracoes": {
+              "embeddings_exportados": false,
+              "fronteiras_periodos": "herdadas_da_etapa_04",
+              "max_caracteres": 50000,
+              "max_tokens_internos": 10000,
+              "tokenizador": {
+                "ajustes": [],
+                "identificacao": "spacy.blank(pt)",
+                "versao_execucao": "3.8.16",
+                "versao_origem": "3.8.16"
+              },
+              "vocabulario": {
+                "pos_excluidas": [
+                  "PUNCT",
+                  "SYM"
+                ],
+                "remover_stopwords": false
+              }
+            },
+            "ferramenta": "spacy",
+            "idioma": "pt",
+            "modelo": {
+              "compatibilidade_spacy": ">=3.8.0,<3.9.0",
+              "nome": "pt_core_news_sm",
+              "versao": "3.8.0"
+            },
+            "versao": "3.8.16"
+          },
+          "registrado_em": "2026-10-07T18:20:00-03:00",
+          "schema_version": "1.0.0",
+          "segmentacao": {
+            "coordenadas": {
+              "base": 0,
+              "fim_exclusivo": true,
+              "unidade": "pontos_de_codigo_unicode"
+            },
+            "documento_id": "documento-fixture-07",
+            "etapa": "04_tokenizacao_segmentacao",
+            "paragrafos": [
+              {
+                "id": "segmentacao-fixture-07:paragrafo:0",
+                "ordem": 0,
+                "original": {
+                  "fim": 34,
+                  "inicio": 2
+                },
+                "periodos": [
+                  "segmentacao-fixture-07:periodo:0",
+                  "segmentacao-fixture-07:periodo:1",
+                  "segmentacao-fixture-07:periodo:2"
+                ],
+                "texto": "Árvore\tverde.  Casa azul! \t Céu.",
+                "trabalho": {
+                  "fim": 34,
+                  "inicio": 2
+                }
+              },
+              {
+                "id": "segmentacao-fixture-07:paragrafo:1",
+                "ordem": 1,
+                "original": {
+                  "fim": 56,
+                  "inicio": 38
+                },
+                "periodos": [
+                  "segmentacao-fixture-07:periodo:3",
+                  "segmentacao-fixture-07:periodo:4"
+                ],
+                "texto": "Outro.  João saiu.",
+                "trabalho": {
+                  "fim": 54,
+                  "inicio": 36
+                }
+              }
+            ],
+            "periodos": [
+              {
+                "id": "segmentacao-fixture-07:periodo:0",
+                "ordem": 0,
+                "original": {
+                  "fim": 15,
+                  "inicio": 2
+                },
+                "paragrafo_id": "segmentacao-fixture-07:paragrafo:0",
+                "regra_encerramento": "pontuacao_terminal",
+                "texto": "Árvore\tverde.",
+                "tokens": [
+                  "segmentacao-fixture-07:token:0",
+                  "segmentacao-fixture-07:token:1",
+                  "segmentacao-fixture-07:token:2"
+                ],
+                "trabalho": {
+                  "fim": 15,
+                  "inicio": 2
+                }
+              },
+              {
+                "id": "segmentacao-fixture-07:periodo:1",
+                "ordem": 1,
+                "original": {
+                  "fim": 27,
+                  "inicio": 17
+                },
+                "paragrafo_id": "segmentacao-fixture-07:paragrafo:0",
+                "regra_encerramento": "pontuacao_terminal",
+                "texto": "Casa azul!",
+                "tokens": [
+                  "segmentacao-fixture-07:token:3",
+                  "segmentacao-fixture-07:token:4",
+                  "segmentacao-fixture-07:token:5"
+                ],
+                "trabalho": {
+                  "fim": 27,
+                  "inicio": 17
+                }
+              },
+              {
+                "id": "segmentacao-fixture-07:periodo:2",
+                "ordem": 2,
+                "original": {
+                  "fim": 34,
+                  "inicio": 30
+                },
+                "paragrafo_id": "segmentacao-fixture-07:paragrafo:0",
+                "regra_encerramento": "pontuacao_terminal",
+                "texto": "Céu.",
+                "tokens": [
+                  "segmentacao-fixture-07:token:6",
+                  "segmentacao-fixture-07:token:7"
+                ],
+                "trabalho": {
+                  "fim": 34,
+                  "inicio": 30
+                }
+              },
+              {
+                "id": "segmentacao-fixture-07:periodo:3",
+                "ordem": 3,
+                "original": {
+                  "fim": 44,
+                  "inicio": 38
+                },
+                "paragrafo_id": "segmentacao-fixture-07:paragrafo:1",
+                "regra_encerramento": "pontuacao_terminal",
+                "texto": "Outro.",
+                "tokens": [
+                  "segmentacao-fixture-07:token:8",
+                  "segmentacao-fixture-07:token:9"
+                ],
+                "trabalho": {
+                  "fim": 42,
+                  "inicio": 36
+                }
+              },
+              {
+                "id": "segmentacao-fixture-07:periodo:4",
+                "ordem": 4,
+                "original": {
+                  "fim": 56,
+                  "inicio": 46
+                },
+                "paragrafo_id": "segmentacao-fixture-07:paragrafo:1",
+                "regra_encerramento": "pontuacao_terminal",
+                "texto": "João saiu.",
+                "tokens": [
+                  "segmentacao-fixture-07:token:10",
+                  "segmentacao-fixture-07:token:11",
+                  "segmentacao-fixture-07:token:12"
+                ],
+                "trabalho": {
+                  "fim": 54,
+                  "inicio": 44
+                }
+              }
+            ],
+            "preparacao": {
+              "alteracoes": [
+                {
+                  "antes": "\r\n",
+                  "depois": "\n",
+                  "id": "preparacao-fixture-07:alteracao:1",
+                  "motivo": "Conversão técnica opcional de CRLF em LF solicitada pelo chamador.",
+                  "operacao": "crlf_para_lf",
+                  "original": {
+                    "fim": 36,
+                    "inicio": 34
+                  },
+                  "trabalho": {
+                    "fim": 35,
+                    "inicio": 34
+                  },
+                  "versao_regra": "1.0.0"
+                },
+                {
+                  "antes": "\r\n",
+                  "depois": "\n",
+                  "id": "preparacao-fixture-07:alteracao:2",
+                  "motivo": "Conversão técnica opcional de CRLF em LF solicitada pelo chamador.",
+                  "operacao": "crlf_para_lf",
+                  "original": {
+                    "fim": 38,
+                    "inicio": 36
+                  },
+                  "trabalho": {
+                    "fim": 36,
+                    "inicio": 35
+                  },
+                  "versao_regra": "1.0.0"
+                }
+              ],
+              "coordenadas": {
+                "base": 0,
+                "fim_exclusivo": true,
+                "unidade": "pontos_de_codigo_unicode"
+              },
+              "documento_id": "documento-fixture-07",
+              "mapa_trechos": [
+                {
+                  "alteracao_id": null,
+                  "original": {
+                    "fim": 34,
+                    "inicio": 0
+                  },
+                  "tipo": "copia",
+                  "trabalho": {
+                    "fim": 34,
+                    "inicio": 0
+                  }
+                },
+                {
+                  "alteracao_id": "preparacao-fixture-07:alteracao:1",
+                  "original": {
+                    "fim": 36,
+                    "inicio": 34
+                  },
+                  "tipo": "transformacao_tecnica",
+                  "trabalho": {
+                    "fim": 35,
+                    "inicio": 34
+                  }
+                },
+                {
+                  "alteracao_id": "preparacao-fixture-07:alteracao:2",
+                  "original": {
+                    "fim": 38,
+                    "inicio": 36
+                  },
+                  "tipo": "transformacao_tecnica",
+                  "trabalho": {
+                    "fim": 36,
+                    "inicio": 35
+                  }
+                },
+                {
+                  "alteracao_id": null,
+                  "original": {
+                    "fim": 58,
+                    "inicio": 38
+                  },
+                  "tipo": "copia",
+                  "trabalho": {
+                    "fim": 56,
+                    "inicio": 36
+                  }
+                }
+              ],
+              "metadados_origem": {
+                "referencia": "anotacao_manual",
+                "rotulos": [
+                  "independente"
+                ]
+              },
+              "original": {
+                "comprimento": 58,
+                "sha256": "1e0b3bafcd602425cafcea8051a839d9d243bfda0f48ec06c3c30e7836539482",
+                "texto": "  Árvore\tverde.  Casa azul! \t Céu.\r\n\r\nOutro.  João saiu.  ",
+                "versao": 1
+              },
+              "politica": {
+                "identificacao": "preservacao_literal",
+                "opcoes": {
+                  "normalizar_crlf": true
+                },
+                "versao": "1.0.0"
+              },
+              "preparacao_id": "preparacao-fixture-07",
+              "registrado_em": "2026-10-07T18:20:00-03:00",
+              "schema_version": "1.0.0",
+              "trabalho": {
+                "comprimento": 56,
+                "sha256": "c0ce4287242884e69643b15aa08b5c47c92144df8ff250b72682bf4d66342ef3",
+                "texto": "  Árvore\tverde.  Casa azul! \t Céu.\n\nOutro.  João saiu.  ",
+                "versao": 2
+              },
+              "validacao": {
+                "estado": "pronto_para_etapa_04",
+                "pronto_para_etapa_04": true,
+                "verificacoes": [
+                  "estrutura_json",
+                  "schema_identificadores_e_data",
+                  "metadados_origem",
+                  "versoes_comprimentos_e_hashes_utf8",
+                  "convencao_de_coordenadas",
+                  "politica_e_resultado_permitido",
+                  "limites_ordem_e_cobertura_dos_intervalos",
+                  "igualdade_dos_trechos_copiados",
+                  "transformacoes_e_alteracoes_correspondentes"
+                ]
+              }
+            },
+            "preparacao_id": "preparacao-fixture-07",
+            "processamento": {
+              "configuracoes": {
+                "abreviacoes_protegidas": [
+                  "Dr.",
+                  "Dra.",
+                  "Sr.",
+                  "Sra."
+                ],
+                "etc": "encerra_antes_de_proxima_palavra_com_inicial_maiuscula_ou_fim_paragrafo",
+                "fechamento_aspas_retas": "adjacente_a_pontuacao_terminal",
+                "limites_paragrafo": "primeiro_ao_ultimo_token_nao_espacial",
+                "max_caracteres": 2097152,
+                "paragrafos": "linhas_em_branco_lf_ou_crlf_com_espacos_ascii_ou_tabulacoes",
+                "reticencias": "nao_encerram_por_si",
+                "segmentador": "componente_proprio_sobre_tokens",
+                "separadores": "complemento_dos_intervalos_dos_tokens_nao_espaciais"
+              },
+              "ferramenta": "spacy",
+              "idioma": "pt",
+              "modelo": null,
+              "regras": {
+                "identificacao": "segmentacao_portugues_por_regras",
+                "versao": "1.0.0"
+              },
+              "tokenizador": {
+                "ajustes": [],
+                "identificacao": "spacy.blank(pt)",
+                "versao": "3.8.16"
+              },
+              "versao": "3.8.16"
+            },
+            "registrado_em": "2026-10-07T18:20:00-03:00",
+            "schema_version": "1.0.0",
+            "segmentacao_id": "segmentacao-fixture-07",
+            "separadores": [
+              {
+                "id": "segmentacao-fixture-07:separador:0",
+                "ordem": 0,
+                "original": {
+                  "fim": 2,
+                  "inicio": 0
+                },
+                "texto": "  ",
+                "trabalho": {
+                  "fim": 2,
+                  "inicio": 0
+                }
+              },
+              {
+                "id": "segmentacao-fixture-07:separador:1",
+                "ordem": 1,
+                "original": {
+                  "fim": 9,
+                  "inicio": 8
+                },
+                "texto": "\t",
+                "trabalho": {
+                  "fim": 9,
+                  "inicio": 8
+                }
+              },
+              {
+                "id": "segmentacao-fixture-07:separador:2",
+                "ordem": 2,
+                "original": {
+                  "fim": 17,
+                  "inicio": 15
+                },
+                "texto": "  ",
+                "trabalho": {
+                  "fim": 17,
+                  "inicio": 15
+                }
+              },
+              {
+                "id": "segmentacao-fixture-07:separador:3",
+                "ordem": 3,
+                "original": {
+                  "fim": 22,
+                  "inicio": 21
+                },
+                "texto": " ",
+                "trabalho": {
+                  "fim": 22,
+                  "inicio": 21
+                }
+              },
+              {
+                "id": "segmentacao-fixture-07:separador:4",
+                "ordem": 4,
+                "original": {
+                  "fim": 30,
+                  "inicio": 27
+                },
+                "texto": " \t ",
+                "trabalho": {
+                  "fim": 30,
+                  "inicio": 27
+                }
+              },
+              {
+                "id": "segmentacao-fixture-07:separador:5",
+                "ordem": 5,
+                "original": {
+                  "fim": 38,
+                  "inicio": 34
+                },
+                "texto": "\n\n",
+                "trabalho": {
+                  "fim": 36,
+                  "inicio": 34
+                }
+              },
+              {
+                "id": "segmentacao-fixture-07:separador:6",
+                "ordem": 6,
+                "original": {
+                  "fim": 46,
+                  "inicio": 44
+                },
+                "texto": "  ",
+                "trabalho": {
+                  "fim": 44,
+                  "inicio": 42
+                }
+              },
+              {
+                "id": "segmentacao-fixture-07:separador:7",
+                "ordem": 7,
+                "original": {
+                  "fim": 51,
+                  "inicio": 50
+                },
+                "texto": " ",
+                "trabalho": {
+                  "fim": 49,
+                  "inicio": 48
+                }
+              },
+              {
+                "id": "segmentacao-fixture-07:separador:8",
+                "ordem": 8,
+                "original": {
+                  "fim": 58,
+                  "inicio": 56
+                },
+                "texto": "  ",
+                "trabalho": {
+                  "fim": 56,
+                  "inicio": 54
+                }
+              }
+            ],
+            "tokens": [
+              {
+                "id": "segmentacao-fixture-07:token:0",
+                "ordem": 0,
+                "original": {
+                  "fim": 8,
+                  "inicio": 2
+                },
+                "paragrafo_id": "segmentacao-fixture-07:paragrafo:0",
+                "periodo_id": "segmentacao-fixture-07:periodo:0",
+                "texto": "Árvore",
+                "trabalho": {
+                  "fim": 8,
+                  "inicio": 2
+                }
+              },
+              {
+                "id": "segmentacao-fixture-07:token:1",
+                "ordem": 1,
+                "original": {
+                  "fim": 14,
+                  "inicio": 9
+                },
+                "paragrafo_id": "segmentacao-fixture-07:paragrafo:0",
+                "periodo_id": "segmentacao-fixture-07:periodo:0",
+                "texto": "verde",
+                "trabalho": {
+                  "fim": 14,
+                  "inicio": 9
+                }
+              },
+              {
+                "id": "segmentacao-fixture-07:token:2",
+                "ordem": 2,
+                "original": {
+                  "fim": 15,
+                  "inicio": 14
+                },
+                "paragrafo_id": "segmentacao-fixture-07:paragrafo:0",
+                "periodo_id": "segmentacao-fixture-07:periodo:0",
+                "texto": ".",
+                "trabalho": {
+                  "fim": 15,
+                  "inicio": 14
+                }
+              },
+              {
+                "id": "segmentacao-fixture-07:token:3",
+                "ordem": 3,
+                "original": {
+                  "fim": 21,
+                  "inicio": 17
+                },
+                "paragrafo_id": "segmentacao-fixture-07:paragrafo:0",
+                "periodo_id": "segmentacao-fixture-07:periodo:1",
+                "texto": "Casa",
+                "trabalho": {
+                  "fim": 21,
+                  "inicio": 17
+                }
+              },
+              {
+                "id": "segmentacao-fixture-07:token:4",
+                "ordem": 4,
+                "original": {
+                  "fim": 26,
+                  "inicio": 22
+                },
+                "paragrafo_id": "segmentacao-fixture-07:paragrafo:0",
+                "periodo_id": "segmentacao-fixture-07:periodo:1",
+                "texto": "azul",
+                "trabalho": {
+                  "fim": 26,
+                  "inicio": 22
+                }
+              },
+              {
+                "id": "segmentacao-fixture-07:token:5",
+                "ordem": 5,
+                "original": {
+                  "fim": 27,
+                  "inicio": 26
+                },
+                "paragrafo_id": "segmentacao-fixture-07:paragrafo:0",
+                "periodo_id": "segmentacao-fixture-07:periodo:1",
+                "texto": "!",
+                "trabalho": {
+                  "fim": 27,
+                  "inicio": 26
+                }
+              },
+              {
+                "id": "segmentacao-fixture-07:token:6",
+                "ordem": 6,
+                "original": {
+                  "fim": 33,
+                  "inicio": 30
+                },
+                "paragrafo_id": "segmentacao-fixture-07:paragrafo:0",
+                "periodo_id": "segmentacao-fixture-07:periodo:2",
+                "texto": "Céu",
+                "trabalho": {
+                  "fim": 33,
+                  "inicio": 30
+                }
+              },
+              {
+                "id": "segmentacao-fixture-07:token:7",
+                "ordem": 7,
+                "original": {
+                  "fim": 34,
+                  "inicio": 33
+                },
+                "paragrafo_id": "segmentacao-fixture-07:paragrafo:0",
+                "periodo_id": "segmentacao-fixture-07:periodo:2",
+                "texto": ".",
+                "trabalho": {
+                  "fim": 34,
+                  "inicio": 33
+                }
+              },
+              {
+                "id": "segmentacao-fixture-07:token:8",
+                "ordem": 8,
+                "original": {
+                  "fim": 43,
+                  "inicio": 38
+                },
+                "paragrafo_id": "segmentacao-fixture-07:paragrafo:1",
+                "periodo_id": "segmentacao-fixture-07:periodo:3",
+                "texto": "Outro",
+                "trabalho": {
+                  "fim": 41,
+                  "inicio": 36
+                }
+              },
+              {
+                "id": "segmentacao-fixture-07:token:9",
+                "ordem": 9,
+                "original": {
+                  "fim": 44,
+                  "inicio": 43
+                },
+                "paragrafo_id": "segmentacao-fixture-07:paragrafo:1",
+                "periodo_id": "segmentacao-fixture-07:periodo:3",
+                "texto": ".",
+                "trabalho": {
+                  "fim": 42,
+                  "inicio": 41
+                }
+              },
+              {
+                "id": "segmentacao-fixture-07:token:10",
+                "ordem": 10,
+                "original": {
+                  "fim": 50,
+                  "inicio": 46
+                },
+                "paragrafo_id": "segmentacao-fixture-07:paragrafo:1",
+                "periodo_id": "segmentacao-fixture-07:periodo:4",
+                "texto": "João",
+                "trabalho": {
+                  "fim": 48,
+                  "inicio": 44
+                }
+              },
+              {
+                "id": "segmentacao-fixture-07:token:11",
+                "ordem": 11,
+                "original": {
+                  "fim": 55,
+                  "inicio": 51
+                },
+                "paragrafo_id": "segmentacao-fixture-07:paragrafo:1",
+                "periodo_id": "segmentacao-fixture-07:periodo:4",
+                "texto": "saiu",
+                "trabalho": {
+                  "fim": 53,
+                  "inicio": 49
+                }
+              },
+              {
+                "id": "segmentacao-fixture-07:token:12",
+                "ordem": 12,
+                "original": {
+                  "fim": 56,
+                  "inicio": 55
+                },
+                "paragrafo_id": "segmentacao-fixture-07:paragrafo:1",
+                "periodo_id": "segmentacao-fixture-07:periodo:4",
+                "texto": ".",
+                "trabalho": {
+                  "fim": 54,
+                  "inicio": 53
+                }
+              }
+            ],
+            "validacao": {
+              "estado": "pronto_para_etapa_05",
+              "pronto_para_etapa_05": true,
+              "verificacoes": [
+                "estrutura_json_identificadores_e_data",
+                "preparacao_textos_hashes_e_mapa",
+                "coordenadas_e_processamento",
+                "limites_ordem_identificadores_e_textos_exatos",
+                "reconstrucao_por_tokens_e_separadores",
+                "paragrafos_e_periodos_por_regras",
+                "relacoes_e_contencao_das_unidades",
+                "correspondencia_ao_original"
+              ]
+            }
+          },
+          "segmentacao_id": "segmentacao-fixture-07",
+          "validacao": {
+            "cobertura": {
+              "tokens_anotados": 13,
+              "tokens_excluidos_vocabulario": 5,
+              "tokens_no_vocabulario": 8,
+              "tokens_total": 13
+            },
+            "estado": "pronto_para_etapa_06",
+            "pendencias": [
+              {
+                "campo": "tag",
+                "motivo": "atributo_nao_produzido",
+                "token_id": "segmentacao-fixture-07:token:0"
+              },
+              {
+                "campo": "tag",
+                "motivo": "atributo_nao_produzido",
+                "token_id": "segmentacao-fixture-07:token:1"
+              },
+              {
+                "campo": "tag",
+                "motivo": "atributo_nao_produzido",
+                "token_id": "segmentacao-fixture-07:token:2"
+              },
+              {
+                "campo": "tag",
+                "motivo": "atributo_nao_produzido",
+                "token_id": "segmentacao-fixture-07:token:3"
+              },
+              {
+                "campo": "tag",
+                "motivo": "atributo_nao_produzido",
+                "token_id": "segmentacao-fixture-07:token:4"
+              },
+              {
+                "campo": "tag",
+                "motivo": "atributo_nao_produzido",
+                "token_id": "segmentacao-fixture-07:token:5"
+              },
+              {
+                "campo": "tag",
+                "motivo": "atributo_nao_produzido",
+                "token_id": "segmentacao-fixture-07:token:6"
+              },
+              {
+                "campo": "tag",
+                "motivo": "atributo_nao_produzido",
+                "token_id": "segmentacao-fixture-07:token:7"
+              },
+              {
+                "campo": "tag",
+                "motivo": "atributo_nao_produzido",
+                "token_id": "segmentacao-fixture-07:token:8"
+              },
+              {
+                "campo": "tag",
+                "motivo": "atributo_nao_produzido",
+                "token_id": "segmentacao-fixture-07:token:9"
+              },
+              {
+                "campo": "tag",
+                "motivo": "atributo_nao_produzido",
+                "token_id": "segmentacao-fixture-07:token:10"
+              },
+              {
+                "campo": "tag",
+                "motivo": "atributo_nao_produzido",
+                "token_id": "segmentacao-fixture-07:token:11"
+              },
+              {
+                "campo": "tag",
+                "motivo": "atributo_nao_produzido",
+                "token_id": "segmentacao-fixture-07:token:12"
+              }
+            ],
+            "pronto_para_etapa_06": true,
+            "verificacoes": [
+              "estrutura_json_identificadores_e_data",
+              "segmentacao_textos_hashes_e_mapa",
+              "coordenadas_e_processamento",
+              "cobertura_ordem_e_vinculos_dos_tokens",
+              "textos_e_intervalos_herdados",
+              "campos_linguisticos_e_pendencias",
+              "agrupamento_contagens_e_vinculos_do_vocabulario"
+            ]
+          },
+          "vocabulario": [
+            {
+              "criterio_agrupamento": "lema_pos",
+              "forma_agrupamento": null,
+              "formas": [
+                "Árvore"
+              ],
+              "id": "anotacao-fixture-07:vocabulario:0",
+              "lema": "árvore",
+              "ordem": 0,
+              "pos": "NOUN",
+              "quantidade": 1,
+              "token_ids": [
+                "segmentacao-fixture-07:token:0"
+              ]
+            },
+            {
+              "criterio_agrupamento": "lema_pos",
+              "forma_agrupamento": null,
+              "formas": [
+                "verde"
+              ],
+              "id": "anotacao-fixture-07:vocabulario:1",
+              "lema": "verde",
+              "ordem": 1,
+              "pos": "ADJ",
+              "quantidade": 1,
+              "token_ids": [
+                "segmentacao-fixture-07:token:1"
+              ]
+            },
+            {
+              "criterio_agrupamento": "lema_pos",
+              "forma_agrupamento": null,
+              "formas": [
+                "Casa"
+              ],
+              "id": "anotacao-fixture-07:vocabulario:2",
+              "lema": "casa",
+              "ordem": 2,
+              "pos": "NOUN",
+              "quantidade": 1,
+              "token_ids": [
+                "segmentacao-fixture-07:token:3"
+              ]
+            },
+            {
+              "criterio_agrupamento": "lema_pos",
+              "forma_agrupamento": null,
+              "formas": [
+                "azul"
+              ],
+              "id": "anotacao-fixture-07:vocabulario:3",
+              "lema": "azul",
+              "ordem": 3,
+              "pos": "ADJ",
+              "quantidade": 1,
+              "token_ids": [
+                "segmentacao-fixture-07:token:4"
+              ]
+            },
+            {
+              "criterio_agrupamento": "lema_pos",
+              "forma_agrupamento": null,
+              "formas": [
+                "Céu"
+              ],
+              "id": "anotacao-fixture-07:vocabulario:4",
+              "lema": "céu",
+              "ordem": 4,
+              "pos": "NOUN",
+              "quantidade": 1,
+              "token_ids": [
+                "segmentacao-fixture-07:token:6"
+              ]
+            },
+            {
+              "criterio_agrupamento": "lema_pos",
+              "forma_agrupamento": null,
+              "formas": [
+                "Outro"
+              ],
+              "id": "anotacao-fixture-07:vocabulario:5",
+              "lema": "outro",
+              "ordem": 5,
+              "pos": "PRON",
+              "quantidade": 1,
+              "token_ids": [
+                "segmentacao-fixture-07:token:8"
+              ]
+            },
+            {
+              "criterio_agrupamento": "lema_pos",
+              "forma_agrupamento": null,
+              "formas": [
+                "João"
+              ],
+              "id": "anotacao-fixture-07:vocabulario:6",
+              "lema": "João",
+              "ordem": 6,
+              "pos": "PROPN",
+              "quantidade": 1,
+              "token_ids": [
+                "segmentacao-fixture-07:token:10"
+              ]
+            },
+            {
+              "criterio_agrupamento": "lema_pos",
+              "forma_agrupamento": null,
+              "formas": [
+                "saiu"
+              ],
+              "id": "anotacao-fixture-07:vocabulario:7",
+              "lema": "sair",
+              "ordem": 7,
+              "pos": "VERB",
+              "quantidade": 1,
+              "token_ids": [
+                "segmentacao-fixture-07:token:11"
+              ]
+            }
+          ]
+        },
+        "anotacao_id": "anotacao-fixture-07",
+        "coordenadas": {
+          "base": 0,
+          "fim_exclusivo": true,
+          "unidade": "pontos_de_codigo_unicode"
+        },
+        "documento_id": "documento-fixture-07",
+        "entidades": [],
+        "etapa": "06_sintaxe_entidades",
+        "preparacao_id": "preparacao-fixture-07",
+        "processamento": {
+          "componentes_desativados": [
+            "morphologizer",
+            "lemmatizer",
+            "senter",
+            "attribute_ruler"
+          ],
+          "componentes_disponiveis": [
+            "tok2vec",
+            "morphologizer",
+            "parser",
+            "lemmatizer",
+            "senter",
+            "attribute_ruler",
+            "ner"
+          ],
+          "componentes_executados": [
+            "tok2vec",
+            "parser",
+            "ner"
+          ],
+          "configuracoes": {
+            "embeddings_exportados": false,
+            "fronteiras_periodos": "herdadas_da_etapa_04_nos_tokens_de_conteudo",
+            "mapa_original": "lote_equivalente_a_mapear_intervalo",
+            "max_caracteres": 50000,
+            "max_tokens_internos": 10000,
+            "morfologia": "herdada_da_etapa_05_sem_reanotacao",
+            "raiz": {
+              "cabeca": "proprio_token",
+              "dependencia": "ROOT"
+            },
+            "separadores": "preservados_no_documento_interno_sem_ids_linguisticos",
+            "tokenizador": {
+              "ajustes": [],
+              "identificacao": "spacy.blank(pt)",
+              "versao_execucao": "3.8.16",
+              "versao_origem": "3.8.16"
+            }
+          },
+          "ferramenta": "spacy",
+          "idioma": "pt",
+          "modelo": {
+            "compatibilidade_spacy": ">=3.8.0,<3.9.0",
+            "nome": "pt_core_news_sm",
+            "versao": "3.8.0"
+          },
+          "modulo": {
+            "nome": "sintaxe_entidades",
+            "versao": "1.0.0"
+          },
+          "natureza": "previsoes_do_modelo",
+          "rotulos_dependencias": [
+            "ROOT",
+            "acl",
+            "acl:relcl",
+            "advcl",
+            "advmod",
+            "amod",
+            "appos",
+            "aux",
+            "aux:pass",
+            "case",
+            "cc",
+            "ccomp",
+            "compound",
+            "conj",
+            "cop",
+            "csubj",
+            "dep",
+            "det",
+            "discourse",
+            "expl",
+            "fixed",
+            "flat",
+            "flat:foreign",
+            "flat:name",
+            "iobj",
+            "mark",
+            "nmod",
+            "nsubj",
+            "nsubj:pass",
+            "nummod",
+            "obj",
+            "obl",
+            "obl:agent",
+            "parataxis",
+            "punct",
+            "xcomp"
+          ],
+          "rotulos_entidades": [
+            "LOC",
+            "MISC",
+            "ORG",
+            "PER"
+          ],
+          "versao": "3.8.16"
+        },
+        "registrado_em": "2026-10-07T18:20:00-03:00",
+        "schema_version": "1.0.0",
+        "segmentacao_id": "segmentacao-fixture-07",
+        "sintaxe": [
+          {
+            "cabeca_token_id": "segmentacao-fixture-07:token:0",
+            "dependencia": "ROOT",
+            "origem": {
+              "componentes": [
+                "tok2vec",
+                "parser",
+                "ner"
+              ],
+              "ferramenta": "spacy",
+              "modelo": {
+                "compatibilidade_spacy": ">=3.8.0,<3.9.0",
+                "nome": "pt_core_news_sm",
+                "versao": "3.8.0"
+              },
+              "natureza": "previsoes_do_modelo",
+              "versao": "3.8.16"
+            },
+            "original": {
+              "fim": 8,
+              "inicio": 2
+            },
+            "paragrafo_id": "segmentacao-fixture-07:paragrafo:0",
+            "periodo_id": "segmentacao-fixture-07:periodo:0",
+            "texto": "Árvore",
+            "token_id": "segmentacao-fixture-07:token:0",
+            "trabalho": {
+              "fim": 8,
+              "inicio": 2
+            }
+          },
+          {
+            "cabeca_token_id": "segmentacao-fixture-07:token:0",
+            "dependencia": "amod",
+            "origem": {
+              "componentes": [
+                "tok2vec",
+                "parser",
+                "ner"
+              ],
+              "ferramenta": "spacy",
+              "modelo": {
+                "compatibilidade_spacy": ">=3.8.0,<3.9.0",
+                "nome": "pt_core_news_sm",
+                "versao": "3.8.0"
+              },
+              "natureza": "previsoes_do_modelo",
+              "versao": "3.8.16"
+            },
+            "original": {
+              "fim": 14,
+              "inicio": 9
+            },
+            "paragrafo_id": "segmentacao-fixture-07:paragrafo:0",
+            "periodo_id": "segmentacao-fixture-07:periodo:0",
+            "texto": "verde",
+            "token_id": "segmentacao-fixture-07:token:1",
+            "trabalho": {
+              "fim": 14,
+              "inicio": 9
+            }
+          },
+          {
+            "cabeca_token_id": "segmentacao-fixture-07:token:0",
+            "dependencia": "punct",
+            "origem": {
+              "componentes": [
+                "tok2vec",
+                "parser",
+                "ner"
+              ],
+              "ferramenta": "spacy",
+              "modelo": {
+                "compatibilidade_spacy": ">=3.8.0,<3.9.0",
+                "nome": "pt_core_news_sm",
+                "versao": "3.8.0"
+              },
+              "natureza": "previsoes_do_modelo",
+              "versao": "3.8.16"
+            },
+            "original": {
+              "fim": 15,
+              "inicio": 14
+            },
+            "paragrafo_id": "segmentacao-fixture-07:paragrafo:0",
+            "periodo_id": "segmentacao-fixture-07:periodo:0",
+            "texto": ".",
+            "token_id": "segmentacao-fixture-07:token:2",
+            "trabalho": {
+              "fim": 15,
+              "inicio": 14
+            }
+          },
+          {
+            "cabeca_token_id": "segmentacao-fixture-07:token:3",
+            "dependencia": "ROOT",
+            "origem": {
+              "componentes": [
+                "tok2vec",
+                "parser",
+                "ner"
+              ],
+              "ferramenta": "spacy",
+              "modelo": {
+                "compatibilidade_spacy": ">=3.8.0,<3.9.0",
+                "nome": "pt_core_news_sm",
+                "versao": "3.8.0"
+              },
+              "natureza": "previsoes_do_modelo",
+              "versao": "3.8.16"
+            },
+            "original": {
+              "fim": 21,
+              "inicio": 17
+            },
+            "paragrafo_id": "segmentacao-fixture-07:paragrafo:0",
+            "periodo_id": "segmentacao-fixture-07:periodo:1",
+            "texto": "Casa",
+            "token_id": "segmentacao-fixture-07:token:3",
+            "trabalho": {
+              "fim": 21,
+              "inicio": 17
+            }
+          },
+          {
+            "cabeca_token_id": "segmentacao-fixture-07:token:3",
+            "dependencia": "amod",
+            "origem": {
+              "componentes": [
+                "tok2vec",
+                "parser",
+                "ner"
+              ],
+              "ferramenta": "spacy",
+              "modelo": {
+                "compatibilidade_spacy": ">=3.8.0,<3.9.0",
+                "nome": "pt_core_news_sm",
+                "versao": "3.8.0"
+              },
+              "natureza": "previsoes_do_modelo",
+              "versao": "3.8.16"
+            },
+            "original": {
+              "fim": 26,
+              "inicio": 22
+            },
+            "paragrafo_id": "segmentacao-fixture-07:paragrafo:0",
+            "periodo_id": "segmentacao-fixture-07:periodo:1",
+            "texto": "azul",
+            "token_id": "segmentacao-fixture-07:token:4",
+            "trabalho": {
+              "fim": 26,
+              "inicio": 22
+            }
+          },
+          {
+            "cabeca_token_id": "segmentacao-fixture-07:token:3",
+            "dependencia": "punct",
+            "origem": {
+              "componentes": [
+                "tok2vec",
+                "parser",
+                "ner"
+              ],
+              "ferramenta": "spacy",
+              "modelo": {
+                "compatibilidade_spacy": ">=3.8.0,<3.9.0",
+                "nome": "pt_core_news_sm",
+                "versao": "3.8.0"
+              },
+              "natureza": "previsoes_do_modelo",
+              "versao": "3.8.16"
+            },
+            "original": {
+              "fim": 27,
+              "inicio": 26
+            },
+            "paragrafo_id": "segmentacao-fixture-07:paragrafo:0",
+            "periodo_id": "segmentacao-fixture-07:periodo:1",
+            "texto": "!",
+            "token_id": "segmentacao-fixture-07:token:5",
+            "trabalho": {
+              "fim": 27,
+              "inicio": 26
+            }
+          },
+          {
+            "cabeca_token_id": "segmentacao-fixture-07:token:6",
+            "dependencia": "ROOT",
+            "origem": {
+              "componentes": [
+                "tok2vec",
+                "parser",
+                "ner"
+              ],
+              "ferramenta": "spacy",
+              "modelo": {
+                "compatibilidade_spacy": ">=3.8.0,<3.9.0",
+                "nome": "pt_core_news_sm",
+                "versao": "3.8.0"
+              },
+              "natureza": "previsoes_do_modelo",
+              "versao": "3.8.16"
+            },
+            "original": {
+              "fim": 33,
+              "inicio": 30
+            },
+            "paragrafo_id": "segmentacao-fixture-07:paragrafo:0",
+            "periodo_id": "segmentacao-fixture-07:periodo:2",
+            "texto": "Céu",
+            "token_id": "segmentacao-fixture-07:token:6",
+            "trabalho": {
+              "fim": 33,
+              "inicio": 30
+            }
+          },
+          {
+            "cabeca_token_id": "segmentacao-fixture-07:token:6",
+            "dependencia": "punct",
+            "origem": {
+              "componentes": [
+                "tok2vec",
+                "parser",
+                "ner"
+              ],
+              "ferramenta": "spacy",
+              "modelo": {
+                "compatibilidade_spacy": ">=3.8.0,<3.9.0",
+                "nome": "pt_core_news_sm",
+                "versao": "3.8.0"
+              },
+              "natureza": "previsoes_do_modelo",
+              "versao": "3.8.16"
+            },
+            "original": {
+              "fim": 34,
+              "inicio": 33
+            },
+            "paragrafo_id": "segmentacao-fixture-07:paragrafo:0",
+            "periodo_id": "segmentacao-fixture-07:periodo:2",
+            "texto": ".",
+            "token_id": "segmentacao-fixture-07:token:7",
+            "trabalho": {
+              "fim": 34,
+              "inicio": 33
+            }
+          },
+          {
+            "cabeca_token_id": "segmentacao-fixture-07:token:8",
+            "dependencia": "ROOT",
+            "origem": {
+              "componentes": [
+                "tok2vec",
+                "parser",
+                "ner"
+              ],
+              "ferramenta": "spacy",
+              "modelo": {
+                "compatibilidade_spacy": ">=3.8.0,<3.9.0",
+                "nome": "pt_core_news_sm",
+                "versao": "3.8.0"
+              },
+              "natureza": "previsoes_do_modelo",
+              "versao": "3.8.16"
+            },
+            "original": {
+              "fim": 43,
+              "inicio": 38
+            },
+            "paragrafo_id": "segmentacao-fixture-07:paragrafo:1",
+            "periodo_id": "segmentacao-fixture-07:periodo:3",
+            "texto": "Outro",
+            "token_id": "segmentacao-fixture-07:token:8",
+            "trabalho": {
+              "fim": 41,
+              "inicio": 36
+            }
+          },
+          {
+            "cabeca_token_id": "segmentacao-fixture-07:token:8",
+            "dependencia": "punct",
+            "origem": {
+              "componentes": [
+                "tok2vec",
+                "parser",
+                "ner"
+              ],
+              "ferramenta": "spacy",
+              "modelo": {
+                "compatibilidade_spacy": ">=3.8.0,<3.9.0",
+                "nome": "pt_core_news_sm",
+                "versao": "3.8.0"
+              },
+              "natureza": "previsoes_do_modelo",
+              "versao": "3.8.16"
+            },
+            "original": {
+              "fim": 44,
+              "inicio": 43
+            },
+            "paragrafo_id": "segmentacao-fixture-07:paragrafo:1",
+            "periodo_id": "segmentacao-fixture-07:periodo:3",
+            "texto": ".",
+            "token_id": "segmentacao-fixture-07:token:9",
+            "trabalho": {
+              "fim": 42,
+              "inicio": 41
+            }
+          },
+          {
+            "cabeca_token_id": "segmentacao-fixture-07:token:11",
+            "dependencia": "nsubj",
+            "origem": {
+              "componentes": [
+                "tok2vec",
+                "parser",
+                "ner"
+              ],
+              "ferramenta": "spacy",
+              "modelo": {
+                "compatibilidade_spacy": ">=3.8.0,<3.9.0",
+                "nome": "pt_core_news_sm",
+                "versao": "3.8.0"
+              },
+              "natureza": "previsoes_do_modelo",
+              "versao": "3.8.16"
+            },
+            "original": {
+              "fim": 50,
+              "inicio": 46
+            },
+            "paragrafo_id": "segmentacao-fixture-07:paragrafo:1",
+            "periodo_id": "segmentacao-fixture-07:periodo:4",
+            "texto": "João",
+            "token_id": "segmentacao-fixture-07:token:10",
+            "trabalho": {
+              "fim": 48,
+              "inicio": 44
+            }
+          },
+          {
+            "cabeca_token_id": "segmentacao-fixture-07:token:11",
+            "dependencia": "ROOT",
+            "origem": {
+              "componentes": [
+                "tok2vec",
+                "parser",
+                "ner"
+              ],
+              "ferramenta": "spacy",
+              "modelo": {
+                "compatibilidade_spacy": ">=3.8.0,<3.9.0",
+                "nome": "pt_core_news_sm",
+                "versao": "3.8.0"
+              },
+              "natureza": "previsoes_do_modelo",
+              "versao": "3.8.16"
+            },
+            "original": {
+              "fim": 55,
+              "inicio": 51
+            },
+            "paragrafo_id": "segmentacao-fixture-07:paragrafo:1",
+            "periodo_id": "segmentacao-fixture-07:periodo:4",
+            "texto": "saiu",
+            "token_id": "segmentacao-fixture-07:token:11",
+            "trabalho": {
+              "fim": 53,
+              "inicio": 49
+            }
+          },
+          {
+            "cabeca_token_id": "segmentacao-fixture-07:token:11",
+            "dependencia": "punct",
+            "origem": {
+              "componentes": [
+                "tok2vec",
+                "parser",
+                "ner"
+              ],
+              "ferramenta": "spacy",
+              "modelo": {
+                "compatibilidade_spacy": ">=3.8.0,<3.9.0",
+                "nome": "pt_core_news_sm",
+                "versao": "3.8.0"
+              },
+              "natureza": "previsoes_do_modelo",
+              "versao": "3.8.16"
+            },
+            "original": {
+              "fim": 56,
+              "inicio": 55
+            },
+            "paragrafo_id": "segmentacao-fixture-07:paragrafo:1",
+            "periodo_id": "segmentacao-fixture-07:periodo:4",
+            "texto": ".",
+            "token_id": "segmentacao-fixture-07:token:12",
+            "trabalho": {
+              "fim": 54,
+              "inicio": 53
+            }
+          }
+        ],
+        "validacao": {
+          "cobertura": {
+            "entidades_total": 0,
+            "periodos_total": 5,
+            "tokens_analisados": 13,
+            "tokens_total": 13
+          },
+          "estado": "pronto_para_etapa_07",
+          "pronto_para_etapa_07": true,
+          "verificacoes": [
+            "estrutura_json_identificadores_e_data",
+            "anotacao_e_registros_de_origem",
+            "coordenadas_e_processamento",
+            "cobertura_alinhamento_e_vinculos_dos_tokens",
+            "arvores_raizes_cabecas_e_ausencia_de_ciclos",
+            "entidades_ordem_textos_tokens_unidades_e_mapa_original"
+          ]
+        }
+      },
+      "analise_id": "analise-fixture-07",
+      "anotacao_id": "anotacao-fixture-07",
+      "catalogo": {
+        "id": "lingua-etapa07",
+        "regras": [
+          {
+            "alcance": "União dos tokens próprios dos predicados correlacionados, sem subordinadas de outros núcleos.",
+            "atributos_utilizados": [
+              "texto",
+              "pos",
+              "dependencia",
+              "cabeca_token_id",
+              "periodo_id"
+            ],
+            "cobertura": "Somente pares completos adjacentes; não contempla mas ainda, como também nem correlações elípticas.",
+            "condicoes": [
+              "Pares adjacentes não+só/somente/apenas e mas+também no mesmo período.",
+              "Marcadores adverbiais e coordenativo com núcleos sintáticos identificáveis.",
+              "POS dos possíveis predicados do período precisa estar disponível para delimitar o alcance; ausência mantém marcador e pendência, sem interpretar null como classe não verbal.",
+              "Delimitadores literais de citação não constituem núcleos; o alcance permanece na mesma região de citação do marcador, inclusive fora de aspas."
+            ],
+            "descricao": "Adição correlativa explícita não só/somente/apenas ... mas também.",
+            "excecoes": [
+              "Uma expressão incompleta não dispara a regra.",
+              "Expressões citadas sem núcleo interno permanecem ambíguas."
+            ],
+            "exemplos": [
+              {
+                "resultado": "adicao_correlativa",
+                "texto": "Não só estudou, mas também trabalhou."
+              },
+              {
+                "resultado": "adicao_correlativa e negacao_simples do segundo não",
+                "texto": "Não só não estudou, mas também faltou."
+              }
+            ],
+            "familia": "negacao",
+            "id": "negacao_correlativa",
+            "padrao": "não (só|somente|apenas) ... mas também; mas tem dependência cc.",
+            "prioridade": 10,
+            "resultado": "adicao_correlativa; não atribui negação simples aos mesmos marcadores.",
+            "sobreposicao": "Tem prioridade apenas sobre seu não e seu mas; outros marcadores continuam ativos. Suprime simples somente se habilitada.",
+            "versao": "1.1.0"
+          },
+          {
+            "alcance": "Subárvore própria, excluindo subárvores cujo núcleo representa outra oração; pode ser descontínua.",
+            "atributos_utilizados": [
+              "pos",
+              "dependencia",
+              "cabeca_token_id",
+              "periodo_id"
+            ],
+            "cobertura": "Verbos, auxiliares, cópulas, conj, xcomp, ccomp, advcl, acl e csubj segundo a árvore recebida.",
+            "condicoes": [
+              "POS VERB/AUX fora de dependências aux/cop, ou núcleo com filho cop.",
+              "POS dos possíveis predicados do período precisa estar disponível para delimitar o alcance; ausência mantém marcador e pendência, sem interpretar null como classe não verbal.",
+              "Delimitadores literais de citação não constituem núcleos; o alcance permanece na mesma região de citação do marcador, inclusive fora de aspas."
+            ],
+            "descricao": "Agrupamentos de predicados verbais e construções copulares.",
+            "excecoes": [
+              "xcomp/ccomp constituem agrupamentos ligados, não locuções automaticamente.",
+              "Não recupera verbos elípticos nem corrige POS recebido."
+            ],
+            "exemplos": [
+              {
+                "associado": "está",
+                "nucleo": "feliz",
+                "texto": "Ela está feliz."
+              },
+              {
+                "associado": "está",
+                "nucleo": "estudando",
+                "texto": "Ela está estudando."
+              },
+              {
+                "nucleos": [
+                  "quer",
+                  "sair"
+                ],
+                "texto": "Ela quer sair."
+              }
+            ],
+            "familia": "oracoes",
+            "id": "oracao_predicado",
+            "padrao": "Núcleo VERB/AUX e seus auxiliares; ADJ/NOUN/etc. com cópula dependente.",
+            "prioridade": 20,
+            "resultado": "oracao com núcleo predicativo, auxiliares e relação com outro núcleo.",
+            "sobreposicao": "Aux/cop integram a mesma oração; relações pai/filho preservadas por vínculos. Sobreposição com outras famílias permitida.",
+            "versao": "1.1.0"
+          },
+          {
+            "alcance": "Tokens próprios do predicado ou subárvore do constituinte negado; ausente quando não sustentado.",
+            "atributos_utilizados": [
+              "texto",
+              "pos",
+              "dependencia",
+              "cabeca_token_id"
+            ],
+            "cobertura": "Negação explícita não; exclui nominalizações como o não quando não citadas.",
+            "condicoes": [
+              "Texto não com POS ADV/PART e dependência advmod/neg, ou ROOT incompleto, ou marcador citado mencionado.",
+              "POS dos possíveis predicados do período precisa estar disponível para delimitar o alcance; ausência mantém marcador e pendência, sem interpretar null como classe não verbal.",
+              "Delimitadores literais de citação não constituem núcleos; o alcance permanece na mesma região de citação do marcador, inclusive fora de aspas."
+            ],
+            "descricao": "Marcador não com alcance sintático proposto.",
+            "excecoes": [
+              "Não da correlativa ativa excluído.",
+              "Citação sem predicado interno não é atribuída ao narrador."
+            ],
+            "exemplos": [
+              {
+                "nucleo": "pensei",
+                "texto": "Não pensei em sair."
+              },
+              {
+                "nucleo": "sair",
+                "texto": "Pensei em não sair."
+              }
+            ],
+            "familia": "negacao",
+            "id": "negacao_nao",
+            "padrao": "não dependente de predicado ou constituinte.",
+            "prioridade": 100,
+            "resultado": "negacao_simples, com marcador e núcleo separados.",
+            "sobreposicao": "Mantém cada não e vínculos com modalidade; pode participar também de multiplos_marcadores.",
+            "versao": "1.1.0"
+          },
+          {
+            "alcance": "Tokens próprios do predicado; não converte o quantificador temporal em uma data.",
+            "atributos_utilizados": [
+              "texto",
+              "pos",
+              "dependencia",
+              "cabeca_token_id"
+            ],
+            "cobertura": "Não inclui jamais, tampouco ou prefixos negativos.",
+            "condicoes": [
+              "Texto nunca com POS ADV e dependência advmod/neg, ou ROOT incompleto, ou marcador citado.",
+              "POS dos possíveis predicados do período precisa estar disponível para delimitar o alcance; ausência mantém marcador e pendência, sem interpretar null como classe não verbal.",
+              "Delimitadores literais de citação não constituem núcleos; o alcance permanece na mesma região de citação do marcador, inclusive fora de aspas."
+            ],
+            "descricao": "Negação temporal explícita nunca.",
+            "excecoes": [
+              "Menção citada conserva indeterminação."
+            ],
+            "exemplos": [
+              {
+                "nucleo": "saio",
+                "texto": "Nunca saio."
+              }
+            ],
+            "familia": "negacao",
+            "id": "negacao_nunca",
+            "padrao": "nunca adverbial ligado ao predicado.",
+            "prioridade": 100,
+            "resultado": "negacao_temporal.",
+            "sobreposicao": "Mantém marcadores múltiplos sem calcular polaridade.",
+            "versao": "1.1.0"
+          },
+          {
+            "alcance": "Predicado próprio ou constituinte nominal coordenado identificado pela cabeça.",
+            "atributos_utilizados": [
+              "texto",
+              "pos",
+              "dependencia",
+              "cabeca_token_id"
+            ],
+            "cobertura": "Somente nem explícito; alcance nominal pode exigir contexto.",
+            "condicoes": [
+              "Texto nem adverbial/coordenativo e dependência cc/advmod/neg, ou ROOT incompleto, ou marcador citado.",
+              "POS dos possíveis predicados do período precisa estar disponível para delimitar o alcance; ausência mantém marcador e pendência, sem interpretar null como classe não verbal.",
+              "Delimitadores literais de citação não constituem núcleos; o alcance permanece na mesma região de citação do marcador, inclusive fora de aspas."
+            ],
+            "descricao": "Negação aditiva com nem.",
+            "excecoes": [
+              "Não interpreta toda coordenação como negação oracional."
+            ],
+            "exemplos": [
+              {
+                "marcador": "Nem",
+                "texto": "Nem João veio."
+              }
+            ],
+            "familia": "negacao",
+            "id": "negacao_nem",
+            "padrao": "nem com dependência adverbial ou de coordenação.",
+            "prioridade": 100,
+            "resultado": "negacao_aditiva.",
+            "sobreposicao": "Cada nem permanece individual; pode haver agrupamento de marcadores.",
+            "versao": "1.1.0"
+          },
+          {
+            "alcance": "Mesmo alcance sintático compartilhado; sem aritmética de polaridade.",
+            "atributos_utilizados": [
+              "texto",
+              "pos",
+              "dependencia",
+              "cabeca_token_id"
+            ],
+            "cobertura": "Agrupa somente negadores explícitos com núcleo identificável.",
+            "condicoes": [
+              "Ao menos dois marcadores reconhecidos não/nunca/nem com mesmo núcleo e contexto de citação.",
+              "POS dos possíveis predicados do período precisa estar disponível para delimitar o alcance; ausência mantém marcador e pendência, sem interpretar null como classe não verbal.",
+              "Delimitadores literais de citação não constituem núcleos; o alcance permanece na mesma região de citação do marcador, inclusive fora de aspas."
+            ],
+            "descricao": "Agrupamento de marcadores negativos no mesmo predicado.",
+            "excecoes": [
+              "Marcador não da correlativa ativa excluído.",
+              "Não combina negadores de orações distintas."
+            ],
+            "exemplos": [
+              {
+                "marcadores": [
+                  "Não",
+                  "nunca"
+                ],
+                "texto": "Não saiu nunca."
+              }
+            ],
+            "familia": "negacao",
+            "id": "negacao_multiplos",
+            "padrao": "Agrupar marcadores válidos por núcleo e região citada.",
+            "prioridade": 100,
+            "resultado": "multiplos_marcadores.",
+            "sobreposicao": "Sobrepõe-se intencionalmente às ocorrências negativas individuais.",
+            "versao": "1.1.0"
+          },
+          {
+            "alcance": "Tokens próprios do predicado ao qual o verbo/auxiliar pertence.",
+            "atributos_utilizados": [
+              "pos",
+              "morfologia",
+              "dependencia",
+              "cabeca_token_id"
+            ],
+            "cobertura": "Somente atributos existentes; morfologia ausente gera pendência.",
+            "condicoes": [
+              "POS VERB/AUX e ao menos uma flexão Tense/Mood/VerbForm disponível.",
+              "POS dos possíveis predicados do período precisa estar disponível para delimitar o alcance; ausência mantém marcador e pendência, sem interpretar null como classe não verbal.",
+              "Delimitadores literais de citação não constituem núcleos; o alcance permanece na mesma região de citação do marcador, inclusive fora de aspas."
+            ],
+            "descricao": "Evidência de tempo, modo e forma verbal da anotação morfológica.",
+            "excecoes": [
+              "Não corrige previsões morfológicas e não converte Future em data."
+            ],
+            "exemplos": [
+              {
+                "atributo": "Tense=Past",
+                "texto": "Ela saiu."
+              }
+            ],
+            "familia": "tempo",
+            "id": "tempo_flexao",
+            "padrao": "Tense, Mood e VerbForm são preservados como valores recebidos.",
+            "prioridade": 100,
+            "resultado": "flexao_verbal.",
+            "sobreposicao": "Flexão e expressão relativa permanecem evidências distintas.",
+            "versao": "1.1.0"
+          },
+          {
+            "alcance": "Tokens próprios do predicado associado; marcador pode permanecer sem alcance.",
+            "atributos_utilizados": [
+              "texto",
+              "pos",
+              "dependencia",
+              "cabeca_token_id"
+            ],
+            "cobertura": "Não inclui calendários, datas absolutas ou resolução de dêixis.",
+            "condicoes": [
+              "Ontem/hoje/amanhã adverbiais; quando marcador de oração advcl temporal.",
+              "POS dos possíveis predicados do período precisa estar disponível para delimitar o alcance; ausência mantém marcador e pendência, sem interpretar null como classe não verbal.",
+              "Delimitadores literais de citação não constituem núcleos; o alcance permanece na mesma região de citação do marcador, inclusive fora de aspas."
+            ],
+            "descricao": "Referências ontem/hoje/amanhã e construção temporal quando.",
+            "excecoes": [
+              "Quando interrogativo não afirma conexão temporal.",
+              "Data técnica de processamento não é referência do enunciado."
+            ],
+            "exemplos": [
+              {
+                "texto": "Amanhã sairei.",
+                "valor": "relativo"
+              },
+              {
+                "texto": "Quando chegar, avise.",
+                "valor": "construcao_temporal"
+              }
+            ],
+            "familia": "tempo",
+            "id": "tempo_relativo",
+            "padrao": "Advérbios relativos ou quando/mark ligado a advcl.",
+            "prioridade": 100,
+            "resultado": "referencia_relativa ou construcao_temporal, sem data absoluta.",
+            "sobreposicao": "Quando pode produzir também conector temporal.",
+            "versao": "1.1.0"
+          },
+          {
+            "alcance": "Conteúdo dos complementos xcomp/ccomp/obj/obl quando identificado; marcador separado.",
+            "atributos_utilizados": [
+              "lema",
+              "pos",
+              "dependencia",
+              "cabeca_token_id"
+            ],
+            "cobertura": "Padrões explícitos; não resolve sentido pragmático, ironia ou capacidade sem sintaxe verbal infinitiva; saber/conseguir com ccomp não afirmam habilidade.",
+            "condicoes": [
+              "Verbo/AUX com lema poder/dever/precisar/necessitar/conseguir/saber/querer/desejar/duvidar; ter com que/de e complemento verbal.",
+              "POS dos possíveis predicados do período precisa estar disponível para delimitar o alcance; ausência mantém marcador e pendência, sem interpretar null como classe não verbal.",
+              "Delimitadores literais de citação não constituem núcleos; o alcance permanece na mesma região de citação do marcador, inclusive fora de aspas."
+            ],
+            "descricao": "Modalidade proposta por verbos e construções ter que/de.",
+            "excecoes": [
+              "Poder mantém possibilidade/permissao/capacidade.",
+              "Dever mantém obrigacao/inferencia_epistemica.",
+              "Querer negado não comprova desejo positivo."
+            ],
+            "exemplos": [
+              {
+                "alternativas": [
+                  "possibilidade",
+                  "permissao",
+                  "capacidade"
+                ],
+                "texto": "Ela pode sair."
+              },
+              {
+                "limitacao": "marcador modal negado",
+                "texto": "Não quero sair."
+              }
+            ],
+            "familia": "modalidade",
+            "id": "modalidade_verbal",
+            "padrao": "Lexema modal com complemento; conseguir/saber requerem complemento xcomp com VerbForm=Inf.",
+            "prioridade": 100,
+            "resultado": "possibilidade_indeterminada, obrigacao, necessidade, capacidade, desejo ou duvida.",
+            "sobreposicao": "Vincula negadores relevantes e agrupamentos por seus tokens; sem atribuir estado teórico ao narrador.",
+            "versao": "1.1.0"
+          },
+          {
+            "alcance": "Predicado modificado ou conteúdo complemental do predicado copular.",
+            "atributos_utilizados": [
+              "texto",
+              "lema",
+              "pos",
+              "dependencia",
+              "cabeca_token_id"
+            ],
+            "cobertura": "Não contempla todo vocabulário modal nem substantivos abstratos.",
+            "condicoes": [
+              "Talvez/possivelmente/provavelmente adverbiais; necessário/obrigatório/capaz como predicados copulares.",
+              "POS dos possíveis predicados do período precisa estar disponível para delimitar o alcance; ausência mantém marcador e pendência, sem interpretar null como classe não verbal.",
+              "Delimitadores literais de citação não constituem núcleos; o alcance permanece na mesma região de citação do marcador, inclusive fora de aspas."
+            ],
+            "descricao": "Advérbios de dúvida/possibilidade e predicados necessário/obrigatório/capaz.",
+            "excecoes": [
+              "Adjetivo amod de nome não dispara modalidade predicativa.",
+              "Palavra citada não caracteriza o narrador."
+            ],
+            "exemplos": [
+              {
+                "resultado": "duvida",
+                "texto": "Talvez ela saia."
+              },
+              {
+                "resultado": "necessidade",
+                "texto": "É necessário sair."
+              }
+            ],
+            "familia": "modalidade",
+            "id": "modalidade_lexical",
+            "padrao": "Advérbio ligado a predicado, ou adjetivo predicativo com cópula.",
+            "prioridade": 100,
+            "resultado": "duvida, possibilidade, necessidade, obrigacao ou capacidade.",
+            "sobreposicao": "Pode coexistir com modalidades verbais e negação justificadas.",
+            "versao": "1.1.0"
+          },
+          {
+            "alcance": "Oração modificada; liga ao núcleo relacionado quando existente, sem fabricar unidades.",
+            "atributos_utilizados": [
+              "texto",
+              "pos",
+              "dependencia",
+              "cabeca_token_id"
+            ],
+            "cobertura": "Sem elipses recuperadas; condições sem consequência exigem contexto.",
+            "condicoes": [
+              "Mas cc de núcleo predicativo conj; porque mark de oração; se SCONJ/mark de advcl ou condição incompleta; quando mark/advmod de advcl.",
+              "POS dos possíveis predicados do período precisa estar disponível para delimitar o alcance; ausência mantém marcador e pendência, sem interpretar null como classe não verbal.",
+              "Delimitadores literais de citação não constituem núcleos; o alcance permanece na mesma região de citação do marcador, inclusive fora de aspas."
+            ],
+            "descricao": "Conexões mas/porque/se/quando condicionadas à sintaxe.",
+            "excecoes": [
+              "Se pronominal/reflexivo/passivador e se de ccomp interrogativo excluídos.",
+              "Mas da correlativa ativa excluído.",
+              "Quando interrogativo excluído.",
+              "Contraste nominal com mas, como João mas não Pedro, não integra a cobertura oracional v1."
+            ],
+            "exemplos": [
+              {
+                "resultado": "condicao",
+                "texto": "Se chover, fico."
+              },
+              {
+                "resultado": "sem condicao",
+                "texto": "Ela se lavou."
+              },
+              {
+                "resultado": "sem condicao",
+                "texto": "Perguntei se sairia."
+              }
+            ],
+            "familia": "conectores",
+            "id": "conector_simples",
+            "padrao": "Conector associado a um núcleo e relação sintática apropriada.",
+            "prioridade": 100,
+            "resultado": "contraste, causa, condicao ou tempo.",
+            "sobreposicao": "Quando pode sustentar tempo e conexão em ocorrências distintas.",
+            "versao": "1.1.0"
+          },
+          {
+            "alcance": "Tokens próprios do predicado consequente; antecedente só ligado quando há núcleo anterior na mesma árvore.",
+            "atributos_utilizados": [
+              "texto",
+              "pos",
+              "dependencia",
+              "cabeca_token_id",
+              "periodo_id"
+            ],
+            "cobertura": "Somente por isso anteposto; não inclui uso pós-verbal/argumental, portanto, logo ou por esse motivo.",
+            "condicoes": [
+              "Por e isso adjacentes no mesmo período, por/case ligado a isso e isso/obl ou advmod associado a predicado, com por isso antes do núcleo predicativo.",
+              "POS dos possíveis predicados do período precisa estar disponível para delimitar o alcance; ausência mantém marcador e pendência, sem interpretar null como classe não verbal.",
+              "Delimitadores literais de citação não constituem núcleos; o alcance permanece na mesma região de citação do marcador, inclusive fora de aspas."
+            ],
+            "descricao": "Consequência explícita por isso com retomada contextual.",
+            "excecoes": [
+              "Retomada entre períodos não inventa antecedente; registra necessidade de contexto.",
+              "Uso pós-verbal/argumental como passei por isso fica fora da cobertura v1."
+            ],
+            "exemplos": [
+              {
+                "resultado": "consequencia",
+                "texto": "Choveu; por isso fiquei."
+              }
+            ],
+            "familia": "conectores",
+            "id": "conector_por_isso",
+            "padrao": "por isso com ligação sintática explícita e posição anterior ao predicado consequente.",
+            "prioridade": 100,
+            "resultado": "consequencia.",
+            "sobreposicao": "Convive com coordenação e modalidades; não é duplicata de outra família.",
+            "versao": "1.1.0"
+          }
+        ],
+        "versao": "1.1.0"
+      },
+      "configuracao": {
+        "alcance": "tokens_selecionados_sem_expandir_periodo",
+        "datas_relativas": "sem_conversao_automatica",
+        "ordem_execucao": [
+          "negacao_correlativa",
+          "oracao_predicado",
+          "conector_por_isso",
+          "conector_simples",
+          "modalidade_lexical",
+          "modalidade_verbal",
+          "negacao_multiplos",
+          "negacao_nao",
+          "negacao_nem",
+          "negacao_nunca",
+          "tempo_flexao",
+          "tempo_relativo"
+        ],
+        "politica_falha": "preservar_diagnostico_sem_prontidao",
+        "regras_habilitadas": [
+          "negacao_correlativa",
+          "oracao_predicado",
+          "conector_por_isso",
+          "conector_simples",
+          "modalidade_lexical",
+          "modalidade_verbal",
+          "negacao_multiplos",
+          "negacao_nao",
+          "negacao_nem",
+          "negacao_nunca",
+          "tempo_flexao",
+          "tempo_relativo"
+        ]
+      },
+      "coordenadas": {
+        "base": 0,
+        "fim_exclusivo": true,
+        "unidade": "pontos_de_codigo_unicode"
+      },
+      "documento_id": "documento-fixture-07",
+      "etapa": "07_regras_linguisticas",
+      "execucao_id": "regras-fixture-08",
+      "execucoes_regras": [
+        {
+          "erro": null,
+          "estado": "executada",
+          "ocorrencias_total": 0,
+          "pendencias": [],
+          "regra_id": "negacao_correlativa",
+          "versao": "1.1.0"
+        },
+        {
+          "erro": null,
+          "estado": "executada",
+          "ocorrencias_total": 1,
+          "pendencias": [],
+          "regra_id": "oracao_predicado",
+          "versao": "1.1.0"
+        },
+        {
+          "erro": null,
+          "estado": "executada",
+          "ocorrencias_total": 0,
+          "pendencias": [],
+          "regra_id": "conector_por_isso",
+          "versao": "1.1.0"
+        },
+        {
+          "erro": null,
+          "estado": "executada",
+          "ocorrencias_total": 0,
+          "pendencias": [],
+          "regra_id": "conector_simples",
+          "versao": "1.1.0"
+        },
+        {
+          "erro": null,
+          "estado": "executada",
+          "ocorrencias_total": 0,
+          "pendencias": [],
+          "regra_id": "modalidade_lexical",
+          "versao": "1.1.0"
+        },
+        {
+          "erro": null,
+          "estado": "executada",
+          "ocorrencias_total": 0,
+          "pendencias": [],
+          "regra_id": "modalidade_verbal",
+          "versao": "1.1.0"
+        },
+        {
+          "erro": null,
+          "estado": "executada",
+          "ocorrencias_total": 0,
+          "pendencias": [],
+          "regra_id": "negacao_multiplos",
+          "versao": "1.1.0"
+        },
+        {
+          "erro": null,
+          "estado": "executada",
+          "ocorrencias_total": 0,
+          "pendencias": [],
+          "regra_id": "negacao_nao",
+          "versao": "1.1.0"
+        },
+        {
+          "erro": null,
+          "estado": "executada",
+          "ocorrencias_total": 0,
+          "pendencias": [],
+          "regra_id": "negacao_nem",
+          "versao": "1.1.0"
+        },
+        {
+          "erro": null,
+          "estado": "executada",
+          "ocorrencias_total": 0,
+          "pendencias": [],
+          "regra_id": "negacao_nunca",
+          "versao": "1.1.0"
+        },
+        {
+          "erro": null,
+          "estado": "executada",
+          "ocorrencias_total": 1,
+          "pendencias": [],
+          "regra_id": "tempo_flexao",
+          "versao": "1.1.0"
+        },
+        {
+          "erro": null,
+          "estado": "executada",
+          "ocorrencias_total": 0,
+          "pendencias": [],
+          "regra_id": "tempo_relativo",
+          "versao": "1.1.0"
+        }
+      ],
+      "ocorrencias": [
+        {
+          "alcance": {
+            "token_ids": [
+              "segmentacao-fixture-07:token:10",
+              "segmentacao-fixture-07:token:11",
+              "segmentacao-fixture-07:token:12"
+            ],
+            "trechos": [
+              {
+                "original": {
+                  "fim": 56,
+                  "inicio": 46
+                },
+                "paragrafo_id": "segmentacao-fixture-07:paragrafo:1",
+                "periodo_id": "segmentacao-fixture-07:periodo:4",
+                "texto": "João saiu.",
+                "token_ids": [
+                  "segmentacao-fixture-07:token:10",
+                  "segmentacao-fixture-07:token:11",
+                  "segmentacao-fixture-07:token:12"
+                ],
+                "trabalho": {
+                  "fim": 54,
+                  "inicio": 44
+                }
+              }
+            ]
+          },
+          "alternativas": [],
+          "ambiguidades": [],
+          "anotacoes_utilizadas": [
+            {
+              "cabeca_token_id": "segmentacao-fixture-07:token:11",
+              "dependencia": "ROOT",
+              "lema": "sair",
+              "morfologia": {
+                "Mood": "Ind",
+                "Tense": "Past",
+                "VerbForm": "Fin"
+              },
+              "pos": "VERB",
+              "token_id": "segmentacao-fixture-07:token:11"
+            }
+          ],
+          "categoria": "oracao",
+          "evidencias": [
+            {
+              "original": {
+                "fim": 55,
+                "inicio": 51
+              },
+              "paragrafo_id": "segmentacao-fixture-07:paragrafo:1",
+              "periodo_id": "segmentacao-fixture-07:periodo:4",
+              "texto": "saiu",
+              "token_ids": [
+                "segmentacao-fixture-07:token:11"
+              ],
+              "trabalho": {
+                "fim": 53,
+                "inicio": 49
+              }
+            }
+          ],
+          "explicacao": "'saiu' é núcleo verbal na anotação recebida (POS=VERB, dependência=ROOT).",
+          "familia": "oracoes",
+          "id": "regras-fixture-08:ocorrencia:0",
+          "marcador_token_ids": [
+            "segmentacao-fixture-07:token:11"
+          ],
+          "necessidade_contexto": [],
+          "nucleo_token_ids": [
+            "segmentacao-fixture-07:token:11"
+          ],
+          "ordem": 0,
+          "paragrafo_id": "segmentacao-fixture-07:paragrafo:1",
+          "periodo_id": "segmentacao-fixture-07:periodo:4",
+          "regra": {
+            "id": "oracao_predicado",
+            "versao": "1.1.0"
+          },
+          "vinculos": []
+        },
+        {
+          "alcance": {
+            "token_ids": [
+              "segmentacao-fixture-07:token:10",
+              "segmentacao-fixture-07:token:11",
+              "segmentacao-fixture-07:token:12"
+            ],
+            "trechos": [
+              {
+                "original": {
+                  "fim": 56,
+                  "inicio": 46
+                },
+                "paragrafo_id": "segmentacao-fixture-07:paragrafo:1",
+                "periodo_id": "segmentacao-fixture-07:periodo:4",
+                "texto": "João saiu.",
+                "token_ids": [
+                  "segmentacao-fixture-07:token:10",
+                  "segmentacao-fixture-07:token:11",
+                  "segmentacao-fixture-07:token:12"
+                ],
+                "trabalho": {
+                  "fim": 54,
+                  "inicio": 44
+                }
+              }
+            ]
+          },
+          "alternativas": [],
+          "ambiguidades": [],
+          "anotacoes_utilizadas": [
+            {
+              "cabeca_token_id": "segmentacao-fixture-07:token:11",
+              "dependencia": "ROOT",
+              "lema": "sair",
+              "morfologia": {
+                "Mood": "Ind",
+                "Tense": "Past",
+                "VerbForm": "Fin"
+              },
+              "pos": "VERB",
+              "token_id": "segmentacao-fixture-07:token:11"
+            }
+          ],
+          "categoria": "flexao_verbal",
+          "evidencias": [
+            {
+              "original": {
+                "fim": 55,
+                "inicio": 51
+              },
+              "paragrafo_id": "segmentacao-fixture-07:paragrafo:1",
+              "periodo_id": "segmentacao-fixture-07:periodo:4",
+              "texto": "saiu",
+              "token_ids": [
+                "segmentacao-fixture-07:token:11"
+              ],
+              "trabalho": {
+                "fim": 53,
+                "inicio": 49
+              }
+            }
+          ],
+          "explicacao": "A anotação morfológica de 'saiu' registra Tense=Past, Mood=Ind, VerbForm=Fin. Os valores recebidos são evidências linguísticas preservadas, sem correção do modelo ou conversão em data.",
+          "familia": "tempo",
+          "id": "regras-fixture-08:ocorrencia:1",
+          "marcador_token_ids": [
+            "segmentacao-fixture-07:token:11"
+          ],
+          "necessidade_contexto": [],
+          "nucleo_token_ids": [
+            "segmentacao-fixture-07:token:11"
+          ],
+          "ordem": 1,
+          "paragrafo_id": "segmentacao-fixture-07:paragrafo:1",
+          "periodo_id": "segmentacao-fixture-07:periodo:4",
+          "regra": {
+            "id": "tempo_flexao",
+            "versao": "1.1.0"
+          },
+          "vinculos": [
+            {
+              "alvo_id": "regras-fixture-08:ocorrencia:0",
+              "alvo_tipo": "ocorrencia",
+              "tipo": "estrutura_associada"
+            },
+            {
+              "alvo_id": "regras-fixture-08:ocorrencia:0",
+              "alvo_tipo": "ocorrencia",
+              "tipo": "predicado_associado"
+            },
+            {
+              "alvo_id": "segmentacao-fixture-07:token:11",
+              "alvo_tipo": "token",
+              "tipo": "predicado_associado"
+            }
+          ]
+        }
+      ],
+      "preparacao_id": "preparacao-fixture-07",
+      "processamento": {
+        "catalogo_sha256": "8fc774801d9cb319bfa874eb5ba2170af8eb3f512d11d22d16343b4e1bf4e6fc",
+        "ferramenta": "biblioteca_padrao",
+        "modelo_reexecutado": false,
+        "modulo": {
+          "nome": "regras_linguisticas",
+          "versao": "1.1.0"
+        },
+        "natureza": "hipoteses_por_regras"
+      },
+      "registrado_em": "2026-10-08T09:30:00-03:00",
+      "schema_version": "1.0.0",
+      "segmentacao_id": "segmentacao-fixture-07",
+      "validacao": {
+        "cobertura": {
+          "familias": {
+            "conectores": {
+              "estado": "executada",
+              "ocorrencias_total": 0,
+              "regras_habilitadas": 2
+            },
+            "modalidade": {
+              "estado": "executada",
+              "ocorrencias_total": 0,
+              "regras_habilitadas": 2
+            },
+            "negacao": {
+              "estado": "executada",
+              "ocorrencias_total": 0,
+              "regras_habilitadas": 5
+            },
+            "oracoes": {
+              "estado": "executada",
+              "ocorrencias_total": 1,
+              "regras_habilitadas": 1
+            },
+            "tempo": {
+              "estado": "executada",
+              "ocorrencias_total": 1,
+              "regras_habilitadas": 2
+            }
+          },
+          "ocorrencias_total": 2,
+          "regras_com_pendencias": 0,
+          "regras_desabilitadas": 0,
+          "regras_executadas": 12,
+          "regras_falharam": 0,
+          "regras_habilitadas": 12,
+          "regras_total": 12
+        },
+        "estado": "pronto_para_etapa_08",
+        "limites": [
+          "Validade estrutural não certifica a correção linguística das hipóteses.",
+          "Ambiguidades e necessidade de contexto são preservadas para a etapa 08."
+        ],
+        "pronto_para_etapa_08": true,
+        "verificacoes": [
+          "analise_e_cadeia_de_origem",
+          "catalogo_e_configuracao",
+          "execucao_por_regra",
+          "condicoes_e_evidencias",
+          "tokens_textos_intervalos_e_mapa_original",
+          "alcances_fragmentos_vinculos_ordem_e_duplicatas"
+        ]
+      }
+    },
+    "regras_execucao_id": "regras-fixture-08",
+    "schema_version": "1.0.0",
+    "segmentacao_id": "segmentacao-fixture-07",
+    "unidades": [
+      {
+        "anotacoes_vizinhos": [
+          {
+            "anotacoes": {
+              "entidades": [],
+              "morfologia": [
+                {
+                  "anotacao_id": "anotacao-fixture-07",
+                  "token_id": "segmentacao-fixture-07:token:3"
+                },
+                {
+                  "anotacao_id": "anotacao-fixture-07",
+                  "token_id": "segmentacao-fixture-07:token:4"
+                },
+                {
+                  "anotacao_id": "anotacao-fixture-07",
+                  "token_id": "segmentacao-fixture-07:token:5"
+                }
+              ],
+              "regras": [],
+              "sintaxe": [
+                {
+                  "analise_id": "analise-fixture-07",
+                  "token_id": "segmentacao-fixture-07:token:3"
+                },
+                {
+                  "analise_id": "analise-fixture-07",
+                  "token_id": "segmentacao-fixture-07:token:4"
+                },
+                {
+                  "analise_id": "analise-fixture-07",
+                  "token_id": "segmentacao-fixture-07:token:5"
+                }
+              ]
+            },
+            "periodo_id": "segmentacao-fixture-07:periodo:1"
+          }
+        ],
+        "anteriores": [],
+        "foco": {
+          "anotacoes": {
+            "entidades": [],
+            "morfologia": [
+              {
+                "anotacao_id": "anotacao-fixture-07",
+                "token_id": "segmentacao-fixture-07:token:0"
+              },
+              {
+                "anotacao_id": "anotacao-fixture-07",
+                "token_id": "segmentacao-fixture-07:token:1"
+              },
+              {
+                "anotacao_id": "anotacao-fixture-07",
+                "token_id": "segmentacao-fixture-07:token:2"
+              }
+            ],
+            "regras": [],
+            "sintaxe": [
+              {
+                "analise_id": "analise-fixture-07",
+                "token_id": "segmentacao-fixture-07:token:0"
+              },
+              {
+                "analise_id": "analise-fixture-07",
+                "token_id": "segmentacao-fixture-07:token:1"
+              },
+              {
+                "analise_id": "analise-fixture-07",
+                "token_id": "segmentacao-fixture-07:token:2"
+              }
+            ]
+          },
+          "original": {
+            "fim": 15,
+            "inicio": 2
+          },
+          "sha256_texto": "b5b08dd2d8ba18d1e90ff038b068cff6c17d3a1a569da5d215229d8258cca0cb",
+          "sha256_texto_original": "b5b08dd2d8ba18d1e90ff038b068cff6c17d3a1a569da5d215229d8258cca0cb",
+          "texto": "Árvore\tverde.",
+          "texto_original": "Árvore\tverde.",
+          "token_ids": [
+            "segmentacao-fixture-07:token:0",
+            "segmentacao-fixture-07:token:1",
+            "segmentacao-fixture-07:token:2"
+          ],
+          "trabalho": {
+            "fim": 15,
+            "inicio": 2
+          }
+        },
+        "id": "contexto-importacao-fixture:unidade:0",
+        "janela": {
+          "original": {
+            "fim": 27,
+            "inicio": 2
+          },
+          "paragrafo_ids": [
+            "segmentacao-fixture-07:paragrafo:0"
+          ],
+          "periodo_ids": [
+            "segmentacao-fixture-07:periodo:0",
+            "segmentacao-fixture-07:periodo:1"
+          ],
+          "sha256_texto": "08646bb34d7e6823b6ac6773de50885680102764ade5d9117df3bf45cfdbc297",
+          "sha256_texto_original": "08646bb34d7e6823b6ac6773de50885680102764ade5d9117df3bf45cfdbc297",
+          "texto": "Árvore\tverde.  Casa azul!",
+          "texto_original": "Árvore\tverde.  Casa azul!",
+          "trabalho": {
+            "fim": 27,
+            "inicio": 2
+          }
+        },
+        "janela_logica_id": "3b00a5dc5f1a98b7c88022a90ea406bfbb99dce4798571acaafdb1af027208f7",
+        "limites": {
+          "anterior": {
+            "motivo": "inicio_documento",
+            "quantidade_selecionada": 0,
+            "raio_solicitado": 1
+          },
+          "seguinte": {
+            "motivo": "raio_atendido",
+            "quantidade_selecionada": 1,
+            "raio_solicitado": 1
+          }
+        },
+        "ordem": 0,
+        "paragrafo_foco_id": "segmentacao-fixture-07:paragrafo:0",
+        "pendencias": [],
+        "periodo_foco_id": "segmentacao-fixture-07:periodo:0",
+        "referencias": {
+          "analise_id": "analise-fixture-07",
+          "anotacao_id": "anotacao-fixture-07",
+          "documento_id": "documento-fixture-07",
+          "paragrafo_id": "segmentacao-fixture-07:paragrafo:0",
+          "preparacao_id": "preparacao-fixture-07",
+          "regras_execucao_id": "regras-fixture-08",
+          "segmentacao_id": "segmentacao-fixture-07"
+        },
+        "seguintes": [
+          "segmentacao-fixture-07:periodo:1"
+        ],
+        "selecao_logica": {
+          "documento": {
+            "documento_id": "documento-fixture-07",
+            "sha256_original": "1e0b3bafcd602425cafcea8051a839d9d243bfda0f48ec06c3c30e7836539482"
+          },
+          "foco": {
+            "original": {
+              "fim": 15,
+              "inicio": 2
+            },
+            "paragrafo_original": {
+              "fim": 34,
+              "inicio": 2
+            }
+          },
+          "periodos": [
+            {
+              "original": {
+                "fim": 15,
+                "inicio": 2
+              },
+              "paragrafo_original": {
+                "fim": 34,
+                "inicio": 2
+              }
+            },
+            {
+              "original": {
+                "fim": 27,
+                "inicio": 17
+              },
+              "paragrafo_original": {
+                "fim": 34,
+                "inicio": 2
+              }
+            }
+          ],
+          "politica_contexto": {
+            "atravessar_paragrafos": false,
+            "identificacao": "janela_periodos_consecutivos",
+            "raio_anterior": 1,
+            "raio_seguinte": 1,
+            "versao": "1.0.0"
+          },
+          "regras_segmentacao": {
+            "identificacao": "segmentacao_portugues_por_regras",
+            "versao": "1.0.0"
+          },
+          "versao": "1.0.0"
+        },
+        "vinculos_disponiveis": []
+      },
+      {
+        "anotacoes_vizinhos": [
+          {
+            "anotacoes": {
+              "entidades": [],
+              "morfologia": [
+                {
+                  "anotacao_id": "anotacao-fixture-07",
+                  "token_id": "segmentacao-fixture-07:token:0"
+                },
+                {
+                  "anotacao_id": "anotacao-fixture-07",
+                  "token_id": "segmentacao-fixture-07:token:1"
+                },
+                {
+                  "anotacao_id": "anotacao-fixture-07",
+                  "token_id": "segmentacao-fixture-07:token:2"
+                }
+              ],
+              "regras": [],
+              "sintaxe": [
+                {
+                  "analise_id": "analise-fixture-07",
+                  "token_id": "segmentacao-fixture-07:token:0"
+                },
+                {
+                  "analise_id": "analise-fixture-07",
+                  "token_id": "segmentacao-fixture-07:token:1"
+                },
+                {
+                  "analise_id": "analise-fixture-07",
+                  "token_id": "segmentacao-fixture-07:token:2"
+                }
+              ]
+            },
+            "periodo_id": "segmentacao-fixture-07:periodo:0"
+          },
+          {
+            "anotacoes": {
+              "entidades": [],
+              "morfologia": [
+                {
+                  "anotacao_id": "anotacao-fixture-07",
+                  "token_id": "segmentacao-fixture-07:token:6"
+                },
+                {
+                  "anotacao_id": "anotacao-fixture-07",
+                  "token_id": "segmentacao-fixture-07:token:7"
+                }
+              ],
+              "regras": [],
+              "sintaxe": [
+                {
+                  "analise_id": "analise-fixture-07",
+                  "token_id": "segmentacao-fixture-07:token:6"
+                },
+                {
+                  "analise_id": "analise-fixture-07",
+                  "token_id": "segmentacao-fixture-07:token:7"
+                }
+              ]
+            },
+            "periodo_id": "segmentacao-fixture-07:periodo:2"
+          }
+        ],
+        "anteriores": [
+          "segmentacao-fixture-07:periodo:0"
+        ],
+        "foco": {
+          "anotacoes": {
+            "entidades": [],
+            "morfologia": [
+              {
+                "anotacao_id": "anotacao-fixture-07",
+                "token_id": "segmentacao-fixture-07:token:3"
+              },
+              {
+                "anotacao_id": "anotacao-fixture-07",
+                "token_id": "segmentacao-fixture-07:token:4"
+              },
+              {
+                "anotacao_id": "anotacao-fixture-07",
+                "token_id": "segmentacao-fixture-07:token:5"
+              }
+            ],
+            "regras": [],
+            "sintaxe": [
+              {
+                "analise_id": "analise-fixture-07",
+                "token_id": "segmentacao-fixture-07:token:3"
+              },
+              {
+                "analise_id": "analise-fixture-07",
+                "token_id": "segmentacao-fixture-07:token:4"
+              },
+              {
+                "analise_id": "analise-fixture-07",
+                "token_id": "segmentacao-fixture-07:token:5"
+              }
+            ]
+          },
+          "original": {
+            "fim": 27,
+            "inicio": 17
+          },
+          "sha256_texto": "f0366efa6753ec5972d096762635d3657c39b6c1e02227e890888da855d07177",
+          "sha256_texto_original": "f0366efa6753ec5972d096762635d3657c39b6c1e02227e890888da855d07177",
+          "texto": "Casa azul!",
+          "texto_original": "Casa azul!",
+          "token_ids": [
+            "segmentacao-fixture-07:token:3",
+            "segmentacao-fixture-07:token:4",
+            "segmentacao-fixture-07:token:5"
+          ],
+          "trabalho": {
+            "fim": 27,
+            "inicio": 17
+          }
+        },
+        "id": "contexto-importacao-fixture:unidade:1",
+        "janela": {
+          "original": {
+            "fim": 34,
+            "inicio": 2
+          },
+          "paragrafo_ids": [
+            "segmentacao-fixture-07:paragrafo:0"
+          ],
+          "periodo_ids": [
+            "segmentacao-fixture-07:periodo:0",
+            "segmentacao-fixture-07:periodo:1",
+            "segmentacao-fixture-07:periodo:2"
+          ],
+          "sha256_texto": "2bcf8f9f7ce2603fac143337dcd9d2a554fa316046b34a6780b62920a9dd561a",
+          "sha256_texto_original": "2bcf8f9f7ce2603fac143337dcd9d2a554fa316046b34a6780b62920a9dd561a",
+          "texto": "Árvore\tverde.  Casa azul! \t Céu.",
+          "texto_original": "Árvore\tverde.  Casa azul! \t Céu.",
+          "trabalho": {
+            "fim": 34,
+            "inicio": 2
+          }
+        },
+        "janela_logica_id": "fa6a25f64cd270097dc0fa9d4bb4a0cb16e956f63335d762c259a8d2dc4d7a3b",
+        "limites": {
+          "anterior": {
+            "motivo": "raio_atendido",
+            "quantidade_selecionada": 1,
+            "raio_solicitado": 1
+          },
+          "seguinte": {
+            "motivo": "raio_atendido",
+            "quantidade_selecionada": 1,
+            "raio_solicitado": 1
+          }
+        },
+        "ordem": 1,
+        "paragrafo_foco_id": "segmentacao-fixture-07:paragrafo:0",
+        "pendencias": [],
+        "periodo_foco_id": "segmentacao-fixture-07:periodo:1",
+        "referencias": {
+          "analise_id": "analise-fixture-07",
+          "anotacao_id": "anotacao-fixture-07",
+          "documento_id": "documento-fixture-07",
+          "paragrafo_id": "segmentacao-fixture-07:paragrafo:0",
+          "preparacao_id": "preparacao-fixture-07",
+          "regras_execucao_id": "regras-fixture-08",
+          "segmentacao_id": "segmentacao-fixture-07"
+        },
+        "seguintes": [
+          "segmentacao-fixture-07:periodo:2"
+        ],
+        "selecao_logica": {
+          "documento": {
+            "documento_id": "documento-fixture-07",
+            "sha256_original": "1e0b3bafcd602425cafcea8051a839d9d243bfda0f48ec06c3c30e7836539482"
+          },
+          "foco": {
+            "original": {
+              "fim": 27,
+              "inicio": 17
+            },
+            "paragrafo_original": {
+              "fim": 34,
+              "inicio": 2
+            }
+          },
+          "periodos": [
+            {
+              "original": {
+                "fim": 15,
+                "inicio": 2
+              },
+              "paragrafo_original": {
+                "fim": 34,
+                "inicio": 2
+              }
+            },
+            {
+              "original": {
+                "fim": 27,
+                "inicio": 17
+              },
+              "paragrafo_original": {
+                "fim": 34,
+                "inicio": 2
+              }
+            },
+            {
+              "original": {
+                "fim": 34,
+                "inicio": 30
+              },
+              "paragrafo_original": {
+                "fim": 34,
+                "inicio": 2
+              }
+            }
+          ],
+          "politica_contexto": {
+            "atravessar_paragrafos": false,
+            "identificacao": "janela_periodos_consecutivos",
+            "raio_anterior": 1,
+            "raio_seguinte": 1,
+            "versao": "1.0.0"
+          },
+          "regras_segmentacao": {
+            "identificacao": "segmentacao_portugues_por_regras",
+            "versao": "1.0.0"
+          },
+          "versao": "1.0.0"
+        },
+        "vinculos_disponiveis": []
+      },
+      {
+        "anotacoes_vizinhos": [
+          {
+            "anotacoes": {
+              "entidades": [],
+              "morfologia": [
+                {
+                  "anotacao_id": "anotacao-fixture-07",
+                  "token_id": "segmentacao-fixture-07:token:3"
+                },
+                {
+                  "anotacao_id": "anotacao-fixture-07",
+                  "token_id": "segmentacao-fixture-07:token:4"
+                },
+                {
+                  "anotacao_id": "anotacao-fixture-07",
+                  "token_id": "segmentacao-fixture-07:token:5"
+                }
+              ],
+              "regras": [],
+              "sintaxe": [
+                {
+                  "analise_id": "analise-fixture-07",
+                  "token_id": "segmentacao-fixture-07:token:3"
+                },
+                {
+                  "analise_id": "analise-fixture-07",
+                  "token_id": "segmentacao-fixture-07:token:4"
+                },
+                {
+                  "analise_id": "analise-fixture-07",
+                  "token_id": "segmentacao-fixture-07:token:5"
+                }
+              ]
+            },
+            "periodo_id": "segmentacao-fixture-07:periodo:1"
+          }
+        ],
+        "anteriores": [
+          "segmentacao-fixture-07:periodo:1"
+        ],
+        "foco": {
+          "anotacoes": {
+            "entidades": [],
+            "morfologia": [
+              {
+                "anotacao_id": "anotacao-fixture-07",
+                "token_id": "segmentacao-fixture-07:token:6"
+              },
+              {
+                "anotacao_id": "anotacao-fixture-07",
+                "token_id": "segmentacao-fixture-07:token:7"
+              }
+            ],
+            "regras": [],
+            "sintaxe": [
+              {
+                "analise_id": "analise-fixture-07",
+                "token_id": "segmentacao-fixture-07:token:6"
+              },
+              {
+                "analise_id": "analise-fixture-07",
+                "token_id": "segmentacao-fixture-07:token:7"
+              }
+            ]
+          },
+          "original": {
+            "fim": 34,
+            "inicio": 30
+          },
+          "sha256_texto": "98ef1d2413be1866d1c89b707599a608002d70e032695a6f4a33be6d31c8bc11",
+          "sha256_texto_original": "98ef1d2413be1866d1c89b707599a608002d70e032695a6f4a33be6d31c8bc11",
+          "texto": "Céu.",
+          "texto_original": "Céu.",
+          "token_ids": [
+            "segmentacao-fixture-07:token:6",
+            "segmentacao-fixture-07:token:7"
+          ],
+          "trabalho": {
+            "fim": 34,
+            "inicio": 30
+          }
+        },
+        "id": "contexto-importacao-fixture:unidade:2",
+        "janela": {
+          "original": {
+            "fim": 34,
+            "inicio": 17
+          },
+          "paragrafo_ids": [
+            "segmentacao-fixture-07:paragrafo:0"
+          ],
+          "periodo_ids": [
+            "segmentacao-fixture-07:periodo:1",
+            "segmentacao-fixture-07:periodo:2"
+          ],
+          "sha256_texto": "acdcfde748eca098403e34b808f3894f4fd01c87ae6a0d1687f4546e84fccd99",
+          "sha256_texto_original": "acdcfde748eca098403e34b808f3894f4fd01c87ae6a0d1687f4546e84fccd99",
+          "texto": "Casa azul! \t Céu.",
+          "texto_original": "Casa azul! \t Céu.",
+          "trabalho": {
+            "fim": 34,
+            "inicio": 17
+          }
+        },
+        "janela_logica_id": "b6dfe83421704fa6e4cc7143c7a919f38883979160750f45f13eabd61594229d",
+        "limites": {
+          "anterior": {
+            "motivo": "raio_atendido",
+            "quantidade_selecionada": 1,
+            "raio_solicitado": 1
+          },
+          "seguinte": {
+            "motivo": "fronteira_paragrafo",
+            "quantidade_selecionada": 0,
+            "raio_solicitado": 1
+          }
+        },
+        "ordem": 2,
+        "paragrafo_foco_id": "segmentacao-fixture-07:paragrafo:0",
+        "pendencias": [],
+        "periodo_foco_id": "segmentacao-fixture-07:periodo:2",
+        "referencias": {
+          "analise_id": "analise-fixture-07",
+          "anotacao_id": "anotacao-fixture-07",
+          "documento_id": "documento-fixture-07",
+          "paragrafo_id": "segmentacao-fixture-07:paragrafo:0",
+          "preparacao_id": "preparacao-fixture-07",
+          "regras_execucao_id": "regras-fixture-08",
+          "segmentacao_id": "segmentacao-fixture-07"
+        },
+        "seguintes": [],
+        "selecao_logica": {
+          "documento": {
+            "documento_id": "documento-fixture-07",
+            "sha256_original": "1e0b3bafcd602425cafcea8051a839d9d243bfda0f48ec06c3c30e7836539482"
+          },
+          "foco": {
+            "original": {
+              "fim": 34,
+              "inicio": 30
+            },
+            "paragrafo_original": {
+              "fim": 34,
+              "inicio": 2
+            }
+          },
+          "periodos": [
+            {
+              "original": {
+                "fim": 27,
+                "inicio": 17
+              },
+              "paragrafo_original": {
+                "fim": 34,
+                "inicio": 2
+              }
+            },
+            {
+              "original": {
+                "fim": 34,
+                "inicio": 30
+              },
+              "paragrafo_original": {
+                "fim": 34,
+                "inicio": 2
+              }
+            }
+          ],
+          "politica_contexto": {
+            "atravessar_paragrafos": false,
+            "identificacao": "janela_periodos_consecutivos",
+            "raio_anterior": 1,
+            "raio_seguinte": 1,
+            "versao": "1.0.0"
+          },
+          "regras_segmentacao": {
+            "identificacao": "segmentacao_portugues_por_regras",
+            "versao": "1.0.0"
+          },
+          "versao": "1.0.0"
+        },
+        "vinculos_disponiveis": []
+      },
+      {
+        "anotacoes_vizinhos": [
+          {
+            "anotacoes": {
+              "entidades": [],
+              "morfologia": [
+                {
+                  "anotacao_id": "anotacao-fixture-07",
+                  "token_id": "segmentacao-fixture-07:token:10"
+                },
+                {
+                  "anotacao_id": "anotacao-fixture-07",
+                  "token_id": "segmentacao-fixture-07:token:11"
+                },
+                {
+                  "anotacao_id": "anotacao-fixture-07",
+                  "token_id": "segmentacao-fixture-07:token:12"
+                }
+              ],
+              "regras": [
+                {
+                  "ocorrencia_id": "regras-fixture-08:ocorrencia:0",
+                  "regras_execucao_id": "regras-fixture-08"
+                },
+                {
+                  "ocorrencia_id": "regras-fixture-08:ocorrencia:1",
+                  "regras_execucao_id": "regras-fixture-08"
+                }
+              ],
+              "sintaxe": [
+                {
+                  "analise_id": "analise-fixture-07",
+                  "token_id": "segmentacao-fixture-07:token:10"
+                },
+                {
+                  "analise_id": "analise-fixture-07",
+                  "token_id": "segmentacao-fixture-07:token:11"
+                },
+                {
+                  "analise_id": "analise-fixture-07",
+                  "token_id": "segmentacao-fixture-07:token:12"
+                }
+              ]
+            },
+            "periodo_id": "segmentacao-fixture-07:periodo:4"
+          }
+        ],
+        "anteriores": [],
+        "foco": {
+          "anotacoes": {
+            "entidades": [],
+            "morfologia": [
+              {
+                "anotacao_id": "anotacao-fixture-07",
+                "token_id": "segmentacao-fixture-07:token:8"
+              },
+              {
+                "anotacao_id": "anotacao-fixture-07",
+                "token_id": "segmentacao-fixture-07:token:9"
+              }
+            ],
+            "regras": [],
+            "sintaxe": [
+              {
+                "analise_id": "analise-fixture-07",
+                "token_id": "segmentacao-fixture-07:token:8"
+              },
+              {
+                "analise_id": "analise-fixture-07",
+                "token_id": "segmentacao-fixture-07:token:9"
+              }
+            ]
+          },
+          "original": {
+            "fim": 44,
+            "inicio": 38
+          },
+          "sha256_texto": "910e4147767c1dd969bdea9315ca3ba4e97dc170271f92f8998b02f12685f3dc",
+          "sha256_texto_original": "910e4147767c1dd969bdea9315ca3ba4e97dc170271f92f8998b02f12685f3dc",
+          "texto": "Outro.",
+          "texto_original": "Outro.",
+          "token_ids": [
+            "segmentacao-fixture-07:token:8",
+            "segmentacao-fixture-07:token:9"
+          ],
+          "trabalho": {
+            "fim": 42,
+            "inicio": 36
+          }
+        },
+        "id": "contexto-importacao-fixture:unidade:3",
+        "janela": {
+          "original": {
+            "fim": 56,
+            "inicio": 38
+          },
+          "paragrafo_ids": [
+            "segmentacao-fixture-07:paragrafo:1"
+          ],
+          "periodo_ids": [
+            "segmentacao-fixture-07:periodo:3",
+            "segmentacao-fixture-07:periodo:4"
+          ],
+          "sha256_texto": "13eb131664c853d3507cf6809993f06032c4ce3baf0576fd39a62f331cdf74c5",
+          "sha256_texto_original": "13eb131664c853d3507cf6809993f06032c4ce3baf0576fd39a62f331cdf74c5",
+          "texto": "Outro.  João saiu.",
+          "texto_original": "Outro.  João saiu.",
+          "trabalho": {
+            "fim": 54,
+            "inicio": 36
+          }
+        },
+        "janela_logica_id": "f47f2ee8059d710c0436208e60c695e74fc148db99c8b88e9266ce716e5bb577",
+        "limites": {
+          "anterior": {
+            "motivo": "fronteira_paragrafo",
+            "quantidade_selecionada": 0,
+            "raio_solicitado": 1
+          },
+          "seguinte": {
+            "motivo": "raio_atendido",
+            "quantidade_selecionada": 1,
+            "raio_solicitado": 1
+          }
+        },
+        "ordem": 3,
+        "paragrafo_foco_id": "segmentacao-fixture-07:paragrafo:1",
+        "pendencias": [],
+        "periodo_foco_id": "segmentacao-fixture-07:periodo:3",
+        "referencias": {
+          "analise_id": "analise-fixture-07",
+          "anotacao_id": "anotacao-fixture-07",
+          "documento_id": "documento-fixture-07",
+          "paragrafo_id": "segmentacao-fixture-07:paragrafo:1",
+          "preparacao_id": "preparacao-fixture-07",
+          "regras_execucao_id": "regras-fixture-08",
+          "segmentacao_id": "segmentacao-fixture-07"
+        },
+        "seguintes": [
+          "segmentacao-fixture-07:periodo:4"
+        ],
+        "selecao_logica": {
+          "documento": {
+            "documento_id": "documento-fixture-07",
+            "sha256_original": "1e0b3bafcd602425cafcea8051a839d9d243bfda0f48ec06c3c30e7836539482"
+          },
+          "foco": {
+            "original": {
+              "fim": 44,
+              "inicio": 38
+            },
+            "paragrafo_original": {
+              "fim": 56,
+              "inicio": 38
+            }
+          },
+          "periodos": [
+            {
+              "original": {
+                "fim": 44,
+                "inicio": 38
+              },
+              "paragrafo_original": {
+                "fim": 56,
+                "inicio": 38
+              }
+            },
+            {
+              "original": {
+                "fim": 56,
+                "inicio": 46
+              },
+              "paragrafo_original": {
+                "fim": 56,
+                "inicio": 38
+              }
+            }
+          ],
+          "politica_contexto": {
+            "atravessar_paragrafos": false,
+            "identificacao": "janela_periodos_consecutivos",
+            "raio_anterior": 1,
+            "raio_seguinte": 1,
+            "versao": "1.0.0"
+          },
+          "regras_segmentacao": {
+            "identificacao": "segmentacao_portugues_por_regras",
+            "versao": "1.0.0"
+          },
+          "versao": "1.0.0"
+        },
+        "vinculos_disponiveis": [
+          {
+            "localizacao": "na_janela",
+            "ocorrencia_id": "regras-fixture-08:ocorrencia:1",
+            "periodo_alvo_id": "segmentacao-fixture-07:periodo:4",
+            "periodo_origem_id": "segmentacao-fixture-07:periodo:4",
+            "vinculo": {
+              "alvo_id": "regras-fixture-08:ocorrencia:0",
+              "alvo_tipo": "ocorrencia",
+              "tipo": "estrutura_associada"
+            }
+          },
+          {
+            "localizacao": "na_janela",
+            "ocorrencia_id": "regras-fixture-08:ocorrencia:1",
+            "periodo_alvo_id": "segmentacao-fixture-07:periodo:4",
+            "periodo_origem_id": "segmentacao-fixture-07:periodo:4",
+            "vinculo": {
+              "alvo_id": "regras-fixture-08:ocorrencia:0",
+              "alvo_tipo": "ocorrencia",
+              "tipo": "predicado_associado"
+            }
+          },
+          {
+            "localizacao": "na_janela",
+            "ocorrencia_id": "regras-fixture-08:ocorrencia:1",
+            "periodo_alvo_id": "segmentacao-fixture-07:periodo:4",
+            "periodo_origem_id": "segmentacao-fixture-07:periodo:4",
+            "vinculo": {
+              "alvo_id": "segmentacao-fixture-07:token:11",
+              "alvo_tipo": "token",
+              "tipo": "predicado_associado"
+            }
+          }
+        ]
+      },
+      {
+        "anotacoes_vizinhos": [
+          {
+            "anotacoes": {
+              "entidades": [],
+              "morfologia": [
+                {
+                  "anotacao_id": "anotacao-fixture-07",
+                  "token_id": "segmentacao-fixture-07:token:8"
+                },
+                {
+                  "anotacao_id": "anotacao-fixture-07",
+                  "token_id": "segmentacao-fixture-07:token:9"
+                }
+              ],
+              "regras": [],
+              "sintaxe": [
+                {
+                  "analise_id": "analise-fixture-07",
+                  "token_id": "segmentacao-fixture-07:token:8"
+                },
+                {
+                  "analise_id": "analise-fixture-07",
+                  "token_id": "segmentacao-fixture-07:token:9"
+                }
+              ]
+            },
+            "periodo_id": "segmentacao-fixture-07:periodo:3"
+          }
+        ],
+        "anteriores": [
+          "segmentacao-fixture-07:periodo:3"
+        ],
+        "foco": {
+          "anotacoes": {
+            "entidades": [],
+            "morfologia": [
+              {
+                "anotacao_id": "anotacao-fixture-07",
+                "token_id": "segmentacao-fixture-07:token:10"
+              },
+              {
+                "anotacao_id": "anotacao-fixture-07",
+                "token_id": "segmentacao-fixture-07:token:11"
+              },
+              {
+                "anotacao_id": "anotacao-fixture-07",
+                "token_id": "segmentacao-fixture-07:token:12"
+              }
+            ],
+            "regras": [
+              {
+                "ocorrencia_id": "regras-fixture-08:ocorrencia:0",
+                "regras_execucao_id": "regras-fixture-08"
+              },
+              {
+                "ocorrencia_id": "regras-fixture-08:ocorrencia:1",
+                "regras_execucao_id": "regras-fixture-08"
+              }
+            ],
+            "sintaxe": [
+              {
+                "analise_id": "analise-fixture-07",
+                "token_id": "segmentacao-fixture-07:token:10"
+              },
+              {
+                "analise_id": "analise-fixture-07",
+                "token_id": "segmentacao-fixture-07:token:11"
+              },
+              {
+                "analise_id": "analise-fixture-07",
+                "token_id": "segmentacao-fixture-07:token:12"
+              }
+            ]
+          },
+          "original": {
+            "fim": 56,
+            "inicio": 46
+          },
+          "sha256_texto": "c82c7f03373e72a20638026bbb9659db9799b247e64d63942aec1331696d76ce",
+          "sha256_texto_original": "c82c7f03373e72a20638026bbb9659db9799b247e64d63942aec1331696d76ce",
+          "texto": "João saiu.",
+          "texto_original": "João saiu.",
+          "token_ids": [
+            "segmentacao-fixture-07:token:10",
+            "segmentacao-fixture-07:token:11",
+            "segmentacao-fixture-07:token:12"
+          ],
+          "trabalho": {
+            "fim": 54,
+            "inicio": 44
+          }
+        },
+        "id": "contexto-importacao-fixture:unidade:4",
+        "janela": {
+          "original": {
+            "fim": 56,
+            "inicio": 38
+          },
+          "paragrafo_ids": [
+            "segmentacao-fixture-07:paragrafo:1"
+          ],
+          "periodo_ids": [
+            "segmentacao-fixture-07:periodo:3",
+            "segmentacao-fixture-07:periodo:4"
+          ],
+          "sha256_texto": "13eb131664c853d3507cf6809993f06032c4ce3baf0576fd39a62f331cdf74c5",
+          "sha256_texto_original": "13eb131664c853d3507cf6809993f06032c4ce3baf0576fd39a62f331cdf74c5",
+          "texto": "Outro.  João saiu.",
+          "texto_original": "Outro.  João saiu.",
+          "trabalho": {
+            "fim": 54,
+            "inicio": 36
+          }
+        },
+        "janela_logica_id": "0f2c5da2c1ab6cd1602082567bf933971b85ad354bc617fb4f09489e3fd98152",
+        "limites": {
+          "anterior": {
+            "motivo": "raio_atendido",
+            "quantidade_selecionada": 1,
+            "raio_solicitado": 1
+          },
+          "seguinte": {
+            "motivo": "fim_documento",
+            "quantidade_selecionada": 0,
+            "raio_solicitado": 1
+          }
+        },
+        "ordem": 4,
+        "paragrafo_foco_id": "segmentacao-fixture-07:paragrafo:1",
+        "pendencias": [],
+        "periodo_foco_id": "segmentacao-fixture-07:periodo:4",
+        "referencias": {
+          "analise_id": "analise-fixture-07",
+          "anotacao_id": "anotacao-fixture-07",
+          "documento_id": "documento-fixture-07",
+          "paragrafo_id": "segmentacao-fixture-07:paragrafo:1",
+          "preparacao_id": "preparacao-fixture-07",
+          "regras_execucao_id": "regras-fixture-08",
+          "segmentacao_id": "segmentacao-fixture-07"
+        },
+        "seguintes": [],
+        "selecao_logica": {
+          "documento": {
+            "documento_id": "documento-fixture-07",
+            "sha256_original": "1e0b3bafcd602425cafcea8051a839d9d243bfda0f48ec06c3c30e7836539482"
+          },
+          "foco": {
+            "original": {
+              "fim": 56,
+              "inicio": 46
+            },
+            "paragrafo_original": {
+              "fim": 56,
+              "inicio": 38
+            }
+          },
+          "periodos": [
+            {
+              "original": {
+                "fim": 44,
+                "inicio": 38
+              },
+              "paragrafo_original": {
+                "fim": 56,
+                "inicio": 38
+              }
+            },
+            {
+              "original": {
+                "fim": 56,
+                "inicio": 46
+              },
+              "paragrafo_original": {
+                "fim": 56,
+                "inicio": 38
+              }
+            }
+          ],
+          "politica_contexto": {
+            "atravessar_paragrafos": false,
+            "identificacao": "janela_periodos_consecutivos",
+            "raio_anterior": 1,
+            "raio_seguinte": 1,
+            "versao": "1.0.0"
+          },
+          "regras_segmentacao": {
+            "identificacao": "segmentacao_portugues_por_regras",
+            "versao": "1.0.0"
+          },
+          "versao": "1.0.0"
+        },
+        "vinculos_disponiveis": [
+          {
+            "localizacao": "na_janela",
+            "ocorrencia_id": "regras-fixture-08:ocorrencia:1",
+            "periodo_alvo_id": "segmentacao-fixture-07:periodo:4",
+            "periodo_origem_id": "segmentacao-fixture-07:periodo:4",
+            "vinculo": {
+              "alvo_id": "regras-fixture-08:ocorrencia:0",
+              "alvo_tipo": "ocorrencia",
+              "tipo": "estrutura_associada"
+            }
+          },
+          {
+            "localizacao": "na_janela",
+            "ocorrencia_id": "regras-fixture-08:ocorrencia:1",
+            "periodo_alvo_id": "segmentacao-fixture-07:periodo:4",
+            "periodo_origem_id": "segmentacao-fixture-07:periodo:4",
+            "vinculo": {
+              "alvo_id": "regras-fixture-08:ocorrencia:0",
+              "alvo_tipo": "ocorrencia",
+              "tipo": "predicado_associado"
+            }
+          },
+          {
+            "localizacao": "na_janela",
+            "ocorrencia_id": "regras-fixture-08:ocorrencia:1",
+            "periodo_alvo_id": "segmentacao-fixture-07:periodo:4",
+            "periodo_origem_id": "segmentacao-fixture-07:periodo:4",
+            "vinculo": {
+              "alvo_id": "segmentacao-fixture-07:token:11",
+              "alvo_tipo": "token",
+              "tipo": "predicado_associado"
+            }
+          }
+        ]
+      }
+    ],
+    "validacao": {
+      "cobertura": {
+        "custo": {
+          "caracteres_textuais": 306,
+          "referencias": 138,
+          "referencias_periodos": 11,
+          "unidades": 5
+        },
+        "pendencias_total": 0,
+        "periodos_total": 5,
+        "unidades_total": 5
+      },
+      "estado": "valido",
+      "limites": [
+        "Disponibilizar contexto não resolve as pendências linguísticas.",
+        "A prontidão preserva a cobertura e as limitações das regras da origem.",
+        "Identidade lógica não substitui o hash do texto escolhido para vetorização."
+      ],
+      "pronto_para_etapa_09": true,
+      "verificacoes": [
+        "origem_integral_validada_e_pronta",
+        "cobertura_ordem_identificadores_e_associacoes",
+        "politica_vizinhos_fronteiras_e_limites",
+        "recortes_tokens_separadores_e_mapeamento_original",
+        "hashes_sha256_utf8_dos_campos_exatos",
+        "selecao_logica_canonica_e_identidade",
+        "anotacoes_por_proprietario_e_vinculos_tipados",
+        "pendencias_preservadas_sem_inferencia"
+      ]
+    }
+  },
+  "contexto_execucao_id": "contexto-importacao-fixture",
+  "contexto_sha256": "e4071c654f1d730e92604cf38c24a267be6ebc027f72c3d0f44549c25f15da37",
+  "documento_id": "documento-fixture-07",
+  "espaco_vetorial_id": "sha256:d271da5acfa9498d85af5530ab2e34ae17babfd5fe78c54681b26a365ddc0399",
+  "etapa": "09_vetorizacao",
+  "execucao_id": "vetores-analista-fixture-09",
+  "perfil": {
+    "agregacao": "nenhuma",
+    "backend": "sentence_transformers",
+    "cache_modelos": "/workspace/lingua/instance/modelos",
+    "dispositivo": "cpu",
+    "estrategia_consultas": "paragrafos_documento",
+    "finalidade": "consulta",
+    "formato_armazenamento": "float32",
+    "fragmentacao": "sem_sobreposicao",
+    "id": "e5_analista",
+    "legado": null,
+    "limite_tokens": 504,
+    "lote": 16,
+    "modelo": {
+      "identificacao": "intfloat/multilingual-e5-large",
+      "revisao": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3"
+    },
+    "normalizacao": "l2",
+    "pooling": "mean",
+    "precisao_inferencia": "float32",
+    "prefixo": "query: ",
+    "somente_local": true,
+    "texto_documento": "original",
+    "tokenizador": {
+      "identificacao": "intfloat/multilingual-e5-large",
+      "revisao": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3"
+    },
+    "versao": "1.0.0"
+  },
+  "preparacao_id": "preparacao-fixture-07",
+  "processamento": {
+    "adaptador": {
+      "backend": "sentence_transformers",
+      "bibliotecas": {
+        "fixture": "deterministica-sem-inferencia-neural"
+      },
+      "dimensao": 3,
+      "dispositivo": "cpu",
+      "limite_tokens": 512,
+      "modelo": {
+        "identificacao": "intfloat/multilingual-e5-large",
+        "revisao": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3"
+      },
+      "pooling": "mean",
+      "precisao_inferencia": "float32",
+      "tokenizador": {
+        "identificacao": "intfloat/multilingual-e5-large",
+        "revisao": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3"
+      },
+      "versao_backend": "teste-1.0"
+    },
+    "backend": "sentence_transformers",
+    "bibliotecas": {
+      "fixture": "deterministica-sem-inferencia-neural"
+    },
+    "dimensao": 3,
+    "dispositivo": "cpu",
+    "limite_modelo_tokens": 512,
+    "limite_tokens": 504,
+    "modelo": {
+      "identificacao": "intfloat/multilingual-e5-large",
+      "revisao": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3"
+    },
+    "modulo": {
+      "nome": "vetorizacao",
+      "versao": "1.0.0"
+    },
+    "pooling": "mean",
+    "precisao_inferencia": "float32",
+    "tokenizador": {
+      "identificacao": "intfloat/multilingual-e5-large",
+      "revisao": "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3"
+    },
+    "versao_backend": "teste-1.0"
+  },
+  "registrado_em": "2026-10-08T09:30:00-03:00",
+  "regras_execucao_id": "regras-fixture-08",
+  "representacoes": [
+    {
+      "artefato_id": "sha256:2b9fc6bf555098ade1d49902ec88dbf802f892596f1f5b0737f7b4fba9e52434",
+      "cobertura_integral": true,
+      "estado": "concluida",
+      "fragmentos": [
+        {
+          "artefato_id": "sha256:2b9fc6bf555098ade1d49902ec88dbf802f892596f1f5b0737f7b4fba9e52434",
+          "original": {
+            "fim": 34,
+            "inicio": 2
+          },
+          "peso": 1,
+          "tokens_conteudo": 32,
+          "trabalho": {
+            "fim": 34,
+            "inicio": 2
+          }
+        }
+      ],
+      "id": "vetores-analista-fixture-09:representacao:0",
+      "metodo": "direto",
+      "omissoes": [],
+      "ordem": 0,
+      "origem": {
+        "campo": "preparacao.original.texto",
+        "original": {
+          "fim": 34,
+          "inicio": 2
+        },
+        "paragrafo_id": "P1",
+        "trabalho": {
+          "fim": 34,
+          "inicio": 2
+        }
+      },
+      "texto_sha256": "2bcf8f9f7ce2603fac143337dcd9d2a554fa316046b34a6780b62920a9dd561a",
+      "tipo": "paragrafo"
+    },
+    {
+      "artefato_id": "sha256:99913b50ff5f07bf981bf2eb4de3f413639fb237650bc74b66e477539fbd7e34",
+      "cobertura_integral": true,
+      "estado": "concluida",
+      "fragmentos": [
+        {
+          "artefato_id": "sha256:99913b50ff5f07bf981bf2eb4de3f413639fb237650bc74b66e477539fbd7e34",
+          "original": {
+            "fim": 56,
+            "inicio": 38
+          },
+          "peso": 1,
+          "tokens_conteudo": 18,
+          "trabalho": {
+            "fim": 54,
+            "inicio": 36
+          }
+        }
+      ],
+      "id": "vetores-analista-fixture-09:representacao:1",
+      "metodo": "direto",
+      "omissoes": [],
+      "ordem": 1,
+      "origem": {
+        "campo": "preparacao.original.texto",
+        "original": {
+          "fim": 56,
+          "inicio": 38
+        },
+        "paragrafo_id": "P2",
+        "trabalho": {
+          "fim": 54,
+          "inicio": 36
+        }
+      },
+      "texto_sha256": "13eb131664c853d3507cf6809993f06032c4ce3baf0576fd39a62f331cdf74c5",
+      "tipo": "paragrafo"
+    },
+    {
+      "artefato_id": "sha256:e61fa440d644a5c033f3912524fee9446ba44b2ffb85e96f844678fd9282286e",
+      "cobertura_integral": true,
+      "estado": "concluida",
+      "fragmentos": [
+        {
+          "artefato_id": "sha256:e61fa440d644a5c033f3912524fee9446ba44b2ffb85e96f844678fd9282286e",
+          "original": {
+            "fim": 58,
+            "inicio": 0
+          },
+          "peso": 1,
+          "tokens_conteudo": 58,
+          "trabalho": {
+            "fim": 56,
+            "inicio": 0
+          }
+        }
+      ],
+      "id": "vetores-analista-fixture-09:representacao:2",
+      "metodo": "direto",
+      "omissoes": [],
+      "ordem": 2,
+      "origem": {
+        "campo": "preparacao.original.texto",
+        "original": {
+          "fim": 58,
+          "inicio": 0
+        },
+        "trabalho": {
+          "fim": 56,
+          "inicio": 0
+        }
+      },
+      "texto_sha256": "1e0b3bafcd602425cafcea8051a839d9d243bfda0f48ec06c3c30e7836539482",
+      "tipo": "documento"
+    }
+  ],
+  "schema_version": "1.0.0",
+  "segmentacao_id": "segmentacao-fixture-07",
+  "validacao": {
+    "cobertura": {
+      "artefatos_total": 3,
+      "cobertura_integral": true,
+      "representacoes_sem_conteudo": 0,
+      "representacoes_total": 3
+    },
+    "estado": "concluida",
+    "limites": [
+      "Integridade estrutural não comprova a inferência de um vetor importado.",
+      "Agregações são sínteses; não equivalem semanticamente ao embedding direto.",
+      "Compatibilidade entre mecanismos distintos precisa de verificação explícita.",
+      "Compatibilidade histórica completa depende de pesos, tokenização e mecanismos verificados."
+    ],
+    "pronto": true,
+    "verificacoes": [
+      "origem_08_recalculada_e_pronta",
+      "associacoes_e_textos_exatos",
+      "cobertura_recortes_e_mapeamentos_unicode",
+      "configuracao_e_espaco_identificados",
+      "entradas_tokens_e_hashes",
+      "dimensoes_finitude_formato_bytes_e_norma",
+      "agregacao_componentes_pesos_e_formula",
+      "historico_sem_sobrescrever_origem"
+    ]
+  }
+}

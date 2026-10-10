@@ -120,6 +120,47 @@ class ImportacaoTests(unittest.TestCase):
             self.assertEqual(consulta["vetor"], por_id[consulta["artefato_id"]]["valores"])
         self.assertIsNone(conferir_compatibilidade(importado, manifesto_teste()))
 
+    def test_analista_importa_paragrafos_e_relato_original_sem_inferencia(self):
+        from agente_analista.entrada import validar_relato
+        for normalizar in (False, True):
+            with self.subTest(normalizar=normalizar):
+                registro = construir_exportacao(perfil_id="e5_analista", dimensao=3, normalizar=normalizar)
+                antes = deepcopy(registro)
+                with patch.dict(sys.modules, {"torch": None, "transformers": None, "sentence_transformers": None}):
+                    importado = importar_vetorizacao(registro)
+                self.assertEqual(registro, antes)
+                self.assertEqual([c["tipo"] for c in importado["consultas"]], ["paragrafo", "paragrafo", "documento"])
+                self.assertEqual([c["paragrafo_id"] for c in importado["consultas"]], ["P1", "P2", None])
+                esperado = [p["texto"] for p in validar_relato(TEXTO)["paragrafos"]] + [TEXTO]
+                self.assertEqual([c["texto_vetorizado"] for c in importado["consultas"]], esperado)
+                self.assertEqual(importado["fonte"]["estrategia_consultas"], "paragrafos_documento")
+                self.assertEqual(importado["fonte"]["agregacao"], "nenhuma")
+                self.assertIsNone(conferir_compatibilidade(importado, manifesto_teste()))
+
+    def test_analista_consulta_cada_recorte_sem_agregar_ou_truncar(self):
+        registro = construir_exportacao(perfil_id="e5_analista", dimensao=3, fragmentar=True)
+        importado = importar_vetorizacao(registro)
+        self.assertEqual(len(importado["consultas"]), sum(len(rep["fragmentos"]) for rep in registro["representacoes"]))
+        self.assertGreater(len(importado["consultas"]), 3)
+        por_id = {a["id"]: a for a in registro["artefatos"]}
+        self.assertTrue(all("derivacao" not in a for a in por_id.values()))
+        for rep in registro["representacoes"]:
+            consultas = [c for c in importado["consultas"] if c["id"].startswith(rep["id"])]
+            origem = rep["origem"]["original"]
+            self.assertEqual("".join(c["texto_vetorizado"] for c in consultas), TEXTO[origem["inicio"]:origem["fim"]])
+            for consulta in consultas:
+                self.assertEqual(consulta["vetor"], por_id[consulta["artefato_id"]]["valores"])
+                self.assertEqual(consulta["texto"], TEXTO[consulta["inicio"]:consulta["fim"]])
+
+    def test_analista_rejeita_cobertura_incompleta_e_fragmento_adulterado(self):
+        for alterar in (lambda r: r["representacoes"].pop(0),
+                        lambda r: r["representacoes"][0]["fragmentos"][0]["original"].__setitem__("inicio", 0),
+                        lambda r: r["representacoes"][0].__setitem__("artefato_id", None)):
+            registro = construir_exportacao(perfil_id="e5_analista", dimensao=3)
+            alterar(registro)
+            with self.assertRaises(ErroImportacao):
+                importar_vetorizacao(registro)
+
     def test_importacao_nao_carrega_bibliotecas_de_inferencia(self):
         script = ("import json,sys; "
                   "from agente_analista.importacao import importar_vetorizacao; "

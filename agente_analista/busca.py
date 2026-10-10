@@ -71,13 +71,15 @@ class Buscador:
         except ValueError as exc:
             raise ErroBusca(str(exc)) from exc
         if not isinstance(importado, dict) or not isinstance(importado.get("consultas"), list) or not importado["consultas"]:
-            raise ErroBusca("Importe uma vetorização com consultas de períodos, contextos e documento.")
+            raise ErroBusca("Importe uma vetorização com consultas do relato.")
         consultas = []
+        estrategia_anterior = importado["fonte"].get("estrategia_consultas") == "paragrafos_documento"
+        tipos = {"paragrafo", "documento"} if estrategia_anterior else set(self.PESOS_TIPOS)
         ids = set()
         for consulta in importado["consultas"]:
             if (not isinstance(consulta, dict) or not isinstance(consulta.get("id"), str)
                     or not consulta["id"] or consulta["id"] in ids
-                    or not isinstance(consulta.get("tipo"), str) or consulta["tipo"] not in self.PESOS_TIPOS
+                    or not isinstance(consulta.get("tipo"), str) or consulta["tipo"] not in tipos
                     or not isinstance(consulta.get("texto"), str) or not consulta["texto"].strip()
                     or not isinstance(consulta.get("vetor"), list)
                     or any(type(valor) not in (int, float) for valor in consulta["vetor"])):
@@ -96,13 +98,14 @@ class Buscador:
     def buscar(self, importado, progresso=lambda etapa: None):
         progresso("Conferindo os vetores importados da análise linguística")
         consultas = self._consultas_importadas(importado)
+        estrategia_anterior = importado["fonte"].get("estrategia_consultas") == "paragrafos_documento"
         contagens = Counter(consulta["tipo"] for consulta, _ in consultas)
         candidatos = {}
         for numero, (consulta, vetor) in enumerate(consultas, 1):
             progresso(f"Buscando no acervo: consulta {numero} de {len(consultas)}")
             lexical = self.lexical.pontuar(consulta.get("texto_vetorizado", consulta["texto"]))
             semantica = self.corpus.vetores @ vetor
-            fator = self.PESOS_TIPOS[consulta["tipo"]] / contagens[consulta["tipo"]]
+            fator = 1.0 if estrategia_anterior else self.PESOS_TIPOS[consulta["tipo"]] / contagens[consulta["tipo"]]
             for metodo, pontuacoes in (("BM25", lexical), ("E5", semantica)):
                 # Lexical zero não constitui um resultado. E5 sempre examina
                 # todas as linhas; a interpretação poderá rejeitar todos.
@@ -129,7 +132,7 @@ class Buscador:
                         "artefato_id": consulta.get("artefato_id"),
                         "fragmento_id": f["id"], "rank": rank, "rank_bloco": rank_bloco,
                         "score": float(pontuacoes[indice]), "contribuicao_rrf_bruta": contribuicao_bruta,
-                        "peso_tipo": self.PESOS_TIPOS[consulta["tipo"]],
+                        "peso_tipo": 1.0 if estrategia_anterior else self.PESOS_TIPOS[consulta["tipo"]],
                         "consultas_do_tipo": contagens[consulta["tipo"]], "contribuicao_rrf": contribuicao})
                     if f["id"] not in candidato["fragmentos_recuperados_ids"]:
                         candidato["fragmentos_recuperados_ids"].append(f["id"])
@@ -139,12 +142,15 @@ class Buscador:
                 "fonte_vetorizacao": deepcopy(importado["fonte"]), "candidatos": ordenados,
                 "metodo_fusao": {"nome": "Reciprocal Rank Fusion (RRF)", "k": self.K_RRF,
                     "top_por_metodo_consulta": self.TOP_METODO, "max_blocos": self.TOP_BLOCOS,
-                    "formula": "soma de peso_tipo/(consultas_do_tipo*(60+rank_bloco)), com uma contribuição por bloco, método e consulta",
-                    "pesos_por_tipo": dict(self.PESOS_TIPOS), "consultas_por_tipo": dict(contagens),
-                    "normalizacao": "média das contribuições por consulta em cada tipo; períodos, contextos e documento têm pesos iguais",
+                    "formula": ("soma de 1/(60+rank_bloco), com uma contribuição por bloco, método e consulta"
+                                if estrategia_anterior else "soma de peso_tipo/(consultas_do_tipo*(60+rank_bloco)), com uma contribuição por bloco, método e consulta"),
+                    "pesos_por_tipo": None if estrategia_anterior else dict(self.PESOS_TIPOS), "consultas_por_tipo": dict(contagens),
+                    "normalizacao": ("estratégia anterior: cada consulta de parágrafo, relato ou recorte contribui integralmente"
+                                     if estrategia_anterior else "média das contribuições por consulta em cada tipo; períodos, contextos e documento têm pesos iguais"),
                     "agrupamento": "blocos distintos por ordem de primeira aparição no top 50 de fragmentos",
                     "bm25": {"k1": self.lexical.K1, "b": self.lexical.B,
                         "tokenizacao": "palavras sem acentos, minúsculas, sem palavras funcionais; sem radicalização"},
                     "semantica": "produto escalar dos vetores importados normalizados L2 com todas as linhas do corpus (similaridade cosseno)",
-                    "vetorizacao": "vetores de períodos, janelas contextuais e documento recebidos da análise linguística; nenhuma inferência ou divisão adicional",
+                    "vetorizacao": ("vetores do texto original de P1, P2 e relato inteiro; recortes E5 independentes produzidos no Língua, sem inferência no agente"
+                                    if estrategia_anterior else "vetores de períodos, janelas contextuais e documento recebidos da análise linguística; nenhuma inferência ou divisão adicional"),
                     "aviso": "Pontuações ordenam candidatos; não representam probabilidades de interpretação correta."}}

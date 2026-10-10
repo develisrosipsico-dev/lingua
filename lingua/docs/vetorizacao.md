@@ -1,7 +1,9 @@
 # Etapa 09: vetorização multimodelo
 
 A etapa 09 recebe uma execução pronta da etapa 08 e produz representações
-vetoriais do período, de sua janela contextual e do documento. A origem é
+vetoriais. O perfil inicial da interface, CLI e Colab, `e5_analista`, produz
+os dois parágrafos originais e o relato inteiro para upload no Agente Analista.
+Os demais perfis produzem período, janela contextual e documento. A origem é
 revalidada com `validar_unidades_contexto()`; somente o relatório recalculado
 com `pronto_para_etapa_09: true` autoriza continuar. O registro exportado
 conserva a execução contextual inteira uma única vez, incluindo sua cadeia
@@ -75,10 +77,11 @@ FastEmbed. `vetorizacao.py` planeja entradas, confere resultados e permite
 consultar ou derivar representações. `persistencia_vetores.py` guarda os
 artefatos, e `trabalhos_vetorizacao.py` acompanha processamento e retomada.
 
-Os quatro perfis iniciais pertencem à família E5:
+Os cinco perfis pertencem à família E5:
 
 | ID | Finalidade | Prefixo inicial |
 | --- | --- | --- |
+| `e5_analista` | P1, P2 e relato inteiro para o Agente Analista. | `query: ` |
 | `e5_consulta` | Consulta em recuperação assimétrica. | `query: ` |
 | `e5_conteudo` | Conteúdo a recuperar. | `passage: ` |
 | `e5_simetrico` | Comparação entre textos. | `query: ` |
@@ -87,7 +90,10 @@ Os quatro perfis iniciais pertencem à família E5:
 São perfis versionados, não constantes aplicáveis a qualquer modelo.
 Modelo, revisão, backend, dispositivo, lote, precisão de inferência,
 formato de armazenamento, limite de tokens, pooling, normalização e
-políticas podem ser selecionados por configuração. A mudança de modelo
+políticas podem ser selecionados por configuração nos perfis gerais.
+`e5_analista` fixa E5 large e sua revisão, SentenceTransformers, média, L2,
+inferência e armazenamento `float32`, texto original e limite de 504 tokens.
+Dispositivo, lote e cache continuam configuráveis. A mudança de modelo
 mantém os experimentos anteriores. Novos mecanismos podem implementar a
 mesma interface de adaptador sem alterar as etapas 01–08.
 
@@ -96,7 +102,7 @@ e gerar sem prefixos ocultos. Tokens do modelo de embeddings são distintos
 dos tokens linguísticos da etapa 04. Revisões dos pesos e do tokenizador,
 versões das bibliotecas e precisão são parte da proveniência.
 
-Exemplo de opções avançadas, compatível com o perfil inicial:
+Exemplo de opções avançadas, compatível com o perfil geral `e5_simetrico`:
 
 ```json
 {
@@ -121,7 +127,7 @@ Exemplo de opções avançadas, compatível com o perfil inicial:
 | `pooling` | `mean`, `cls`, `max`, `last_token` ou `modelo`, se suportados. |
 | `normalizacao` | `l2` ou `nenhuma`. |
 | `fragmentacao` | `sem_sobreposicao` ou `erro`. |
-| `agregacao` | `media_ponderada_tokens` ou `media_simples`. |
+| `agregacao` | `media_ponderada_tokens` ou `media_simples`; `nenhuma` somente em `e5_analista`. |
 | `texto_documento` | `trabalho` ou `original`. |
 
 `limite_tokens` omitido é resolvido pelo adaptador. Um valor explícito
@@ -143,7 +149,14 @@ efetiva registra o modelo realmente carregado, não somente a solicitação.
 
 ## Textos e coordenadas
 
-Para cada unidade contextual são criadas duas representações:
+Em `e5_analista`, são criadas três representações a partir de
+`preparacao.original.texto`: P1 e P2 com as margens em branco removidas, e
+o documento com o texto original inteiro, inclusive separadores e espaços.
+Exigem-se exatamente dois parágrafos e até 400 palavras, contadas por espaços
+em branco. Os intervalos originais e seu mapeamento para o texto de trabalho
+são preservados, inclusive quando a preparação normaliza CRLF.
+
+Nos demais perfis, para cada unidade contextual são criadas duas representações:
 
 | Tipo | Campo selecionado | Referências |
 | --- | --- | --- |
@@ -172,21 +185,28 @@ continuam sendo conferidos separadamente.
 
 ## Entradas longas, fragmentação e agregação
 
-Período, janela e documento são enviados integralmente quando couberem no
+Parágrafo, período, janela e documento são enviados integralmente quando couberem no
 limite efetivo selecionado. Um modelo com janela maior não herda o limite
 do E5. A contagem inclui prefixo e tokens especiais; o núcleo não permite
 truncamento silencioso pelo encoder.
 
 Quando a política exige fragmentar, os fragmentos são recortes literais do
-texto. O planejamento prefere fronteiras existentes e divide tecnicamente
+texto. Nos perfis gerais, o planejamento prefere fronteiras existentes e divide tecnicamente
 um trecho quando necessário. Não reconstrói texto com `tokenizer.decode()`.
 Os intervalos ordenados precisam cobrir o texto por inteiro, sem lacunas ou
 caracteres inventados. A política de erro também permite recusar entradas
 maiores sem produzir um resultado parcial.
 
+`e5_analista` restaura o recorte anterior: busca o maior trecho literal que
+cabe em 504 tokens com o prefixo `query: ` e os tokens especiais. Cada recorte
+tem seu próprio vetor e alimenta a busca separadamente. Quando há mais de um,
+a representação usa `metodo: "fragmentado"`, `artefato_id: null` e conserva
+todos os componentes. Não há agregação nem inferência no agente consumidor.
+
 | Método | Proveniência |
 | --- | --- |
 | `direto` | Uma entrada textual efetivamente enviada ao modelo. |
+| `fragmentado` | Recortes independentes, sem vetor agregado, no perfil `e5_analista`. |
 | `agregado` | Fragmentos de um texto, intervalos, vetores componentes e fórmula. |
 | `derivado` | Representações selecionadas, ordem, pesos e fórmula. |
 

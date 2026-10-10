@@ -91,6 +91,15 @@ def _importado(relato=None, vetor=None):
     }}
 
 
+def _importado_analista():
+    importado = _importado()
+    importado["fonte"].update(perfil="e5_analista", estrategia_consultas="paragrafos_documento", agregacao="nenhuma")
+    importado["consultas"] = importado["consultas"][:2] + importado["consultas"][-1:]
+    for consulta, paragrafo in zip(importado["consultas"][:2], importado["relato"]["paragrafos"]):
+        consulta.update(tipo="paragrafo", paragrafo_id=paragrafo["id"])
+    return importado
+
+
 class CorpusTests(unittest.TestCase):
     def setUp(self):
         self.temporario = tempfile.TemporaryDirectory()
@@ -200,6 +209,27 @@ class BuscaTests(unittest.TestCase):
             self.assertAlmostEqual(pontuacao["contribuicao_rrf"],
                                    pontuacao["contribuicao_rrf_bruta"] / (3 * pontuacao["consultas_do_tipo"]))
         self.assertTrue(etapas)
+
+    def test_analista_restaura_soma_rrf_original_de_p1_p2_e_relato(self):
+        resultado = self.buscador.buscar(_importado_analista())
+        self.assertEqual([c["tipo"] for c in resultado["consultas"]], ["paragrafo", "paragrafo", "documento"])
+        primeiro, segundo = resultado["candidatos"]
+        self.assertEqual(primeiro["bloco_id"], "sonhos#1")
+        # Antigo ranking: três consultas, lexical+E5; uma contribuição por bloco.
+        self.assertAlmostEqual(primeiro["rrf"], 6 / 61)
+        self.assertAlmostEqual(segundo["rrf"], 3 / 62)
+        self.assertIsNone(resultado["metodo_fusao"]["pesos_por_tipo"])
+        self.assertEqual(resultado["metodo_fusao"]["consultas_por_tipo"], {"paragrafo": 2, "documento": 1})
+        for p in primeiro["pontuacoes"]:
+            self.assertEqual(p["contribuicao_rrf"], p["contribuicao_rrf_bruta"])
+
+    def test_analista_fragmentos_independentes_contribuem_como_antes(self):
+        importado = _importado_analista()
+        recorte = deepcopy(importado["consultas"][0])
+        recorte["id"] += ":fragmento:2"
+        importado["consultas"].append(recorte)
+        resultado = self.buscador.buscar(importado)
+        self.assertAlmostEqual(resultado["candidatos"][0]["rrf"], 8 / 61)
 
     def test_reutiliza_consultas_sem_recortar_inferir_ou_exportar_vetores(self):
         relato = _relato("  Não apago o sonho 🧠.\t" * 7, "A lembrança retorna.\r\nMesmo assim há dúvida.  ")

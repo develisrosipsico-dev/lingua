@@ -123,6 +123,17 @@ class PaginaTests(unittest.TestCase):
             self.assertIn(acao, pagina)
         self.assertIn("no-store", resposta.headers["Cache-Control"])
 
+    def test_upload_paragrafos_e_relato_preserva_contrato_e_contagens(self):
+        registro = construir_exportacao(perfil_id="e5_analista", normalizar=True)
+        resposta = self.client.post("/api/vetorizacoes", json=registro)
+        self.assertEqual(resposta.status_code, 201)
+        dados = resposta.get_json()
+        self.assertEqual(dados["contagens"], {"paragrafo": 2, "documento": 1})
+        self.assertEqual(dados["fonte"]["estrategia_consultas"], "paragrafos_documento")
+        self.assertEqual(dados["relato"]["texto"], TEXTO)
+        self.assertEqual(self.client.get("/api/vetorizacoes/" + dados["id"]).get_json(), dados)
+        self.assertEqual(self.app.extensions["agente_analista"]["banco"].obter_vetorizacao(dados["id"]), registro)
+
     def test_entrada_invalida_nao_inicia(self):
         self.assertEqual(self.client.post("/api/buscas", json={"texto": "um"}).status_code, 400)
         self.assertFalse(self.servico.iniciou.is_set())

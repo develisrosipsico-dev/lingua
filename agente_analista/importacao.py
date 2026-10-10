@@ -83,10 +83,25 @@ def _importar_atual(registro):
     por_id = {a["id"]: a for a in registro["artefatos"]}
     consultas = []
     for rep in registro["representacoes"]:
-        _exigir(rep["tipo"] in ("periodo", "contextual", "documento")
+        _exigir(rep["tipo"] in ("periodo", "contextual", "paragrafo", "documento")
                 and rep["estado"] == "concluida" and rep["cobertura_integral"] is True
                 and not rep["omissoes"], "Uma representação está incompleta ou perdeu sua origem.")
         origem = rep["origem"]
+        if perfil["id"] == "e5_analista":
+            # Preserve o antigo P1/P2/relato: recortes longos são consultas
+            # independentes, nunca a média dos vetores de seus fragmentos.
+            for numero, fragmento in enumerate(rep["fragmentos"], 1):
+                origem_fragmento = {**deepcopy(origem), **{k: deepcopy(fragmento[k])
+                                                        for k in ("original", "trabalho")}}
+                posicao = fragmento["original"]
+                texto = original[posicao["inicio"]:posicao["fim"]]
+                artefato_id = fragmento["artefato_id"]
+                consulta = _consulta(rep, origem_fragmento, por_id[artefato_id]["valores"],
+                                     original, texto, artefato_id,
+                                     sufixo=f":fragmento:{numero}" if len(rep["fragmentos"]) > 1 else "")
+                consulta["paragrafo_id"] = origem.get("paragrafo_id")
+                consultas.append(consulta)
+            continue
         campo = "original" if origem["campo"] == "preparacao.original.texto" else "trabalho"
         posicao = origem[campo]
         texto = preparacao[campo]["texto"][posicao["inicio"]:posicao["fim"]]
@@ -99,6 +114,8 @@ def _importar_atual(registro):
              "perfil": perfil["id"], "espaco_vetorial_id": registro["espaco_vetorial_id"],
              "agregacao": perfil["agregacao"], "fragmentacao": perfil["fragmentacao"],
              "backend": processamento["backend"], "precisao_inferencia": processamento["precisao_inferencia"]}
+    if perfil["id"] == "e5_analista":
+        fonte["estrategia_consultas"] = "paragrafos_documento"
     return original, consultas, fonte
 
 

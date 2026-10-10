@@ -13,6 +13,7 @@ from datetime import datetime, timezone
 import hashlib
 import json
 import math
+import re
 import struct
 from uuid import uuid4
 
@@ -191,7 +192,39 @@ def _mapa(preparacao, inicio, fim, campo="trabalho"):
     return {"trabalho": _intervalo(*trabalho), "original": _intervalo(inicio, fim)}
 
 
+def _paragrafos_originais(texto):
+    """Localize os mesmos blocos usados na antiga entrada do analista."""
+    quebra = r"(?:\r\n|\n|\r(?!\n))"
+    separador = re.compile(quebra + r"[\t ]*" + quebra + r"(?:[\t ]*" + quebra + r")*")
+    inicio, intervalos = 0, []
+    for match in separador.finditer(texto):
+        intervalos.append((inicio, match.start()))
+        inicio = match.end()
+    intervalos.append((inicio, len(texto)))
+    paragrafos = []
+    for inicio, fim in intervalos:
+        while inicio < fim and texto[inicio].isspace():
+            inicio += 1
+        while fim > inicio and texto[fim - 1].isspace():
+            fim -= 1
+        if inicio < fim:
+            paragrafos.append({"id": f"P{len(paragrafos) + 1}", "inicio": inicio, "fim": fim})
+    _exigir(len(paragrafos) == 2 and 0 < len(texto.split()) <= 400,
+            "O perfil do Agente Analista requer dois parágrafos e até 400 palavras.")
+    return paragrafos
+
+
 def _descricoes(contexto, perfil, preparacao):
+    if perfil["id"] == "e5_analista":
+        texto = preparacao["original"]["texto"]
+        for paragrafo in _paragrafos_originais(texto):
+            inicio, fim = paragrafo["inicio"], paragrafo["fim"]
+            yield {"tipo": "paragrafo", "texto": texto[inicio:fim], "campo_texto": "original",
+                   "origem": {"campo": "preparacao.original.texto", "paragrafo_id": paragrafo["id"],
+                              **_mapa(preparacao, inicio, fim, "original")}}
+        yield {"tipo": "documento", "texto": texto, "campo_texto": "original",
+               "origem": {"campo": "preparacao.original.texto", **_mapa(preparacao, 0, len(texto), "original")}}
+        return
     for unidade in contexto["unidades"]:
         for tipo, campo in (("periodo", "foco"), ("contextual", "janela")):
             bloco = unidade[campo]
@@ -423,6 +456,30 @@ def _limite_fragmento(texto, inicio, teto, entrada_para, limite):
     return melhor
 
 
+def _limite_fragmento_analista(texto, inicio, teto, entrada_para, limite):
+    """Mesmo crescimento e recorte por caracteres do antigo _dividir do analista."""
+    baixo, alto, melhor = inicio + 1, min(teto, inicio + limite * 4), None
+    while True:
+        if len(entrada_para(texto[inicio:alto])["input_ids"]) > limite:
+            alto -= 1
+            break
+        melhor = alto
+        if alto == teto:
+            baixo = alto + 1
+            break
+        baixo = alto + 1
+        alto = min(teto, inicio + 2 * (alto - inicio))
+    while baixo <= alto:
+        fim = (baixo + alto) // 2
+        if len(entrada_para(texto[inicio:fim])["input_ids"]) <= limite:
+            melhor, baixo = fim, fim + 1
+        else:
+            alto = fim - 1
+    if melhor is None:
+        raise ErroLimite("Um caractere com prefixo e especiais excede o orçamento; nenhum conteúdo foi descartado.")
+    return melhor
+
+
 def _compor_paragrafos(descricao, preparacao, paragrafos):
     """Composição histórica opt-in; cada cópia/inserção tem proveniência própria."""
     campo = descricao["campo_texto"]
@@ -528,8 +585,9 @@ def _planejar(descricao, perfil, processamento, adaptador, preparacao, periodos,
         base = descricao["origem"][campo]["inicio"]
         fronteiras = [p[campo]["fim"] - base for p in periodos if 0 < p[campo]["fim"] - base <= teto]
         while inicio < teto:
-            fim = _limite_fragmento(texto, inicio, teto, entrada_para, limite)
-            if fim < teto:
+            fim = (_limite_fragmento_analista if perfil["id"] == "e5_analista" else _limite_fragmento)(
+                texto, inicio, teto, entrada_para, limite)
+            if fim < teto and perfil["id"] != "e5_analista":
                 indice_fronteira = bisect_right(fronteiras, fim) - 1
                 if indice_fronteira >= 0 and fronteiras[indice_fronteira] > inicio:
                     fim = fronteiras[indice_fronteira]
@@ -584,7 +642,7 @@ def _validacao(registro):
 
 def vetorizar_contexto(contexto, *, perfil_id="e5_simetrico", opcoes=None, execucao_id=None,
                        registrado_em=None, adaptador=None, progresso=None, obter_cache=None, salvar_cache=None):
-    """Gere duas representações por unidade e uma por documento, sem sobrescrever 08."""
+    """Gere as consultas do perfil escolhido, sem sobrescrever a etapa 08."""
     from perfis_vetorizacao import carregar_perfil
     perfil = carregar_perfil(perfil_id, opcoes=opcoes)
     _json(perfil)
@@ -657,6 +715,8 @@ def vetorizar_contexto(contexto, *, perfil_id="e5_simetrico", opcoes=None, execu
         metodo, artefato_id = "direto", None
         if len(componentes) == 1:
             artefato_id = componentes[0]["id"]
+        elif len(componentes) > 1 and perfil["agregacao"] == "nenhuma":
+            metodo = "fragmentado"
         elif len(componentes) > 1:
             metodo = "agregado"
             derivacao = {"metodo": perfil["agregacao"], "versao": "1.0.0",
@@ -871,11 +931,15 @@ def _validar_vetorizacao(registro, profundidade=0):
         alvo = representacao["artefato_id"]
         if len(componentes) == 1:
             _exigir(representacao["metodo"] == "direto" and alvo == componentes[0], "Vetor direto incorreto.")
+        elif perfil["agregacao"] == "nenhuma":
+            _exigir(representacao["metodo"] == "fragmentado" and alvo is None,
+                    "As consultas longas do analista exigem fragmentos independentes, sem vetor agregado.")
         else:
             _exigir(representacao["metodo"] == "agregado" and alvo in por_id, "Agregado ausente.")
             esperado = {"metodo": perfil["agregacao"], "versao": "1.0.0", "componentes_ids": componentes, "pesos": pesos}
             _exigir(por_id[alvo].get("derivacao") == esperado, "Agregação não corresponde aos fragmentos.")
-        usados.add(alvo)
+        if alvo is not None:
+            usados.add(alvo)
     _exigir(usados == set(por_id), "Artefatos órfãos ou referências incompletas.")
     esperado = _validacao(registro)
     _exigir(_canonico(registro.get("validacao")) == _canonico(esperado), "Relatório de validação inconsistente.")

@@ -679,6 +679,7 @@
         {% set current_vectors = vectorized|default(none) %}
         {% set saved_vector_jobs = vector_history|default([], true) %}
         {% set available_vector_profiles = vector_profiles|default([
+          {'id': 'e5_analista', 'nome': 'Agente Analista — parágrafos e relato inteiro'},
           {'id': 'e5_simetrico', 'nome': 'Comparação entre textos'},
           {'id': 'e5_consulta', 'nome': 'Consulta para recuperação'},
           {'id': 'e5_conteudo', 'nome': 'Conteúdo para recuperação'},
@@ -688,7 +689,7 @@
         <section class="editor vector-panel stage-panel" id="etapa-vetorizacao" data-stage-panel="vetorizacao" aria-labelledby="vector-title">
           <div class="editor-heading">
             <h2 id="vector-title">Vetorização</h2>
-            <p>Gere representações do período, de seu contexto e do documento, preservando o texto e as referências de origem.</p>
+            <p>Para o Agente Analista, gere os vetores dos dois parágrafos e do relato inteiro. O texto original e suas referências permanecem preservados.</p>
           </div>
           {% if contextualized.validacao.pronto_para_etapa_09 %}
           <form method="post" action="{{ url_for('vector_submission', record_id=record.id) }}">
@@ -696,11 +697,11 @@
             <label for="vector-profile">Finalidade
               <select id="vector-profile" name="perfil_id" aria-describedby="vector-profile-help" required>
                 {% for profile in available_vector_profiles %}
-                <option value="{{ profile.id }}"{% if profile.id == 'e5_simetrico' %} selected{% endif %}>{{ profile.nome }}</option>
+                <option value="{{ profile.id }}"{% if profile.id == 'e5_analista' %} selected{% endif %}>{{ profile.nome }}</option>
                 {% endfor %}
               </select>
             </label>
-            <p id="vector-profile-help" class="option-help">Cada execução fica salva separadamente. A comparação entre resultados depende da compatibilidade dos modelos e perfis.</p>
+            <p id="vector-profile-help" class="option-help">O perfil do Agente Analista usa dois parágrafos e até 400 palavras, em float32. Consultas longas são divididas sem cortar conteúdo; cada fragmento é usado separadamente na busca. Cada execução fica salva separadamente.</p>
             <details class="technical-settings vector-settings">
               <summary>Configuração de execução</summary>
               <div class="vector-options">
@@ -767,8 +768,8 @@
           {% if current_vectors %}
           {% set vector_artifacts = {} %}
           {% for artifact in current_vectors.artefatos %}{% set _ = vector_artifacts.update({artifact.id: artifact}) %}{% endfor %}
-          {% set representation_names = {'periodo': 'Período', 'contextual': 'Contexto', 'documento': 'Documento'} %}
-          {% set vector_method_names = {'direto': 'Direto', 'agregado': 'Agregado', 'derivado': 'Derivado', 'sem_conteudo': 'Sem conteúdo'} %}
+          {% set representation_names = {'paragrafo': 'Parágrafo', 'periodo': 'Período', 'contextual': 'Contexto', 'documento': 'Relato inteiro'} %}
+          {% set vector_method_names = {'direto': 'Direto', 'fragmentado': 'Fragmentos independentes', 'agregado': 'Agregado', 'derivado': 'Derivado', 'sem_conteudo': 'Sem conteúdo'} %}
           <div class="vector-result">
             {% if current_vectors.artefatos %}
             <p class="rule-readiness" role="status">Vetorização concluída e validada.</p>
@@ -780,8 +781,12 @@
             <p class="rule-pending">Esta execução contém representações com cobertura parcial. Os trechos omitidos estão registrados no JSON; o texto de origem permanece intacto.</p>
             {% endif %}
             <dl class="unit-counts vector-counts">
+              {% if current_vectors.perfil.id == 'e5_analista' %}
+              <div><dt>Parágrafos</dt><dd>{{ current_vectors.representacoes|selectattr('tipo', 'equalto', 'paragrafo')|list|length }}</dd></div>
+              {% else %}
               <div><dt>Períodos</dt><dd>{{ current_vectors.representacoes|selectattr('tipo', 'equalto', 'periodo')|list|length }}</dd></div>
               <div><dt>Contextos</dt><dd>{{ current_vectors.representacoes|selectattr('tipo', 'equalto', 'contextual')|list|length }}</dd></div>
+              {% endif %}
               <div><dt>Documento</dt><dd>{{ current_vectors.representacoes|selectattr('tipo', 'equalto', 'documento')|list|length }}</dd></div>
             </dl>
             <a class="download-link" href="{{ url_for('vector_json', record_id=record.id, vetorizacao_execucao_id=current_vectors.execucao_id) }}">Baixar vetorização JSON <span aria-hidden="true">↓</span></a>
@@ -792,8 +797,9 @@
                 <tbody>
                   {% for representation in current_vectors.representacoes %}
                   {% set artifact = vector_artifacts.get(representation.artefato_id) %}
+                  {% if not artifact and representation.metodo == 'fragmentado' %}{% set artifact = vector_artifacts.get(representation.fragmentos[0].artefato_id) %}{% endif %}
                   <tr>
-                    <td>{{ representation_names.get(representation.tipo, representation.tipo) }}{% if representation.origem.unidade_id|default(none) %}<details class="token-details"><summary>Origem</summary><dl><dt>Unidade</dt><dd>{{ representation.origem.unidade_id }}</dd><dt>Trabalho</dt><dd>[{{ representation.origem.trabalho.inicio }}, {{ representation.origem.trabalho.fim }})</dd></dl></details>{% endif %}</td>
+                    <td>{{ representation_names.get(representation.tipo, representation.tipo) }}{% if representation.origem.paragrafo_id|default(none) %} {{ representation.origem.paragrafo_id }}{% endif %}{% if representation.origem.unidade_id|default(none) %}<details class="token-details"><summary>Origem</summary><dl><dt>Unidade</dt><dd>{{ representation.origem.unidade_id }}</dd><dt>Trabalho</dt><dd>[{{ representation.origem.trabalho.inicio }}, {{ representation.origem.trabalho.fim }})</dd></dl></details>{% endif %}</td>
                     <td>{{ vector_method_names.get(representation.metodo, representation.metodo) }}</td>
                     <td>{% if artifact %}{{ artifact.dimensao }}{% else %}<span class="unavailable">Sem vetor</span>{% endif %}</td>
                     <td>{% if artifact %}{{ artifact.formato }}{% else %}—{% endif %}</td>
