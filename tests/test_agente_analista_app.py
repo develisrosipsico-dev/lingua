@@ -86,7 +86,10 @@ class ServicoTeste:
 class PaginaTests(unittest.TestCase):
     def setUp(self):
         self.servico = ServicoTeste()
-        self.app = criar_app({"TESTING": True}, servico=self.servico)
+        self.directory = TemporaryDirectory()
+        self.addCleanup(self.directory.cleanup)
+        self.app = criar_app({"TESTING": True, "DATABASE": str(Path(self.directory.name) / "agente.sqlite3")},
+                             servico=self.servico)
         self.client = self.app.test_client()
 
     def tearDown(self):
@@ -342,10 +345,11 @@ class IntegracaoE5Tests(unittest.TestCase):
             inventada = {**ligacao, "bloco_id": "fonte-inexistente"}
             return json.dumps({"ligacoes": [ligacao, inventada]}, ensure_ascii=False)
 
-        with patch.dict(os.environ, {"NARRATIVA_API_KEY": "chave-somente-teste"}), \
+        with TemporaryDirectory() as pasta_banco, \
+                patch.dict(os.environ, {"NARRATIVA_API_KEY": "chave-somente-teste"}), \
                 patch("agente_analista.modelos.escolher_formato_resposta", return_value="texto") as escolher, \
                 patch("agente_analista.ligacoes._enviar_mensagens", side_effect=transporte):
-            app = criar_app({"TESTING": True})
+            app = criar_app({"TESTING": True, "DATABASE": str(Path(pasta_banco) / "agente.sqlite3")})
             try:
                 client = app.test_client()
                 self.assertTrue(client.get("/api/status").get_json()["pronto"])
