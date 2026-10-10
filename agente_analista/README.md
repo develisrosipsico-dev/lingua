@@ -19,11 +19,15 @@ análise linguística.
 
 Na pasta do repositório:
 
+A organização mantém `agente_analista/` ao lado de `lingua/`. Os comandos do
+agente continuam partindo da raiz; seus ambientes, banco e índice permanecem
+nos caminhos existentes.
+
 ```bash
 cd ~/lingua-agente
 git fetch origin
-git switch agente-analista/preparacao-20261010
-git pull --ff-only origin agente-analista/preparacao-20261010
+git switch organizacao/projetos-20261010
+git pull --ff-only origin organizacao/projetos-20261010
 instance/venv-agente-e5-intel/bin/python -m pip install -r agente_analista/requirements.txt
 instance/venv-agente-e5-intel/bin/python -m agente_analista.app
 ```
@@ -251,7 +255,7 @@ final fica para uma etapa posterior.
 No ambiente preparado:
 
 ```bash
-instance/venv-agente-e5-intel/bin/python -m unittest discover -s tests -p 'test_agente_analista_*.py' -v
+instance/venv-agente-e5-intel/bin/python -m unittest discover -s agente_analista/tests -p 'test_agente_analista_*.py' -v
 ```
 
 Para verificar somente o banco e sua integração com a API, sem E5 ou chamadas
@@ -259,7 +263,7 @@ externas, use o Python do ambiente que tenha Flask instalado, na raiz do
 repositório:
 
 ```bash
-PYTHONPATH="$PWD/tests" .venv/bin/python -m unittest test_agente_analista_persistencia -v
+PYTHONPATH="$PWD/agente_analista/tests" .venv/bin/python -m unittest test_agente_analista_persistencia -v
 ```
 
 Esses testes usam bancos temporários e não alteram os relatos do usuário.
@@ -270,7 +274,7 @@ informe o caminho do arquivo no Mac:
 ```bash
 AGENTE_ANALISTA_VETORIZACAO_REAL="/caminho/vetorizacao.json" \
   instance/venv-agente-e5-intel/bin/python -m unittest discover \
-  -s tests -p 'test_agente_analista_*.py' -v
+  -s agente_analista/tests -p 'test_agente_analista_*.py' -v
 ```
 
 Essa verificação usa os vetores recebidos e simula as respostas do provedor.

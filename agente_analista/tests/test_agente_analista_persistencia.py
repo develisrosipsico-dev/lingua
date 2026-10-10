@@ -12,7 +12,7 @@ import unittest
 from agente_analista.app import criar_app
 from agente_analista.entrada import validar_relato
 from agente_analista.persistencia import BancoAnalista, ErroPersistencia
-from fixtures_contexto import TEXTO
+from fixtures_importacao import TEXTO
 from test_agente_analista_importacao import construir_exportacao, construir_exportacao_portatil
 
 

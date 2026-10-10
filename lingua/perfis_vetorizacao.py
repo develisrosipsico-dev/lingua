@@ -124,6 +124,8 @@ def carregar_perfil(perfil_id="e5_simetrico", *, opcoes=None):
             raise ErroPerfil("Outro tokenizador exige revisão imutável explícita.")
         tokenizer_revision = revisao
     _revisao(tokenizer_revision, "tokenizador_revisao")
+    base = Path(__file__).resolve().parent
+    base_dados = base.parent if (base.parent / ".git").exists() else base
     perfil = {
         "id": perfil_id, "versao": _VERSAO, "finalidade": finalidade,
         "modelo": {"identificacao": modelo, "revisao": revisao},
@@ -133,7 +135,7 @@ def carregar_perfil(perfil_id="e5_simetrico", *, opcoes=None):
         "limite_tokens": None, "pooling": "mean", "normalizacao": "l2",
         "prefixo": prefixo, "fragmentacao": "sem_sobreposicao",
         "agregacao": "media_ponderada_tokens", "texto_documento": "trabalho",
-        "cache_modelos": str((Path(__file__).parent / "instance" / "modelos").resolve()),
+        "cache_modelos": str((base_dados / "instance" / "modelos").resolve()),
         "somente_local": True, "legado": None,
     }
     if perfil_id == "e5_legado":

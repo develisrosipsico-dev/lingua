@@ -1,5 +1,16 @@
 # Preparação parcial do Agente Analista — 10/10/2026
 
+## Organização dos projetos
+
+Na branch `organizacao/projetos-20261010`, o código do Língua está em
+`lingua/` e o agente continua em `agente_analista/`. Os testes do agente estão
+em `agente_analista/tests/`; seus comandos atuais estão no [README](README.md).
+Os quatro arquivos originais antes preservados na raiz foram movidos, sem
+alteração de conteúdo, para [legado/](legado/README.md). Os bancos, ambientes
+Python e caches locais permanecem em `instance/` e `.venv/` na raiz do
+repositório. As referências de caminhos e os comandos do registro histórico
+abaixo descrevem a disposição anterior à reorganização.
+
 ## Atualização: entrada por arquivo vetorial
 
 O fluxo atual recebe um único `vetorizacao.json` pelo upload da página e usa

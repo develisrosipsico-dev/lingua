@@ -58,6 +58,9 @@ from trabalhos_vetorizacao import (
 
 
 BASE = Path(__file__).resolve().parent
+# No checkout reorganizado, preserve o banco já existente na raiz do
+# repositório. Uma cópia independente do projeto usa sua própria instance/.
+BASE_DADOS = BASE.parent if (BASE.parent / ".git").exists() else BASE
 SOURCE_ERRORS = (ErroPreparacao, ErroSegmentacao, ErroAnotacao, ErroAnalise, ErroRegras, ErroContexto)
 VECTOR_ERRORS = (ErroVetorizacao, ErroPersistenciaVetores, ErroTrabalhoVetorizacao, ErroPerfil)
 VECTOR_PROFILES = [
@@ -370,7 +373,7 @@ def load_vector_context(connection, document_id, context_execution_id):
 def create_app(config=None):
     app = Flask(__name__)
     app.config.from_mapping(
-        DATABASE=os.environ.get("ANALISE_DB", str(BASE / "instance" / "textos.sqlite3")),
+        DATABASE=os.environ.get("ANALISE_DB", str(BASE_DADOS / "instance" / "textos.sqlite3")),
         MAX_CONTENT_LENGTH=2 * 1024 * 1024,
         VECTORS_AUTO_START=True,
         VECTORS_MAX_WORKERS=1,

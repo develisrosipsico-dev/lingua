@@ -15,17 +15,17 @@ a ambiguidades e à revisão humana.
 A dependência é spaCy 3.8.16. Seus metadados oficiais no
 [PyPI](https://pypi.org/project/spacy/3.8.16/) declaram Python `>=3.9,<3.15`;
 o Lingua mantém o mínimo de Python 3.10 e admite as versões até 3.14.
-Depois de atualizar sua cópia com Git, instale as dependências na raiz `lingua`.
+Depois de atualizar sua cópia com Git, instale as dependências na pasta `lingua/`.
 No macOS ou Linux:
 
 ```bash
-.venv/bin/python -m pip install -r requirements.txt
+../.venv/bin/python -m pip install -r requirements.txt
 ```
 
 No Windows:
 
 ```powershell
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+..\.venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
 
 O tokenizador usa `spacy.blank("pt")`. A segmentação de períodos segue regras
@@ -213,9 +213,9 @@ pela validação do registro armazenado.
 ## Exemplos e verificação
 
 O [exemplo completo](../examples/segmentacao.json) contém uma preparação e sua
-segmentação. Para executar a suíte a partir da raiz `lingua`, use
-`.venv/bin/python -m unittest discover -s tests -v` no macOS/Linux ou
-`.\.venv\Scripts\python.exe -m unittest discover -s tests -v` no Windows.
+segmentação. Para executar a suíte a partir da pasta `lingua/`, use
+`../.venv/bin/python -m unittest discover -s tests -v` no macOS/Linux ou
+`..\.venv\Scripts\python.exe -m unittest discover -s tests -v` no Windows.
 
 A verificação usa exemplos curtos anotados manualmente, incluindo preservação,
 mapas, regras de períodos e contexto. O relato de três parágrafos e dezesseis

@@ -7,33 +7,13 @@ import sys
 import unittest
 from unittest.mock import patch
 
-from fixtures_contexto import TEXTO, INSTANTE, construir_regras
-from test_vetorizacao import AdaptadorTeste
-from perfis_vetorizacao import carregar_perfil
-from unidades_contexto import construir_unidades_contexto
-from vetorizacao import vetorizar_contexto
+from fixtures_importacao import TEXTO, INSTANTE, construir_exportacao, carregar_perfil, contexto_teste, PASTA
 from agente_analista.importacao import (ErroImportacao, importar_vetorizacao,
                                         conferir_compatibilidade)
 import agente_analista.importacao as modulo_importacao
-from contratos_vetorizacao import (codificar_vetor, configuracao_vetorizacao,
+from agente_analista.contratos_importacao import (codificar_vetor, configuracao_vetorizacao,
                                   hash_json, perfil_compatibilidade, sha256)
-from preparacao import mapear_intervalos
-
-
-def construir_exportacao(*, normalizar=False, dimensao=1024, limite=160,
-                        perfil_id="e5_simetrico", opcoes=None):
-    """Gere uma fixture da exportação atual, preservando duasparas/CRLF.
-
-    O adaptador determinístico é exclusivo dos testes. Seu uso não demonstra
-    que os embeddings de um modelo neural possuem qualidade semântica.
-    """
-    perfil = carregar_perfil(perfil_id, opcoes=opcoes)
-    contexto = construir_unidades_contexto(construir_regras(normalizar=normalizar),
-                                          execucao_id="contexto-importacao-fixture",
-                                          registrado_em=INSTANTE)
-    return vetorizar_contexto(contexto, perfil_id=perfil_id, opcoes=opcoes,
-                             adaptador=AdaptadorTeste(perfil, dimensao=dimensao, limite=limite),
-                             execucao_id="vetores-importacao-fixture", registrado_em=INSTANTE)
+from agente_analista.validacao_vetorial import mapear_intervalos
 
 
 exportacao_teste = construir_exportacao
@@ -47,9 +27,7 @@ def construir_exportacao_portatil(*, dimensao=3, normalizar=False, limite=512,
     A declaração de inferência real permite verificar o contrato de importação;
     hashes e metadados, por si só, não autenticam uma inferência externa.
     """
-    contexto = construir_unidades_contexto(construir_regras(normalizar=normalizar),
-                                          execucao_id="contexto-portatil-fixture",
-                                          registrado_em=INSTANTE)
+    contexto = contexto_teste(normalizar=normalizar)
     prep = contexto["regras"]["analise"]["anotacao"]["segmentacao"]["preparacao"]
     perfil = carregar_perfil()
     modelo = {"identificacao": perfil["modelo"]["identificacao"], "revisao": perfil["modelo"]["revisao"],
@@ -119,9 +97,17 @@ class ImportacaoTests(unittest.TestCase):
     def setUpClass(cls):
         cls.registro = construir_exportacao(dimensao=3)
 
+    def test_variantes_basicas_coincidem_com_exportacoes_congeladas_do_produtor(self):
+        for nome, opcoes in (("exportacao_atual", {}),
+                             ("exportacao_atual_crlf", {"normalizar": True}),
+                             ("exportacao_atual_fragmentada", {"limite": 23})):
+            with self.subTest(nome=nome):
+                esperado = json.loads((PASTA / (nome + ".json")).read_text(encoding="utf-8"))
+                self.assertEqual(construir_exportacao(dimensao=3, **opcoes), esperado)
+
     def test_periodo_janela_documento_preservados_sem_gerar_novamente(self):
         antes = deepcopy(self.registro)
-        with patch.object(AdaptadorTeste, "gerar", side_effect=AssertionError("Não inferir")):
+        with patch.dict(sys.modules, {"torch": None, "transformers": None, "sentence_transformers": None}):
             importado = importar_vetorizacao(self.registro)
         self.assertEqual(self.registro, antes)
         self.assertEqual(importado["relato"]["texto"], TEXTO)

@@ -20,15 +20,15 @@ e preservando o catálogo e as ocorrências originalmente registrados.
 
 ## Instalação e execução local
 
-Use a pasta `lingua` criada pelas [instruções do README](../README.md).
+Use a subpasta `lingua/` do repositório, conforme as [instruções do README](../README.md).
 Com o aplicativo encerrado e suas alterações locais preservadas:
 
 ```bash
-git pull --ff-only origin main
-.venv/bin/python app.py
+git pull --ff-only origin organizacao/projetos-20261010
+../.venv/bin/python app.py
 ```
 
-No Windows, inicie com `.\.venv\Scripts\python.exe app.py`.
+No Windows, inicie com `..\.venv\Scripts\python.exe app.py`.
 A etapa 07 não muda `requirements.txt` nem baixa outro modelo. Execute a
 instalação descrita no README se este for o primeiro uso ou se esse arquivo
 mudar em uma atualização. Abra <http://127.0.0.1:5001>.
@@ -362,13 +362,13 @@ O modelo recebido anotou “escrevi” com `VerbForm=Part`, `Gender=Masc` e
 `Number=Plur`. Os exemplos preservam essa previsão e o lema recebido
 `escrevi`; a validade estrutural e a detecção da correlativa não os corrigem.
 
-Para executar os testes, na raiz local `lingua`:
+Para executar os testes, na pasta local `lingua/`:
 
 ```bash
-.venv/bin/python -m unittest discover -s tests -v
+../.venv/bin/python -m unittest discover -s tests -v
 ```
 
-No Windows, substitua o executável por `.\.venv\Scripts\python.exe`.
+No Windows, substitua o executável por `..\.venv\Scripts\python.exe`.
 Os testes de regras usam anotações controladas independentes do mecanismo
 e do modelo; incluem positivos, negativos e ambiguidades. Os testes de
 contrato verificam preservação, estados, textos, tokens, alcances descontínuos,

@@ -4,20 +4,21 @@ from copy import deepcopy
 import json
 from pathlib import Path
 import sqlite3
+import sys
 from tempfile import TemporaryDirectory
 import time
 from types import SimpleNamespace
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 import numpy as np
 
 from agente_analista.app import ServicoAnalista, criar_app
-from fixtures_contexto import TEXTO
+from fixtures_importacao import TEXTO
 from test_agente_analista_importacao import construir_exportacao
 
 
-RAIZ = Path(__file__).resolve().parents[1]
+RAIZ = Path(__file__).resolve().parents[2]
 CHAVE = "chave-transitoria-nao-persistida-importacao"
 
 
@@ -63,14 +64,13 @@ class FluxoImportadoAPITests(unittest.TestCase):
         self.servico = ServicoVetoresImportados()
         # Nem a inicialização da app nem a importação podem iniciar outra
         # inferência. As representações são calculadas pela fixture uma vez.
-        self.gerador = self.enterContext(patch(
-            "embeddings_e5.criar_gerador_padrao",
-            side_effect=AssertionError("O agente não deve gerar novos embeddings."),
-        ))
-        self.adaptador = self.enterContext(patch(
-            "modelo_embeddings.criar_adaptador",
-            side_effect=AssertionError("O agente não deve executar a vetorização do Lingua."),
-        ))
+        self.gerador = Mock(side_effect=AssertionError("O agente não deve gerar novos embeddings."))
+        self.adaptador = Mock(side_effect=AssertionError("O agente não deve executar o produtor."))
+        # Sentinelas locais: a suíte não importa fábricas de outro projeto.
+        self.enterContext(patch.dict(sys.modules, {
+            "embeddings_e5": SimpleNamespace(criar_gerador_padrao=self.gerador),
+            "modelo_embeddings": SimpleNamespace(criar_adaptador=self.adaptador),
+        }))
         self.app = self.nova_app()
         self.client = self.app.test_client()
 

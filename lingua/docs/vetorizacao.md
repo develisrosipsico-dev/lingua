@@ -18,14 +18,14 @@ As dependências das etapas 01–08 permanecem em `requirements.txt`. Para usar
 embeddings, instale o conjunto opcional com o aplicativo encerrado:
 
 ```bash
-git pull --ff-only origin main
-.venv/bin/python -m pip install -r requirements-vetorizacao.txt
-.venv/bin/python modelo_embeddings.py --baixar
-.venv/bin/python app.py
+git pull --ff-only origin organizacao/projetos-20261010
+../.venv/bin/python -m pip install -r requirements-vetorizacao.txt
+../.venv/bin/python modelo_embeddings.py --baixar
+../.venv/bin/python app.py
 ```
 
-No Windows, substitua `.venv/bin/python` por
-`.\.venv\Scripts\python.exe`. Abra <http://127.0.0.1:5001> no mesmo computador.
+No Windows, substitua `../.venv/bin/python` por
+`..\.venv\Scripts\python.exe`. Abra <http://127.0.0.1:5001> no mesmo computador.
 
 O comando de download é explícito. Abrir a página, consultar um resultado ou
 validar um JSON não baixa pesos nem carrega bibliotecas de inferência. Se o
@@ -45,8 +45,8 @@ Em Linux, para instalar especificamente o pacote PyTorch de CPU antes das
 demais dependências opcionais:
 
 ```bash
-.venv/bin/python -m pip install torch==2.10.0 --index-url https://download.pytorch.org/whl/cpu
-.venv/bin/python -m pip install -r requirements-vetorizacao.txt
+../.venv/bin/python -m pip install torch==2.10.0 --index-url https://download.pytorch.org/whl/cpu
+../.venv/bin/python -m pip install -r requirements-vetorizacao.txt
 ```
 
 FastEmbed é opcional e tem suas dependências em `requirements-fastembed.txt`.
@@ -134,8 +134,8 @@ Para baixar explicitamente a configuração selecionada e depois consultar
 sua descrição local:
 
 ```bash
-.venv/bin/python modelo_embeddings.py --baixar --perfil e5_simetrico --opcoes '{"dispositivo":"cpu","lote":8}'
-.venv/bin/python modelo_embeddings.py --descrever --perfil e5_simetrico --opcoes '{"dispositivo":"cpu","lote":8}'
+../.venv/bin/python modelo_embeddings.py --baixar --perfil e5_simetrico --opcoes '{"dispositivo":"cpu","lote":8}'
+../.venv/bin/python modelo_embeddings.py --descrever --perfil e5_simetrico --opcoes '{"dispositivo":"cpu","lote":8}'
 ```
 
 `--cache-modelos` permite selecionar uma pasta de pesos. A descrição
@@ -289,7 +289,7 @@ Depois de instalar o modelo, execute com uma origem contextual válida.
 Pelo terminal, gere um arquivo novo para cada experimento:
 
 ```bash
-.venv/bin/python vetorizar.py examples/contexto_integrado.json --saida minha_vetorizacao.json --perfil e5_simetrico --opcoes '{"dispositivo":"cpu"}'
+../.venv/bin/python vetorizar.py examples/contexto_integrado.json --saida minha_vetorizacao.json --perfil e5_simetrico --opcoes '{"dispositivo":"cpu"}'
 ```
 
 O comando lê o JSON da etapa 08, mostra progresso no terminal e recusa
@@ -394,7 +394,7 @@ sobre a mesma execução.
 Instalar outra revisão ou alterar um perfil cria um experimento novo.
 Reprocessar o mesmo documento conserva as execuções anteriores. Trabalhos
 pendentes ou com falha não podem ser baixados como execuções prontas.
-O banco continua local em `instance/textos.sqlite3`; encerre o aplicativo
+O banco continua local em `../instance/textos.sqlite3`; encerre o aplicativo
 antes de copiar o arquivo para backup. Modelos baixados e ambiente virtual
 não são enviados pelo Git.
 
@@ -443,17 +443,17 @@ o ID abaixo pelo identificador exibido no histórico e usando o caminho do
 banco configurado em `ANALISE_DB`, se diferente do padrão:
 
 ```bash
-.venv/bin/python - <<'PY'
+../.venv/bin/python - <<'PY'
 import sqlite3
 from trabalhos_vetorizacao import interromper_trabalho
 
-conexao = sqlite3.connect("instance/textos.sqlite3")
+conexao = sqlite3.connect("../instance/textos.sqlite3")
 conexao.execute("PRAGMA foreign_keys = ON")
 with conexao:
     interromper_trabalho(conexao, "ID_REAL_DO_TRABALHO")
 conexao.close()
 PY
-.venv/bin/python app.py
+../.venv/bin/python app.py
 ```
 
 Abra o trabalho no navegador e clique em **Retomar**. Apenas reiniciar o
@@ -497,8 +497,8 @@ Recall@k, MRR@k e nDCG@k, com média por consulta e desempate pela ordem do
 corpus. Ambas as pontas são renormalizadas para calcular cosseno.
 
 ```bash
-.venv/bin/python avaliacao_vetorizacao.py recuperar minhas_consultas.json meus_conteudos.json minhas_referencias.json --ks 1 3 10 --saida minha_avaliacao.json
-.venv/bin/python avaliacao_vetorizacao.py caracterizar minha_vetorizacao.json --saida meus_recursos.json
+../.venv/bin/python avaliacao_vetorizacao.py recuperar minhas_consultas.json meus_conteudos.json minhas_referencias.json --ks 1 3 10 --saida minha_avaliacao.json
+../.venv/bin/python avaliacao_vetorizacao.py caracterizar minha_vetorizacao.json --saida meus_recursos.json
 ```
 
 O JSON de referências mapeia cada ID real de representação de consulta
@@ -517,7 +517,7 @@ Para verificar dois mecanismos reais, prepare uma lista JSON de strings
 efetivas, já incluindo prefixos, e use:
 
 ```bash
-.venv/bin/python compatibilidade_embeddings.py --entradas minhas_entradas.json --perfil-a e5_simetrico --perfil-b e5_simetrico --opcoes-a '{"backend":"sentence_transformers","dispositivo":"cpu"}' --opcoes-b '{"backend":"fastembed","dispositivo":"cpu","arquivo_onnx":"CAMINHO_ONNX_REAL","modelo_onnx_sha256":"SHA256_REAL_DO_ARQUIVO"}' --saida minha_compatibilidade.json
+../.venv/bin/python compatibilidade_embeddings.py --entradas minhas_entradas.json --perfil-a e5_simetrico --perfil-b e5_simetrico --opcoes-a '{"backend":"sentence_transformers","dispositivo":"cpu"}' --opcoes-b '{"backend":"fastembed","dispositivo":"cpu","arquivo_onnx":"CAMINHO_ONNX_REAL","modelo_onnx_sha256":"SHA256_REAL_DO_ARQUIVO"}' --saida minha_compatibilidade.json
 ```
 
 O adaptador FastEmbed exige arquivo ONNX e SHA-256 reais, além do
@@ -575,10 +575,10 @@ armazenados, com números Python em precisão dupla, antes de codificar o
 resultado no formato escolhido. Os componentes, pesos e métodos versionados
 permitem conferir esse cálculo sem executar novamente o modelo.
 
-Execute a suíte na raiz do projeto:
+Execute a suíte na pasta `lingua/` do repositório:
 
 ```bash
-.venv/bin/python -m unittest discover -s tests -v
+../.venv/bin/python -m unittest discover -s tests -v
 ```
 
 A validação desta entrega executou **561 testes, todos aprovados**, incluindo

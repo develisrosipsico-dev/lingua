@@ -2,6 +2,7 @@
 
 import json
 import os
+import sys
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from threading import Event
@@ -301,7 +302,8 @@ class ConfiguracaoTests(unittest.TestCase):
 
     def test_status_pronto_sem_chave_api_ou_modelo_do_provedor_no_ambiente(self):
         with patch.dict(os.environ, {}, clear=True), \
-                patch("embeddings_e5.criar_gerador_padrao", side_effect=AssertionError("Inferência duplicada")):
+                patch.dict(sys.modules, {"embeddings_e5": None, "modelo_embeddings": None,
+                                         "torch": None, "transformers": None}):
             servico = ServicoAnalista()
             servico._corpus = lambda: SimpleNamespace(fragmentos=[{}], blocos={"B1": {}}, manifesto={})
             for extras in ({}, {"AGENTE_ANALISTA_PROVEDOR": "invalido", "AGENTE_ANALISTA_MODELO": ""}):

@@ -26,15 +26,15 @@ preservada no contexto; a atualização da etapa 07 não muda o formato da etapa
 
 ## Instalação e execução local
 
-Use a pasta `lingua` criada pelas [instruções do README](../README.md).
+Use a subpasta `lingua/` do repositório, conforme as [instruções do README](../README.md).
 Com o aplicativo encerrado e suas alterações locais preservadas:
 
 ```bash
-git pull --ff-only origin main
-.venv/bin/python app.py
+git pull --ff-only origin organizacao/projetos-20261010
+../.venv/bin/python app.py
 ```
 
-No Windows, inicie com `.\.venv\Scripts\python.exe app.py`.
+No Windows, inicie com `..\.venv\Scripts\python.exe app.py`.
 A etapa 08 não altera `requirements.txt` nem baixa outro modelo. Execute a
 instalação do README se este for o primeiro uso ou se as dependências mudarem
 em outra atualização. Abra <http://127.0.0.1:5001>.
@@ -305,13 +305,13 @@ identidades lógicas. Quatro hashes de janela diferem porque seus recortes de
 trabalho incluem quebras CRLF/LF; a janela formada somente pelos períodos
 três e quatro não contém essa transformação e mantém seu hash.
 
-Para executar os testes na raiz local `lingua`:
+Para executar os testes na pasta local `lingua/`:
 
 ```bash
-.venv/bin/python -m unittest discover -s tests -v
+../.venv/bin/python -m unittest discover -s tests -v
 ```
 
-No Windows, substitua o executável por `.\.venv\Scripts\python.exe`.
+No Windows, substitua o executável por `..\.venv\Scripts\python.exe`.
 As seleções e os intervalos esperados dos testes devem ser definidos
 independentemente do construtor. A conferência linguística e suas pendências
 continuam registradas nas etapas de origem; prontidão para a etapa 09 confirma

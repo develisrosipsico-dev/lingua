@@ -13,16 +13,16 @@ declara compatibilidade com spaCy `>=3.8.0,<3.9.0`. A dependência está fixada
 em `requirements.txt` por uma URL HTTPS para a distribuição oficial no GitHub
 de `explosion/spacy-models`.
 
-Após atualizar sua cópia com Git, execute na raiz `lingua`, no macOS ou Linux:
+Após atualizar sua cópia com Git, execute na pasta `lingua/`, no macOS ou Linux:
 
 ```bash
-.venv/bin/python -m pip install -r requirements.txt
+../.venv/bin/python -m pip install -r requirements.txt
 ```
 
 No Windows:
 
 ```powershell
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+..\.venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
 
 Esse comando instala tanto as dependências quanto o modelo. O download inicial

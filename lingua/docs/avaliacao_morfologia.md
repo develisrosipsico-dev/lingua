@@ -10,13 +10,13 @@ pontuação e traços flexionais não fazem parte desta pequena referência. `gu
 é avaliada tanto como verbo (`guardar`, `VERB`) quanto como substantivo
 (`guarda`, `NOUN`). Nenhuma expectativa é substituída pela previsão do modelo.
 
-Na raiz do projeto, com as dependências instaladas, execute:
+Na pasta `lingua/` do repositório, com as dependências instaladas, execute:
 
 ```bash
-.venv/bin/python avaliacao_morfologia.py --saida-json examples/avaliacao_morfologia.json --saida-markdown docs/avaliacao_morfologia_resultado.md
+../.venv/bin/python avaliacao_morfologia.py --saida-json examples/avaliacao_morfologia.json --saida-markdown docs/avaliacao_morfologia_resultado.md
 ```
 
-No Windows, substitua o executável por `.\.venv\Scripts\python.exe`.
+No Windows, substitua o executável por `..\.venv\Scripts\python.exe`.
 Os registros de cada frase são gerados pela preparação, segmentação e anotação
 reais. O modelo recebe cada frase inteira, com seu contexto, e não palavras
 isoladas. As versões, IDs e hashes reais constam no relatório JSON.

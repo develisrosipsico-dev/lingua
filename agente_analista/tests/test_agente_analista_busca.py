@@ -17,7 +17,7 @@ from agente_analista.busca import Buscador, ErroBusca, _BM25
 from agente_analista.corpus import Corpus, ErroCorpus
 
 
-RAIZ = Path(__file__).resolve().parents[1]
+RAIZ = Path(__file__).resolve().parents[2]
 REVISAO = "3d7cfbdacd47fdda877c5cd8a79fbcc4f2a574f3"
 
 

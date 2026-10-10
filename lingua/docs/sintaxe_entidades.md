@@ -12,20 +12,20 @@ produz um registro próprio com `schema_version = "1.0.0"` e
 As etapas 05 e 06 usam spaCy **3.8.16** e o modelo português
 **`pt_core_news_sm` 3.8.0**, compatível com spaCy `>=3.8.0,<3.9.0`.
 As versões estão fixadas em `requirements.txt`, incluindo a distribuição
-oficial do modelo. Na raiz `lingua`, no macOS ou Linux:
+oficial do modelo. Na pasta `lingua/`, no macOS ou Linux:
 
 ```bash
-git pull --ff-only origin main
-.venv/bin/python -m pip install -r requirements.txt
-.venv/bin/python app.py
+git pull --ff-only origin organizacao/projetos-20261010
+../.venv/bin/python -m pip install -r requirements.txt
+../.venv/bin/python app.py
 ```
 
 No Windows:
 
 ```powershell
-git pull --ff-only origin main
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
-.\.venv\Scripts\python.exe app.py
+git pull --ff-only origin organizacao/projetos-20261010
+..\.venv\Scripts\python.exe -m pip install -r requirements.txt
+..\.venv\Scripts\python.exe app.py
 ```
 
 A instalação inicial requer internet. O modelo já instalado na etapa 05 é
@@ -239,13 +239,13 @@ Nos dois exemplos, o modelo classificou `São\tPaulo` como `ORG`. O registro
 conserva esse rótulo real, que precisa de revisão linguística; passar pela
 validação estrutural não transforma essa previsão em uma referência correta.
 
-Na raiz do projeto, execute os testes com o Python do ambiente virtual:
+Na pasta `lingua/` do repositório, execute os testes com o Python do ambiente virtual:
 
 ```bash
-.venv/bin/python -m unittest discover -s tests -v
+../.venv/bin/python -m unittest discover -s tests -v
 ```
 
-No Windows, use `.\.venv\Scripts\python.exe` no lugar de `.venv/bin/python`.
+No Windows, use `..\.venv\Scripts\python.exe` no lugar de `../.venv/bin/python`.
 Os testes de contrato verificam preservação, Unicode, separadores, árvores,
 entidades, intervalos, erros, persistência e histórico; os testes com o modelo
 real conferem o alinhamento e a execução dos componentes instalados.

@@ -14,7 +14,7 @@ from test_agente_analista_importacao import (
 )
 
 
-RAIZ = Path(__file__).resolve().parents[1]
+RAIZ = Path(__file__).resolve().parents[2]
 
 
 class IndependenciaTests(unittest.TestCase):
@@ -38,7 +38,12 @@ class IndependenciaTests(unittest.TestCase):
             )
             # Além da ausência física do outro aplicativo, impeça qualquer
             # import acidental de seus nomes, inclusive depois do startup.
-            bloqueados = [arquivo.stem for arquivo in RAIZ.glob("*.py")]
+            # Nomes históricos permanecem bloqueados mesmo quando o teste
+            # roda numa cópia do agente sem a pasta do outro aplicativo.
+            bloqueados = {"app", "preparacao", "segmentacao", "anotacao", "sintaxe_entidades",
+                          "regras_linguisticas", "unidades_contexto", "vetorizacao", "perfis_vetorizacao",
+                          "modelo_embeddings", "embeddings_e5", "contratos_vetorizacao", "api_narrativas"}
+            bloqueados.update(arquivo.stem for arquivo in (RAIZ / "lingua").glob("*.py"))
             script = """
 import json,sys
 from pathlib import Path
@@ -68,7 +73,7 @@ print('Pacote isolado: upload, histórico e validação sem Língua ou inferênc
 """
             ambiente = dict(os.environ, PYTHONPATH=str(destino))
             processo = subprocess.run(
-                [sys.executable, "-c", script, json.dumps(bloqueados)],
+                [sys.executable, "-c", script, json.dumps(sorted(bloqueados))],
                 cwd=destino, env=ambiente, capture_output=True, text=True, timeout=30,
             )
             self.assertEqual(processo.returncode, 0, processo.stdout + processo.stderr)
