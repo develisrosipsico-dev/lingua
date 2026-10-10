@@ -65,7 +65,7 @@
             </fieldset>
             <label for="relato">Texto do relato</label>
             <textarea id="relato" name="relato" rows="10" spellcheck="true" aria-describedby="input-help input-counts input-error" placeholder="Cole o primeiro parágrafo aqui.&#10;&#10;Cole o segundo parágrafo aqui."></textarea>
-            <p id="input-help" class="field-help">O texto será preservado como recebido. A busca considera os dois parágrafos e o relato completo. Para avaliar as ligações, o relato e os trechos recuperados serão enviados ao provedor de IA configurado.</p>
+            <p id="input-help" class="field-help">O texto será preservado como recebido. Você pode salvar o relato sem fazer uma busca. Ao buscar, o relato e as ligações conferidas também ficam salvos neste computador. Para avaliar as ligações, o relato e os trechos recuperados serão enviados ao provedor de IA configurado.</p>
             <div class="input-meta">
               <div id="input-counts" class="counts" aria-live="polite" aria-atomic="true"><span id="word-count">0 / 400 palavras</span><span id="paragraph-count">0 / 2 parágrafos</span></div>
               <span class="field-help">Sem mínimo de palavras</span>
@@ -73,11 +73,23 @@
             <p id="input-error" class="field-error" role="alert" hidden></p>
             <div class="form-actions">
               <button id="search-button" class="button button-primary" type="submit" disabled>Buscar ligações <span aria-hidden="true">→</span></button>
+              <button id="save-story-button" class="button button-secondary" type="button" disabled>Salvar relato</button>
               <button id="clear-button" class="button button-secondary" type="button">Limpar</button>
             </div>
+            <p id="save-story-feedback" class="field-help" role="status" aria-live="polite"></p>
           </form>
           <div id="processing" class="processing" role="status" aria-live="polite" hidden><span id="processing-spinner" class="spinner" aria-hidden="true"></span><div><p id="processing-title">Preparando a busca</p><p id="processing-detail" class="muted">Aguarde enquanto o relato é examinado.</p></div></div>
           <p id="request-error" class="field-error request-error" role="alert" hidden></p>
+        </section>
+
+        <section class="history-card" aria-labelledby="history-title">
+          <div class="results-heading">
+            <div><h2 id="history-title">Relatos salvos</h2><p class="muted">Consulte relatos e resultados anteriores, mesmo depois de reiniciar o aplicativo. Limpar o formulário não apaga os registros.</p></div>
+            <button id="refresh-history" class="button button-secondary" type="button">Atualizar</button>
+          </div>
+          <p id="history-feedback" class="field-help" role="status" aria-live="polite"></p>
+          <div id="history-list" class="history-list"></div>
+          <button id="more-history" class="button button-secondary" type="button" hidden>Carregar mais</button>
         </section>
 
         <section id="results" class="results" aria-labelledby="results-title" hidden>

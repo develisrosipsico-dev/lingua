@@ -17,6 +17,7 @@
     "rejected-list", "retrieval-section", "retrieval-method", "retrieval-candidates",
     "provider-select", "api-key", "model-select", "add-model-button", "add-model-panel", "new-model-id",
     "save-model-button", "cancel-model-button", "new-model-error", "configuration-error", "model-feedback",
+    "save-story-button", "save-story-feedback", "refresh-history", "history-feedback", "history-list", "more-history",
   ].map((id) => [id, $(id)]));
   const modelsStorageKey = "agente-analista-modelos-v1";
   const modelIdentifier = /^[A-Za-z0-9][A-Za-z0-9._:/@+-]{0,199}$/u;
@@ -29,6 +30,14 @@
   let currentJob = null;
   let pollTimer = null;
   let connectionFailures = 0;
+  let saving = false;
+  let openingRecord = false;
+  let savedId = null;
+  let savedState = null;
+  let historyRecords = [];
+  let historyNext = null;
+  let historyLoading = false;
+  let historyRequest = 0;
 
   const trimWhitespace = (text) => text.replace(edgeWhitespace, "");
   const list = (value) => Array.isArray(value) ? value : [];
@@ -148,22 +157,166 @@
     elements["input-error"].textContent = state.error;
     elements["input-error"].hidden = !touched || !state.error;
     elements.relato.setAttribute("aria-invalid", String(touched && Boolean(state.error)));
-    elements["search-button"].disabled = busy || !ready || Boolean(state.error) || Boolean(configuration.error);
+    elements["search-button"].disabled = busy || saving || openingRecord || !ready || Boolean(state.error) || Boolean(configuration.error);
+    elements["save-story-button"].disabled = busy || saving || openingRecord || Boolean(state.error) || Boolean(savedId);
     return state;
   }
 
   function setBusy(value) {
     busy = value;
-    elements.relato.readOnly = value;
-    elements["clear-button"].disabled = value;
-    elements["clear-button"].title = value ? "Aguarde o término da busca para limpar o relato." : "";
-    elements["copy-button"].disabled = value || !currentResult;
-    elements["export-button"].disabled = value || !currentResult;
+    const locked = busy || saving || openingRecord;
+    elements.relato.readOnly = locked;
+    elements["clear-button"].disabled = locked;
+    elements["clear-button"].title = locked ? "Aguarde o término da operação para limpar o relato." : "";
+    elements["copy-button"].disabled = locked || !currentResult;
+    elements["export-button"].disabled = locked || !currentResult;
     elements["search-button"].textContent = value ? "Buscando ligações…" : "Buscar ligações →";
+    elements["save-story-button"].textContent = saving ? "Salvando…" : savedId ? "Relato salvo" : "Salvar relato";
     for (const id of ["provider-select", "api-key", "model-select", "add-model-button", "new-model-id", "save-model-button", "cancel-model-button"]) {
-      elements[id].disabled = value;
+      elements[id].disabled = locked;
     }
     updateInput();
+    updateHistoryControls();
+  }
+
+  function forgetSavedRecord() {
+    savedId = null;
+    savedState = null;
+    elements["save-story-feedback"].textContent = "";
+    elements["save-story-feedback"].className = "field-help";
+    elements["save-story-button"].textContent = "Salvar relato";
+  }
+
+  function recordState(state) {
+    return { registrado: "Sem busca", executando: "Busca em andamento", concluido: "Busca concluída", erro: "Busca interrompida", interrompido: "Busca interrompida pelo reinício do servidor" }[state] || "Relato salvo";
+  }
+
+  function markSavedRecord(id, state) {
+    savedId = Number.isSafeInteger(id) && id > 0 ? id : null;
+    savedState = state;
+    elements["save-story-feedback"].className = "field-help";
+    elements["save-story-feedback"].textContent = savedId ? `Relato #${savedId} salvo neste computador. ${recordState(state)}.` : "";
+    elements["save-story-button"].textContent = savedId ? "Relato salvo" : "Salvar relato";
+    updateInput();
+  }
+
+  function updateHistoryControls() {
+    const locked = busy || saving || openingRecord || historyLoading;
+    elements["refresh-history"].disabled = locked;
+    elements["more-history"].disabled = locked;
+    elements["more-history"].hidden = historyNext === null;
+    elements["history-list"].querySelectorAll("button").forEach((button) => { button.disabled = locked; });
+  }
+
+  function renderHistory() {
+    elements["history-list"].replaceChildren();
+    historyRecords.forEach((record) => {
+      const item = node("div", "", "history-item");
+      const content = node("div", "", "history-item-content");
+      const timestamp = new Date(record.criado_em);
+      const date = Number.isNaN(timestamp.getTime()) ? display(record.criado_em) : timestamp.toLocaleString("pt-BR");
+      content.append(node("p", `Relato #${record.id}${date ? ` · ${date}` : ""}`, "history-item-title"));
+      const text = display(record.texto).replace(/\s+/gu, " ");
+      const characters = Array.from(text);
+      content.append(node("p", characters.slice(0, 180).join("") + (characters.length > 180 ? "…" : ""), "history-item-preview"));
+      const count = Number(record.total_relacoes) || 0;
+      const metadata = [recordState(record.estado), `${record.palavras} palavras`, `${count} ${count === 1 ? "relação" : "relações"}`];
+      if (record.modelo) metadata.push([record.provedor, record.modelo].filter(Boolean).join(" · "));
+      content.append(node("p", metadata.join(" · "), "history-item-meta"));
+      const open = node("button", "Abrir", "button button-secondary button-small");
+      open.type = "button";
+      open.setAttribute("aria-label", `Abrir relato #${record.id}`);
+      open.addEventListener("click", () => openRecord(record.id));
+      item.append(content, open);
+      elements["history-list"].append(item);
+    });
+    updateHistoryControls();
+  }
+
+  async function refreshHistory(reset = true) {
+    if (!reset && historyNext === null) return;
+    const sequence = ++historyRequest;
+    const cursor = reset ? "" : `&antes_id=${encodeURIComponent(historyNext)}`;
+    historyLoading = true;
+    elements["history-feedback"].className = "field-help";
+    elements["history-feedback"].textContent = "Carregando relatos salvos…";
+    updateHistoryControls();
+    try {
+      const response = await fetchJSON(`/api/relatos?limite=20${cursor}`);
+      if (sequence !== historyRequest) return;
+      const records = list(response.relatos);
+      if (reset) historyRecords = records;
+      else {
+        const known = new Set(historyRecords.map((record) => record.id));
+        historyRecords.push(...records.filter((record) => !known.has(record.id)));
+      }
+      historyNext = Number.isSafeInteger(response.proximo_antes_id) ? response.proximo_antes_id : null;
+      renderHistory();
+      elements["history-feedback"].textContent = historyRecords.length ? "" : "Nenhum relato salvo ainda. Use Salvar relato ou Buscar ligações.";
+    } catch (error) {
+      if (sequence !== historyRequest) return;
+      elements["history-feedback"].className = "field-error";
+      elements["history-feedback"].textContent = `Não foi possível consultar os relatos salvos. ${error.message}`;
+    } finally {
+      if (sequence === historyRequest) {
+        historyLoading = false;
+        updateHistoryControls();
+      }
+    }
+  }
+
+  async function saveStory() {
+    if (busy || saving || openingRecord || savedId) return;
+    touched = true;
+    const state = updateInput();
+    if (state.error) { elements.relato.focus(); return; }
+    saving = true;
+    setBusy(busy);
+    elements["save-story-feedback"].className = "field-help";
+    elements["save-story-feedback"].textContent = "Salvando o relato neste computador…";
+    try {
+      const record = await fetchJSON("/api/relatos", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ texto: elements.relato.value }) });
+      if (!Number.isSafeInteger(record.id)) throw new Error("O servidor não informou o identificador do relato salvo.");
+      markSavedRecord(record.id, record.estado);
+      refreshHistory();
+    } catch (error) {
+      elements["save-story-feedback"].className = "field-error";
+      elements["save-story-feedback"].textContent = `Não foi possível salvar o relato. ${error.message}`;
+    } finally {
+      saving = false;
+      setBusy(busy);
+    }
+  }
+
+  async function openRecord(id) {
+    if (busy || saving || openingRecord) return;
+    openingRecord = true;
+    setBusy(busy);
+    elements["history-feedback"].className = "field-help";
+    elements["history-feedback"].textContent = `Abrindo relato #${id}…`;
+    try {
+      const record = await fetchJSON(`/api/relatos/${encodeURIComponent(id)}`);
+      resetResults();
+      elements.relato.value = record.texto;
+      touched = true;
+      elements["request-error"].hidden = true;
+      elements.processing.hidden = true;
+      markSavedRecord(record.id, record.estado);
+      if (record.resultado && typeof record.resultado === "object") renderResult(record.resultado);
+      if (record.erro) {
+        elements["request-error"].textContent = display(record.erro);
+        elements["request-error"].hidden = false;
+      }
+      elements["history-feedback"].textContent = `Relato #${record.id} aberto. ${recordState(record.estado)}.`;
+      elements.relato.focus();
+      elements.relato.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center" });
+    } catch (error) {
+      elements["history-feedback"].className = "field-error";
+      elements["history-feedback"].textContent = `Não foi possível abrir o relato. ${error.message}`;
+    } finally {
+      openingRecord = false;
+      setBusy(busy);
+    }
   }
 
   function resetResults() {
@@ -252,6 +405,7 @@
     elements["request-error"].textContent = message;
     elements["request-error"].hidden = false;
     setBusy(false);
+    refreshHistory();
   }
 
   async function pollJob(id) {
@@ -264,13 +418,16 @@
         if (!job.resultado || typeof job.resultado !== "object") throw new Error("A busca terminou sem um resultado válido. Confira o terminal do servidor.");
         currentJob = null;
         elements.processing.hidden = true;
+        if (savedId) markSavedRecord(savedId, "concluido");
         renderResult(job.resultado);
         setBusy(false);
+        refreshHistory();
         elements["results-title"].focus({ preventScroll: true });
         elements.results.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
         return;
       }
       if (job.estado === "erro") {
+        if (savedId) markSavedRecord(savedId, "erro");
         finishError(display(job.erro) || "Não foi possível concluir a busca. Confira o terminal do servidor.");
         return;
       }
@@ -445,7 +602,7 @@
 
   async function submitSearch(event) {
     event.preventDefault();
-    if (busy) return;
+    if (busy || saving || openingRecord) return;
     touched = true;
     configurationTouched = true;
     const state = updateInput();
@@ -466,14 +623,18 @@
     setBusy(true);
     showProgress("Iniciando a busca", "Preparando consultas com P1, P2 e o relato completo.");
     try {
-      const response = await fetchJSON("/api/buscas", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({
+      const payload = {
         texto: originalText,
         provedor: elements["provider-select"].value,
         modelo: elements["model-select"].value,
         chave_api: elements["api-key"].value.trim(),
-      }) });
+      };
+      if (savedId && savedState === "registrado") payload.relato_id = savedId;
+      const response = await fetchJSON("/api/buscas", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
       if (!response.id) throw new Error("O servidor não informou o identificador da busca.");
       currentJob = response.id;
+      markSavedRecord(response.relato_id, "executando");
+      refreshHistory();
       pollJob(currentJob);
     } catch (error) {
       finishError(error.message);
@@ -559,14 +720,16 @@
   });
   elements.relato.addEventListener("input", () => {
     touched = true;
+    forgetSavedRecord();
     resetResults();
     elements["request-error"].hidden = true;
     updateInput();
   });
   elements["clear-button"].addEventListener("click", () => {
-    if (busy) return;
+    if (busy || saving || openingRecord) return;
     elements.relato.value = "";
     touched = false;
+    forgetSavedRecord();
     resetResults();
     elements["request-error"].hidden = true;
     elements.processing.hidden = true;
@@ -574,10 +737,14 @@
     elements.relato.focus();
   });
   elements["refresh-status"].addEventListener("click", checkStatus);
+  elements["save-story-button"].addEventListener("click", saveStory);
+  elements["refresh-history"].addEventListener("click", () => refreshHistory());
+  elements["more-history"].addEventListener("click", () => refreshHistory(false));
   elements["copy-button"].addEventListener("click", copyTable);
   elements["export-button"].addEventListener("click", exportJSON);
   elements["api-key"].value = "";
   renderModels();
   updateInput();
   checkStatus();
+  refreshHistory();
 })();

@@ -4,6 +4,7 @@ from concurrent.futures import ThreadPoolExecutor
 import json
 import os
 from pathlib import Path
+import sqlite3
 from threading import Lock
 from time import monotonic
 from urllib.parse import urlsplit
@@ -13,6 +14,7 @@ from flask import Flask, jsonify, render_template, request
 from werkzeug.exceptions import HTTPException
 
 from .entrada import ErroEntrada, validar_relato
+from .persistencia import BancoAnalista, ErroPersistencia
 
 
 RAIZ = Path(__file__).resolve().parents[1]
@@ -20,7 +22,7 @@ CONFIG_E5 = RAIZ / "instance/agente_analista_e5.json"
 
 
 class ServicoAnalista:
-    """Reutilize corpus, BM25 e modelo entre buscas; nunca persista o relato."""
+    """Reutilize corpus, BM25 e modelo; o aplicativo cuida dos registros locais."""
 
     def __init__(self, pasta=None, caminho_config=None):
         self.pasta = Path(pasta or RAIZ / "agente_analista/data/Vetor")
@@ -102,15 +104,21 @@ class ServicoAnalista:
 
 def criar_app(config=None, *, servico=None):
     app = Flask(__name__)
-    app.config.update(MAX_CONTENT_LENGTH=256 * 1024)
+    app.config.update(
+        MAX_CONTENT_LENGTH=256 * 1024,
+        DATABASE=os.environ.get("AGENTE_ANALISTA_DB", str(RAIZ / "instance/agente_analista.sqlite3")),
+    )
     if config:
         app.config.update(config)
     servico = servico or ServicoAnalista()
+    banco = BancoAnalista(app.config["DATABASE"])
     executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="agente-analista")
     lock = Lock()
     tarefas = {}
-    estado = {"ativa": None}
-    app.extensions["agente_analista"] = {"servico": servico, "executor": executor, "tarefas": tarefas}
+    estado = {"ativa": None, "recuperado": False}
+    app.extensions["agente_analista"] = {
+        "servico": servico, "executor": executor, "tarefas": tarefas, "banco": banco,
+    }
 
     @app.before_request
     def somente_local():
@@ -121,6 +129,15 @@ def criar_app(config=None, *, servico=None):
             origem = request.headers.get("Origin")
             if origem and urlsplit(origem).netloc != request.host:
                 return jsonify(erro="Abra a página local para iniciar a busca."), 403
+
+    @app.before_request
+    def recuperar_buscas():
+        # Criar a app não comprova que ela conseguiu abrir a porta. Recuperar
+        # aqui evita interromper o servidor ativo ao tentar iniciá-lo de novo.
+        with lock:
+            if not estado["recuperado"]:
+                banco.interromper_buscas()
+                estado["recuperado"] = True
 
     @app.after_request
     def sem_cache(resposta):
@@ -139,6 +156,38 @@ def criar_app(config=None, *, servico=None):
             limpar_expiradas()
         return jsonify(servico.status())
 
+    @app.post("/api/relatos")
+    def registrar_relato():
+        if not request.is_json:
+            return jsonify(erro="Envie o relato em JSON."), 415
+        dados = request.get_json(silent=True)
+        if not isinstance(dados, dict) or not isinstance(dados.get("texto"), str):
+            return jsonify(erro="Envie o relato como texto."), 400
+        try:
+            relato = validar_relato(dados["texto"])
+        except ErroEntrada as erro:
+            return jsonify(erro=str(erro), contagem=erro.contagem), 400
+        relato_id = banco.registrar(relato)
+        return jsonify(banco.obter(relato_id)), 201
+
+    @app.get("/api/relatos")
+    def listar_relatos():
+        try:
+            limite = int(request.args.get("limite", "20"))
+            antes_id = int(request.args["antes_id"]) if "antes_id" in request.args else None
+            if not 1 <= limite <= 100 or (antes_id is not None and antes_id < 1):
+                raise ValueError
+        except ValueError:
+            return jsonify(erro="Informe limite de 1 a 100 e antes_id positivo."), 400
+        return jsonify(banco.listar(limite, antes_id))
+
+    @app.get("/api/relatos/<int:relato_id>")
+    def consultar_relato(relato_id):
+        relato = banco.obter(relato_id)
+        if relato is None:
+            return jsonify(erro="Relato não encontrado."), 404
+        return jsonify(relato)
+
     def limpar_expiradas():
         agora = monotonic()
         for id in list(tarefas):
@@ -151,18 +200,31 @@ def criar_app(config=None, *, servico=None):
                 tarefas[tarefa_id]["etapa"] = etapa
         try:
             resultado = servico.executar(relato, progresso, **configuracao_api)
+            resultado = banco.concluir(tarefa_id, resultado)
             with lock:
                 tarefas[tarefa_id].update(estado="concluido", etapa="Busca concluída", resultado=resultado)
         except Exception as erro:
-            from .busca import ErroBusca
             from .corpus import ErroCorpus
             from .ligacoes import ErroLigacoes
             from contratos_vetorizacao import ErroVetorizacao
-            conhecidos = (ErroEntrada, ErroBusca, ErroCorpus, ErroLigacoes, ErroVetorizacao)
+            # A busca pode estar indisponível por dependências ausentes. Ainda
+            # assim, o erro deve encerrar a tarefa e preservar o relato salvo.
+            try:
+                from .busca import ErroBusca
+                erros_busca = (ErroBusca,)
+            except ImportError:
+                erros_busca = ()
+            conhecidos = (ErroEntrada, ErroCorpus, ErroLigacoes, ErroVetorizacao, ErroPersistencia) + erros_busca
             mensagem = str(erro) if isinstance(erro, conhecidos) else "Não foi possível concluir a busca. Confira o ambiente e tente novamente."
+            if isinstance(erro, sqlite3.Error):
+                mensagem = "Não foi possível salvar o resultado no banco local. O relato continua disponível no histórico."
             if configuracao_api["chave_api"] in mensagem:
                 mensagem = "Não foi possível concluir a avaliação. Confira a chave, o provedor e o modelo na página."
             app.logger.error("Busca não concluída (%s)", type(erro).__name__)
+            try:
+                banco.falhar(tarefa_id, mensagem)
+            except sqlite3.Error:
+                app.logger.error("Não foi possível gravar o estado da busca no banco local.")
             with lock:
                 tarefas[tarefa_id].update(estado="erro", etapa="Busca interrompida", erro=mensagem)
         finally:
@@ -181,6 +243,9 @@ def criar_app(config=None, *, servico=None):
             relato = validar_relato(dados["texto"])
         except ErroEntrada as erro:
             return jsonify(erro=str(erro), contagem=erro.contagem), 400
+        relato_id = dados.get("relato_id")
+        if "relato_id" in dados and (type(relato_id) is not int or relato_id < 1):
+            return jsonify(erro="relato_id deve ser um identificador inteiro positivo."), 400
         from api_narrativas import ErroAPINarrativa, _obter_chave_api
         from .ligacoes import ErroLigacoes, _configuracao
         if not isinstance(dados.get("chave_api"), str) or not dados["chave_api"].strip():
@@ -200,17 +265,28 @@ def criar_app(config=None, *, servico=None):
         with lock:
             if estado["ativa"]:
                 return jsonify(erro="Uma busca já está em andamento. Aguarde sua conclusão."), 409
-            # Retenção limitada, somente em memória; relatos não são gravados em disco.
+            # O cache de progresso é limitado; relatos e resultados ficam no SQLite.
             limpar_expiradas()
             agora = monotonic()
             for antiga in list(tarefas):
                 if len(tarefas) >= 8:
                     del tarefas[antiga]
             tarefa_id = str(uuid4())
-            tarefas[tarefa_id] = {"id": tarefa_id, "estado": "executando", "etapa": "Preparando a busca", "criada": agora}
+            try:
+                relato_id = banco.iniciar_busca(relato, tarefa_id, provedor, modelo, relato_id)
+            except LookupError:
+                return jsonify(erro="Relato não encontrado."), 404
+            except FileExistsError as erro:
+                return jsonify(erro=str(erro)), 409
+            except ErroPersistencia as erro:
+                return jsonify(erro=str(erro)), 400
+            tarefas[tarefa_id] = {
+                "id": tarefa_id, "relato_id": relato_id, "estado": "executando",
+                "etapa": "Preparando a busca", "criada": agora,
+            }
             estado["ativa"] = tarefa_id
         executor.submit(executar, tarefa_id, relato, {"provedor": provedor, "modelo": modelo, "chave_api": chave})
-        return jsonify(id=tarefa_id), 202
+        return jsonify(id=tarefa_id, relato_id=relato_id), 202
 
     @app.get("/api/buscas/<tarefa_id>")
     def consultar(tarefa_id):
@@ -218,8 +294,15 @@ def criar_app(config=None, *, servico=None):
             limpar_expiradas()
             tarefa = tarefas.get(tarefa_id)
             if tarefa is None:
-                return jsonify(erro="Busca não encontrada ou expirada. Execute uma nova busca."), 404
+                tarefa = banco.obter_busca(tarefa_id)
+            if tarefa is None:
+                return jsonify(erro="Busca não encontrada."), 404
             return jsonify({k: v for k, v in tarefa.items() if k != "criada"})
+
+    @app.errorhandler(sqlite3.Error)
+    def erro_banco(erro):
+        app.logger.error("Banco local indisponível (%s)", type(erro).__name__)
+        return jsonify(erro="Não foi possível acessar o banco local. Confira o armazenamento e tente novamente."), 503
 
     @app.errorhandler(HTTPException)
     def erro_http(erro):

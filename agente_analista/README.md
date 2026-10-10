@@ -69,10 +69,16 @@ Lingua ou as variáveis de ambiente do servidor.
 O E5 e o índice funcionam localmente. Para construir as justificativas, o
 provedor recebe o relato e os blocos recuperados por HTTPS; essa chamada usa
 a conta do provedor e pode consumir créditos. A busca é liberada após informar
-a chave, selecionar o modelo e preencher um relato válido. Os relatos e resultados ficam
-somente em memória no servidor, com até oito buscas e disponibilidade por uma
-hora. Resultados expirados são removidos nos próximos acessos; encerrar o
-servidor libera todos eles. O usuário pode salvar o resultado por **Exportar JSON**.
+a chave, selecionar o modelo e preencher um relato válido. **Salvar relato**
+guarda somente o texto, sem usar o E5, enviar dados ao provedor ou consumir
+créditos. O relato precisa seguir os mesmos limites de dois parágrafos e até
+400 palavras. Uma busca também salva automaticamente o relato e seu resultado
+no banco local. As chaves de API não fazem parte dos registros salvos.
+
+Os relatos e resultados permanecem disponíveis depois de encerrar e reiniciar
+o servidor. O acompanhamento das buscas em andamento continua em memória,
+limitado a oito buscas por uma hora; essa limpeza não apaga o histórico salvo.
+**Exportar JSON** continua disponível para guardar uma cópia de cada resultado.
 
 ### Executar diretamente no ambiente Python
 
@@ -172,6 +178,34 @@ o contexto, IDs, posições e pontuações. Relações descartadas e propostas q
 falharam na conferência ficam em áreas separadas. Há controles para limpar,
 copiar a tabela e exportar o JSON completo.
 
+### Relatos e relações salvos
+
+O banco SQLite fica, por padrão, em `instance/agente_analista.sqlite3`, separado
+dos dados do Lingua. Para usar outro arquivo, defina `AGENTE_ANALISTA_DB` com
+seu caminho antes de iniciar o aplicativo. Não há servidor de banco de dados
+nem dependência adicional a instalar.
+
+A tabela `relatos` guarda o texto original e os dados da busca. A tabela
+`relacoes` guarda as relações conferidas, com chave estrangeira `relato_id`,
+passagem do relato, trecho de Freud e justificativa, além das referências e
+dos detalhes necessários para inspecionar o resultado. Relações pertinentes,
+parciais e descartadas são preservadas. Propostas rejeitadas por falharem nas
+conferências não se tornam registros nessa tabela; ficam disponíveis para
+inspeção no resultado original.
+
+Use **Salvar relato** para guardar um texto antes de configurar a busca.
+Salvar novamente sem editar não cria outra cópia. Ao buscar um relato salvo
+que ainda não tem busca, o resultado é associado àquele registro. Repetir
+uma busca já realizada cria um novo registro e preserva o resultado anterior.
+
+A seção **Relatos salvos** mostra o histórico, com **Atualizar**, **Carregar
+mais** e **Abrir**. Abrir um registro recupera o texto e a tabela sem fazer
+outra chamada ao provedor, sem chave de API e sem precisar do E5. **Limpar**
+limpa apenas o formulário e o resultado exibido; não exclui registros do banco.
+Não há exclusão automática dos relatos salvos. Para fazer um backup, encerre
+o aplicativo e copie o arquivo SQLite. O arquivo permanece no computador
+onde o servidor está sendo executado.
+
 Uma busca pode terminar sem ligações utilizáveis. Isso significa que os
 candidatos examinados não sustentaram uma relação suficiente, não que o acervo
 inteiro careça de material pertinente. Conferências automáticas de integridade
@@ -191,10 +225,20 @@ instance/venv-agente-e5-intel/bin/python -m unittest discover -s tests -p 'test_
 AGENTE_ANALISTA_TESTE_E5_REAL=1 instance/venv-agente-e5-intel/bin/python -m unittest tests.test_agente_analista_busca -v
 ```
 
+Para verificar somente o banco e sua integração com a API, sem E5 ou chamadas
+externas, use o Python do ambiente que tenha Flask instalado, na raiz do
+repositório:
+
+```bash
+PYTHONPATH="$PWD/tests" .venv/bin/python -m unittest test_agente_analista_persistencia -v
+```
+
+Esses testes usam bancos temporários e não alteram os relatos do usuário.
+
 Os testes verificam limites de entrada, preservação Unicode e posições,
 integridade e reconstrução do corpus, busca e agrupamento, citações e IDs
-inexistentes, relações sem sustentação, o fluxo assíncrono e a separação das
-credenciais de cada busca. As respostas do
+inexistentes, relações sem sustentação, o fluxo assíncrono, a persistência dos
+registros e a separação das credenciais de cada busca. As respostas do
 provedor são simuladas nos testes para evitar chamadas cobradas. O teste E5
 opcional executa inferência real na revisão local do modelo.
 
