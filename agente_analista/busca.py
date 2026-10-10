@@ -1,4 +1,4 @@
-"""BM25 e E5 no acervo completo, com consultas e fontes rastreáveis."""
+"""BM25 e vetores importados no acervo completo, sem nova inferência."""
 
 from collections import Counter, defaultdict
 from copy import deepcopy
@@ -8,7 +8,7 @@ import unicodedata
 
 import numpy as np
 
-from vetorizacao import _dividir
+from .importacao import conferir_compatibilidade
 
 
 class ErroBusca(ValueError):
@@ -58,73 +58,51 @@ class _BM25:
 
 class Buscador:
     K_RRF, TOP_METODO, TOP_BLOCOS = 60, 50, 12
+    PESOS_TIPOS = {"periodo": 1 / 3, "contextual": 1 / 3, "documento": 1 / 3}
 
-    def __init__(self, corpus, gerador):
-        self.corpus, self.gerador = corpus, gerador
+    def __init__(self, corpus):
+        self.corpus = corpus
         self.lexical = _BM25(corpus.fragmentos)
-        self._modelo_conferido = False
 
-    def _conferir_modelo(self):
-        if self._modelo_conferido:
-            return
+    def _consultas_importadas(self, importado):
+        """Confira o contrato já importado e use os vetores recebidos intactos."""
         try:
-            descricao = self.gerador.descrever()
-        except Exception as exc:
-            raise ErroBusca("Não foi possível carregar o E5. Execute bash agente_analista/preparar_e5_mac_intel.sh "
-                            "e confira a configuração instance/agente_analista_e5.json.") from exc
-        m = self.corpus.manifesto
-        if (descricao.get("identificacao") != m["modelo"] or descricao.get("revisao") != m["revisao"]
-                or descricao.get("dimensao") != m["dimensao"]
-                or descricao.get("limite_tokens", 0) < m["tokens_maximo"]):
-            raise ErroBusca("Modelo, revisão, dimensão ou limite do E5 divergem do manifesto. "
-                            "Prepare a revisão usada pelo corpus antes de buscar.")
-        tokenizador = descricao.get("tokenizador", {})
-        if tokenizador.get("identificacao") != m["modelo"] or tokenizador.get("revisao") != m["revisao"]:
-            raise ErroBusca("O tokenizador E5 diverge do modelo ou revisão do corpus.")
-        self._modelo_conferido = True
-
-    def _consultas(self, relato):
-        texto = relato["texto"]
-        origens = [dict(p, origem=p["id"]) for p in relato["paragrafos"]]
-        origens.append({"origem": "relato", "inicio": 0, "fim": len(texto), "texto": texto})
-        m = self.corpus.manifesto
-        configuracao = {"prefixo": m["prefixo_consultas"], "max_tokens": m["tokens_maximo"] - m["margem_tokens"]}
+            conferir_compatibilidade(importado, self.corpus.manifesto)
+        except ValueError as exc:
+            raise ErroBusca(str(exc)) from exc
+        if not isinstance(importado, dict) or not isinstance(importado.get("consultas"), list) or not importado["consultas"]:
+            raise ErroBusca("Importe uma vetorização com consultas de períodos, contextos e documento.")
         consultas = []
-        for origem in origens:
-            if texto[origem["inicio"]:origem["fim"]] != origem["texto"]:
-                raise ErroBusca("As posições dos parágrafos divergem do relato original.")
+        ids = set()
+        for consulta in importado["consultas"]:
+            if (not isinstance(consulta, dict) or not isinstance(consulta.get("id"), str)
+                    or not consulta["id"] or consulta["id"] in ids
+                    or not isinstance(consulta.get("tipo"), str) or consulta["tipo"] not in self.PESOS_TIPOS
+                    or not isinstance(consulta.get("texto"), str) or not consulta["texto"].strip()
+                    or not isinstance(consulta.get("vetor"), list)
+                    or any(type(valor) not in (int, float) for valor in consulta["vetor"])):
+                raise ErroBusca("As consultas importadas têm identificadores, tipos, textos ou vetores inválidos.")
+            ids.add(consulta["id"])
             try:
-                recortes = list(_dividir(origem["texto"], self.gerador, configuracao))
-            except Exception as exc:
-                raise ErroBusca("Não foi possível dividir as consultas no limite E5 sem truncamento. "
-                                "Confira o modelo e o tokenizador configurados.") from exc
-            for numero, (inicio, fim, entrada) in enumerate(recortes, 1):
-                identificador = origem["origem"] if len(recortes) == 1 else f"{origem['origem']}.{numero}"
-                consulta = {"id": identificador, "origem": origem["origem"],
-                            "inicio": origem["inicio"] + inicio, "fim": origem["inicio"] + fim,
-                            "texto": origem["texto"][inicio:fim], "tokens": entrada["tokens_total"]}
-                consultas.append((consulta, entrada))
+                vetor = np.asarray(consulta["vetor"], dtype=np.float32)
+            except (TypeError, ValueError, OverflowError) as exc:
+                raise ErroBusca("O vetor importado é incompatível com o corpus.") from exc
+            if (vetor.shape != (self.corpus.manifesto["dimensao"],) or not np.isfinite(vetor).all()
+                    or not np.isclose(np.linalg.norm(vetor), 1, atol=2e-5, rtol=0)):
+                raise ErroBusca("O vetor importado tem dimensão ou normalização incompatível com o corpus.")
+            consultas.append((consulta, vetor))
         return consultas
 
-    def buscar(self, relato, progresso=lambda etapa: None):
-        progresso("Carregando o modelo E5")
-        self._conferir_modelo()
-        progresso("Preparando consultas de P1, P2 e do relato completo")
-        consultas = self._consultas(relato)
+    def buscar(self, importado, progresso=lambda etapa: None):
+        progresso("Conferindo os vetores importados da análise linguística")
+        consultas = self._consultas_importadas(importado)
+        contagens = Counter(consulta["tipo"] for consulta, _ in consultas)
         candidatos = {}
-        for numero, (consulta, entrada) in enumerate(consultas, 1):
+        for numero, (consulta, vetor) in enumerate(consultas, 1):
             progresso(f"Buscando no acervo: consulta {numero} de {len(consultas)}")
-            lexical = self.lexical.pontuar(consulta["texto"])
-            try:
-                saida = self.gerador.gerar([entrada])
-                vetor = np.asarray(saida, dtype=np.float32)
-            except Exception as exc:
-                raise ErroBusca("O E5 não conseguiu vetorizar a consulta. Confira a instalação e a memória disponível; "
-                                "nenhum texto foi truncado.") from exc
-            if (vetor.shape != (1, self.corpus.manifesto["dimensao"]) or not np.isfinite(vetor).all()
-                    or not np.isclose(np.linalg.norm(vetor[0]), 1, atol=2e-5, rtol=0)):
-                raise ErroBusca("O E5 retornou uma dimensão ou normalização incompatível com o corpus.")
-            semantica = self.corpus.vetores @ vetor[0]
+            lexical = self.lexical.pontuar(consulta.get("texto_vetorizado", consulta["texto"]))
+            semantica = self.corpus.vetores @ vetor
+            fator = self.PESOS_TIPOS[consulta["tipo"]] / contagens[consulta["tipo"]]
             for metodo, pontuacoes in (("BM25", lexical), ("E5", semantica)):
                 # Lexical zero não constitui um resultado. E5 sempre examina
                 # todas as linhas; a interpretação poderá rejeitar todos.
@@ -142,21 +120,31 @@ class Buscador:
                         candidatos[bloco_id] = deepcopy(self.corpus.blocos[bloco_id])
                         candidatos[bloco_id].update(pontuacoes=[], rrf=0.0, fragmentos_recuperados_ids=[])
                     candidato = candidatos[bloco_id]
-                    contribuicao = 1.0 / (self.K_RRF + rank_bloco) if novo else 0.0
+                    contribuicao_bruta = 1.0 / (self.K_RRF + rank_bloco) if novo else 0.0
+                    contribuicao = fator * contribuicao_bruta
                     candidato["rrf"] += contribuicao
                     candidato["pontuacoes"].append({"consulta_id": consulta["id"], "metodo": metodo,
+                        "consulta_tipo": consulta["tipo"], "origem": deepcopy(consulta.get("origem")),
+                        "periodo_id": consulta.get("periodo_id"), "unidade_id": consulta.get("unidade_id"),
+                        "artefato_id": consulta.get("artefato_id"),
                         "fragmento_id": f["id"], "rank": rank, "rank_bloco": rank_bloco,
-                        "score": float(pontuacoes[indice]), "contribuicao_rrf": contribuicao})
+                        "score": float(pontuacoes[indice]), "contribuicao_rrf_bruta": contribuicao_bruta,
+                        "peso_tipo": self.PESOS_TIPOS[consulta["tipo"]],
+                        "consultas_do_tipo": contagens[consulta["tipo"]], "contribuicao_rrf": contribuicao})
                     if f["id"] not in candidato["fragmentos_recuperados_ids"]:
                         candidato["fragmentos_recuperados_ids"].append(f["id"])
         progresso("Reunindo fragmentos e ampliando o contexto das fontes")
         ordenados = sorted(candidatos.values(), key=lambda c: (-c["rrf"], c["bloco_id"]))[:self.TOP_BLOCOS]
-        return {"consultas": [c for c, _ in consultas], "candidatos": ordenados,
+        return {"consultas": [deepcopy({k: v for k, v in c.items() if k != "vetor"}) for c, _ in consultas],
+                "fonte_vetorizacao": deepcopy(importado["fonte"]), "candidatos": ordenados,
                 "metodo_fusao": {"nome": "Reciprocal Rank Fusion (RRF)", "k": self.K_RRF,
                     "top_por_metodo_consulta": self.TOP_METODO, "max_blocos": self.TOP_BLOCOS,
-                    "formula": "soma de 1/(60+rank_bloco), com uma contribuição por bloco, método e consulta",
+                    "formula": "soma de peso_tipo/(consultas_do_tipo*(60+rank_bloco)), com uma contribuição por bloco, método e consulta",
+                    "pesos_por_tipo": dict(self.PESOS_TIPOS), "consultas_por_tipo": dict(contagens),
+                    "normalizacao": "média das contribuições por consulta em cada tipo; períodos, contextos e documento têm pesos iguais",
                     "agrupamento": "blocos distintos por ordem de primeira aparição no top 50 de fragmentos",
                     "bm25": {"k1": self.lexical.K1, "b": self.lexical.B,
                         "tokenizacao": "palavras sem acentos, minúsculas, sem palavras funcionais; sem radicalização"},
-                    "semantica": "produto escalar de vetores E5 normalizados L2 (similaridade cosseno)",
+                    "semantica": "produto escalar dos vetores importados normalizados L2 com todas as linhas do corpus (similaridade cosseno)",
+                    "vetorizacao": "vetores de períodos, janelas contextuais e documento recebidos da análise linguística; nenhuma inferência ou divisão adicional",
                     "aviso": "Pontuações ordenam candidatos; não representam probabilidades de interpretação correta."}}

@@ -1,5 +1,33 @@
 # Preparação parcial do Agente Analista — 10/10/2026
 
+## Atualização: entrada por arquivo vetorial
+
+O fluxo atual recebe um único `vetorizacao.json` pelo upload da página e usa
+os vetores já calculados de períodos, janelas contextuais e documento. O agente
+não gera embeddings, não importa módulos do Língua e não depende de sua
+instalação ou execução. Os módulos de leitura e transporte pertencem ao
+pacote `agente_analista`; os arquivos existentes do outro projeto foram
+preservados. A antiga dependência de `_dividir` foi removida.
+
+Consulte [README.md](README.md) para os comandos e o fluxo atuais. O histórico
+SQLite preserva os registros anteriores e vincula os novos relatos à exportação
+importada. A matriz original do acervo continua ausente nesta nuvem; a busca
+com o arquivo vetorial real e o índice do Mac ainda precisa ser conferida nesse
+ambiente. O agente não exige o cache do E5 para usar os vetores recebidos.
+
+A suíte atual executou 160 testes: 157 aprovados e três pulados por ausência
+da matriz original ou da exportação real opcional. O teste de pacote isolado
+bloqueou todos os módulos Python da raiz e aprovou upload e persistência.
+O Chromium validou upload único, busca, preservação de CRLF, histórico,
+invalidação após edição e chave transitória, usando corpus e vetores controlados
+com transporte externo simulado. Isso não valida a qualidade semântica do E5
+real. Nenhum relato de teste foi inserido no banco padrão.
+
+## Registro da preparação inicial
+
+As verificações, decisões e comandos abaixo documentam o estado anterior à
+entrada por arquivo vetorial. As instruções operacionais atuais estão no README.
+
 Esta preparação mantém os caminhos do pacote de Rodrigo e preserva todos os
 arquivos já versionados do Lingua. A integração da busca permanece pendente,
 conforme a escolha feita neste atendimento. O ambiente não está pronto para

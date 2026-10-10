@@ -6,8 +6,8 @@ import os
 import unittest
 from unittest.mock import Mock, patch
 
-import api_narrativas as api
-from api_narrativas import ErroAPINarrativa
+from agente_analista import transporte as api
+from agente_analista.transporte import ErroAPINarrativa
 from agente_analista import ligacoes
 
 
@@ -169,7 +169,7 @@ class LigacoesTests(unittest.TestCase):
 
     def test_status_nao_expoe_credencial_e_modelo_depende_do_provedor(self):
         self.assertFalse(ligacoes.status_configuracao()["chave_configurada"])
-        with patch.dict(os.environ, {"AGENTE_ANALISTA_PROVEDOR": "openai", "NARRATIVA_API_KEY": "credencial-privada"}):
+        with patch.dict(os.environ, {"AGENTE_ANALISTA_PROVEDOR": "openai", "AGENTE_ANALISTA_API_KEY": "credencial-privada"}):
             estado = ligacoes.status_configuracao()
             self.assertTrue(estado["chave_configurada"])
             self.assertEqual(estado["modelo"], "gpt-4.1-mini")
@@ -179,13 +179,13 @@ class LigacoesTests(unittest.TestCase):
 
     def test_credencial_ausente_bloqueia_transporte_real_com_acao_especifica(self):
         with patch("agente_analista.ligacoes._enviar_mensagens") as enviar:
-            with self.assertRaisesRegex(ligacoes.ErroLigacoes, "Configure NARRATIVA_API_KEY"):
+            with self.assertRaisesRegex(ligacoes.ErroLigacoes, "Configure AGENTE_ANALISTA_API_KEY"):
                 ligacoes.avaliar_ligacoes(self.relato, self.recuperacao)
             enviar.assert_not_called()
 
     def test_status_informa_configuracao_invalida_sem_levantar_erro_ou_expor_chave(self):
         for dados in ({"AGENTE_ANALISTA_PROVEDOR": "invalido"}, {"AGENTE_ANALISTA_MODELO": ""}):
-            with self.subTest(dados=dados), patch.dict(os.environ, {**dados, "NARRATIVA_API_KEY": "credencial-privada"}):
+            with self.subTest(dados=dados), patch.dict(os.environ, {**dados, "AGENTE_ANALISTA_API_KEY": "credencial-privada"}):
                 estado = ligacoes.status_configuracao()
                 self.assertTrue(estado["erro"])
                 self.assertTrue(estado["chave_configurada"])
@@ -251,7 +251,7 @@ class LigacoesTests(unittest.TestCase):
         for provedor, modelo, modo in casos:
             with self.subTest(provedor=provedor, modo=modo), \
                     patch.dict(os.environ, {api.VARIAVEL_CHAVE: "credencial-ficticia"}), \
-                    patch("api_narrativas.build_opener") as fabrica:
+                    patch("agente_analista.transporte.build_opener") as fabrica:
                 cliente = fabrica.return_value
                 cliente.open.return_value.__enter__.return_value.read.return_value = json.dumps(resposta).encode("utf-8")
                 resultado = ligacoes.avaliar_ligacoes(self.relato, self.recuperacao, provedor=provedor,

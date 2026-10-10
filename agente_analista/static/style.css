@@ -36,6 +36,10 @@ p { margin: 0 0 12px; }
 form { margin-top: 24px; }
 .provider-settings { min-width: 0; margin: 0 0 24px; padding: 18px 20px 12px; border: 1px solid var(--line); border-radius: 12px; background: #f8faf6; }
 .provider-settings legend { padding: 0 6px; font-size: .9rem; font-weight: 650; }
+.vector-import { min-width: 0; margin: 0 0 24px; padding: 18px 20px 12px; border: 1px solid #c5d1c8; border-radius: 12px; background: var(--soft); }
+.vector-import legend { padding: 0 6px; font-size: .9rem; font-weight: 650; }
+.vector-import input[type="file"] { padding: 8px; }
+.vector-import input[type="file"]::file-selector-button { margin-right: 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--white); padding: 6px 10px; color: var(--ink); font: inherit; cursor: pointer; }
 .settings-intro { margin: 0 0 14px; }
 .settings-grid { display: grid; grid-template-columns: minmax(150px, 1fr) minmax(0, 2fr); gap: 14px 20px; }
 .setting-field { min-width: 0; }

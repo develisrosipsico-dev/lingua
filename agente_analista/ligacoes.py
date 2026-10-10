@@ -12,7 +12,7 @@ import json
 import os
 import re
 
-from api_narrativas import (
+from .transporte import (
     ErroAPINarrativa, LIMITE_PEDIDO_BYTES, LIMITE_RESPOSTA_BYTES,
     VARIAVEL_CHAVE, _enviar_mensagens, _obter_chave_api, _serializar_pedido,
 )
@@ -382,7 +382,7 @@ def avaliar_ligacoes(relato, recuperacao, *, provedor=None, modelo=None, transpo
     """Proponha ligações e elimine referências e citações sem correspondência.
 
     ``transporte`` permite testar sem chamadas externas; recebe o mesmo contrato
-    de ``api_narrativas._enviar_mensagens`` e retorna o conteúdo textual JSON.
+    de ``transporte._enviar_mensagens`` e retorna o conteúdo textual JSON.
     Nenhuma resposta inválida é substituída por interpretações fabricadas.
     """
     paragrafos, blocos = _fontes(relato, recuperacao)

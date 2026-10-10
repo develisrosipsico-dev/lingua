@@ -5,7 +5,7 @@ import os
 import unittest
 from unittest.mock import Mock, patch
 
-import api_narrativas as api
+from agente_analista import transporte as api
 from agente_analista.app import ServicoAnalista
 from agente_analista.entrada import validar_relato
 from agente_analista import ligacoes
@@ -23,10 +23,10 @@ class CredenciaisTransporteTests(unittest.TestCase):
         }).encode("utf-8")
         self.cliente.open.return_value.__enter__ = Mock(return_value=resposta)
         self.cliente.open.return_value.__exit__ = Mock(return_value=False)
-        self.opener = patch("api_narrativas.build_opener", return_value=self.cliente)
+        self.opener = patch("agente_analista.transporte.build_opener", return_value=self.cliente)
         self.opener.start()
         self.addCleanup(self.opener.stop)
-        self.certificados = patch("api_narrativas._contexto_https")
+        self.certificados = patch("agente_analista.transporte._contexto_https")
         self.certificados.start()
         self.addCleanup(self.certificados.stop)
         self.relato = validar_relato("A lembrança retorna.\n\nPenso na casa.")
@@ -65,9 +65,10 @@ class CredenciaisTransporteTests(unittest.TestCase):
                 self.assertNotIn("credencial-da-busca", pedido.data.decode("utf-8"))
                 self.assertNotIn("credencial-da-busca", json.dumps(resultado))
                 self.assertNotIn("NARRATIVA_API_KEY", os.environ)
+                self.assertNotIn("AGENTE_ANALISTA_API_KEY", os.environ)
 
     def test_credencial_e_modelo_explicitos_nao_usam_fallback_do_ambiente(self):
-        os.environ.update(NARRATIVA_API_KEY="credencial-servidor", AGENTE_ANALISTA_PROVEDOR="openai",
+        os.environ.update(NARRATIVA_API_KEY="credencial-lingua", AGENTE_ANALISTA_API_KEY="credencial-servidor", AGENTE_ANALISTA_PROVEDOR="openai",
                           AGENTE_ANALISTA_MODELO="modelo-servidor")
         antes = os.environ.copy()
         ligacoes.avaliar_ligacoes(self.relato, self.recuperacao, provedor="openrouter",
@@ -86,7 +87,7 @@ class CredenciaisTransporteTests(unittest.TestCase):
         servico.buscador.buscar.return_value = self.recuperacao
         with patch("agente_analista.modelos.escolher_formato_resposta", return_value="texto") as capacidades:
             resultado = servico.executar(self.relato, Mock(), provedor="openrouter", modelo=modelo,
-                                         chave_api="credencial-pagina")
+                                         chave_api="credencial-pagina", vetorizacao={"relato": self.relato})
         capacidades.assert_called_once_with("openrouter", modelo)
         self.cliente.open.assert_called_once()
         pedido = self.pedido_enviado()
@@ -101,16 +102,25 @@ class CredenciaisTransporteTests(unittest.TestCase):
             "provedor": "openrouter", "modelo": modelo, "formato_resposta": "texto"})
         self.assertNotIn("credencial-pagina", json.dumps(resultado))
         self.assertNotIn("NARRATIVA_API_KEY", os.environ)
+        self.assertNotIn("AGENTE_ANALISTA_API_KEY", os.environ)
 
-    def test_chave_none_preserva_compatibilidade_do_transporte_legado(self):
-        os.environ["NARRATIVA_API_KEY"] = "credencial-legada"
+    def test_chave_none_usa_apenas_variavel_do_agente(self):
+        os.environ["AGENTE_ANALISTA_API_KEY"] = "credencial-agente"
+        os.environ["NARRATIVA_API_KEY"] = "credencial-lingua"
         for extras in ({}, {"chave_api": None}):
             with self.subTest(extras=extras):
                 self.assertEqual(self.enviar(**extras), '{"ligacoes":[]}')
-                self.assertEqual(self.pedido_enviado().get_header("Authorization"), "Bearer credencial-legada")
+                self.assertEqual(self.pedido_enviado().get_header("Authorization"), "Bearer credencial-agente")
+
+    def test_chave_do_lingua_nao_autentica_transporte_do_agente(self):
+        os.environ["NARRATIVA_API_KEY"] = "credencial-lingua"
+        with self.assertRaisesRegex(api.ErroAPINarrativa, "Configure AGENTE_ANALISTA_API_KEY"):
+            self.enviar()
+        self.assertFalse(ligacoes.status_configuracao()["chave_configurada"])
+        self.cliente.open.assert_not_called()
 
     def test_chave_vazia_explicita_nao_recupera_chave_do_ambiente(self):
-        os.environ["NARRATIVA_API_KEY"] = "credencial-ambiente-nao-usar"
+        os.environ["AGENTE_ANALISTA_API_KEY"] = "credencial-ambiente-nao-usar"
         for valor in ("", "   "):
             with self.subTest(valor=valor), self.assertRaises(api.ErroAPINarrativa) as erro:
                 self.enviar(chave_api=valor)
@@ -126,7 +136,7 @@ class CredenciaisTransporteTests(unittest.TestCase):
         self.cliente.open.assert_not_called()
 
     def test_avaliacao_chave_vazia_explicita_nao_recupera_chave_do_ambiente(self):
-        os.environ["NARRATIVA_API_KEY"] = "credencial-ambiente-nao-usar"
+        os.environ["AGENTE_ANALISTA_API_KEY"] = "credencial-ambiente-nao-usar"
         with self.assertRaises(ligacoes.ErroLigacoes) as erro:
             ligacoes.avaliar_ligacoes(self.relato, self.recuperacao, provedor="openrouter",
                                      modelo="fabricante/modelo-pagina", chave_api="")

@@ -16,7 +16,7 @@ import ssl
 from urllib.error import HTTPError, URLError
 from urllib.request import HTTPSHandler, Request, build_opener
 
-import api_narrativas
+from . import transporte as api_narrativas
 
 
 _ENDPOINTS = {

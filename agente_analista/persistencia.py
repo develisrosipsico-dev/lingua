@@ -2,6 +2,7 @@
 
 from contextlib import closing
 from datetime import datetime, timezone
+import hashlib
 import json
 from pathlib import Path
 import sqlite3
@@ -15,7 +16,7 @@ class ErroPersistencia(ValueError):
 
 _CAMPOS_RESULTADO = {
     "consultas", "candidatos", "metodo_fusao", "rejeitadas", "avaliacao",
-    "mensagem", "justificativas", "posicoes", "aviso",
+    "mensagem", "justificativas", "posicoes", "aviso", "fonte_vetorizacao",
 }
 _CAMPOS_RELACAO = {
     "id", "paragrafo", "relato", "freud", "observacao", "justificativa", "ligacao", "limites",
@@ -39,6 +40,42 @@ def _sem_credenciais(valor):
 
 def _json(valor):
     return json.dumps(_sem_credenciais(valor), ensure_ascii=False, allow_nan=False)
+
+
+def _json_vetorizacao(registro):
+    """Serialize o contrato intacto; seus hashes não permitem remover campos."""
+    def conferir(valor):
+        if type(valor) is dict:
+            if any(type(chave) is not str for chave in valor):
+                raise ValueError
+            for item in valor.values():
+                conferir(item)
+        elif type(valor) is list:
+            for item in valor:
+                conferir(item)
+        elif type(valor) not in (str, int, float, bool, type(None)):
+            raise ValueError
+
+    try:
+        if type(registro) is not dict:
+            raise ValueError
+        conferir(registro)
+        bruto = json.dumps(registro, ensure_ascii=False, sort_keys=True,
+                           separators=(",", ":"), allow_nan=False)
+        bruto.encode("utf-8")
+        return bruto
+    except (ValueError, TypeError, OverflowError, UnicodeError, RecursionError):
+        raise ErroPersistencia("A vetorização precisa conter um objeto JSON válido e finito.") from None
+
+
+def _texto_vetorizado(registro):
+    try:
+        texto = registro["contexto"]["regras"]["analise"]["anotacao"]["segmentacao"]["preparacao"]["original"]["texto"]
+        if type(texto) is not str:
+            raise ValueError
+        return texto
+    except (KeyError, TypeError, ValueError):
+        raise ErroPersistencia("A vetorização não possui o texto original do relato.") from None
 
 
 def _relacao_conferida(item, texto):
@@ -73,6 +110,11 @@ class BancoAnalista:
         self.caminho.parent.mkdir(parents=True, exist_ok=True)
         with closing(self.conectar()) as conexao, conexao:
             conexao.executescript("""
+                CREATE TABLE IF NOT EXISTS vetorizacoes (
+                    id TEXT PRIMARY KEY,
+                    registro_json TEXT NOT NULL,
+                    criado_em TEXT NOT NULL
+                );
                 CREATE TABLE IF NOT EXISTS relatos (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     texto TEXT NOT NULL,
@@ -85,7 +127,8 @@ class BancoAnalista:
                     provedor TEXT,
                     modelo TEXT,
                     erro TEXT,
-                    resultado_json TEXT
+                    resultado_json TEXT,
+                    vetorizacao_id TEXT REFERENCES vetorizacoes(id)
                 );
                 CREATE TABLE IF NOT EXISTS relacoes (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -104,6 +147,10 @@ class BancoAnalista:
                     UNIQUE (relato_id, ordem)
                 );
             """)
+            # Bancos anteriores mantêm relatos, relações, IDs e resultados.
+            colunas = {coluna["name"] for coluna in conexao.execute("PRAGMA table_info(relatos)")}
+            if "vetorizacao_id" not in colunas:
+                conexao.execute("ALTER TABLE relatos ADD COLUMN vetorizacao_id TEXT REFERENCES vetorizacoes(id)")
 
     def conectar(self):
         conexao = sqlite3.connect(self.caminho, timeout=10)
@@ -117,35 +164,66 @@ class BancoAnalista:
                 erro = 'O servidor foi reiniciado antes de concluir esta busca.', atualizado_em = ?
                 WHERE estado = 'executando'""", (_agora(),))
 
-    def registrar(self, relato):
+    def registrar_vetorizacao(self, registro):
+        bruto = _json_vetorizacao(registro)
+        _texto_vetorizado(registro)
+        identificador = hashlib.sha256(bruto.encode("utf-8")).hexdigest()
+        with closing(self.conectar()) as conexao, conexao:
+            conexao.execute("""INSERT OR IGNORE INTO vetorizacoes
+                (id, registro_json, criado_em) VALUES (?, ?, ?)""", (identificador, bruto, _agora()))
+        return identificador
+
+    def obter_vetorizacao(self, vetorizacao_id):
+        with closing(self.conectar()) as conexao:
+            registro = conexao.execute("SELECT registro_json FROM vetorizacoes WHERE id = ?",
+                                      (vetorizacao_id,)).fetchone()
+            return json.loads(registro["registro_json"]) if registro is not None else None
+
+    def _conferir_vetorizacao(self, conexao, vetorizacao_id, texto):
+        if vetorizacao_id is None:
+            return
+        registro = conexao.execute("SELECT registro_json FROM vetorizacoes WHERE id = ?",
+                                  (vetorizacao_id,)).fetchone()
+        if registro is None:
+            raise LookupError("Vetorização não encontrada. Importe o arquivo antes de buscar.")
+        if _texto_vetorizado(json.loads(registro["registro_json"])) != texto:
+            raise ErroPersistencia("O texto enviado difere do texto original da vetorização importada.")
+
+    def registrar(self, relato, vetorizacao_id=None):
         agora = _agora()
         with closing(self.conectar()) as conexao, conexao:
+            self._conferir_vetorizacao(conexao, vetorizacao_id, relato["texto"])
             registro = conexao.execute("""INSERT INTO relatos
-                (texto, palavras, criado_em, atualizado_em, estado)
-                VALUES (?, ?, ?, ?, 'registrado')""",
-                (relato["texto"], relato["palavras"], agora, agora))
+                (texto, palavras, criado_em, atualizado_em, estado, vetorizacao_id)
+                VALUES (?, ?, ?, ?, 'registrado', ?)""",
+                (relato["texto"], relato["palavras"], agora, agora, vetorizacao_id))
             return registro.lastrowid
 
-    def iniciar_busca(self, relato, busca_id, provedor, modelo, relato_id=None):
+    def iniciar_busca(self, relato, busca_id, provedor, modelo, relato_id=None, vetorizacao_id=None):
         agora = _agora()
         with closing(self.conectar()) as conexao, conexao:
+            self._conferir_vetorizacao(conexao, vetorizacao_id, relato["texto"])
             if relato_id is None:
                 registro = conexao.execute("""INSERT INTO relatos
-                    (texto, palavras, criado_em, atualizado_em, estado, busca_id, provedor, modelo)
-                    VALUES (?, ?, ?, ?, 'executando', ?, ?, ?)""",
-                    (relato["texto"], relato["palavras"], agora, agora, busca_id, provedor, modelo))
+                    (texto, palavras, criado_em, atualizado_em, estado, busca_id, provedor, modelo, vetorizacao_id)
+                    VALUES (?, ?, ?, ?, 'executando', ?, ?, ?, ?)""",
+                    (relato["texto"], relato["palavras"], agora, agora, busca_id, provedor, modelo, vetorizacao_id))
                 return registro.lastrowid
-            registro = conexao.execute("SELECT texto, estado FROM relatos WHERE id = ?", (relato_id,)).fetchone()
+            registro = conexao.execute("SELECT texto, estado, vetorizacao_id FROM relatos WHERE id = ?", (relato_id,)).fetchone()
             if registro is None:
                 raise LookupError("Relato não encontrado.")
             if registro["texto"] != relato["texto"]:
                 raise ErroPersistencia("O texto enviado difere do relato salvo. Salve um novo registro.")
             if registro["estado"] != "registrado":
                 raise FileExistsError("Este relato já possui uma busca. Inicie um novo registro para preservar o histórico.")
+            if registro["vetorizacao_id"] is not None:
+                if vetorizacao_id is not None and registro["vetorizacao_id"] != vetorizacao_id:
+                    raise ErroPersistencia("Este relato está vinculado a outra vetorização. Salve um novo registro.")
+                vetorizacao_id = registro["vetorizacao_id"]
             registro = conexao.execute("""UPDATE relatos SET estado = 'executando',
-                busca_id = ?, provedor = ?, modelo = ?, atualizado_em = ?
+                busca_id = ?, provedor = ?, modelo = ?, atualizado_em = ?, vetorizacao_id = ?
                 WHERE id = ? AND estado = 'registrado'""",
-                (busca_id, provedor, modelo, agora, relato_id))
+                (busca_id, provedor, modelo, agora, vetorizacao_id, relato_id))
             if registro.rowcount != 1:
                 raise FileExistsError("Este relato já possui uma busca.")
             return relato_id
@@ -189,7 +267,7 @@ class BancoAnalista:
     def listar(self, limite=20, antes_id=None):
         with closing(self.conectar()) as conexao:
             registros = conexao.execute("""SELECT r.id, r.texto, r.palavras, r.criado_em,
-                r.estado, r.provedor, r.modelo, r.busca_id,
+                r.estado, r.provedor, r.modelo, r.busca_id, r.vetorizacao_id,
                 (SELECT COUNT(*) FROM relacoes WHERE relato_id = r.id) AS total_relacoes
                 FROM relatos r WHERE (? IS NULL OR r.id < ?) ORDER BY r.id DESC LIMIT ?""",
                 (antes_id, antes_id, limite + 1)).fetchall()
@@ -218,7 +296,7 @@ class BancoAnalista:
             return None
         relato = self.obter(registro["id"])
         estado = "erro" if relato["estado"] == "interrompido" else relato["estado"]
-        tarefa = {"id": busca_id, "relato_id": relato["id"], "estado": estado,
+        tarefa = {"id": busca_id, "relato_id": relato["id"], "vetorizacao_id": relato["vetorizacao_id"], "estado": estado,
                   "etapa": "Busca concluída" if estado == "concluido" else "Busca interrompida"}
         if estado == "concluido":
             tarefa["resultado"] = relato["resultado"]

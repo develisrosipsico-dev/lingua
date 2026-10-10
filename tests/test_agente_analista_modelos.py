@@ -11,7 +11,7 @@ from urllib.error import HTTPError, URLError
 from urllib.request import HTTPSHandler
 
 from agente_analista import modelos
-from api_narrativas import ErroAPINarrativa
+from agente_analista.transporte import ErroAPINarrativa
 
 
 MODELO_NVIDIA = "nvidia/nemotron-3-ultra-550b-a55b:free"
@@ -20,12 +20,12 @@ SEGREDO = "chave-e-relato-privados-nao-exibir"
 
 class AmbienteSemChave(dict):
     def get(self, nome, padrao=None):
-        if nome == "NARRATIVA_API_KEY":
+        if nome in ("NARRATIVA_API_KEY", "AGENTE_ANALISTA_API_KEY"):
             raise AssertionError("A consulta pública não pode ler uma chave de API.")
         return super().get(nome, padrao)
 
     def __getitem__(self, nome):
-        if nome == "NARRATIVA_API_KEY":
+        if nome in ("NARRATIVA_API_KEY", "AGENTE_ANALISTA_API_KEY"):
             raise AssertionError("A consulta pública não pode ler uma chave de API.")
         return super().__getitem__(nome)
 
@@ -51,7 +51,7 @@ class ModelosTests(unittest.TestCase):
             dados = json.dumps(catalogo if catalogo is not None else self.catalogo([])).encode("utf-8")
         self.resposta.read.return_value = dados
         self.cliente.open.side_effect = erro
-        ambiente = AmbienteSemChave({"NARRATIVA_API_KEY": SEGREDO})
+        ambiente = AmbienteSemChave({"NARRATIVA_API_KEY": SEGREDO, "AGENTE_ANALISTA_API_KEY": SEGREDO})
         with (
             patch.object(os, "environ", ambiente),
             patch.object(modelos, "_contexto_https", return_value=self.contexto, side_effect=erro_contexto) as contexto,

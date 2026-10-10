@@ -1,6 +1,7 @@
 """Persistência do agente sem modelo E5 nem chamadas a provedores externos."""
 
 from copy import deepcopy
+from contextlib import closing
 import json
 from pathlib import Path
 import sqlite3
@@ -10,10 +11,12 @@ import unittest
 
 from agente_analista.app import criar_app
 from agente_analista.entrada import validar_relato
+from agente_analista.persistencia import BancoAnalista, ErroPersistencia
+from fixtures_contexto import TEXTO
+from test_agente_analista_importacao import construir_exportacao, construir_exportacao_portatil
 
 
 CHAVE_TESTE = "credencial-transitoria-nao-deve-ir-ao-banco"
-TEXTO = "Não respondi ao convite 😀.\r\n \t\r\nAinda guardo a mensagem."
 
 
 class ServicoPersistenciaTeste:
@@ -28,7 +31,7 @@ class ServicoPersistenciaTeste:
     def status(self):
         return {"pronto": self.pronto, "problemas": [] if self.pronto else ["E5 ausente."]}
 
-    def executar(self, relato, progresso, *, provedor, modelo, chave_api):
+    def executar(self, relato, progresso, *, provedor, modelo, chave_api, vetorizacao=None):
         self.chamadas += 1
         progresso("Conferindo citações")
         if self.falhar:
@@ -67,6 +70,7 @@ class ServicoPersistenciaTeste:
             "relato": relato, "ligacoes": ligacoes, "descartadas": descartadas, "rejeitadas": [],
             "candidatos": [], "consultas": [], "mensagem": "Ligação fictícia de teste.",
             "justificativas": {"provedor": provedor, "modelo": modelo, "formato_resposta": "json_schema"},
+            "fonte_vetorizacao": deepcopy(vetorizacao["fonte"]) if vetorizacao is not None else {},
             # O banco deve selecionar os campos de resultado; nunca gravar esta chave.
             "chave_api": chave_api,
         }
@@ -97,8 +101,10 @@ class PersistenciaAPITests(unittest.TestCase):
         return resposta.get_json()
 
     def buscar(self, texto=TEXTO, **campos):
+        importacao = self.client.post("/api/vetorizacoes", json=construir_exportacao())
+        self.assertEqual(importacao.status_code, 201, importacao.get_json())
         dados = {"texto": texto, "provedor": "openrouter", "modelo": "fabricante/modelo-teste",
-                 "chave_api": CHAVE_TESTE}
+                 "chave_api": CHAVE_TESTE, "vetorizacao_id": importacao.get_json()["id"]}
         dados.update(campos)
         return self.client.post("/api/buscas", json=dados)
 
@@ -160,6 +166,8 @@ class PersistenciaAPITests(unittest.TestCase):
         self.assertEqual(registro["texto"], TEXTO)
         self.assertEqual(registro["estado"], "concluido")
         self.assertEqual(registro["busca_id"], ids["id"])
+        self.assertTrue(registro["vetorizacao_id"])
+        self.assertTrue(registro["resultado"]["fonte_vetorizacao"])
         self.assertEqual(len(registro["relacoes"]), 1)
         relacao = registro["relacoes"][0]
         ligacao = registro["resultado"]["ligacoes"][0]
@@ -332,6 +340,134 @@ class PersistenciaAPITests(unittest.TestCase):
         registro = self.client.get(f"/api/relatos/{ids['relato_id']}").get_json()
         self.assertEqual(len(registro["relacoes"]), 1)
         self.assertEqual(registro["relacoes"][0]["relato_id"], registro["id"])
+
+
+class PersistenciaVetorizacoesTests(unittest.TestCase):
+    def setUp(self):
+        self.temporario = TemporaryDirectory()
+        self.addCleanup(self.temporario.cleanup)
+        self.caminho = Path(self.temporario.name) / "agente.sqlite3"
+        self.banco = BancoAnalista(self.caminho)
+
+    def test_exportacao_deduplicada_preserva_contrato_e_hashes(self):
+        registro = construir_exportacao()
+        antes = deepcopy(registro)
+        identificador = self.banco.registrar_vetorizacao(registro)
+        self.assertRegex(identificador, r"^[0-9a-f]{64}$")
+        reordenado = dict(reversed(list(registro.items())))
+        self.assertEqual(self.banco.registrar_vetorizacao(reordenado), identificador)
+        self.assertEqual(self.banco.obter_vetorizacao(identificador), antes)
+        self.assertEqual(registro, antes)
+        reaberto = BancoAnalista(self.caminho)
+        self.assertEqual(reaberto.obter_vetorizacao(identificador), antes)
+        self.assertIsNone(reaberto.obter_vetorizacao("0" * 64))
+        with closing(self.banco.conectar()) as conexao:
+            self.assertEqual(conexao.execute("SELECT COUNT(*) FROM vetorizacoes").fetchone()[0], 1)
+
+    def test_vinculo_de_importacao_preserva_historico_e_recusa_troca(self):
+        primeira = self.banco.registrar_vetorizacao(construir_exportacao())
+        segunda = self.banco.registrar_vetorizacao(construir_exportacao(normalizar=True))
+        self.assertNotEqual(primeira, segunda)
+        relato = validar_relato(TEXTO)
+        relato_id = self.banco.registrar(relato, vetorizacao_id=primeira)
+        salvo = self.banco.obter(relato_id)
+        self.assertEqual(salvo["vetorizacao_id"], primeira)
+        self.assertEqual(self.banco.listar()["relatos"][0]["vetorizacao_id"], primeira)
+        with self.assertRaises(ErroPersistencia):
+            self.banco.iniciar_busca(relato, "troca-proibida", "teste", "modelo", relato_id, segunda)
+        self.assertEqual(self.banco.obter(relato_id), salvo)
+        self.assertEqual(self.banco.iniciar_busca(
+            relato, "busca-vinculada", "teste", "modelo", relato_id, primeira,
+        ), relato_id)
+        self.assertEqual(self.banco.obter_busca("busca-vinculada")["vetorizacao_id"], primeira)
+
+    def test_exportacao_portatil_preserva_payload_base64_sem_reescrever(self):
+        registro = construir_exportacao_portatil(dimensao=1024)
+        antes = deepcopy(registro)
+        identificador = self.banco.registrar_vetorizacao(registro)
+        self.assertEqual(self.banco.registrar_vetorizacao(registro), identificador)
+        reaberto = BancoAnalista(self.caminho).obter_vetorizacao(identificador)
+        self.assertEqual(reaberto, antes)
+        self.assertEqual(reaberto["artefatos"][0]["armazenamento"],
+                         antes["artefatos"][0]["armazenamento"])
+        relato_id = self.banco.registrar(validar_relato(TEXTO), identificador)
+        self.assertEqual(self.banco.obter(relato_id)["vetorizacao_id"], identificador)
+
+    def test_importacao_inexistente_ou_texto_divergente_nao_grava_relato(self):
+        identificador = self.banco.registrar_vetorizacao(construir_exportacao())
+        diferente = validar_relato("Outro relato.\n\nOutra parte.")
+        with self.assertRaises(ErroPersistencia):
+            self.banco.registrar(diferente, vetorizacao_id=identificador)
+        with self.assertRaises(ErroPersistencia):
+            self.banco.iniciar_busca(diferente, "divergente", "teste", "modelo", vetorizacao_id=identificador)
+        with self.assertRaises(LookupError):
+            self.banco.registrar(validar_relato(TEXTO), vetorizacao_id="0" * 64)
+        self.assertEqual(self.banco.listar()["relatos"], [])
+
+    def test_json_nao_finito_ou_convertido_nao_e_armazenado(self):
+        for valor in (float("nan"), float("inf"), (1, 2), {1: "chave não textual"}):
+            registro = construir_exportacao()
+            registro["invalido"] = valor
+            with self.subTest(valor=repr(valor)), self.assertRaises(ErroPersistencia):
+                self.banco.registrar_vetorizacao(registro)
+        with closing(self.banco.conectar()) as conexao:
+            self.assertEqual(conexao.execute("SELECT COUNT(*) FROM vetorizacoes").fetchone()[0], 0)
+
+    def test_chave_estrangeira_impede_vetorizacao_orfa(self):
+        identificador = self.banco.registrar_vetorizacao(construir_exportacao())
+        relato_id = self.banco.registrar(validar_relato(TEXTO), identificador)
+        conexao = self.banco.conectar()
+        try:
+            with self.assertRaises(sqlite3.IntegrityError):
+                conexao.execute("UPDATE relatos SET vetorizacao_id = ? WHERE id = ?", ("0" * 64, relato_id))
+            conexao.rollback()
+            with self.assertRaises(sqlite3.IntegrityError):
+                conexao.execute("DELETE FROM vetorizacoes WHERE id = ?", (identificador,))
+            conexao.rollback()
+        finally:
+            conexao.close()
+        self.assertEqual(self.banco.obter(relato_id)["vetorizacao_id"], identificador)
+
+    def test_migracao_preserva_relato_estado_resultado_e_relacao_anteriores(self):
+        antigo = Path(self.temporario.name) / "anterior.sqlite3"
+        with sqlite3.connect(antigo) as conexao:
+            conexao.executescript("""
+                CREATE TABLE relatos (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT, texto TEXT NOT NULL,
+                    palavras INTEGER NOT NULL, criado_em TEXT NOT NULL, atualizado_em TEXT NOT NULL,
+                    estado TEXT NOT NULL, busca_id TEXT UNIQUE, provedor TEXT, modelo TEXT,
+                    erro TEXT, resultado_json TEXT
+                );
+                CREATE TABLE relacoes (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    relato_id INTEGER NOT NULL REFERENCES relatos(id) ON DELETE CASCADE,
+                    ordem INTEGER NOT NULL, trecho_relato TEXT NOT NULL, relato_inicio INTEGER NOT NULL,
+                    relato_fim INTEGER NOT NULL, trecho_freud TEXT NOT NULL, freud_inicio INTEGER NOT NULL,
+                    freud_fim INTEGER NOT NULL, justificativa TEXT NOT NULL, bloco_id TEXT NOT NULL,
+                    situacao TEXT NOT NULL, dados_json TEXT NOT NULL, UNIQUE(relato_id, ordem)
+                );
+            """)
+            conexao.execute("""INSERT INTO relatos (id, texto, palavras, criado_em, atualizado_em,
+                estado, busca_id, resultado_json) VALUES (7, ?, ?, 'antes', 'antes', 'concluido', 'busca-antiga', ?)""",
+                (TEXTO, len(TEXTO.split()), json.dumps({"mensagem": "Resultado anterior."})))
+            conexao.execute("""INSERT INTO relacoes (id, relato_id, ordem, trecho_relato, relato_inicio,
+                relato_fim, trecho_freud, freud_inicio, freud_fim, justificativa, bloco_id, situacao, dados_json)
+                VALUES (3, 7, 1, 'Árvore', 2, 8, 'Fonte antiga', 0, 12,
+                        'Justificativa anterior', 'bloco-antigo', 'pertinente', '{}')""")
+        migrado = BancoAnalista(antigo)
+        registro = migrado.obter(7)
+        self.assertEqual(registro["texto"], TEXTO)
+        self.assertEqual(registro["estado"], "concluido")
+        self.assertEqual(registro["busca_id"], "busca-antiga")
+        self.assertEqual(registro["resultado"], {"mensagem": "Resultado anterior."})
+        self.assertEqual(registro["relacoes"][0]["id"], 3)
+        self.assertEqual(registro["relacoes"][0]["justificativa"], "Justificativa anterior")
+        self.assertIsNone(registro["vetorizacao_id"])
+        with closing(migrado.conectar()) as conexao:
+            chaves = [dict(item) for item in conexao.execute("PRAGMA foreign_key_list(relatos)")]
+            self.assertTrue(any(item["table"] == "vetorizacoes" and item["from"] == "vetorizacao_id" for item in chaves))
+        BancoAnalista(antigo)
+        self.assertEqual(migrado.obter(7), registro)
 
 
 if __name__ == "__main__":

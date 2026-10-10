@@ -16,7 +16,7 @@ from agente_analista import diagnosticar_conexao as diagnostico
 
 class AmbienteSemChave(dict):
     def get(self, nome, padrao=None):
-        if nome == "NARRATIVA_API_KEY":
+        if nome in ("NARRATIVA_API_KEY", "AGENTE_ANALISTA_API_KEY"):
             raise AssertionError("O diagnóstico não pode ler a chave de API.")
         return super().get(nome, padrao)
 
@@ -34,6 +34,7 @@ class DiagnosticarConexaoTests(unittest.TestCase):
         saida = io.StringIO()
         ambiente = AmbienteSemChave(ambiente or {})
         ambiente["NARRATIVA_API_KEY"] = "chave-privada-nunca-exibir"
+        ambiente["AGENTE_ANALISTA_API_KEY"] = "chave-privada-nunca-exibir"
         with (
             patch.object(os, "environ", ambiente),
             patch.object(diagnostico.api_narrativas, "_contexto_https", return_value=self.contexto, side_effect=erro_contexto, create=True) as contexto,

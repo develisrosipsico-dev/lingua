@@ -18,6 +18,7 @@
     "provider-select", "api-key", "model-select", "add-model-button", "add-model-panel", "new-model-id",
     "save-model-button", "cancel-model-button", "new-model-error", "configuration-error", "model-feedback",
     "save-story-button", "save-story-feedback", "refresh-history", "history-feedback", "history-list", "more-history",
+    "vetorizacao-file", "import-feedback",
   ].map((id) => [id, $(id)]));
   const modelsStorageKey = "agente-analista-modelos-v1";
   const modelIdentifier = /^[A-Za-z0-9][A-Za-z0-9._:/@+-]{0,199}$/u;
@@ -32,6 +33,9 @@
   let connectionFailures = 0;
   let saving = false;
   let openingRecord = false;
+  let importing = false;
+  let importedVectorization = null;
+  let importedText = null;
   let savedId = null;
   let savedState = null;
   let historyRecords = [];
@@ -47,6 +51,8 @@
     return String(value);
   };
   const countFormat = (value) => Number(value).toLocaleString("pt-BR");
+  const visibleText = (text) => text.replace(/\r\n?|\n/gu, "\n");
+  const storyText = () => importedText !== null && elements.relato.value === visibleText(importedText) ? importedText : elements.relato.value;
   const node = (tag, text = "", className = "") => {
     const element = document.createElement(tag);
     if (text !== "") element.textContent = display(text);
@@ -148,7 +154,7 @@
   }
 
   function updateInput() {
-    const state = inputState(elements.relato.value);
+    const state = inputState(storyText());
     const configuration = configurationState();
     elements["word-count"].textContent = `${state.words} / 400 palavras`;
     elements["paragraph-count"].textContent = `${state.paragraphs} / 2 parágrafos`;
@@ -157,14 +163,14 @@
     elements["input-error"].textContent = state.error;
     elements["input-error"].hidden = !touched || !state.error;
     elements.relato.setAttribute("aria-invalid", String(touched && Boolean(state.error)));
-    elements["search-button"].disabled = busy || saving || openingRecord || !ready || Boolean(state.error) || Boolean(configuration.error);
-    elements["save-story-button"].disabled = busy || saving || openingRecord || Boolean(state.error) || Boolean(savedId);
+    elements["search-button"].disabled = busy || saving || openingRecord || importing || !ready || !importedVectorization || Boolean(state.error) || Boolean(configuration.error);
+    elements["save-story-button"].disabled = busy || saving || openingRecord || importing || Boolean(state.error) || Boolean(savedId);
     return state;
   }
 
   function setBusy(value) {
     busy = value;
-    const locked = busy || saving || openingRecord;
+    const locked = busy || saving || openingRecord || importing;
     elements.relato.readOnly = locked;
     elements["clear-button"].disabled = locked;
     elements["clear-button"].title = locked ? "Aguarde o término da operação para limpar o relato." : "";
@@ -172,11 +178,65 @@
     elements["export-button"].disabled = locked || !currentResult;
     elements["search-button"].textContent = value ? "Buscando ligações…" : "Buscar ligações →";
     elements["save-story-button"].textContent = saving ? "Salvando…" : savedId ? "Relato salvo" : "Salvar relato";
+    elements["vetorizacao-file"].disabled = locked;
     for (const id of ["provider-select", "api-key", "model-select", "add-model-button", "new-model-id", "save-model-button", "cancel-model-button"]) {
       elements[id].disabled = locked;
     }
     updateInput();
     updateHistoryControls();
+  }
+
+  function forgetVectorization(message = "Importe a vetorização para habilitar a busca.") {
+    importedVectorization = null;
+    importedText = null;
+    elements["vetorizacao-file"].value = "";
+    elements["import-feedback"].className = "field-help";
+    elements["import-feedback"].textContent = message;
+  }
+
+  function useVectorization(record) {
+    if (!record || typeof record.id !== "string" || !record.id || !record.relato || typeof record.relato.texto !== "string") {
+      throw new Error("O servidor não retornou a vetorização e o relato importados.");
+    }
+    importedVectorization = record.id;
+    importedText = record.relato.texto;
+    const counts = record.contagens || {};
+    elements["import-feedback"].className = "field-help";
+    elements["import-feedback"].textContent = `Vetorização disponível: ${countFormat(counts.periodo || 0)} períodos, ${countFormat(counts.contextual || 0)} janelas contextuais e ${countFormat(counts.documento || 0)} documento(s).`;
+  }
+
+  async function importVectorization() {
+    if (busy || saving || openingRecord || importing) return;
+    const file = elements["vetorizacao-file"].files[0];
+    if (!file) return;
+    forgetSavedRecord();
+    resetResults();
+    importedVectorization = null;
+    importedText = null;
+    elements["request-error"].hidden = true;
+    importing = true;
+    setBusy(busy);
+    elements["import-feedback"].className = "field-help";
+    elements["import-feedback"].textContent = "Conferindo e importando a vetorização…";
+    try {
+      if (file.size > 32 * 1024 * 1024) throw new Error("O arquivo ultrapassa o limite de 32 MiB.");
+      let payload;
+      try { payload = JSON.parse((await file.text()).replace(/^\uFEFF/u, "")); }
+      catch (_) { throw new Error("O arquivo não contém um JSON válido. Exporte novamente o arquivo completo da análise linguística."); }
+      const record = await fetchJSON("/api/vetorizacoes", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+      useVectorization(record);
+      elements.relato.value = importedText;
+      touched = true;
+      elements.processing.hidden = true;
+      elements.relato.focus();
+    } catch (error) {
+      forgetVectorization();
+      elements["import-feedback"].className = "field-error";
+      elements["import-feedback"].textContent = `Não foi possível importar a vetorização. ${error.message}`;
+    } finally {
+      importing = false;
+      setBusy(busy);
+    }
   }
 
   function forgetSavedRecord() {
@@ -201,7 +261,7 @@
   }
 
   function updateHistoryControls() {
-    const locked = busy || saving || openingRecord || historyLoading;
+    const locked = busy || saving || openingRecord || importing || historyLoading;
     elements["refresh-history"].disabled = locked;
     elements["more-history"].disabled = locked;
     elements["more-history"].hidden = historyNext === null;
@@ -266,7 +326,7 @@
   }
 
   async function saveStory() {
-    if (busy || saving || openingRecord || savedId) return;
+    if (busy || saving || openingRecord || importing || savedId) return;
     touched = true;
     const state = updateInput();
     if (state.error) { elements.relato.focus(); return; }
@@ -275,7 +335,9 @@
     elements["save-story-feedback"].className = "field-help";
     elements["save-story-feedback"].textContent = "Salvando o relato neste computador…";
     try {
-      const record = await fetchJSON("/api/relatos", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ texto: elements.relato.value }) });
+      const payload = { texto: storyText() };
+      if (importedVectorization) payload.vetorizacao_id = importedVectorization;
+      const record = await fetchJSON("/api/relatos", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
       if (!Number.isSafeInteger(record.id)) throw new Error("O servidor não informou o identificador do relato salvo.");
       markSavedRecord(record.id, record.estado);
       refreshHistory();
@@ -289,14 +351,28 @@
   }
 
   async function openRecord(id) {
-    if (busy || saving || openingRecord) return;
+    if (busy || saving || openingRecord || importing) return;
     openingRecord = true;
     setBusy(busy);
     elements["history-feedback"].className = "field-help";
     elements["history-feedback"].textContent = `Abrindo relato #${id}…`;
     try {
       const record = await fetchJSON(`/api/relatos/${encodeURIComponent(id)}`);
+      let vectorization = null;
+      let vectorizationError = "";
+      if (record.vetorizacao_id) {
+        try {
+          vectorization = await fetchJSON(`/api/vetorizacoes/${encodeURIComponent(record.vetorizacao_id)}`);
+          if (!vectorization.relato || vectorization.relato.texto !== record.texto) throw new Error("A vetorização salva não corresponde ao texto do relato.");
+        } catch (error) { vectorizationError = error.message; }
+      }
       resetResults();
+      forgetVectorization(record.vetorizacao_id ? "Não foi possível recuperar a vetorização deste relato. Importe o arquivo para fazer uma nova busca." : "Este relato não tem vetorização associada. Importe o arquivo para fazer uma busca.");
+      if (vectorization && !vectorizationError) useVectorization(vectorization);
+      if (vectorizationError) {
+        elements["import-feedback"].className = "field-error";
+        elements["import-feedback"].textContent += ` ${vectorizationError}`;
+      }
       elements.relato.value = record.texto;
       touched = true;
       elements["request-error"].hidden = true;
@@ -368,7 +444,7 @@
       const corpus = status.corpus || {};
       const parts = [];
       if (corpus.fragmentos) parts.push(`${countFormat(corpus.fragmentos)} fragmentos${corpus.blocos ? ` em ${countFormat(corpus.blocos)} blocos` : ""} no acervo local`);
-      if (ready) parts.push("E5 disponível. Escolha abaixo o modelo da justificativa e informe sua chave");
+      if (ready) parts.push("Índice disponível. Importe a vetorização da análise linguística e configure as justificativas");
       elements["environment-description"].textContent = parts.join(". ") || "Resolva os itens abaixo e confira o ambiente novamente.";
       const problems = list(status.problemas);
       elements["environment-problems"].replaceChildren();
@@ -602,7 +678,7 @@
 
   async function submitSearch(event) {
     event.preventDefault();
-    if (busy || saving || openingRecord) return;
+    if (busy || saving || openingRecord || importing) return;
     touched = true;
     configurationTouched = true;
     const state = updateInput();
@@ -615,19 +691,26 @@
       elements[configuration.hasModel ? "api-key" : "model-select"].focus();
       return;
     }
+    if (!importedVectorization) {
+      elements["import-feedback"].className = "field-error";
+      elements["import-feedback"].textContent = "Importe a vetorização correspondente ao relato antes de buscar.";
+      elements["vetorizacao-file"].focus();
+      return;
+    }
     if (!ready) return;
-    const originalText = elements.relato.value;
+    const originalText = storyText();
     resetResults();
     elements["request-error"].hidden = true;
     connectionFailures = 0;
     setBusy(true);
-    showProgress("Iniciando a busca", "Preparando consultas com P1, P2 e o relato completo.");
+    showProgress("Iniciando a busca", "Usando os vetores de períodos, janelas contextuais e documento importados.");
     try {
       const payload = {
         texto: originalText,
         provedor: elements["provider-select"].value,
         modelo: elements["model-select"].value,
         chave_api: elements["api-key"].value.trim(),
+        vetorizacao_id: importedVectorization,
       };
       if (savedId && savedState === "registrado") payload.relato_id = savedId;
       const response = await fetchJSON("/api/buscas", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
@@ -692,6 +775,7 @@
   }
 
   elements["search-form"].addEventListener("submit", submitSearch);
+  elements["vetorizacao-file"].addEventListener("change", importVectorization);
   elements["api-key"].addEventListener("input", invalidateConfiguration);
   elements["model-select"].addEventListener("change", invalidateConfiguration);
   elements["provider-select"].addEventListener("change", () => {
@@ -721,15 +805,17 @@
   elements.relato.addEventListener("input", () => {
     touched = true;
     forgetSavedRecord();
+    forgetVectorization("O relato foi editado. Importe a vetorização desse texto atualizado antes de buscar.");
     resetResults();
     elements["request-error"].hidden = true;
     updateInput();
   });
   elements["clear-button"].addEventListener("click", () => {
-    if (busy || saving || openingRecord) return;
+    if (busy || saving || openingRecord || importing) return;
     elements.relato.value = "";
     touched = false;
     forgetSavedRecord();
+    forgetVectorization();
     resetResults();
     elements["request-error"].hidden = true;
     elements.processing.hidden = true;

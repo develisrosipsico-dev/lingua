@@ -12,6 +12,7 @@ from unittest.mock import Mock, patch
 
 from agente_analista.app import ServicoAnalista, criar_app
 from agente_analista.entrada import ErroEntrada, contar_relato, validar_relato
+from test_agente_analista_importacao import construir_exportacao, TEXTO
 
 
 class EntradaTests(unittest.TestCase):
@@ -70,7 +71,7 @@ class ServicoTeste:
     def status(self):
         return {"pronto": True, "problemas": []}
 
-    def executar(self, relato, progresso, *, provedor, modelo, chave_api):
+    def executar(self, relato, progresso, *, provedor, modelo, chave_api, vetorizacao):
         self.relato = relato
         self.credenciais = {"provedor": provedor, "modelo": modelo, "chave_api": chave_api}
         self.pedidos.append(self.credenciais.copy())
@@ -91,6 +92,9 @@ class PaginaTests(unittest.TestCase):
         self.app = criar_app({"TESTING": True, "DATABASE": str(Path(self.directory.name) / "agente.sqlite3")},
                              servico=self.servico)
         self.client = self.app.test_client()
+        resposta = self.client.post("/api/vetorizacoes", json=construir_exportacao(limite=512))
+        self.assertEqual(resposta.status_code, 201, resposta.get_json())
+        self.vetorizacao_id = resposta.get_json()["id"]
 
     def tearDown(self):
         self.servico.liberar.set()
@@ -104,9 +108,9 @@ class PaginaTests(unittest.TestCase):
             time.sleep(.01)
         self.fail("A busca não terminou.")
 
-    def pedido(self, texto="a\n\nb", **alteracoes):
+    def pedido(self, texto=TEXTO, **alteracoes):
         dados = {"texto": texto, "provedor": "openrouter", "modelo": "openai/modelo-teste",
-                 "chave_api": "credencial-somente-pagina"}
+                 "chave_api": "credencial-somente-pagina", "vetorizacao_id": self.vetorizacao_id}
         dados.update(alteracoes)
         return dados
 
@@ -125,7 +129,7 @@ class PaginaTests(unittest.TestCase):
         self.assertEqual(self.client.post("/api/buscas", data="texto").status_code, 415)
 
     def test_progresso_preservacao_e_envio_duplicado(self):
-        texto = "Não sonho 😀.\r\n \t\r\nLembro da infância."
+        texto = TEXTO
         resposta = self.client.post("/api/buscas", json=self.pedido(texto))
         self.assertEqual(resposta.status_code, 202)
         id = resposta.get_json()["id"]
@@ -152,10 +156,10 @@ class PaginaTests(unittest.TestCase):
         self.assertEqual(self.client.get("/", headers={"Host": "externo.example"}).status_code, 403)
 
     def test_falta_configuracao_acao_visivel(self):
-        self.servico.status = lambda: {"pronto": False, "problemas": ["Prepare o modelo E5."]}
+        self.servico.status = lambda: {"pronto": False, "problemas": ["Restaure o índice de Freud."]}
         resposta = self.client.post("/api/buscas", json=self.pedido())
         self.assertEqual(resposta.status_code, 503)
-        self.assertIn("E5", resposta.get_json()["erro"])
+        self.assertIn("índice", resposta.get_json()["erro"])
 
     def test_credenciais_ausentes_invalidas_nao_iniciam_nem_usam_env(self):
         casos = []
@@ -213,7 +217,7 @@ class PaginaTests(unittest.TestCase):
     def test_erros_conhecidos_nao_revelam_chave_recebida(self):
         from agente_analista.ligacoes import ErroLigacoes
 
-        def falhar(relato, progresso, *, provedor, modelo, chave_api):
+        def falhar(relato, progresso, *, provedor, modelo, chave_api, vetorizacao):
             raise ErroLigacoes("Falha ao usar " + chave_api)
 
         self.servico.executar = falhar
@@ -256,7 +260,7 @@ class ConfiguracaoTests(unittest.TestCase):
                         patch("agente_analista.modelos.escolher_formato_resposta", return_value=modo) as escolher, \
                         patch("agente_analista.ligacoes.avaliar_ligacoes", return_value={"ligacoes": []}) as avaliar:
                     resultado = servico.executar(relato, Mock(), provedor="openai", modelo="modelo-pagina",
-                                                 chave_api="credencial-pagina")
+                                                 chave_api="credencial-pagina", vetorizacao={"relato": relato})
                 escolher.assert_called_once_with("openai", "modelo-pagina")
                 avaliar.assert_called_once_with(relato, recuperacao, provedor="openai", modelo="modelo-pagina",
                                                  chave_api="credencial-pagina", modo_resposta=modo)
@@ -278,52 +282,40 @@ class ConfiguracaoTests(unittest.TestCase):
                    side_effect=ErroModelo("Não foi possível conferir as capacidades do modelo.")) as escolher:
             with self.assertRaisesRegex(ErroLigacoes, "capacidades") as erro:
                 servico.executar(relato, Mock(), provedor="openrouter",
-                    modelo="nvidia/nemotron-3-ultra-550b-a55b:free", chave_api="credencial-pagina")
+                    modelo="nvidia/nemotron-3-ultra-550b-a55b:free", chave_api="credencial-pagina",
+                    vetorizacao={"relato": relato})
         escolher.assert_called_once_with("openrouter", "nvidia/nemotron-3-ultra-550b-a55b:free")
         servico.buscador.buscar.assert_not_called()
         servico._corpus.assert_not_called()
         self.assertNotIn("credencial-pagina", str(erro.exception))
 
-    def test_configuracao_malformada_mostra_acao_sem_falhar_pagina(self):
-        with TemporaryDirectory() as pasta:
-            caminho = Path(pasta) / "config.json"
-            servico = ServicoAnalista(caminho_config=caminho)
-            servico._corpus = lambda: SimpleNamespace(fragmentos=[], blocos={}, manifesto={})
-            for dados in ("[]", "null", "{", "{}"):
-                caminho.write_text(dados, encoding="utf-8")
-                with self.subTest(dados=dados), patch.dict(os.environ, {"NARRATIVA_API_KEY": "segredo-teste"}):
-                    status = servico.status()
-                    self.assertFalse(status["pronto"])
-                    self.assertIn("preparar_e5_mac_intel.sh", " ".join(status["problemas"]))
-                    self.assertNotIn("segredo-teste", json.dumps(status))
+    def test_indice_invalido_mostra_acao_sem_expor_credenciais(self):
+        from agente_analista.corpus import ErroCorpus
+        servico = ServicoAnalista()
+        servico._corpus = Mock(side_effect=ErroCorpus("Restaure o índice original de Freud."))
+        with patch.dict(os.environ, {"NARRATIVA_API_KEY": "segredo-teste"}):
+            status = servico.status()
+        self.assertFalse(status["pronto"])
+        self.assertIn("índice", " ".join(status["problemas"]))
+        self.assertNotIn("segredo-teste", json.dumps(status))
 
     def test_status_pronto_sem_chave_api_ou_modelo_do_provedor_no_ambiente(self):
-        with TemporaryDirectory() as pasta, patch.dict(os.environ, {}, clear=True):
-            cache = Path(pasta) / "cache"
-            os.environ["HF_HUB_CACHE"] = str(cache)
-            manifesto = {"modelo": "fabricante/e5", "revisao": "revisao-fixa"}
-            snapshot = cache / "models--fabricante--e5/snapshots/revisao-fixa"
-            snapshot.mkdir(parents=True)
-            for nome in ("config.json", "model.safetensors", "tokenizer.json", "tokenizer_config.json"):
-                (snapshot / nome).touch()
-            caminho = Path(pasta) / "config.json"
-            caminho.write_text(json.dumps({"modelo_id": manifesto["modelo"], "revisao": manifesto["revisao"],
-                "tokenizador_id": manifesto["modelo"], "tokenizador_revisao": manifesto["revisao"],
-                "local_files_only": True, "dispositivo": "cpu", "precisao": "float32", "limite_tokens": 512}),
-                encoding="utf-8")
-            servico = ServicoAnalista(caminho_config=caminho)
-            servico._corpus = lambda: SimpleNamespace(fragmentos=[{}], blocos={"B1": {}}, manifesto=manifesto)
+        with patch.dict(os.environ, {}, clear=True), \
+                patch("embeddings_e5.criar_gerador_padrao", side_effect=AssertionError("Inferência duplicada")):
+            servico = ServicoAnalista()
+            servico._corpus = lambda: SimpleNamespace(fragmentos=[{}], blocos={"B1": {}}, manifesto={})
             for extras in ({}, {"AGENTE_ANALISTA_PROVEDOR": "invalido", "AGENTE_ANALISTA_MODELO": ""}):
                 with self.subTest(extras=extras), patch.dict(os.environ, extras):
                     status = servico.status()
                     self.assertTrue(status["pronto"], status["problemas"])
                     self.assertEqual(status["problemas"], [])
                     self.assertEqual(status["corpus"], {"fragmentos": 1, "blocos": 1})
+                    self.assertFalse(status["inferencia_local"])
 
 
-@unittest.skipUnless(os.environ.get("AGENTE_ANALISTA_TESTE_E5_REAL") == "1", "Inferência real E5 opcional")
-class IntegracaoE5Tests(unittest.TestCase):
-    def test_busca_da_pagina_com_e5_real_e_provedor_simulado(self):
+@unittest.skipUnless(os.environ.get("AGENTE_ANALISTA_VETORIZACAO_REAL"), "Exportação vetorial real opcional")
+class IntegracaoImportadaTests(unittest.TestCase):
+    def test_busca_da_pagina_com_vetores_reais_e_provedor_simulado(self):
         def transporte(**pedido):
             self.assertEqual(pedido["chave_api"], "chave-somente-pagina")
             self.assertEqual(pedido["provedor"], "openrouter")
@@ -353,9 +345,13 @@ class IntegracaoE5Tests(unittest.TestCase):
             try:
                 client = app.test_client()
                 self.assertTrue(client.get("/api/status").get_json()["pronto"])
-                texto = "Sonho e desejo.\n \t\nVolto a pensar no sonho."
+                registro = json.loads(Path(os.environ["AGENTE_ANALISTA_VETORIZACAO_REAL"]).read_text(encoding="utf-8"))
+                importada = client.post("/api/vetorizacoes", json=registro)
+                self.assertEqual(importada.status_code, 201, importada.get_json())
+                texto = importada.get_json()["relato"]["texto"]
                 resposta = client.post("/api/buscas", json={"texto": texto, "provedor": "openrouter",
-                                      "modelo": "nvidia/nemotron-3-ultra-550b-a55b:free", "chave_api": "chave-somente-pagina"})
+                                      "modelo": "nvidia/nemotron-3-ultra-550b-a55b:free", "chave_api": "chave-somente-pagina",
+                                      "vetorizacao_id": importada.get_json()["id"]})
                 self.assertEqual(resposta.status_code, 202)
                 id = resposta.get_json()["id"]
                 limite = time.monotonic() + 90
@@ -374,6 +370,6 @@ class IntegracaoE5Tests(unittest.TestCase):
                 self.assertTrue(resultado["ligacoes"][0]["conferencias"]["freud_literal"])
                 self.assertEqual(len(resultado["rejeitadas"]), 1)
                 self.assertEqual(len(resultado["candidatos"]), 12)
-                self.assertEqual(len(resultado["consultas"]), 3)
+                self.assertEqual({c["tipo"] for c in resultado["consultas"]}, {"periodo", "contextual", "documento"})
             finally:
                 app.extensions["agente_analista"]["executor"].shutdown(wait=True)

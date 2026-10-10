@@ -15,7 +15,7 @@ from time import monotonic
 from urllib.error import HTTPError, URLError
 from urllib.request import HTTPSHandler, Request, build_opener
 
-from api_narrativas import ErroAPINarrativa, _contexto_https, _SemRedirecionamento
+from .transporte import ErroAPINarrativa, _contexto_https, _SemRedirecionamento
 
 
 URL_CATALOGO = "https://openrouter.ai/api/v1/models"

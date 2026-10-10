@@ -1,8 +1,19 @@
 # Agente analista: relato e Freud
 
 Página local para examinar ligações entre um relato em português e o acervo
-fornecido. Recebe exatamente dois parágrafos e até 400 palavras, pesquisa todos
-os 8.087 fragmentos e termina em uma tabela de propostas interpretativas.
+fornecido. Importa o arquivo completo `vetorizacao.json` produzido pela análise
+linguística e reaproveita seus vetores de períodos, janelas contextuais e
+documento. O relato deve ter exatamente dois parágrafos e até 400 palavras.
+A busca consulta todos os 8.087 fragmentos e termina em uma tabela de propostas
+interpretativas. O agente não executa uma nova vetorização do relato.
+
+O Agente Analista e a análise linguística são aplicativos independentes. A
+integração ocorre pelo arquivo exportado: o agente executa sem instalar,
+importar código ou manter a análise linguística aberta. Para cada relato,
+importe somente **vetorizacao.json** pelo controle **Importar vetorização**.
+O texto e os metadados incluídos nesse arquivo permitem conferir os vetores e
+as posições das passagens; não é necessário carregar outros arquivos da
+análise linguística.
 
 ## Executar no Mac Intel
 
@@ -10,33 +21,41 @@ Na pasta do repositório:
 
 ```bash
 cd ~/lingua-agente
-git -c http.version=HTTP/1.1 pull --ff-only
-bash agente_analista/iniciar_mac_intel.sh
+git fetch origin
+git switch agente-analista/preparacao-20261010
+git pull --ff-only origin agente-analista/preparacao-20261010
+instance/venv-agente-e5-intel/bin/python -m pip install -r agente_analista/requirements.txt
+instance/venv-agente-e5-intel/bin/python -m agente_analista.app
 ```
 
-O iniciador usa o E5 que você já preparou, instala as dependências da página
-(Flask 3.1.3 e Certifi 2026.7.22) quando necessário, testa a conexão HTTPS
-com uma consulta pública e abre o servidor sem pedir uma chave no terminal.
+Os comandos usam o ambiente Python já preparado no Mac. As dependências da
+página e da busca são Flask, Certifi e NumPy. A chave das justificativas é
+informada na página.
 
 Abra **http://127.0.0.1:5002** no navegador. Deixe o terminal aberto enquanto usa
-a página; pressione `Ctrl+C` para encerrar. A primeira busca carrega o E5 na
-memória; as seguintes reutilizam o modelo e o índice.
+a página; pressione `Ctrl+C` para encerrar. O agente precisa do índice vetorial
+do acervo, mas não carrega o E5 nem baixa seus pesos para realizar consultas.
+
+Na análise linguística, gere a vetorização do relato e exporte o arquivo
+completo **vetorizacao.json**. Na seção **Importar vetorização**,
+selecione esse arquivo. O agente confere os dados, guarda a importação no banco
+local, preenche o texto e mostra a quantidade de vetores por tipo. O limite do
+arquivo é 32 MiB. O arquivo exportado reúne os vetores e as informações do
+relato necessárias para a busca.
 
 Na seção **Justificativas**, escolha o provedor, cole a chave de API no campo
 oculto e use **+** para incluir o identificador de um modelo. O seletor começa
 sem modelo selecionado, sem modelos predefinidos. Ao incluir um modelo, ele
-é selecionado para a próxima busca. Informe o relato e clique em **Buscar ligações**.
+é selecionado para a próxima busca. Depois de importar a vetorização, clique
+em **Buscar ligações**. Editar o texto invalida a associação aos vetores;
+nesse caso, faça a vetorização do texto atualizado na análise linguística e
+importe o novo arquivo antes de buscar. O relato original, inclusive suas
+quebras de linha, é preservado no servidor.
 
-Se ainda não preparou o modelo, instale Python 3.12 e execute antes:
-
-```bash
-bash agente_analista/preparar_e5_mac_intel.sh
-```
-
-O modelo fica em `instance/huggingface`, o ambiente Python em
-`instance/venv-agente-e5-intel` e a configuração em
-`instance/agente_analista_e5.json`. O acervo já está vetorizado: a busca gera
-somente os vetores das consultas.
+Os vetores precisam usar o mesmo espaço do índice do acervo. A importação
+confere os metadados do modelo, revisão, dimensão, normalização e perfil de
+consulta, além dos valores, textos e posições. O E5 da análise linguística
+continua pertencendo à etapa de origem e pode alimentar diferentes agentes.
 
 ### Chave e modelo das justificativas
 
@@ -66,11 +85,11 @@ Não há necessidade de configurar variáveis no terminal. A configuração envi
 na página é usada somente naquela busca, sem alterar as credenciais do projeto
 Lingua ou as variáveis de ambiente do servidor.
 
-O E5 e o índice funcionam localmente. Para construir as justificativas, o
+O índice e os vetores importados são consultados localmente. Para construir as justificativas, o
 provedor recebe o relato e os blocos recuperados por HTTPS; essa chamada usa
 a conta do provedor e pode consumir créditos. A busca é liberada após informar
-a chave, selecionar o modelo e preencher um relato válido. **Salvar relato**
-guarda somente o texto, sem usar o E5, enviar dados ao provedor ou consumir
+a chave, selecionar o modelo e importar a vetorização de um relato válido. **Salvar relato**
+guarda o texto e, quando houver, o vínculo com a vetorização importada, sem enviar dados ao provedor ou consumir
 créditos. O relato precisa seguir os mesmos limites de dois parágrafos e até
 400 palavras. Uma busca também salva automaticamente o relato e seu resultado
 no banco local. As chaves de API não fazem parte dos registros salvos.
@@ -82,23 +101,23 @@ limitado a oito buscas por uma hora; essa limpeza não apaga o histórico salvo.
 
 ### Executar diretamente no ambiente Python
 
-Depois de instalar `agente_analista/requirements.txt` no ambiente com E5:
+Depois de instalar `agente_analista/requirements.txt` em um ambiente Python:
 
 ```bash
 instance/venv-agente-e5-intel/bin/python -m agente_analista.app
 ```
 
 O servidor escuta somente em `127.0.0.1:5002`, separado do Lingua na porta 5001.
-Usa uma execução por vez e mostra o progresso na página. Configure o cache via
-`HF_HOME`/`HF_HUB_CACHE` se usar outro caminho.
+Usa uma execução por vez e mostra o progresso na página. O nome histórico do
+ambiente Python não indica necessidade de carregar o E5; também é possível
+usar outro ambiente com as dependências do agente instaladas.
 
 ### Diagnosticar a conexão com o provedor
 
-O iniciador executa um diagnóstico público do provedor padrão ao abrir o servidor.
-Esse teste usa OpenRouter por padrão; a escolha do provedor das buscas é feita
-na página. O teste
-apenas consulta o endereço do provedor por GET, sem autenticação, envio do
-relato ou geração de texto; não consome créditos. Para executá-lo separadamente:
+Se precisar conferir a conexão, execute opcionalmente o diagnóstico abaixo.
+Ele usa OpenRouter por padrão; a escolha do provedor das buscas é feita na
+página. O teste apenas consulta o endereço do provedor por GET, sem
+autenticação, envio do relato ou geração de texto; não consome créditos:
 
 ```bash
 instance/venv-agente-e5-intel/bin/python -m agente_analista.diagnosticar_conexao
@@ -134,16 +153,21 @@ quando a chamada de avaliação consegue alcançar o provedor.
 - `corpus.py` carrega o manifesto e a matriz por mmap, valida IDs, dimensões,
   valores finitos, normalização L2 e hashes dos textos. Reconstrói blocos pelas
   posições, reúne sobreposições idênticas e rejeita lacunas/conflitos.
-- `busca.py` prepara consultas de P1, P2 e do relato completo. Divide consultas
-  longas em recortes rastreáveis de até 504 tokens, incluindo o prefixo, sem
-  truncar o conteúdo. Reutiliza o adaptador `embeddings_e5.py` e o divisor de
-  `vetorizacao.py`, com modelo, revisão e prefixos do manifesto.
+- A importação recebe o registro completo da vetorização da análise
+  linguística. Cada vetor mantém seu tipo, texto e posição de origem. As
+  consultas de períodos, janelas contextuais e documento saem desse registro;
+  não há nova inferência E5, divisão por tokens ou processamento linguístico
+  no agente. Um texto diferente exige uma nova exportação correspondente.
 - A busca lexical usa BM25 (`k1=1.2`, `b=0.75`), palavras em minúsculas sem
   acentos, remoção de palavras funcionais e preservação de negações. O código
   anterior no ZIP serviu de consulta para a fórmula; radicalização não é usada.
-- A busca E5 calcula similaridade cosseno com todas as linhas da matriz. A fusão
-  usa RRF: soma `1/(60 + rank_bloco)` por método e consulta, sobre os 50 melhores
-  fragmentos. Cada bloco contribui uma vez por ranking. Os 12 melhores blocos
+- A busca semântica compara os vetores importados com todas as linhas da matriz
+  por similaridade cosseno. A fusão usa RRF: soma
+  `peso_tipo/(consultas_do_tipo * (60 + rank_bloco))` por método e consulta,
+  sobre os 50 melhores fragmentos. Períodos, janelas contextuais e documento
+  têm peso de `1/3` cada; as contribuições são divididas pela quantidade de
+  consultas do respectivo tipo para equilibrar o total. Cada bloco contribui
+  uma vez por ranking. Os 12 melhores blocos
   distintos seguem com seu contexto inteiro para avaliação; nada é filtrado
   previamente por obra ou conceito. Os parâmetros saem no JSON.
 - `modelos.py` consulta o catálogo do OpenRouter e ajusta o formato aceito pelo
@@ -185,7 +209,10 @@ dos dados do Lingua. Para usar outro arquivo, defina `AGENTE_ANALISTA_DB` com
 seu caminho antes de iniciar o aplicativo. Não há servidor de banco de dados
 nem dependência adicional a instalar.
 
-A tabela `relatos` guarda o texto original e os dados da busca. A tabela
+A tabela `relatos` guarda o texto original, o vínculo com a vetorização
+importada e os dados da busca. A terceira tabela, `vetorizacoes`, mantém os
+arquivos importados para permitir novas consultas depois de reiniciar o
+aplicativo. O vínculo `relatos.vetorizacao_id` referencia essa tabela. A tabela
 `relacoes` guarda as relações conferidas, com chave estrangeira `relato_id`,
 passagem do relato, trecho de Freud e justificativa, além das referências e
 dos detalhes necessários para inspecionar o resultado. Relações pertinentes,
@@ -200,7 +227,10 @@ uma busca já realizada cria um novo registro e preserva o resultado anterior.
 
 A seção **Relatos salvos** mostra o histórico, com **Atualizar**, **Carregar
 mais** e **Abrir**. Abrir um registro recupera o texto e a tabela sem fazer
-outra chamada ao provedor, sem chave de API e sem precisar do E5. **Limpar**
+outra chamada ao provedor e sem chave de API. Quando existe uma vetorização
+associada, ela também é recuperada e fica disponível para uma nova busca sem
+importar o arquivo novamente. Registros antigos sem vetorização continuam
+acessíveis; para uma nova busca, importe a exportação correspondente. **Limpar**
 limpa apenas o formulário e o resultado exibido; não exclui registros do banco.
 Não há exclusão automática dos relatos salvos. Para fazer um backup, encerre
 o aplicativo e copie o arquivo SQLite. O arquivo permanece no computador
@@ -214,7 +244,7 @@ não substituem a avaliação da pertinência pelo usuário.
 As páginas são apresentadas como **“páginas registradas no índice; numeração
 impressa não conferida”**. Edição, tradutor, editora e ano da edição permanecem
 pendentes quando ausentes. A tabela encerra esta etapa; a escrita da resposta
-final e a integração com os JSONs linguísticos ficam para etapas posteriores.
+final fica para uma etapa posterior.
 
 ## Verificar
 
@@ -222,7 +252,6 @@ No ambiente preparado:
 
 ```bash
 instance/venv-agente-e5-intel/bin/python -m unittest discover -s tests -p 'test_agente_analista_*.py' -v
-AGENTE_ANALISTA_TESTE_E5_REAL=1 instance/venv-agente-e5-intel/bin/python -m unittest tests.test_agente_analista_busca -v
 ```
 
 Para verificar somente o banco e sua integração com a API, sem E5 ou chamadas
@@ -235,12 +264,25 @@ PYTHONPATH="$PWD/tests" .venv/bin/python -m unittest test_agente_analista_persis
 
 Esses testes usam bancos temporários e não alteram os relatos do usuário.
 
-Os testes verificam limites de entrada, preservação Unicode e posições,
+Para incluir a busca sobre o índice original e uma exportação real já existente,
+informe o caminho do arquivo no Mac:
+
+```bash
+AGENTE_ANALISTA_VETORIZACAO_REAL="/caminho/vetorizacao.json" \
+  instance/venv-agente-e5-intel/bin/python -m unittest discover \
+  -s tests -p 'test_agente_analista_*.py' -v
+```
+
+Essa verificação usa os vetores recebidos e simula as respostas do provedor.
+O índice original precisa estar em `agente_analista/data/Vetor/`.
+
+Os testes verificam importação e reaproveitamento dos vetores, limites de entrada, preservação Unicode e posições,
 integridade e reconstrução do corpus, busca e agrupamento, citações e IDs
 inexistentes, relações sem sustentação, o fluxo assíncrono, a persistência dos
 registros e a separação das credenciais de cada busca. As respostas do
-provedor são simuladas nos testes para evitar chamadas cobradas. O teste E5
-opcional executa inferência real na revisão local do modelo.
+provedor são simuladas nos testes para evitar chamadas cobradas. A consulta
+com um arquivo real exportado pela análise linguística e o índice completo
+do acervo deve ser validada no ambiente que contém esses dados.
 
 O código antigo continua guardado, sem execução automática, em
 `codigos/freud-agent-codigo-20261003-165655.zip`.

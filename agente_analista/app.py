@@ -4,6 +4,7 @@ from concurrent.futures import ThreadPoolExecutor
 import json
 import os
 from pathlib import Path
+import re
 import sqlite3
 from threading import Lock
 from time import monotonic
@@ -14,26 +15,21 @@ from flask import Flask, jsonify, render_template, request
 from werkzeug.exceptions import HTTPException
 
 from .entrada import ErroEntrada, validar_relato
+from .importacao import ErroImportacao, conferir_compatibilidade, importar_vetorizacao
 from .persistencia import BancoAnalista, ErroPersistencia
 
 
 RAIZ = Path(__file__).resolve().parents[1]
-CONFIG_E5 = RAIZ / "instance/agente_analista_e5.json"
 
 
 class ServicoAnalista:
-    """Reutilize corpus, BM25 e modelo; o aplicativo cuida dos registros locais."""
+    """Pesquise no índice usando os vetores recebidos da análise linguística."""
 
-    def __init__(self, pasta=None, caminho_config=None):
+    def __init__(self, pasta=None):
         self.pasta = Path(pasta or RAIZ / "agente_analista/data/Vetor")
-        self.caminho_config = Path(caminho_config or CONFIG_E5)
         self.corpus = None
         self.buscador = None
         self._lock = Lock()
-        os.environ.setdefault("HF_HOME", str(RAIZ / "instance/huggingface"))
-        os.environ.setdefault("HF_HUB_CACHE", str(Path(os.environ["HF_HOME"]) / "hub"))
-        os.environ.setdefault("OMP_NUM_THREADS", "2")
-        os.environ.setdefault("MKL_NUM_THREADS", "2")
 
     def _corpus(self):
         from .corpus import Corpus
@@ -48,51 +44,28 @@ class ServicoAnalista:
             corpus = self._corpus()
             contagens = {"fragmentos": len(corpus.fragmentos), "blocos": len(corpus.blocos)}
         except (ValueError, ImportError) as erro:
-            corpus = None
             contagens = {}
             problemas.append(str(erro) if isinstance(erro, ValueError) else
-                             "Instale as dependências executando: bash agente_analista/preparar_e5_mac_intel.sh")
-        try:
-            configuracao = json.loads(self.caminho_config.read_text(encoding="utf-8"))
-            if not isinstance(configuracao, dict):
-                raise ValueError("A configuração E5 deve ser um objeto JSON.")
-            esperado = corpus.manifesto if corpus else {}
-            for campo, manifesto in (("modelo_id", "modelo"), ("revisao", "revisao"),
-                                     ("tokenizador_id", "modelo"), ("tokenizador_revisao", "revisao")):
-                if corpus and configuracao.get(campo) != esperado[manifesto]:
-                    raise ValueError("A configuração E5 difere do manifesto do corpus.")
-            if configuracao.get("local_files_only") is not True:
-                raise ValueError("Configure o E5 para usar somente o cache local já verificado.")
-            if (configuracao.get("dispositivo") != "cpu" or configuracao.get("precisao") != "float32"
-                    or configuracao.get("limite_tokens") != 512):
-                raise ValueError("Prepare a configuração CPU float32 com limite de 512 tokens.")
-            modelo = configuracao["modelo_id"]
-            revisao = configuracao["revisao"]
-            if not isinstance(modelo, str) or not isinstance(revisao, str):
-                raise ValueError("Modelo e revisão devem ser textos.")
-            snapshot = Path(os.environ["HF_HUB_CACHE"]) / ("models--" + modelo.replace("/", "--")) / "snapshots" / revisao
-            if any(not (snapshot / nome).is_file() for nome in (
-                    "config.json", "model.safetensors", "tokenizer.json", "tokenizer_config.json")):
-                raise ValueError("O download do modelo E5 está ausente ou incompleto.")
-        except (OSError, ValueError, KeyError, TypeError):
-            problemas.append("Prepare o modelo executando: bash agente_analista/preparar_e5_mac_intel.sh")
-        return {"pronto": not problemas, "problemas": problemas, "corpus": contagens}
+                             "Instale as dependências de agente_analista/requirements.txt.")
+        return {"pronto": not problemas, "problemas": problemas, "corpus": contagens,
+                "entrada": "vetorizacao_importada", "inferencia_local": False}
 
-    def executar(self, relato, progresso, *, provedor, modelo, chave_api):
+    def executar(self, relato, progresso, *, provedor, modelo, chave_api, vetorizacao):
         from .busca import Buscador
         from .ligacoes import ErroLigacoes, avaliar_ligacoes
         from .modelos import ErroModelo, escolher_formato_resposta
-        from embeddings_e5 import criar_gerador_padrao
         progresso("Conferindo o modelo das justificativas")
         try:
             modo_resposta = escolher_formato_resposta(provedor, modelo)
         except ErroModelo as erro:
             raise ErroLigacoes(str(erro)) from None
-        progresso("Conferindo o corpus e carregando o modelo E5")
+        if relato["texto"] != vetorizacao["relato"]["texto"]:
+            raise ErroImportacao("O relato difere do texto da vetorização importada.")
+        progresso("Conferindo o índice e a vetorização recebida")
         corpus = self._corpus()
         if self.buscador is None:
-            self.buscador = Buscador(corpus, criar_gerador_padrao(caminho_config=self.caminho_config))
-        recuperacao = self.buscador.buscar(relato, progresso=progresso)
+            self.buscador = Buscador(corpus)
+        recuperacao = self.buscador.buscar(vetorizacao, progresso=progresso)
         progresso("Avaliando os candidatos e conferindo as citações")
         ligacoes = avaliar_ligacoes(relato, recuperacao, provedor=provedor, modelo=modelo,
                                    chave_api=chave_api, modo_resposta=modo_resposta)
@@ -105,7 +78,7 @@ class ServicoAnalista:
 def criar_app(config=None, *, servico=None):
     app = Flask(__name__)
     app.config.update(
-        MAX_CONTENT_LENGTH=256 * 1024,
+        MAX_CONTENT_LENGTH=32 * 1024 * 1024,
         DATABASE=os.environ.get("AGENTE_ANALISTA_DB", str(RAIZ / "instance/agente_analista.sqlite3")),
     )
     if config:
@@ -156,6 +129,48 @@ def criar_app(config=None, *, servico=None):
             limpar_expiradas()
         return jsonify(servico.status())
 
+    def manifesto_indice():
+        pasta = Path(getattr(servico, "pasta", RAIZ / "agente_analista/data/Vetor"))
+        try:
+            return json.loads((pasta / "manifesto.json").read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            raise ErroImportacao("Restaure o manifesto do índice de Freud antes de importar a vetorização.") from None
+
+    def carregar_vetorizacao(identificador):
+        if not isinstance(identificador, str) or re.fullmatch(r"[0-9a-f]{64}", identificador) is None:
+            raise ErroImportacao("Importe o arquivo vetorizacao.json da análise linguística antes de buscar.")
+        registro = banco.obter_vetorizacao(identificador)
+        if registro is None:
+            return None
+        importada = importar_vetorizacao(registro)
+        conferir_compatibilidade(importada, manifesto_indice())
+        return importada
+
+    def resumo_vetorizacao(identificador, importada):
+        contagens = {tipo: sum(c["tipo"] == tipo for c in importada["consultas"])
+                     for tipo in ("periodo", "contextual", "documento")}
+        return {"id": identificador, "relato": importada["relato"],
+                "fonte": importada["fonte"], "contagens": contagens}
+
+    @app.post("/api/vetorizacoes")
+    def importar():
+        if not request.is_json:
+            return jsonify(erro="Envie a exportação vetorizacao.json em JSON."), 415
+        dados = request.get_json(silent=True)
+        if not isinstance(dados, dict):
+            return jsonify(erro="Envie o JSON completo da vetorização da análise linguística."), 400
+        importada = importar_vetorizacao(dados)
+        conferir_compatibilidade(importada, manifesto_indice())
+        identificador = banco.registrar_vetorizacao(dados)
+        return jsonify(resumo_vetorizacao(identificador, importada)), 201
+
+    @app.get("/api/vetorizacoes/<identificador>")
+    def consultar_vetorizacao(identificador):
+        importada = carregar_vetorizacao(identificador)
+        if importada is None:
+            return jsonify(erro="Vetorização não encontrada. Importe o arquivo novamente."), 404
+        return jsonify(resumo_vetorizacao(identificador, importada))
+
     @app.post("/api/relatos")
     def registrar_relato():
         if not request.is_json:
@@ -167,7 +182,14 @@ def criar_app(config=None, *, servico=None):
             relato = validar_relato(dados["texto"])
         except ErroEntrada as erro:
             return jsonify(erro=str(erro), contagem=erro.contagem), 400
-        relato_id = banco.registrar(relato)
+        vetorizacao_id = dados.get("vetorizacao_id")
+        if "vetorizacao_id" in dados:
+            importada = carregar_vetorizacao(vetorizacao_id)
+            if importada is None:
+                return jsonify(erro="Vetorização não encontrada."), 404
+            if importada["relato"]["texto"] != relato["texto"]:
+                raise ErroImportacao("O texto foi alterado após a vetorização. Importe a exportação correspondente ao relato.")
+        relato_id = banco.registrar(relato, vetorizacao_id=vetorizacao_id)
         return jsonify(banco.obter(relato_id)), 201
 
     @app.get("/api/relatos")
@@ -194,19 +216,18 @@ def criar_app(config=None, *, servico=None):
             if id != estado["ativa"] and agora - tarefas[id]["criada"] > 3600:
                 del tarefas[id]
 
-    def executar(tarefa_id, relato, configuracao_api):
+    def executar(tarefa_id, relato, configuracao_api, vetorizacao):
         def progresso(etapa):
             with lock:
                 tarefas[tarefa_id]["etapa"] = etapa
         try:
-            resultado = servico.executar(relato, progresso, **configuracao_api)
+            resultado = servico.executar(relato, progresso, vetorizacao=vetorizacao, **configuracao_api)
             resultado = banco.concluir(tarefa_id, resultado)
             with lock:
                 tarefas[tarefa_id].update(estado="concluido", etapa="Busca concluída", resultado=resultado)
         except Exception as erro:
             from .corpus import ErroCorpus
             from .ligacoes import ErroLigacoes
-            from contratos_vetorizacao import ErroVetorizacao
             # A busca pode estar indisponível por dependências ausentes. Ainda
             # assim, o erro deve encerrar a tarefa e preservar o relato salvo.
             try:
@@ -214,7 +235,7 @@ def criar_app(config=None, *, servico=None):
                 erros_busca = (ErroBusca,)
             except ImportError:
                 erros_busca = ()
-            conhecidos = (ErroEntrada, ErroCorpus, ErroLigacoes, ErroVetorizacao, ErroPersistencia) + erros_busca
+            conhecidos = (ErroEntrada, ErroCorpus, ErroLigacoes, ErroPersistencia, ErroImportacao) + erros_busca
             mensagem = str(erro) if isinstance(erro, conhecidos) else "Não foi possível concluir a busca. Confira o ambiente e tente novamente."
             if isinstance(erro, sqlite3.Error):
                 mensagem = "Não foi possível salvar o resultado no banco local. O relato continua disponível no histórico."
@@ -246,7 +267,7 @@ def criar_app(config=None, *, servico=None):
         relato_id = dados.get("relato_id")
         if "relato_id" in dados and (type(relato_id) is not int or relato_id < 1):
             return jsonify(erro="relato_id deve ser um identificador inteiro positivo."), 400
-        from api_narrativas import ErroAPINarrativa, _obter_chave_api
+        from .transporte import ErroAPINarrativa, _obter_chave_api
         from .ligacoes import ErroLigacoes, _configuracao
         if not isinstance(dados.get("chave_api"), str) or not dados["chave_api"].strip():
             return jsonify(erro="Informe a chave de API na página para gerar as justificativas."), 400
@@ -259,6 +280,12 @@ def criar_app(config=None, *, servico=None):
             chave = _obter_chave_api(dados["chave_api"])
         except (ErroAPINarrativa, ErroLigacoes):
             return jsonify(erro="Confira a chave de API e o identificador do modelo informado na página."), 400
+        vetorizacao_id = dados.get("vetorizacao_id")
+        vetorizacao = carregar_vetorizacao(vetorizacao_id)
+        if vetorizacao is None:
+            return jsonify(erro="Vetorização não encontrada. Importe o arquivo novamente."), 404
+        if relato["texto"] != vetorizacao["relato"]["texto"]:
+            raise ErroImportacao("O texto foi alterado após a vetorização. Importe a exportação correspondente ao relato.")
         configuracao = servico.status()
         if not configuracao["pronto"]:
             return jsonify(erro=" ".join(configuracao["problemas"]), problemas=configuracao["problemas"]), 503
@@ -273,7 +300,8 @@ def criar_app(config=None, *, servico=None):
                     del tarefas[antiga]
             tarefa_id = str(uuid4())
             try:
-                relato_id = banco.iniciar_busca(relato, tarefa_id, provedor, modelo, relato_id)
+                relato_id = banco.iniciar_busca(relato, tarefa_id, provedor, modelo, relato_id,
+                                               vetorizacao_id=vetorizacao_id)
             except LookupError:
                 return jsonify(erro="Relato não encontrado."), 404
             except FileExistsError as erro:
@@ -285,7 +313,7 @@ def criar_app(config=None, *, servico=None):
                 "etapa": "Preparando a busca", "criada": agora,
             }
             estado["ativa"] = tarefa_id
-        executor.submit(executar, tarefa_id, relato, {"provedor": provedor, "modelo": modelo, "chave_api": chave})
+        executor.submit(executar, tarefa_id, relato, {"provedor": provedor, "modelo": modelo, "chave_api": chave}, vetorizacao)
         return jsonify(id=tarefa_id, relato_id=relato_id), 202
 
     @app.get("/api/buscas/<tarefa_id>")
@@ -304,9 +332,13 @@ def criar_app(config=None, *, servico=None):
         app.logger.error("Banco local indisponível (%s)", type(erro).__name__)
         return jsonify(erro="Não foi possível acessar o banco local. Confira o armazenamento e tente novamente."), 503
 
+    @app.errorhandler(ErroImportacao)
+    def erro_importacao(erro):
+        return jsonify(erro=str(erro)), 400
+
     @app.errorhandler(HTTPException)
     def erro_http(erro):
-        mensagem = "O relato excedeu o tamanho permitido para envio." if erro.code == 413 else "Pedido inválido ou endereço não encontrado."
+        mensagem = "O arquivo excedeu o limite de 32 MiB para envio." if erro.code == 413 else "Pedido inválido ou endereço não encontrado."
         return jsonify(erro=mensagem), erro.code
 
     return app
