@@ -18,8 +18,8 @@ diff --git a/agente_analista/validacao_vetorial.py b/agente_analista/validacao_v
          for item in contexto["unidades"]:
              for tipo in ("periodo", "contextual"):
 @@ -332,6 +341,16 @@
- 
- 
+
+
  def validar_atual(registro):
 +    """Confira uma execução completa, mantendo seu contrato de cobertura."""
 +    return _validar_atual(registro)
@@ -164,8 +164,8 @@ diff --git a/agente_analista/importacao.py b/agente_analista/importacao.py
 +    resultado["validacao"] = _relatorio_selecao(representacoes, resultado["artefatos"])
 +    importar_vetorizacao(resultado)
 +    return resultado
- 
- 
+
+
  def _importar_atual(registro):
      # O agente valida os dados recebidos; não importa nem executa o aplicativo
      # produtor, mesmo quando ambos os projetos estão no mesmo repositório.
@@ -207,8 +207,8 @@ diff --git a/agente_analista/importacao.py b/agente_analista/importacao.py
 +        fonte["representacao_ids"] = deepcopy(registro["selecao_representacoes"]["representacao_ids"])
 +        fonte["formato_importacao"] = "representacao_individual" if individual else "selecao_declarada"
      return original, consultas, fonte
- 
- 
+
+
 @@ -134,14 +215,12 @@
      por_id = {a["id"]: a for a in registro["artefatos"]}
      consultas = []
@@ -258,7 +258,7 @@ diff --git a/agente_analista/busca.py b/agente_analista/busca.py
      # Pesos relativos: cada granularidade presente participa igualmente.
      PESOS_TIPOS = {"periodo": 1.0, "contextual": 1.0, "documento": 1.0, "paragrafo": 1.0}
 +    TIPOS_CONSULTAS = frozenset(PESOS_TIPOS)
- 
+
      def __init__(self, corpus):
          self.corpus = corpus
 @@ -80,13 +81,13 @@
@@ -299,7 +299,7 @@ diff --git a/agente_analista/busca.py b/agente_analista/busca.py
 +                repetidas[chave] = vetor
              consultas.append((consulta, vetor))
          return consultas
- 
+
      def buscar(self, importado, progresso=lambda etapa: None):
          progresso("Conferindo os vetores importados da análise linguística")
          consultas = self._consultas_importadas(importado)
@@ -358,8 +358,8 @@ diff --git a/agente_analista/ligacoes.py b/agente_analista/ligacoes.py
 +++ b/agente_analista/ligacoes.py
 @@ -45,7 +45,7 @@
      return valor
- 
- 
+
+
 -def _formato_resposta(modo="json_schema"):
 +def _formato_resposta(modo="json_schema", *, paragrafos=None):
      """Use o formato aceito pelo modelo; confira a literalidade das fontes depois."""
@@ -399,7 +399,7 @@ diff --git a/agente_analista/ligacoes.py b/agente_analista/ligacoes.py
          raise ErroLigacoes("Os candidatos da busca estão ausentes ou inválidos. Execute a busca novamente.")
      por_bloco = {}
 @@ -192,9 +195,9 @@
- 
+
  def construir_mensagens(*, relato, recuperacao):
      """Use o relato completo e blocos completos, tratando todo conteúdo como dados."""
 -    _fontes(relato, recuperacao)
@@ -433,7 +433,7 @@ diff --git a/agente_analista/app.py b/agente_analista/app.py
 --- a/agente_analista/app.py
 +++ b/agente_analista/app.py
 @@ -138,7 +138,7 @@
- 
+
      def carregar_vetorizacao(identificador):
          if not isinstance(identificador, str) or re.fullmatch(r"[0-9a-f]{64}", identificador) is None:
 -            raise ErroImportacao("Importe o arquivo vetorizacao.json da análise linguística antes de buscar.")
@@ -485,7 +485,7 @@ diff --git a/agente_analista/static/app.js b/agente_analista/static/app.js
 +    const scope = record.fonte?.selecao_representacoes ? "Seleção disponível" : "Vetorização disponível";
 +    elements["import-feedback"].textContent = `${scope}: ${descriptions.join(", ")}. A busca usa as consultas enviadas e combina seus resultados.${legacyHelp}`;
    }
- 
+
    async function importVectorization() {
 @@ -239,7 +239,7 @@
        if (file.size > 32 * 1024 * 1024) throw new Error("O arquivo ultrapassa o limite de 32 MiB.");
