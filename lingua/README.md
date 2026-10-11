@@ -61,6 +61,14 @@ clique em **Registrar texto**. A confirmação mostra o identificador do registr
 e a data em horário de Brasília. Atualizar a confirmação não repete o envio.
 Mantenha o terminal aberto durante o uso e pressione `Ctrl+C` para encerrar.
 
+Para chegar direto à etapa final, cole o relato e clique em **Ir direto à
+vetorização**. O Língua executa a segmentação, morfologia, sintaxe, regras e
+contexto com os padrões existentes, e abre **Vetores**. Nesse painel, escolha
+**Gerar vetores** localmente ou **Gerar notebook para o Colab**. O atalho não
+inicia o E5 automaticamente. Se uma etapa falhar, a página mostra o diagnóstico
+e mantém o texto e os passos concluídos disponíveis para continuar pelas abas.
+O botão **Registrar texto** mantém o percurso manual anterior.
+
 ## Navegar pelas etapas
 
 Depois de registrar um texto, use as abas **Texto**, **Preparação**,

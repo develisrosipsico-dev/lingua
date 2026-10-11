@@ -40,6 +40,15 @@
           <a class="new-text" href="{{ url_for('index') }}">Novo texto <span aria-hidden="true">→</span></a>
         </section>
 
+        {% if quick_error|default(none) %}
+        <section class="notice notice-error" role="alert">
+          <div>
+            <p>{{ quick_error }}</p>
+            <p>Seu texto e as etapas concluídas foram salvos. Você pode continuar pelas abas.</p>
+          </div>
+        </section>
+        {% endif %}
+
         {% set stages = [
           {'id': 'texto', 'numero': '01', 'nome': 'Texto', 'titulo': 'Conteúdo do texto', 'disponivel': true, 'concluida': true},
           {'id': 'preparacao', 'numero': '03', 'nome': 'Preparação', 'titulo': 'Preparação para análise', 'disponivel': true, 'concluida': prepared|default(none)},
@@ -50,7 +59,7 @@
           {'id': 'contexto', 'numero': '08', 'nome': 'Contexto', 'titulo': 'Unidades de contexto', 'disponivel': ruled|default(none), 'concluida': contextualized|default(none), 'anterior': 'regras', 'requisito': 'Aplique as regras linguísticas para construir as unidades de contexto.'},
           {'id': 'vetorizacao', 'numero': '09', 'nome': 'Vetores', 'titulo': 'Vetorização', 'disponivel': contextualized|default(none), 'concluida': vectorized|default(none), 'anterior': 'contexto', 'requisito': 'Construa as unidades de contexto para gerar os vetores.'}
         ] %}
-        {% set default_stage = 'vetorizacao' if vector_job|default(none) else 'contexto' if contextualized|default(none) else 'regras' if ruled|default(none) else 'sintaxe' if analyzed|default(none) else 'morfologia' if annotated|default(none) else 'segmentacao' if segmented|default(none) else 'preparacao' %}
+        {% set default_stage = quick_stage if quick_stage|default(none) else 'vetorizacao' if vector_job|default(none) else 'contexto' if contextualized|default(none) else 'regras' if ruled|default(none) else 'sintaxe' if analyzed|default(none) else 'morfologia' if annotated|default(none) else 'segmentacao' if segmented|default(none) else 'preparacao' %}
         <div data-stage-start aria-hidden="true"></div>
         <nav class="stage-navigation" aria-label="Etapas da análise" data-stage-navigation>
           <div class="stage-tabs" data-stage-tabs data-default-stage="{{ default_stage }}">
@@ -881,8 +890,12 @@
             </details>
             <div class="form-footer">
               <p id="content-help">Você pode manter parágrafos, espaços e pontuação.</p>
-              <button type="submit">Registrar texto <span aria-hidden="true">→</span></button>
+              <div class="submit-actions">
+                <button type="submit" name="destino" value="etapas">Registrar texto <span aria-hidden="true">→</span></button>
+                <button type="submit" name="destino" value="vetorizacao" aria-describedby="direct-vectors-help">Ir direto à vetorização <span aria-hidden="true">→</span></button>
+              </div>
             </div>
+            <p id="direct-vectors-help" class="option-help">O atalho prepara as etapas automaticamente e abre Vetores. Depois, escolha gerar os vetores aqui ou usar o Colab. O preparo pode levar alguns segundos.</p>
           </form>
         </section>
       </main>

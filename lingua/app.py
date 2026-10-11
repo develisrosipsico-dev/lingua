@@ -64,7 +64,7 @@ BASE_DADOS = BASE.parent if (BASE.parent / ".git").exists() else BASE
 SOURCE_ERRORS = (ErroPreparacao, ErroSegmentacao, ErroAnotacao, ErroAnalise, ErroRegras, ErroContexto)
 VECTOR_ERRORS = (ErroVetorizacao, ErroPersistenciaVetores, ErroTrabalhoVetorizacao, ErroPerfil)
 VECTOR_PROFILES = [
-    {"id": "e5_analista", "nome": "Agente Analista — parágrafos e relato inteiro", "descricao": "Estratégia anterior: texto original, consultas independentes e E5 float32."},
+    {"id": "e5_analista", "nome": "Agente Analista — parágrafos, contextos e relato inteiro", "descricao": "Texto original, janelas de contexto, consultas independentes e E5 float32."},
     {"id": "e5_simetrico", "nome": "Comparação entre textos", "descricao": "Perfil simétrico E5 de referência."},
     {"id": "e5_consulta", "nome": "Consulta de recuperação", "descricao": "Consulta para um índice compatível."},
     {"id": "e5_conteudo", "nome": "Conteúdo para recuperação", "descricao": "Conteúdo para um índice compatível."},
@@ -507,6 +507,11 @@ def create_app(config=None):
                 "index.html", content=content,
                 error="Digite um texto antes de registrar.", record=None,
             ), 400
+        destinations = request.form.getlist("destino")
+        if destinations and (len(destinations) != 1 or destinations[0] not in ("etapas", "vetorizacao")):
+            return render_template("index.html", content=content,
+                                   error="Escolha registrar o texto ou ir direto à vetorização.", record=None), 400
+        direct_vectors = destinations == ["vetorizacao"]
 
         created_at = datetime.now(timezone.utc).isoformat()
         try:
@@ -517,7 +522,7 @@ def create_app(config=None):
                     (content, created_at),
                 )
                 record_id = cursor.lastrowid
-                save_preparation(
+                prepared = save_preparation(
                     connection, {"id": record_id, "content": content, "created_at": created_at},
                     normalizar_crlf=normalizar_crlf,
                     registrado_em=created_at,
@@ -525,10 +530,39 @@ def create_app(config=None):
                 connection.commit()
         except ErroPreparacao as error:
             return render_template("index.html", content=content, error=str(error), record=None), 400
+        if direct_vectors:
+            steps = (
+                ("segmentacao", "Tokenização e segmentação", save_segmentation),
+                ("morfologia", "Morfologia", save_annotation),
+                ("sintaxe", "Sintaxe e entidades", save_analysis),
+                ("regras", "Regras linguísticas", save_rule_run),
+                ("contexto", "Contexto", save_context_run),
+            )
+            document = {"id": record_id, "content": content, "created_at": created_at}
+            source = prepared
+            try:
+                with closing(connect_database(app.config["DATABASE"])) as connection:
+                    for stage, label, save in steps:
+                        source = save(connection, document, source)
+                        # Uma falha posterior não apaga o relato nem as etapas
+                        # concluídas. O usuário pode continuar pelas abas.
+                        connection.commit()
+                        if stage == "regras" and not source["validacao"]["pronto_para_etapa_08"]:
+                            raise ErroRegras("As regras precisam de revisão antes de construir o contexto. Consulte os diagnósticos desta etapa.")
+            except SOURCE_ERRORS as error:
+                response = app.make_response(submission(
+                    record_id, quick_stage=stage,
+                    quick_error=f"O preparo automático parou em {label}: {error}",
+                ))
+                response.status_code = (503 if isinstance(error, (ErroModelo, ErroAnaliseModelo))
+                                        else 413 if isinstance(error, (ErroLimite, ErroAnaliseLimite, ErroContextoLimite)) else 400)
+                return response
+            return redirect(url_for("submission", record_id=record_id,
+                                    contexto_execucao_id=source["execucao_id"], _anchor="etapa-vetorizacao"), code=303)
         return redirect(url_for("submission", record_id=record_id), code=303)
 
     @app.get("/envios/<int:record_id>")
-    def submission(record_id):
+    def submission(record_id, *, quick_error=None, quick_stage=None):
         with closing(connect_database(app.config["DATABASE"])) as connection:
             row = connection.execute(
                 "SELECT id, content, created_at FROM submissions WHERE id = ?",
@@ -683,6 +717,7 @@ def create_app(config=None):
             contextualized=contextualized, context_history=[dict(item) for item in context_history],
             vector_job=vector_job, vectorized=vectorized, vector_history=vector_history,
             vector_profiles=VECTOR_PROFILES,
+            quick_error=quick_error, quick_stage=quick_stage,
         )
 
     @app.post("/envios/<int:record_id>/preparacoes")

@@ -259,6 +259,8 @@ a:focus-visible {
 
 .form-footer p { margin: 0; color: var(--muted); font-size: 13px; }
 
+.submit-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 12px; }
+
 button {
   display: inline-flex;
   align-items: center;
