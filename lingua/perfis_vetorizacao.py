@@ -28,7 +28,7 @@ _OPCOES = {
     "modelo", "revisao", "tokenizador", "tokenizador_revisao", "backend",
     "dispositivo", "lote", "precisao_inferencia", "formato_armazenamento",
     "limite_tokens", "pooling", "normalizacao", "prefixo", "fragmentacao",
-    "agregacao", "texto_documento", "cache_modelos", "somente_local",
+    "agregacao", "texto_documento", "cache_modelos", "somente_local", "estrategia_consultas",
     "corte_caracteres", "cabecalho", "juntar_paragrafos", "arquivo_onnx", "modelo_onnx_sha256", "arquivos_onnx_sha256",
 }
 _ENUMS = {
@@ -141,7 +141,7 @@ def carregar_perfil(perfil_id="e5_simetrico", *, opcoes=None):
         "somente_local": True, "legado": None,
     }
     if perfil_id == "e5_analista":
-        perfil.update(estrategia_consultas="paragrafos_documento", limite_tokens=504,
+        perfil.update(estrategia_consultas="paragrafos_contextos_documento", limite_tokens=504,
                       agregacao="nenhuma", texto_documento="original")
     if perfil_id == "e5_legado":
         perfil["formato_armazenamento"] = "float16"
@@ -168,6 +168,8 @@ def carregar_perfil(perfil_id="e5_simetrico", *, opcoes=None):
                 perfil["legado"]["composicao"] = "cabecalho_mais_lf_mais_paragrafos"
     perfil.update(opcoes)
     if perfil_id == "e5_analista":
+        if perfil["estrategia_consultas"] not in ("paragrafos_documento", "paragrafos_contextos_documento"):
+            raise ErroPerfil("Estratégia de consultas do Agente Analista desconhecida.")
         fixos = {"modelo": {"identificacao": E5_MODELO, "revisao": E5_REVISAO},
                  "tokenizador": {"identificacao": E5_MODELO, "revisao": E5_REVISAO},
                  "backend": "sentence_transformers", "prefixo": "query: ",
@@ -177,6 +179,8 @@ def carregar_perfil(perfil_id="e5_simetrico", *, opcoes=None):
                  "texto_documento": "original"}
         if any(perfil[k] != v for k, v in fixos.items()):
             raise ErroPerfil("O perfil do Agente Analista preserva E5, query:, média, L2, float32 e orçamento de 504 tokens.")
+    elif "estrategia_consultas" in perfil:
+        raise ErroPerfil("A estratégia de consultas é exclusiva do Agente Analista.")
     elif perfil["agregacao"] == "nenhuma":
         raise ErroPerfil("A ausência de agregação é exclusiva do perfil do Agente Analista.")
     for nome, permitidos in _ENUMS.items():

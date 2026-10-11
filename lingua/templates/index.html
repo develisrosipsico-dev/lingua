@@ -679,7 +679,7 @@
         {% set current_vectors = vectorized|default(none) %}
         {% set saved_vector_jobs = vector_history|default([], true) %}
         {% set available_vector_profiles = vector_profiles|default([
-          {'id': 'e5_analista', 'nome': 'Agente Analista — parágrafos e relato inteiro'},
+          {'id': 'e5_analista', 'nome': 'Agente Analista — parágrafos, contextos e relato inteiro'},
           {'id': 'e5_simetrico', 'nome': 'Comparação entre textos'},
           {'id': 'e5_consulta', 'nome': 'Consulta para recuperação'},
           {'id': 'e5_conteudo', 'nome': 'Conteúdo para recuperação'},
@@ -689,7 +689,7 @@
         <section class="editor vector-panel stage-panel" id="etapa-vetorizacao" data-stage-panel="vetorizacao" aria-labelledby="vector-title">
           <div class="editor-heading">
             <h2 id="vector-title">Vetorização</h2>
-            <p>Para o Agente Analista, gere os vetores dos dois parágrafos e do relato inteiro. O texto original e suas referências permanecem preservados.</p>
+            <p>Para o Agente Analista, gere os vetores dos dois parágrafos, das janelas da etapa Contexto e do relato inteiro. O texto original e suas referências permanecem preservados.</p>
           </div>
           {% if contextualized.validacao.pronto_para_etapa_09 %}
           <form method="post" action="{{ url_for('vector_submission', record_id=record.id) }}">
@@ -701,7 +701,7 @@
                 {% endfor %}
               </select>
             </label>
-            <p id="vector-profile-help" class="option-help">O perfil do Agente Analista usa dois parágrafos e até 400 palavras, em float32. Consultas longas são divididas sem cortar conteúdo; cada fragmento é usado separadamente na busca. Cada execução fica salva separadamente.</p>
+            <p id="vector-profile-help" class="option-help">O perfil do Agente Analista usa dois parágrafos e até 400 palavras, em float32, incluindo as janelas já construídas na etapa Contexto. Consultas longas são divididas sem cortar conteúdo; cada fragmento é usado separadamente na busca. Cada execução fica salva separadamente.</p>
             <details class="technical-settings vector-settings">
               <summary>Configuração de execução</summary>
               <div class="vector-options">

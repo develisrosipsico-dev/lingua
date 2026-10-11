@@ -137,6 +137,32 @@ class ImportacaoTests(unittest.TestCase):
                 self.assertEqual(importado["fonte"]["agregacao"], "nenhuma")
                 self.assertIsNone(conferir_compatibilidade(importado, manifesto_teste()))
 
+    def test_analista_importa_contextos_originais_e_recortes_sem_inferencia(self):
+        for fragmentar in (False, True):
+            with self.subTest(fragmentar=fragmentar):
+                registro = construir_exportacao(perfil_id="e5_analista", dimensao=3, fragmentar=fragmentar,
+                    opcoes={"estrategia_consultas": "paragrafos_contextos_documento"})
+                with patch.dict(sys.modules, {"torch": None, "transformers": None, "sentence_transformers": None}):
+                    importado = importar_vetorizacao(registro)
+                por_id = {a["id"]: a for a in registro["artefatos"]}
+                janelas = [c for c in importado["consultas"] if c["tipo"] == "contextual"]
+                self.assertGreaterEqual(len(janelas), 5)
+                self.assertEqual(importado["fonte"]["estrategia_consultas"], "paragrafos_contextos_documento")
+                for c in janelas:
+                    self.assertEqual(c["texto_vetorizado"], TEXTO[c["inicio"]:c["fim"]])
+                    self.assertEqual(c["vetor"], por_id[c["artefato_id"]]["valores"])
+                    self.assertTrue(c["unidade_id"])
+                    self.assertTrue(c["periodo_id"])
+                self.assertIsNone(conferir_compatibilidade(importado, manifesto_teste()))
+                adulterado = deepcopy(registro)
+                adulterado["representacoes"].pop(2)
+                with self.assertRaises(ErroImportacao):
+                    importar_vetorizacao(adulterado)
+                adulterado = deepcopy(registro)
+                adulterado["representacoes"][2]["origem"]["periodo_foco_id"] = "foco-inventado"
+                with self.assertRaises(ErroImportacao):
+                    importar_vetorizacao(adulterado)
+
     def test_analista_consulta_cada_recorte_sem_agregar_ou_truncar(self):
         registro = construir_exportacao(perfil_id="e5_analista", dimensao=3, fragmentar=True)
         importado = importar_vetorizacao(registro)

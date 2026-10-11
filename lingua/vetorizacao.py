@@ -222,6 +222,15 @@ def _descricoes(contexto, perfil, preparacao):
             yield {"tipo": "paragrafo", "texto": texto[inicio:fim], "campo_texto": "original",
                    "origem": {"campo": "preparacao.original.texto", "paragrafo_id": paragrafo["id"],
                               **_mapa(preparacao, inicio, fim, "original")}}
+        if perfil["estrategia_consultas"] == "paragrafos_contextos_documento":
+            for unidade in contexto["unidades"]:
+                janela = unidade["janela"]["original"]
+                inicio, fim = janela["inicio"], janela["fim"]
+                yield {"tipo": "contextual", "texto": texto[inicio:fim], "campo_texto": "original",
+                       "origem": {"campo": "preparacao.original.texto", "unidade_id": unidade["id"],
+                                  "periodo_foco_id": unidade["periodo_foco_id"],
+                                  "janela_logica_id": unidade["janela_logica_id"],
+                                  **_mapa(preparacao, inicio, fim, "original")}}
         yield {"tipo": "documento", "texto": texto, "campo_texto": "original",
                "origem": {"campo": "preparacao.original.texto", **_mapa(preparacao, 0, len(texto), "original")}}
         return

@@ -2,8 +2,8 @@
 
 Página local para examinar ligações entre um relato em português e o acervo
 fornecido. Importa o arquivo completo `vetorizacao.json` produzido pela análise
-linguística e reaproveita seus vetores dos dois parágrafos originais e do
-relato inteiro. O relato deve ter exatamente dois parágrafos e até 400 palavras.
+linguística e reaproveita seus vetores dos dois parágrafos originais, das janelas
+de contexto e do relato inteiro. O relato deve ter exatamente dois parágrafos e até 400 palavras.
 A busca consulta todos os 8.087 fragmentos e termina em uma tabela de propostas
 interpretativas. O agente não executa uma nova vetorização do relato.
 
@@ -42,7 +42,7 @@ Abra **http://127.0.0.1:5002** no navegador. Deixe o terminal aberto enquanto us
 a página; pressione `Ctrl+C` para encerrar. O agente precisa do índice vetorial
 do acervo, mas não carrega o E5 nem baixa seus pesos para realizar consultas.
 
-No Língua, escolha o perfil **Agente Analista — parágrafos e relato inteiro**
+No Língua, escolha o perfil **Agente Analista — parágrafos, contextos e relato inteiro**
 na etapa **Vetores**, gere a vetorização do relato e exporte o arquivo
 completo **vetorizacao.json**. Na seção **Importar vetorização**,
 selecione esse arquivo. O agente confere os dados, guarda a importação no banco
@@ -50,14 +50,25 @@ local, exibe a prévia do relato e mostra a quantidade de vetores por tipo. O li
 arquivo é 32 MiB. O arquivo exportado reúne os vetores e as informações do
 relato necessárias para a busca.
 
-Esse perfil restaura as consultas por P1, P2 e relato inteiro, com prefixo
+Esse perfil usa consultas por P1, P2, janelas da etapa Contexto e relato inteiro, com prefixo
 `query: `, E5 multilingual large, média, normalização L2 e `float32`.
 Entradas acima de 504 tokens, contando prefixo e tokens especiais, geram
 recortes independentes e completos; não se calcula uma média entre eles.
 Arquivos anteriores de períodos e janelas continuam aceitos com sua estratégia
 anterior, mas não são convertidos automaticamente. Gere um novo arquivo para
-usar as consultas por parágrafos. No Colab, gere também um **novo notebook**
+usar as consultas com contextos. Exportações anteriores de P1/P2/documento
+continuam aceitas, e não recebem contextos automaticamente.
+No Colab, gere também um **novo notebook**
 depois de atualizar o Língua: o notebook antigo contém uma cópia do código antigo.
+
+As novas janelas usam os trechos originais correspondentes aos intervalos da
+etapa 08, preservando foco e referências. O agente não carrega o E5 nem depende
+dos módulos do Língua. Na RRF, cada consulta de parágrafo/documento mantém
+sua contribuição anterior; as consultas contextuais distintas contribuem pela
+média de suas pontuações RRF. Janelas idênticas (mesmo recorte e artefato) contam
+uma vez, evitando multiplicar a pontuação por focos que compartilham contexto.
+O limite final permanece em 12 candidatos; adicionar contextos pode mudar as
+fontes recuperadas, sem garantir mais ligações pertinentes.
 
 Na seção **Justificativas**, escolha o provedor, cole a chave de API no campo
 oculto e use **+** para incluir o identificador de um modelo. O seletor começa
@@ -170,7 +181,7 @@ quando a chamada de avaliação consegue alcançar o provedor.
   posições, reúne sobreposições idênticas e rejeita lacunas/conflitos.
 - A importação recebe o registro completo da vetorização da análise
   linguística. Cada vetor mantém seu tipo, texto e posição de origem. As
-  consultas de parágrafos e relato inteiro saem desse registro;
+  consultas de parágrafos, contextos e relato inteiro saem desse registro;
   não há nova inferência E5, divisão por tokens ou processamento linguístico
   no agente. Um texto diferente exige uma nova exportação correspondente.
 - A busca lexical usa BM25 (`k1=1.2`, `b=0.75`), palavras em minúsculas sem
@@ -178,9 +189,10 @@ quando a chamada de avaliação consegue alcançar o provedor.
   anterior no ZIP serviu de consulta para a fórmula; radicalização não é usada.
 - A busca semântica compara os vetores importados com todas as linhas da matriz
   por similaridade cosseno. No perfil `e5_analista`, a fusão restaura a RRF
-  anterior: soma `1/(60 + rank_bloco)` por método e consulta, sobre os 50
-  melhores fragmentos. Cada consulta de parágrafo, documento ou recorte
-  contribui integralmente. Arquivos anteriores de períodos/janelas preservam
+  anterior para parágrafos e documento: soma `1/(60 + rank_bloco)` por método
+  e consulta, sobre os 50 melhores fragmentos. As novas consultas contextuais
+  usam a média dessas contribuições, depois de eliminar janelas repetidas.
+  Arquivos anteriores de períodos/janelas preservam
   sua fórmula `peso_tipo/(consultas_do_tipo * (60 + rank_bloco))`, com peso
   `1/3` por tipo. Cada bloco contribui
   uma vez por ranking. Os 12 melhores blocos

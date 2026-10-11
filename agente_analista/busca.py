@@ -73,9 +73,12 @@ class Buscador:
         if not isinstance(importado, dict) or not isinstance(importado.get("consultas"), list) or not importado["consultas"]:
             raise ErroBusca("Importe uma vetorização com consultas do relato.")
         consultas = []
-        estrategia_anterior = importado["fonte"].get("estrategia_consultas") == "paragrafos_documento"
-        tipos = {"paragrafo", "documento"} if estrategia_anterior else set(self.PESOS_TIPOS)
+        estrategia = importado["fonte"].get("estrategia_consultas")
+        estrategia_anterior = estrategia in ("paragrafos_documento", "paragrafos_contextos_documento")
+        tipos = ({"paragrafo", "contextual", "documento"} if estrategia == "paragrafos_contextos_documento"
+                 else {"paragrafo", "documento"}) if estrategia_anterior else set(self.PESOS_TIPOS)
         ids = set()
+        contextos = set()
         for consulta in importado["consultas"]:
             if (not isinstance(consulta, dict) or not isinstance(consulta.get("id"), str)
                     or not consulta["id"] or consulta["id"] in ids
@@ -92,13 +95,23 @@ class Buscador:
             if (vetor.shape != (self.corpus.manifesto["dimensao"],) or not np.isfinite(vetor).all()
                     or not np.isclose(np.linalg.norm(vetor), 1, atol=2e-5, rtol=0)):
                 raise ErroBusca("O vetor importado tem dimensão ou normalização incompatível com o corpus.")
+            # Focos diferentes podem compartilhar a mesma janela. Preserve
+            # suas referências na exportação, mas conte a consulta uma vez.
+            if estrategia == "paragrafos_contextos_documento" and consulta["tipo"] == "contextual":
+                chave = (consulta.get("artefato_id"), consulta.get("texto_vetorizado"),
+                         consulta.get("inicio"), consulta.get("fim"))
+                if chave in contextos:
+                    continue
+                contextos.add(chave)
             consultas.append((consulta, vetor))
         return consultas
 
     def buscar(self, importado, progresso=lambda etapa: None):
         progresso("Conferindo os vetores importados da análise linguística")
         consultas = self._consultas_importadas(importado)
-        estrategia_anterior = importado["fonte"].get("estrategia_consultas") == "paragrafos_documento"
+        estrategia = importado["fonte"].get("estrategia_consultas")
+        com_contextos = estrategia == "paragrafos_contextos_documento"
+        estrategia_anterior = estrategia in ("paragrafos_documento", "paragrafos_contextos_documento")
         contagens = Counter(consulta["tipo"] for consulta, _ in consultas)
         candidatos = {}
         for numero, (consulta, vetor) in enumerate(consultas, 1):
@@ -106,6 +119,8 @@ class Buscador:
             lexical = self.lexical.pontuar(consulta.get("texto_vetorizado", consulta["texto"]))
             semantica = self.corpus.vetores @ vetor
             fator = 1.0 if estrategia_anterior else self.PESOS_TIPOS[consulta["tipo"]] / contagens[consulta["tipo"]]
+            if com_contextos and consulta["tipo"] == "contextual":
+                fator /= contagens["contextual"]
             for metodo, pontuacoes in (("BM25", lexical), ("E5", semantica)):
                 # Lexical zero não constitui um resultado. E5 sempre examina
                 # todas as linhas; a interpretação poderá rejeitar todos.
@@ -142,15 +157,18 @@ class Buscador:
                 "fonte_vetorizacao": deepcopy(importado["fonte"]), "candidatos": ordenados,
                 "metodo_fusao": {"nome": "Reciprocal Rank Fusion (RRF)", "k": self.K_RRF,
                     "top_por_metodo_consulta": self.TOP_METODO, "max_blocos": self.TOP_BLOCOS,
-                    "formula": ("soma de 1/(60+rank_bloco), com uma contribuição por bloco, método e consulta"
+                    "formula": ("soma de fator_consulta/(60+rank_bloco); contextos usam 1/consultas_contextuais, parágrafos e documento usam 1"
+                                if com_contextos else "soma de 1/(60+rank_bloco), com uma contribuição por bloco, método e consulta"
                                 if estrategia_anterior else "soma de peso_tipo/(consultas_do_tipo*(60+rank_bloco)), com uma contribuição por bloco, método e consulta"),
                     "pesos_por_tipo": None if estrategia_anterior else dict(self.PESOS_TIPOS), "consultas_por_tipo": dict(contagens),
-                    "normalizacao": ("estratégia anterior: cada consulta de parágrafo, relato ou recorte contribui integralmente"
+                    "normalizacao": ("parágrafos e relato preservam suas contribuições; média das consultas contextuais distintas para evitar predominância por quantidade"
+                                     if com_contextos else "estratégia anterior: cada consulta de parágrafo, relato ou recorte contribui integralmente"
                                      if estrategia_anterior else "média das contribuições por consulta em cada tipo; períodos, contextos e documento têm pesos iguais"),
                     "agrupamento": "blocos distintos por ordem de primeira aparição no top 50 de fragmentos",
                     "bm25": {"k1": self.lexical.K1, "b": self.lexical.B,
                         "tokenizacao": "palavras sem acentos, minúsculas, sem palavras funcionais; sem radicalização"},
                     "semantica": "produto escalar dos vetores importados normalizados L2 com todas as linhas do corpus (similaridade cosseno)",
-                    "vetorizacao": ("vetores do texto original de P1, P2 e relato inteiro; recortes E5 independentes produzidos no Língua, sem inferência no agente"
+                    "vetorizacao": ("vetores do texto original de P1, P2, janelas de contexto da etapa 08 e relato inteiro; recortes independentes, sem inferência no agente"
+                                    if com_contextos else "vetores do texto original de P1, P2 e relato inteiro; recortes E5 independentes produzidos no Língua, sem inferência no agente"
                                     if estrategia_anterior else "vetores de períodos, janelas contextuais e documento recebidos da análise linguística; nenhuma inferência ou divisão adicional"),
                     "aviso": "Pontuações ordenam candidatos; não representam probabilidades de interpretação correta."}}

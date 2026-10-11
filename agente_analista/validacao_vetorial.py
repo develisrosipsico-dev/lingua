@@ -299,7 +299,7 @@ def validar_atual(registro):
            and perfil["texto_documento"] in ("original", "trabalho"), "Perfil de consulta não suportado.")
     analista = perfil.get("id") == "e5_analista"
     if analista:
-        exigir(perfil.get("estrategia_consultas") == "paragrafos_documento"
+        exigir(perfil.get("estrategia_consultas") in ("paragrafos_documento", "paragrafos_contextos_documento")
                and perfil["texto_documento"] == "original" and perfil["limite_tokens"] == 504
                and perfil["agregacao"] == "nenhuma" and perfil["fragmentacao"] == "sem_sobreposicao"
                and perfil["precisao_inferencia"] == "float32", "Estratégia anterior do analista inválida.")
@@ -341,6 +341,15 @@ def validar_atual(registro):
             origem = {"campo": "preparacao.original.texto", "paragrafo_id": paragrafo["id"],
                       **_mapa(preparacao, paragrafo["inicio"], paragrafo["fim"], "original")}
             descricoes.append(("paragrafo", origem, "original", paragrafo["texto"]))
+        if perfil["estrategia_consultas"] == "paragrafos_contextos_documento":
+            for unidade in contexto["unidades"]:
+                janela = unidade["janela"]["original"]
+                inicio, fim = janela["inicio"], janela["fim"]
+                origem = {"campo": "preparacao.original.texto", "unidade_id": unidade["id"],
+                          "periodo_foco_id": unidade["periodo_foco_id"],
+                          "janela_logica_id": unidade["janela_logica_id"],
+                          **_mapa(preparacao, inicio, fim, "original")}
+                descricoes.append(("contextual", origem, "original", preparacao["original"]["texto"][inicio:fim]))
     else:
         for unidade in contexto["unidades"]:
             for tipo, campo in (("periodo", "foco"), ("contextual", "janela")):

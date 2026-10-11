@@ -76,13 +76,30 @@ class VetorizacaoTestes(unittest.TestCase):
         self.assertTrue(validar_vetorizacao(registro)["pronto"])
 
     def test_analista_vetoriza_paragrafos_e_relato_original_inclusive_crlf(self):
-        registro, adaptador = self.gerar(contexto=self.normalizado, perfil_id="e5_analista", limite=512)
+        registro, adaptador = self.gerar(contexto=self.normalizado, perfil_id="e5_analista", limite=512,
+                                       opcoes={"estrategia_consultas": "paragrafos_documento"})
         self.assertEqual([r["tipo"] for r in registro["representacoes"]], ["paragrafo", "paragrafo", "documento"])
         original = self.normalizado["regras"]["analise"]["anotacao"]["segmentacao"]["preparacao"]["original"]["texto"]
         esperado = [p.strip() for p in original.split("\r\n\r\n")] + [original]
         self.assertEqual([t for lote in adaptador.chamadas for t in lote], ["query: " + t for t in esperado])
         self.assertEqual(registro["processamento"]["limite_tokens"], 504)
         self.assertTrue(all(r["metodo"] == "direto" for r in registro["representacoes"]))
+        self.assertTrue(validar_vetorizacao(registro)["pronto"])
+
+    def test_analista_inclui_janelas_no_texto_original_com_referencias(self):
+        registro, _ = self.gerar(contexto=self.normalizado, perfil_id="e5_analista", limite=512)
+        original = self.normalizado["regras"]["analise"]["anotacao"]["segmentacao"]["preparacao"]["original"]["texto"]
+        self.assertEqual([r["tipo"] for r in registro["representacoes"]],
+                         ["paragrafo", "paragrafo"] + ["contextual"] * 5 + ["documento"])
+        artefatos = {a["id"]: a for a in registro["artefatos"]}
+        for rep, unidade in zip(registro["representacoes"][2:-1], self.normalizado["unidades"]):
+            origem = rep["origem"]
+            self.assertEqual(origem["unidade_id"], unidade["id"])
+            self.assertEqual(origem["periodo_foco_id"], unidade["periodo_foco_id"])
+            self.assertEqual(origem["janela_logica_id"], unidade["janela_logica_id"])
+            self.assertEqual(origem["original"], unidade["janela"]["original"])
+            texto = original[origem["original"]["inicio"]:origem["original"]["fim"]]
+            self.assertEqual(artefatos[rep["artefato_id"]]["entrada"]["texto"], "query: " + texto)
         self.assertTrue(validar_vetorizacao(registro)["pronto"])
 
     def test_analista_recortes_longos_independentes_sem_media(self):

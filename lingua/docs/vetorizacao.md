@@ -2,7 +2,7 @@
 
 A etapa 09 recebe uma execução pronta da etapa 08 e produz representações
 vetoriais. O perfil inicial da interface, CLI e Colab, `e5_analista`, produz
-os dois parágrafos originais e o relato inteiro para upload no Agente Analista.
+os dois parágrafos originais, as janelas de contexto e o relato inteiro para upload no Agente Analista.
 Os demais perfis produzem período, janela contextual e documento. A origem é
 revalidada com `validar_unidades_contexto()`; somente o relatório recalculado
 com `pronto_para_etapa_09: true` autoriza continuar. O registro exportado
@@ -157,12 +157,21 @@ incluem a dependência original, sem serem confundidas com pesos ausentes.
 
 ## Textos e coordenadas
 
-Em `e5_analista`, são criadas três representações a partir de
-`preparacao.original.texto`: P1 e P2 com as margens em branco removidas, e
-o documento com o texto original inteiro, inclusive separadores e espaços.
+Em `e5_analista`, são criadas representações a partir de
+`preparacao.original.texto`: P1 e P2 com as margens em branco removidas,
+uma janela contextual por unidade da etapa 08, e o documento com o texto
+original inteiro, inclusive separadores e espaços. As janelas respeitam
+o raio e a política de atravessar parágrafos escolhidos na etapa Contexto;
+não são resumos nem interpretações geradas por outro modelo. Seus intervalos
+originais, unidade, período de foco e identidade lógica acompanham cada vetor.
 Exigem-se exatamente dois parágrafos e até 400 palavras, contadas por espaços
 em branco. Os intervalos originais e seu mapeamento para o texto de trabalho
 são preservados, inclusive quando a preparação normaliza CRLF.
+
+Novas execuções usam `estrategia_consultas=paragrafos_contextos_documento`.
+Snapshots anteriores com `paragrafos_documento` continuam válidos e trabalhos
+existentes preservam essa configuração ao serem retomados. Gere uma nova
+execução (ou um novo notebook do Colab) para acrescentar os contextos.
 
 Nos demais perfis, para cada unidade contextual são criadas duas representações:
 

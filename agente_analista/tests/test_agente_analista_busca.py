@@ -231,6 +231,30 @@ class BuscaTests(unittest.TestCase):
         resultado = self.buscador.buscar(importado)
         self.assertAlmostEqual(resultado["candidatos"][0]["rrf"], 8 / 61)
 
+    def test_analista_contextos_comparam_vetores_sem_predominar_ou_duplicar_janelas(self):
+        importado = _importado_analista()
+        anterior = self.buscador.buscar(importado)
+        importado["fonte"]["estrategia_consultas"] = "paragrafos_contextos_documento"
+        contextos = [deepcopy(c) for c in _importado()["consultas"] if c["tipo"] == "contextual"]
+        importado["consultas"].extend(contextos)
+        resultado = self.buscador.buscar(importado)
+        self.assertEqual(resultado["metodo_fusao"]["consultas_por_tipo"],
+                         {"paragrafo": 2, "documento": 1, "contextual": 2})
+        for candidato in resultado["candidatos"]:
+            for p in candidato["pontuacoes"]:
+                esperado = p["contribuicao_rrf_bruta"] / (2 if p["consulta_tipo"] == "contextual" else 1)
+                self.assertAlmostEqual(p["contribuicao_rrf"], esperado)
+            base = next(c for c in anterior["candidatos"] if c["bloco_id"] == candidato["bloco_id"])
+            extra = sum(p["contribuicao_rrf"] for p in candidato["pontuacoes"] if p["consulta_tipo"] == "contextual")
+            self.assertAlmostEqual(candidato["rrf"], base["rrf"] + extra)
+        for n in range(5):
+            duplicada = deepcopy(contextos[0])
+            duplicada["id"] += f":duplicada:{n}"
+            importado["consultas"].append(duplicada)
+        repetido = self.buscador.buscar(importado)
+        self.assertEqual(repetido["candidatos"], resultado["candidatos"])
+        self.assertEqual(repetido["consultas"], resultado["consultas"])
+
     def test_reutiliza_consultas_sem_recortar_inferir_ou_exportar_vetores(self):
         relato = _relato("  Não apago o sonho 🧠.\t" * 7, "A lembrança retorna.\r\nMesmo assim há dúvida.  ")
         importado = _importado(relato)

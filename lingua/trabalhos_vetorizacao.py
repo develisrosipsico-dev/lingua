@@ -128,6 +128,8 @@ def obter_trabalho(connection, execucao_id, *, documento_id=None):
     # O padrão do cache pode mudar entre reinícios; o snapshot registrado é
     # a referência para execuções existentes. Uma opção explícita é conferida.
     opcoes_salvas.setdefault("cache_modelos", perfil_salvo["cache_modelos"])
+    if result["perfil_id"] == "e5_analista":
+        opcoes_salvas.setdefault("estrategia_consultas", perfil_salvo["estrategia_consultas"])
     if (result["estado"] not in {"enfileirada", "executando", "concluida", "falhou", "interrompida"}
             or type(result["tentativas"]) is not int or result["tentativas"] < 0
             or _canonico(carregar_perfil(result["perfil_id"], opcoes=opcoes_salvas)) != _canonico(result["perfil"])):
@@ -273,6 +275,8 @@ def processar_trabalho(database_path, execucao_id, *, fabrica_adaptador=None, ca
             # A execução conserva o cache capturado ao ser criada, mesmo que
             # o servidor seja reiniciado com outro LINGUA_CACHE_MODELOS.
             opcoes_execucao = {**job["opcoes"], "cache_modelos": job["perfil"]["cache_modelos"]}
+            if job["perfil_id"] == "e5_analista":
+                opcoes_execucao.setdefault("estrategia_consultas", job["perfil"]["estrategia_consultas"])
             registro = vetorizar_contexto(contexto, perfil_id=job["perfil_id"], opcoes=opcoes_execucao,
                 execucao_id=execucao_id, registrado_em=job["registrado_em"], adaptador=adaptador,
                 progresso=progresso, obter_cache=cache_ler, salvar_cache=cache_salvar)

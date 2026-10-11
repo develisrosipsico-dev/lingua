@@ -41,11 +41,13 @@ class TestPerfisVetorizacao(unittest.TestCase):
 
     def test_analista_preserva_configuracao_da_busca_anterior(self):
         perfil = carregar_perfil('e5_analista')
-        self.assertEqual(perfil['estrategia_consultas'], 'paragrafos_documento')
+        self.assertEqual(perfil['estrategia_consultas'], 'paragrafos_contextos_documento')
         self.assertEqual(perfil['limite_tokens'], 504)
         self.assertEqual(perfil['texto_documento'], 'original')
         self.assertEqual(perfil['agregacao'], 'nenhuma')
         self.assertEqual(perfil, validar_perfil(perfil))
+        antigo = carregar_perfil('e5_analista', opcoes={'estrategia_consultas': 'paragrafos_documento'})
+        self.assertEqual(antigo, validar_perfil(antigo))
         for opcoes in ({'prefixo': 'passage: '}, {'limite_tokens': 512},
                        {'texto_documento': 'trabalho'}, {'agregacao': 'media_simples'},
                        {'formato_armazenamento': 'float16'}, {'pooling': 'cls'}):

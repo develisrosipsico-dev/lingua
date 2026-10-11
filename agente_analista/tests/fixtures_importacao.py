@@ -75,6 +75,8 @@ def construir_exportacao(*, normalizar=False, dimensao=1024, limite=160,
         limite = 512
         nome = "exportacao_analista_crlf" if normalizar else (
             "exportacao_analista_fragmentada" if fragmentar else "exportacao_analista")
+        if (opcoes or {}).get("estrategia_consultas") == "paragrafos_contextos_documento":
+            nome = "exportacao_analista_contextos_fragmentada" if fragmentar else "exportacao_analista_contextos_crlf"
     else:
         nome = "exportacao_atual_crlf" if normalizar else (
             "exportacao_atual_fragmentada" if limite == 23 else "exportacao_atual")

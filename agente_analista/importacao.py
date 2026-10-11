@@ -115,7 +115,7 @@ def _importar_atual(registro):
              "agregacao": perfil["agregacao"], "fragmentacao": perfil["fragmentacao"],
              "backend": processamento["backend"], "precisao_inferencia": processamento["precisao_inferencia"]}
     if perfil["id"] == "e5_analista":
-        fonte["estrategia_consultas"] = "paragrafos_documento"
+        fonte["estrategia_consultas"] = perfil["estrategia_consultas"]
     return original, consultas, fonte
 
 

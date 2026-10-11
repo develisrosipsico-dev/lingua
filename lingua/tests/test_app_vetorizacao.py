@@ -138,7 +138,8 @@ class VectorAppTests(unittest.TestCase):
         validar_vetorizacao(result)
         self.assertEqual(result["contexto"], context)
         self.assertEqual(result["documento_id"], document_id)
-        self.assertEqual([r["tipo"] for r in result["representacoes"]], ["paragrafo", "paragrafo", "documento"])
+        self.assertEqual([r["tipo"] for r in result["representacoes"]],
+                         ["paragrafo", "paragrafo"] + ["contextual"] * len(context["unidades"]) + ["documento"])
         self.assertEqual(result["perfil"]["id"], "e5_analista")
         self.assertEqual(len([item for item in result["representacoes"] if item["tipo"] == "documento"]), 1)
         self.assertEqual(self.snapshot(), before)
@@ -205,6 +206,22 @@ class VectorAppTests(unittest.TestCase):
         self.process(job)
         self.assertEqual(self.download(document_id).status_code, 200)
         self.assertEqual(self.status(document_id, job).get_json()["tentativas"], 2)
+
+    def test_trabalho_antigo_sem_opcao_explicitada_preserva_estrategia_ao_retomar(self):
+        document_id, _ = self.source()
+        job = self.enqueue(document_id, opcoes={"estrategia_consultas": "paragrafos_documento"})
+        # Antes da atualização, o padrão antigo não aparecia nas opções.
+        with sqlite3.connect(self.database) as connection:
+            connection.execute("UPDATE vector_jobs SET options_json = '{}' WHERE execution_id = ?", (job["execucao_id"],))
+        self.process(job, fail=True)
+        self.assertEqual(self.status(document_id, job).get_json()["estado"], "falhou")
+        restarted = create_app(self.config).test_client()
+        response = restarted.post(f"{job['status_url']}/retomar", json={})
+        self.assertEqual(response.status_code, 202, response.get_data(as_text=True))
+        self.process(job)
+        registro = self.download(document_id, job["execucao_id"], restarted).get_json()
+        self.assertEqual(registro["perfil"]["estrategia_consultas"], "paragrafos_documento")
+        self.assertEqual([r["tipo"] for r in registro["representacoes"]], ["paragrafo", "paragrafo", "documento"])
 
     def test_cache_capturado_na_execucao_e_preservado_apos_mudar_ambiente(self):
         document_id, context = self.source()
