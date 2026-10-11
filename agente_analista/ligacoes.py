@@ -20,6 +20,11 @@ from .transporte import (
 
 MAXIMO_LIGACOES = 24
 MAXIMO_CAMPO_TEXTO = 4096
+# A proposta rejeitada é preservada com o conteúdo bruto para diagnóstico
+# (distinguir erro de formato, de raciocínio e de posições), com cada texto
+# truncado no mesmo teto dos campos válidos para não inflar o registro.
+MAXIMO_TEXTO_DIAGNOSTICO = MAXIMO_CAMPO_TEXTO
+SUFIXO_TRUNCADO_DIAGNOSTICO = "… [truncado no diagnóstico]"
 _MODELOS = {"openrouter": "openai/gpt-4.1-mini", "openai": "gpt-4.1-mini"}
 _SITUACOES = {"pertinente", "parcial", "descartada"}
 _CAMPOS_TEXTO = ("observacao", "ligacao", "justificativa", "limites")
@@ -27,6 +32,17 @@ _CAMPOS_TEXTO = ("observacao", "ligacao", "justificativa", "limites")
 
 class ErroLigacoes(ValueError):
     """Problema com mensagem segura para exibição na página local."""
+
+
+def _proposta_para_diagnostico(valor):
+    """Copie a proposta rejeitada como recebida, truncando apenas textos enormes."""
+    if isinstance(valor, str) and len(valor) > MAXIMO_TEXTO_DIAGNOSTICO:
+        return valor[:MAXIMO_TEXTO_DIAGNOSTICO] + SUFIXO_TRUNCADO_DIAGNOSTICO
+    if isinstance(valor, dict):
+        return {chave: _proposta_para_diagnostico(item) for chave, item in valor.items()}
+    if isinstance(valor, list):
+        return [_proposta_para_diagnostico(item) for item in valor]
+    return valor
 
 
 def _formato_resposta(modo="json_schema", *, paragrafos=None):
@@ -205,6 +221,8 @@ def construir_mensagens(*, relato, recuperacao):
         "se forem necessários à discussão, apresente-os explicitamente como hipóteses incertas. "
         "Uma palavra em comum ou uma pontuação de busca alta não prova pertinência. "
         "As pontuações BM25, similaridade E5 e fusão RRF ordenam candidatos, não são probabilidades de uma interpretação. "
+        "O campo ancoras_por_trecho indica, para cada trecho do relato, os blocos que lideraram o ranking do próprio trecho, e ancoras de cada fonte lista os trechos que a aproximaram localmente. "
+        "Uma âncora forte sinaliza proximidade local entre trecho e bloco, não pertinência; fontes sem âncora chegaram apenas pela fusão geral e exigem cautela redobrada. "
         "Não produza diagnósticos nem conclusões clínicas sobre a pessoa. "
         "Proponha apenas relações sustentadas pelas passagens recebidas, com justificativa específica e limites. "
         "Classifique como pertinente, parcial ou descartada; relações descartadas devem explicitar a insuficiência. "
@@ -223,22 +241,39 @@ def construir_mensagens(*, relato, recuperacao):
                   for paragrafo in relato["paragrafos"]]
     fontes = []
     for candidato in recuperacao["candidatos"]:
-        fontes.append({
+        fonte = {
             "bloco_id": candidato["bloco_id"], "texto": candidato["texto"],
             "fragmentos": candidato["fragmentos"], "referencia": candidato["referencia"],
             # A auditoria das pontuações permanece no resultado e no histórico.
             # Enviar centenas de contribuições por fonte consumia o orçamento
             # da avaliação e deixava candidatos inteiros sem exame.
             "passagens_disponiveis": _passagens_disponiveis(candidato["texto"]),
-        })
+        }
+        if candidato.get("ancoras"):
+            fonte["ancoras"] = copy.deepcopy(candidato["ancoras"])
+        fontes.append(fonte)
+    ids_fontes = {fonte["bloco_id"] for fonte in fontes}
+    ancoras_por_trecho = []
+    for ancora in recuperacao.get("ancoras", []):
+        blocos = [copy.deepcopy(registro) for registro in ancora.get("blocos", [])
+                  if registro.get("bloco_id") in ids_fontes]
+        if blocos:
+            ancoras_por_trecho.append({
+                "consulta_id": ancora.get("consulta_id"), "tipo": ancora.get("tipo"),
+                "inicio": ancora.get("inicio"), "fim": ancora.get("fim"),
+                "periodo_id": ancora.get("periodo_id"), "unidade_id": ancora.get("unidade_id"),
+                "paragrafo_id": ancora.get("paragrafo_id"), "blocos": blocos})
     contexto = {
         "relato_original": relato["texto"], "paragrafos": paragrafos,
         "consultas_da_busca": [{k: copy.deepcopy(v) for k, v in consulta.items()
                               if k in ("id", "tipo", "inicio", "fim", "texto", "paragrafo_id")}
                              for consulta in recuperacao.get("consultas", [])],
-        "metodo_fusao": recuperacao.get("metodo_fusao", {}), "fontes_recuperadas": fontes,
-        "formato_resposta": {"ligacoes": [esquema_ligacao]},
     }
+    if ancoras_por_trecho:
+        contexto["ancoras_por_trecho"] = ancoras_por_trecho
+    contexto["metodo_fusao"] = recuperacao.get("metodo_fusao", {})
+    contexto["fontes_recuperadas"] = fontes
+    contexto["formato_resposta"] = {"ligacoes": [esquema_ligacao]}
     try:
         dados = json.dumps(contexto, ensure_ascii=False, allow_nan=False)
     except (TypeError, ValueError, UnicodeError):
@@ -437,7 +472,10 @@ def avaliar_ligacoes(relato, recuperacao, *, provedor=None, modelo=None, transpo
             else:
                 vistos.add(chave)
         if motivo:
-            resultado["rejeitadas"].append({"indice_resposta": indice, "motivo": motivo})
+            resultado["rejeitadas"].append({
+                "indice_resposta": indice, "motivo": motivo,
+                "proposta": _proposta_para_diagnostico(item),
+            })
             continue
         numero += 1
         validada["id"] = f"L{numero}"

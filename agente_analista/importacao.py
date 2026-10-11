@@ -65,7 +65,8 @@ def _consulta(rep, origem, vetor, original, texto_vetorizado, artefato_id, *, su
             "origem": deepcopy(origem), "inicio": inicio, "fim": fim,
             "texto": original[inicio:fim], "texto_vetorizado": texto_vetorizado,
             "vetor": deepcopy(vetor), "unidade_id": origem.get("unidade_id"),
-            "periodo_id": origem.get("periodo_foco_id"), "artefato_id": artefato_id}
+            "periodo_id": origem.get("periodo_foco_id"), "paragrafo_id": origem.get("paragrafo_id"),
+            "artefato_id": artefato_id}
 
 
 def _relatorio_selecao(representacoes, artefatos):
@@ -95,12 +96,8 @@ def _normalizar_representacao(registro):
     resultado["etapa"] = "09_vetorizacao"
     for campo in ("preparacao_id", "segmentacao_id", "anotacao_id", "analise_id", "regras_execucao_id"):
         resultado.setdefault(campo, contexto[campo])
-    if perfil.get("id") == "e5_analista":
-        total = len(validar_relato(_preparacao(resultado)["original"]["texto"])["paragrafos"]) + 1
-        if perfil.get("estrategia_consultas") == "paragrafos_contextos_documento":
-            total += len(contexto["unidades"])
-    else:
-        total = 2 * len(contexto["unidades"]) + 1
+    from .validacao_vetorial import _descricoes_atual
+    total = len(list(_descricoes_atual(contexto, _preparacao(resultado), perfil)))
     resultado["representacoes"] = [representacao]
     resultado["selecao_representacoes"] = {
         "versao": "1.0.0", "representacao_ids": [representacao["id"]],
@@ -149,7 +146,7 @@ def _importar_atual(registro):
     selecao = "selecao_representacoes" in registro
     (validar_selecao_atual if selecao else validar_atual)(registro)
     _exigir("derivacao_execucao" not in registro,
-            "Importe a execução completa da etapa 09, com períodos, janelas e documento.")
+            "Importe a execução da etapa 09, com todas as representações declaradas.")
     perfil, processamento = registro["perfil"], registro["processamento"]
     _exigir(perfil["prefixo"] == "query: " and perfil["pooling"] == "mean"
             and perfil["normalizacao"] == "l2" and perfil["formato_armazenamento"] == "float32",
@@ -172,7 +169,9 @@ def _importar_atual(registro):
                 origem_fragmento = {**deepcopy(origem), **{k: deepcopy(fragmento[k])
                                                         for k in ("original", "trabalho")}}
                 posicao = fragmento["original"]
-                texto = original[posicao["inicio"]:posicao["fim"]]
+                campo = "original" if origem["campo"] == "preparacao.original.texto" else "trabalho"
+                trecho = fragmento[campo]
+                texto = preparacao[campo]["texto"][trecho["inicio"]:trecho["fim"]]
                 artefato_id = fragmento["artefato_id"]
                 consulta = _consulta(rep, origem_fragmento, por_id[artefato_id]["valores"],
                                      original, texto, artefato_id,
@@ -194,6 +193,8 @@ def _importar_atual(registro):
              "backend": processamento["backend"], "precisao_inferencia": processamento["precisao_inferencia"]}
     if perfil["id"] == "e5_analista":
         fonte["estrategia_consultas"] = perfil["estrategia_consultas"]
+    if "tipos_representacao" in perfil:
+        fonte["tipos_representacao"] = deepcopy(perfil["tipos_representacao"])
     if selecao:
         fonte["selecao_representacoes"] = True
         fonte["representacao_ids"] = deepcopy(registro["selecao_representacoes"]["representacao_ids"])

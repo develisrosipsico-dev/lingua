@@ -42,23 +42,27 @@ do acervo, mas não carrega o E5 nem baixa seus pesos para realizar consultas.
 
 ### Atualizar preservando alterações locais
 
-O atualizador aplica somente os trechos de importação, busca, entrada e interface
-necessários à consulta flexível. Ele confere a aplicação completa antes de
-alterar arquivos, cria um backup em `../lingua-agente-backups/` e interrompe se
-encontrar conflito com o código local. O Língua, o banco e o índice do acervo
-permanecem nos seus caminhos; a branch e o índice Git não são trocados.
+O ajuste de Rodrigo usa como origem os oito arquivos do ZIP
+`agente-analista-ajuste-20261011-191014.zip`. Ele preserva as âncoras por trecho,
+os candidatos adicionais, o diagnóstico das propostas rejeitadas e a seleção
+por `tipos_representacao` dessa versão, acrescentando a consulta flexível.
+Antes de aplicar, o atualizador confere os hashes dos oito arquivos e para se
+algum tiver sido modificado após o envio do ZIP. A aplicação é conferida antes
+de alterar arquivos e tem backup em `../lingua-agente-backups/`.
+O Língua, o banco e o índice do acervo permanecem nos seus caminhos; a branch
+e o índice Git não são trocados.
 
 ```bash
 cd ~/lingua-agente &&
 git fetch origin organizacao/projetos-20261010 &&
 atualizador_analista=$(mktemp "${TMPDIR:-/tmp}/atualizar-analista.XXXXXX") &&
-git show FETCH_HEAD:agente_analista/scripts/atualizar_consulta_flexivel.sh > "$atualizador_analista" &&
+git show FETCH_HEAD:agente_analista/scripts/atualizar_analista_rodrigo_20261011.sh > "$atualizador_analista" &&
 bash "$atualizador_analista"
 ```
 
 Após a mensagem de aplicação concluída, reinicie somente o Agente Analista.
-Se houver conflito, conserve a cópia local e use os erros exibidos para adaptar
-os trechos às suas modificações antes de tentar novamente.
+Se algum arquivo tiver mudado, conserve a cópia local e envie uma nova cópia
+dos arquivos indicados para adaptar o ajuste à versão atual.
 
 ### Arquivos aceitos
 
@@ -99,14 +103,21 @@ novo notebook para o Colab depois de atualizar o Língua. As janelas preservam o
 trechos originais, o foco e as referências da etapa 08. O formato portátil 1.1
 também aproveita os vetores de parágrafos que antes eram ignorados pelo agente.
 
-Nas seleções e nas exportações portáteis com parágrafos, a fusão RRF combina
-somente os tipos presentes, com peso 1 por tipo e contribuição média por consulta
-desse tipo. Nas seleções, contextos idênticos contam uma vez. A quantidade de janelas não
-multiplica o peso do tipo, e os vetores não são somados nem recalculados.
-As fórmulas dos arquivos completos anteriores de P1/P2/documento e de
-períodos/janelas/documento permanecem iguais. O limite final continua em 12
-candidatos; adicionar contextos pode mudar as fontes recuperadas, sem garantir
-mais ligações pertinentes.
+Nas seleções de representações, a fusão RRF combina somente os tipos presentes,
+com peso 1 por tipo e contribuição média por consulta desse tipo. Consultas
+idênticas contam uma vez. As execuções completas preservam a fórmula da versão
+local de Rodrigo: P1/P2/documento contribuem integralmente no perfil anterior;
+as outras combinações repartem o peso entre os tipos efetivamente presentes.
+A quantidade de janelas não multiplica o peso do tipo, e os vetores não são
+somados nem recalculados.
+
+A recuperação preserva até 50 posições do ranking fundido. Cada trecho pode
+marcar como âncoras os dois primeiros blocos E5 e o primeiro BM25. Os 12 blocos
+do topo fundido recebem até 12 candidatos extras por essas âncoras. A avaliação
+recebe as âncoras das fontes enviadas e confere as citações propostas; propostas
+rejeitadas conservam seu diagnóstico, com textos longos limitados a 4.096
+caracteres mais a indicação de truncamento. Âncoras e pontuações indicam
+proximidade de busca, sem garantir pertinência interpretativa.
 
 Na seção **Justificativas**, escolha o provedor, cole a chave de API no campo
 oculto e use **+** para incluir o identificador de um modelo. O seletor começa

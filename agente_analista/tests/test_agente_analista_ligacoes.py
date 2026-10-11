@@ -180,6 +180,49 @@ class LigacoesTests(unittest.TestCase):
         self.assertEqual(len(resultado["rejeitadas"]), 1)
         self.assertIn("não pertence", resultado["rejeitadas"][0]["motivo"])
 
+    def test_ancoras_privadas_sao_preservadas_com_paragrafos_dinamicos_e_fontes_enviadas(self):
+        self.relato = validar_relato("Não voltei 😀.\n\nRecordei a carta.\n\nNão respondi.")
+        self.candidato["ancoras"] = [{"consulta_id": "Q3", "tipo": "contextual", "paragrafo_id": "P3",
+                                      "rank": 1, "score": .9}]
+        self.recuperacao["ancoras"] = [
+            {"consulta_id": "Q3", "tipo": "contextual", "inicio": 33, "fim": 45,
+             "periodo_id": "T3", "unidade_id": "U3", "paragrafo_id": "P3",
+             "blocos": [{"bloco_id": "B1", "rank": 1}, {"bloco_id": "B2", "rank": 2}]},
+            {"consulta_id": "Q4", "tipo": "contextual", "blocos": [{"bloco_id": "B2", "rank": 1}]},
+        ]
+        antes = copy.deepcopy(self.recuperacao)
+        mensagens = ligacoes.construir_mensagens(relato=self.relato, recuperacao=self.recuperacao)
+        contexto = json.loads(mensagens[1]["content"])
+        self.assertIn("âncora forte", mensagens[0]["content"])
+        self.assertEqual(contexto["fontes_recuperadas"][0]["ancoras"], self.candidato["ancoras"])
+        self.assertEqual(contexto["ancoras_por_trecho"], [{
+            "consulta_id": "Q3", "tipo": "contextual", "inicio": 33, "fim": 45,
+            "periodo_id": "T3", "unidade_id": "U3", "paragrafo_id": "P3",
+            "blocos": [{"bloco_id": "B1", "rank": 1}],
+        }])
+        self.assertEqual(contexto["formato_resposta"]["ligacoes"][0]["paragrafo"], "P1 ou P2 ou P3")
+        self.assertEqual(self.recuperacao, antes)
+
+    def test_proposta_rejeitada_privada_preserva_diagnostico_e_trunca_so_textos_extensos(self):
+        invalida = copy.deepcopy(self.item)
+        invalida.update(bloco_id="B-INVENTADO", observacao="x" * (ligacoes.MAXIMO_TEXTO_DIAGNOSTICO + 10),
+                        diagnostico_extra={"lista": ["y" * (ligacoes.MAXIMO_TEXTO_DIAGNOSTICO + 2), 3, None]})
+        antes = copy.deepcopy(invalida)
+        resultado = self.avaliar([invalida])
+        self.assertFalse(resultado["ligacoes"])
+        rejeitada = resultado["rejeitadas"][0]
+        self.assertEqual(rejeitada["indice_resposta"], 1)
+        self.assertIn("não pertence", rejeitada["motivo"])
+        proposta = rejeitada["proposta"]
+        self.assertEqual(proposta["bloco_id"], invalida["bloco_id"])
+        self.assertEqual(proposta["relato"], invalida["relato"])
+        self.assertEqual(proposta["freud"], invalida["freud"])
+        self.assertEqual(proposta["observacao"], "x" * ligacoes.MAXIMO_TEXTO_DIAGNOSTICO + ligacoes.SUFIXO_TRUNCADO_DIAGNOSTICO)
+        self.assertEqual(proposta["diagnostico_extra"]["lista"],
+                         ["y" * ligacoes.MAXIMO_TEXTO_DIAGNOSTICO + ligacoes.SUFIXO_TRUNCADO_DIAGNOSTICO, 3, None])
+        proposta["freud"]["texto"] = "Outra citação"
+        self.assertEqual(invalida, antes)
+
     def test_ids_citacoes_posicoes_e_campos_invalidos_sao_rejeitados_individualmente(self):
         mudancas = [
             {"bloco_id": "B-INVENTADO"}, {"paragrafo": "P3"},

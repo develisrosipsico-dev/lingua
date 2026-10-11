@@ -1,0 +1,522 @@
+diff --git a/agente_analista/validacao_vetorial.py b/agente_analista/validacao_vetorial.py
+--- a/agente_analista/validacao_vetorial.py
++++ b/agente_analista/validacao_vetorial.py
+@@ -324,6 +324,15 @@
+             origem = {"campo": "preparacao.original.texto", "paragrafo_id": paragrafo["id"],
+                       **_mapa(preparacao, paragrafo["inicio"], paragrafo["fim"], "original")}
+             yield "paragrafo", origem, "original", paragrafo["texto"]
++        if perfil.get("estrategia_consultas") == "paragrafos_contextos_documento":
++            for item in contexto["unidades"]:
++                janela = item["janela"]["original"]
++                inicio, fim = janela["inicio"], janela["fim"]
++                origem = {"campo": "preparacao.original.texto", "unidade_id": item["id"],
++                          "periodo_foco_id": item["periodo_foco_id"],
++                          "janela_logica_id": item["janela_logica_id"],
++                          **_mapa(preparacao, inicio, fim, "original")}
++                yield "contextual", origem, "original", preparacao["original"]["texto"][inicio:fim]
+     else:
+         for item in contexto["unidades"]:
+             for tipo in ("periodo", "contextual"):
+@@ -332,6 +341,16 @@
+ 
+ 
+ def validar_atual(registro):
++    """Confira uma execução completa, mantendo seu contrato de cobertura."""
++    return _validar_atual(registro)
++
++
++def validar_selecao_atual(registro):
++    """Confira a seleção declarada; a ausência de outros tipos é permitida."""
++    return _validar_atual(registro, parcial=True)
++
++
++def _validar_atual(registro, *, parcial=False):
+     exigir(registro.get("schema_version") == "1.0.0" and registro.get("etapa") == "09_vetorizacao"
+            and "derivacao_execucao" not in registro, "Importe a execução integral da etapa 09.")
+     contexto = registro["contexto"]
+@@ -352,7 +371,7 @@
+            and perfil["texto_documento"] in ("original", "trabalho"), "Perfil de consulta não suportado.")
+     analista = perfil.get("id") == "e5_analista"
+     if analista:
+-        exigir(perfil.get("estrategia_consultas") == "paragrafos_documento"
++        exigir(perfil.get("estrategia_consultas") in ("paragrafos_documento", "paragrafos_contextos_documento")
+                and perfil["texto_documento"] == "original" and perfil["limite_tokens"] == 504
+                and perfil["agregacao"] == "nenhuma" and perfil["fragmentacao"] == "sem_sobreposicao"
+                and perfil["precisao_inferencia"] == "float32", "Estratégia anterior do analista inválida.")
+@@ -388,9 +407,29 @@
+             _conferir_media(artefato, por_id, proc["dimensao"])
+     descricoes = list(_descricoes_atual(contexto, preparacao, perfil))
+     reps = registro["representacoes"]
+-    exigir(len(reps) == len(descricoes), "Cobertura vetorial incompleta.")
++    if parcial:
++        selecao = registro["selecao_representacoes"]
++        exigir(type(selecao) is dict and set(selecao) == {
++            "versao", "representacao_ids", "representacoes_origem_total"}
++            and selecao["versao"] == "1.0.0", "Formato de seleção vetorial não suportado.")
++        ids = selecao["representacao_ids"]
++        exigir(type(ids) is list and bool(ids) and all(type(i) is str for i in ids)
++               and len(set(ids)) == len(ids), "Declare identificadores únicos para a seleção.")
++        exigir(type(selecao["representacoes_origem_total"]) is int
++               and selecao["representacoes_origem_total"] == len(descricoes),
++               "O total de representações da origem diverge da seleção.")
++        esperadas = {f"{registro['execucao_id']}:representacao:{i}": (i, d)
++                     for i, d in enumerate(descricoes)}
++        exigir(len(reps) == len(ids) and [r["id"] for r in reps] == ids
++               and all(i in esperadas for i in ids),
++               "A seleção perdeu uma representação declarada ou contém origem desconhecida.")
++        pares = [esperadas[i] for i in ids]
++    else:
++        exigir("selecao_representacoes" not in registro, "Valide este arquivo como uma seleção declarada.")
++        exigir(len(reps) == len(descricoes), "Cobertura vetorial incompleta.")
++        pares = list(enumerate(descricoes))
+     usados = set()
+-    for ordem, (rep, (tipo, origem, campo, texto)) in enumerate(zip(reps, descricoes)):
++    for rep, (ordem, (tipo, origem, campo, texto)) in zip(reps, pares):
+         exigir(rep["id"] == f"{registro['execucao_id']}:representacao:{ordem}" and type(rep["ordem"]) is int
+                and rep["ordem"] == ordem and rep["tipo"] == tipo and rep["origem"] == origem
+                and rep["texto_sha256"] == sha256(texto) and rep["estado"] == "concluida"
+diff --git a/agente_analista/importacao.py b/agente_analista/importacao.py
+--- a/agente_analista/importacao.py
++++ b/agente_analista/importacao.py
+@@ -41,7 +41,10 @@
+         tamanho = len(json.dumps(registro, ensure_ascii=False, allow_nan=False,
+                                  separators=(",", ":")).encode("utf-8"))
+         _exigir(tamanho <= MAX_BYTES_IMPORTACAO, "A exportação excede o limite de 32 MiB.")
+-        representacoes = registro.get("representacoes")
++        _exigir(not ("representacao" in registro and "representacoes" in registro),
++                "Envie uma representação individual ou uma lista de representações.")
++        representacoes = ([registro["representacao"]] if "representacao" in registro
++                          else registro.get("representacoes"))
+         artefatos = registro.get("artefatos")
+         _exigir(type(representacoes) is list and 0 < len(representacoes) <= MAX_REPRESENTACOES,
+                 "A exportação deve conter entre 1 e 1.024 representações.")
+@@ -62,16 +65,88 @@
+             "origem": deepcopy(origem), "inicio": inicio, "fim": fim,
+             "texto": original[inicio:fim], "texto_vetorizado": texto_vetorizado,
+             "vetor": deepcopy(vetor), "unidade_id": origem.get("unidade_id"),
+-            "periodo_id": origem.get("periodo_foco_id"), "artefato_id": artefato_id}
++            "periodo_id": origem.get("periodo_foco_id"), "paragrafo_id": origem.get("paragrafo_id"),
++            "artefato_id": artefato_id}
++
++
++def _relatorio_selecao(representacoes, artefatos):
++    return {"pronto": True, "estado": "concluida", "cobertura": {
++        "representacoes_total": len(representacoes), "artefatos_total": len(artefatos),
++        "representacoes_sem_conteudo": 0, "cobertura_integral": True}}
++
++
++def _normalizar_representacao(registro):
++    """Adapte apenas o envelope individual já exportado pelo Língua.
++
++    Dados, vetores, IDs e posições recebidos permanecem intactos. Campos da
++    execução ausentes nesse envelope são derivados da origem que ele inclui.
++    """
++    campos = {"representacao", "artefatos", "perfil", "processamento", "contexto",
++              "execucao_id", "contexto_execucao_id", "contexto_sha256", "documento_id",
++              "registrado_em", "schema_version", "configuracao_sha256", "espaco_vetorial_id"}
++    _exigir(campos <= set(registro),
++            "A representação individual precisa incluir texto e contexto de origem, perfil, processamento e artefatos.")
++    _exigir("selecao_representacoes" not in registro,
++            "O arquivo individual já declara sua seleção pela representação enviada.")
++    _exigir("etapa" not in registro or registro["etapa"] == "09_vetorizacao",
++            "A representação individual deve pertencer à etapa de vetorização.")
++    resultado = deepcopy(registro)
++    contexto, perfil = resultado["contexto"], resultado["perfil"]
++    representacao = resultado.pop("representacao")
++    resultado["etapa"] = "09_vetorizacao"
++    for campo in ("preparacao_id", "segmentacao_id", "anotacao_id", "analise_id", "regras_execucao_id"):
++        resultado.setdefault(campo, contexto[campo])
++    from .validacao_vetorial import _descricoes_atual
++    total = len(list(_descricoes_atual(contexto, _preparacao(resultado), perfil)))
++    resultado["representacoes"] = [representacao]
++    resultado["selecao_representacoes"] = {
++        "versao": "1.0.0", "representacao_ids": [representacao["id"]],
++        "representacoes_origem_total": total}
++    resultado["validacao"] = _relatorio_selecao(resultado["representacoes"], resultado["artefatos"])
++    return resultado
++
++
++def selecionar_representacoes(registro, representacao_ids):
++    """Selecione vetores já conferidos; não tokenize nem gere representações.
++
++    A extensão de seleção tem versão própria. O formato de execução completa
++    conserva sua exigência de cobertura e nunca vira parcial implicitamente.
++    """
++    _exigir(type(registro) is dict and "perfil" in registro
++            and "representacao" not in registro and "selecao_representacoes" not in registro,
++            "Selecione representações de uma execução completa com perfil.")
++    importar_vetorizacao(registro)
++    _exigir(type(representacao_ids) is list and bool(representacao_ids)
++            and all(type(i) is str for i in representacao_ids)
++            and len(set(representacao_ids)) == len(representacao_ids),
++            "Selecione identificadores únicos de representações.")
++    ids = set(representacao_ids)
++    representacoes = [deepcopy(r) for r in registro["representacoes"] if r["id"] in ids]
++    _exigir(len(representacoes) == len(ids), "Uma representação selecionada não existe na execução.")
++    usados = {f["artefato_id"] for r in representacoes for f in r["fragmentos"]}
++    usados.update(r["artefato_id"] for r in representacoes if r["artefato_id"] is not None)
++    resultado = deepcopy(registro)
++    resultado["representacoes"] = representacoes
++    resultado["artefatos"] = [a for a in resultado["artefatos"] if a["id"] in usados]
++    resultado["selecao_representacoes"] = {
++        "versao": "1.0.0", "representacao_ids": [r["id"] for r in representacoes],
++        "representacoes_origem_total": len(registro["representacoes"])}
++    resultado["validacao"] = _relatorio_selecao(representacoes, resultado["artefatos"])
++    importar_vetorizacao(resultado)
++    return resultado
+ 
+ 
+ def _importar_atual(registro):
+     # O agente valida os dados recebidos; não importa nem executa o aplicativo
+     # produtor, mesmo quando ambos os projetos estão no mesmo repositório.
+-    from .validacao_vetorial import validar_atual
+-    validar_atual(registro)
++    from .validacao_vetorial import validar_atual, validar_selecao_atual
++    individual = "representacao" in registro
++    if individual:
++        registro = _normalizar_representacao(registro)
++    selecao = "selecao_representacoes" in registro
++    (validar_selecao_atual if selecao else validar_atual)(registro)
+     _exigir("derivacao_execucao" not in registro,
+-            "Importe a execução completa da etapa 09, com todas as representações selecionadas.")
++            "Importe a execução da etapa 09, com todas as representações declaradas.")
+     perfil, processamento = registro["perfil"], registro["processamento"]
+     _exigir(perfil["prefixo"] == "query: " and perfil["pooling"] == "mean"
+             and perfil["normalizacao"] == "l2" and perfil["formato_armazenamento"] == "float32",
+@@ -94,7 +169,9 @@
+                 origem_fragmento = {**deepcopy(origem), **{k: deepcopy(fragmento[k])
+                                                         for k in ("original", "trabalho")}}
+                 posicao = fragmento["original"]
+-                texto = original[posicao["inicio"]:posicao["fim"]]
++                campo = "original" if origem["campo"] == "preparacao.original.texto" else "trabalho"
++                trecho = fragmento[campo]
++                texto = preparacao[campo]["texto"][trecho["inicio"]:trecho["fim"]]
+                 artefato_id = fragmento["artefato_id"]
+                 consulta = _consulta(rep, origem_fragmento, por_id[artefato_id]["valores"],
+                                      original, texto, artefato_id,
+@@ -115,9 +192,13 @@
+              "agregacao": perfil["agregacao"], "fragmentacao": perfil["fragmentacao"],
+              "backend": processamento["backend"], "precisao_inferencia": processamento["precisao_inferencia"]}
+     if perfil["id"] == "e5_analista":
+-        fonte["estrategia_consultas"] = "paragrafos_documento"
++        fonte["estrategia_consultas"] = perfil["estrategia_consultas"]
+     if "tipos_representacao" in perfil:
+         fonte["tipos_representacao"] = deepcopy(perfil["tipos_representacao"])
++    if selecao:
++        fonte["selecao_representacoes"] = True
++        fonte["representacao_ids"] = deepcopy(registro["selecao_representacoes"]["representacao_ids"])
++        fonte["formato_importacao"] = "representacao_individual" if individual else "selecao_declarada"
+     return original, consultas, fonte
+ 
+ 
+@@ -134,14 +215,12 @@
+     por_id = {a["id"]: a for a in registro["artefatos"]}
+     consultas = []
+     for rep in registro["representacoes"]:
+-        # O formato 1.1 também exporta parágrafos. Períodos, janelas e documento
+-        # alimentam esta busca; os parágrafos permanecem no JSON arquivado.
+-        if rep["tipo"] == "paragrafo":
+-            continue
+-        _exigir(rep["tipo"] in ("foco", "janela", "documento")
++        _exigir(rep["tipo"] in ("foco", "janela", "paragrafo", "documento")
+                 and rep["construcao"] != "sem_conteudo", "Uma representação não possui conteúdo vetorial.")
+         origem = {k: deepcopy(rep[k]) for k in
+                   ("campo", "unidade_id", "periodo_foco_id", "janela_logica_id", "trabalho", "original")}
++        if rep["tipo"] == "paragrafo":
++            origem["paragrafo_id"] = rep["paragrafo_id"]
+         if rep["vetor"] is not None:
+             artefato_id = (rep["blocos"][0]["artefato_id"] if rep["construcao"] == "direta"
+                            else rep["representacao_logica_id"])
+@@ -181,7 +260,12 @@
+     """
+     _limites(registro)
+     try:
+-        _exigir(registro.get("etapa") == "09_vetorizacao", "Importe a exportação da etapa 09 de vetorização.")
++        _exigir("representacao" not in registro or "perfil" in registro,
++                "A representação individual precisa incluir os metadados de perfil e de origem.")
++        _exigir("selecao_representacoes" not in registro or "perfil" in registro,
++                "A seleção declarada exige o formato vetorial com perfil e origem.")
++        _exigir(registro.get("etapa") == "09_vetorizacao" or "representacao" in registro,
++                "Importe a exportação vetorial ou uma representação individual com sua origem.")
+         if "perfil" in registro:
+             _exigir(registro.get("schema_version") == "1.0.0", "Versão vetorial não suportada.")
+             original, consultas, fonte = _importar_atual(registro)
+@@ -196,6 +280,8 @@
+     except ErroImportacao:
+         raise
+     except ErroEntrada as erro:
++        raise ErroImportacao(str(erro)) from None
++    except ErroVetorizacao as erro:
+         raise ErroImportacao(str(erro)) from None
+     except (ValueError, TypeError, KeyError, AttributeError, ImportError, OverflowError, RecursionError):
+         raise ErroImportacao("A exportação vetorial está incompleta ou falhou na conferência de integridade.") from None
+diff --git a/agente_analista/busca.py b/agente_analista/busca.py
+--- a/agente_analista/busca.py
++++ b/agente_analista/busca.py
+@@ -66,6 +66,7 @@
+     ANCORAS_RANK_E5, ANCORAS_RANK_BM25, TOP_ANCORAS_EXTRAS = 2, 1, 12
+     # Pesos relativos: cada granularidade presente participa igualmente.
+     PESOS_TIPOS = {"periodo": 1.0, "contextual": 1.0, "documento": 1.0, "paragrafo": 1.0}
++    TIPOS_CONSULTAS = frozenset(PESOS_TIPOS)
+ 
+     def __init__(self, corpus):
+         self.corpus = corpus
+@@ -80,13 +81,13 @@
+         if not isinstance(importado, dict) or not isinstance(importado.get("consultas"), list) or not importado["consultas"]:
+             raise ErroBusca("Importe uma vetorização com consultas do relato.")
+         consultas = []
+-        estrategia_anterior = importado["fonte"].get("estrategia_consultas") == "paragrafos_documento"
+-        tipos = {"paragrafo", "documento"} if estrategia_anterior else set(self.PESOS_TIPOS)
++        selecao = importado["fonte"].get("selecao_representacoes") is True
+         ids = set()
++        repetidas = {}
+         for consulta in importado["consultas"]:
+             if (not isinstance(consulta, dict) or not isinstance(consulta.get("id"), str)
+                     or not consulta["id"] or consulta["id"] in ids
+-                    or not isinstance(consulta.get("tipo"), str) or consulta["tipo"] not in tipos
++                    or not isinstance(consulta.get("tipo"), str) or consulta["tipo"] not in self.TIPOS_CONSULTAS
+                     or not isinstance(consulta.get("texto"), str) or not consulta["texto"].strip()
+                     or not isinstance(consulta.get("vetor"), list)
+                     or any(type(valor) not in (int, float) for valor in consulta["vetor"])):
+@@ -99,16 +100,33 @@
+             if (vetor.shape != (self.corpus.manifesto["dimensao"],) or not np.isfinite(vetor).all()
+                     or not np.isclose(np.linalg.norm(vetor), 1, atol=2e-5, rtol=0)):
+                 raise ErroBusca("O vetor importado tem dimensão ou normalização incompatível com o corpus.")
++            # A seleção preserva as referências no JSON importado, mas usa uma
++            # vez o mesmo artefato/recorte. Vetores nunca são combinados. Arquivos
++            # completos históricos mantêm a contribuição usada nesta versão.
++            if selecao:
++                chave = (consulta["tipo"], consulta.get("artefato_id"), consulta.get("texto_vetorizado", consulta["texto"]),
++                         consulta.get("inicio"), consulta.get("fim"))
++                try:
++                    anterior = repetidas.get(chave)
++                except TypeError as exc:
++                    raise ErroBusca("As referências da consulta importada são inválidas.") from exc
++                if anterior is not None:
++                    if not np.array_equal(anterior, vetor):
++                        raise ErroBusca("Consultas repetidas apontam para vetores divergentes.")
++                    continue
++                repetidas[chave] = vetor
+             consultas.append((consulta, vetor))
+         return consultas
+ 
+     def buscar(self, importado, progresso=lambda etapa: None):
+         progresso("Conferindo os vetores importados da análise linguística")
+         consultas = self._consultas_importadas(importado)
+-        estrategia_anterior = importado["fonte"].get("estrategia_consultas") == "paragrafos_documento"
++        selecao = importado["fonte"].get("selecao_representacoes") is True
+         contagens = Counter(consulta["tipo"] for consulta, _ in consultas)
+-        pesos = None
+-        if not estrategia_anterior:
++        estrategia_anterior = (not selecao and importado["fonte"].get("estrategia_consultas") == "paragrafos_documento"
++                              and set(contagens) <= {"paragrafo", "documento"})
++        pesos = {tipo: 1.0 for tipo in contagens} if selecao else None
++        if not selecao and not estrategia_anterior:
+             soma_pesos = sum(self.PESOS_TIPOS[tipo] for tipo in contagens)
+             pesos = {tipo: peso / soma_pesos for tipo, peso in self.PESOS_TIPOS.items() if tipo in contagens}
+         candidatos = {}
+@@ -193,11 +211,14 @@
+                 "ranking_fundido": ranking_fundido,
+                 "ancoras": ancoras,
+                 "metodo_fusao": {"nome": "Reciprocal Rank Fusion (RRF)", "k": self.K_RRF,
++                    **({"politica": "tipos_presentes_v1"} if selecao else {}),
+                     "top_por_metodo_consulta": self.TOP_METODO, "max_blocos": self.TOP_BLOCOS,
+-                    "formula": ("soma de 1/(60+rank_bloco), com uma contribuição por bloco, método e consulta"
++                    "formula": ("soma de 1/(consultas_do_tipo*(60+rank_bloco)) para os tipos presentes"
++                                if selecao else "soma de 1/(60+rank_bloco), com uma contribuição por bloco, método e consulta"
+                                 if estrategia_anterior else "soma de peso_tipo/(consultas_do_tipo*(60+rank_bloco)), com uma contribuição por bloco, método e consulta"),
+                     "pesos_por_tipo": pesos, "consultas_por_tipo": dict(contagens),
+-                    "normalizacao": ("estratégia anterior: cada consulta de parágrafo, relato ou recorte contribui integralmente"
++                    "normalizacao": ("média das contribuições por consulta distinta; peso 1 por tipo presente, sem gerar ou combinar vetores"
++                                     if selecao else "estratégia anterior: cada consulta de parágrafo, relato ou recorte contribui integralmente"
+                                      if estrategia_anterior else "média das contribuições por consulta em cada tipo; os tipos presentes têm pesos iguais"),
+                     "agrupamento": "blocos distintos por ordem de primeira aparição no top 50 de fragmentos",
+                     "ancoras": {"criterio": "cada trecho (período, janela ou parágrafo) marca como âncoras os blocos que lideram o próprio ranking: E5 até 2 blocos distintos, BM25 apenas o 1º",
+@@ -207,6 +228,7 @@
+                     "bm25": {"k1": self.lexical.K1, "b": self.lexical.B,
+                         "tokenizacao": "palavras sem acentos, minúsculas, sem palavras funcionais; sem radicalização"},
+                     "semantica": "produto escalar dos vetores importados normalizados L2 com todas as linhas do corpus (similaridade cosseno)",
+-                    "vetorizacao": ("vetores do texto original de P1, P2 e relato inteiro; recortes E5 independentes produzidos no Língua, sem inferência no agente"
++                    "vetorizacao": ("vetores dos tipos presentes no arquivo; cada recorte é consultado separadamente, sem inferência no agente"
++                                    if selecao else "vetores do texto original de P1, P2 e relato inteiro; recortes E5 independentes produzidos no Língua, sem inferência no agente"
+                                     if estrategia_anterior else "vetores dos tipos selecionados (períodos, parágrafos, janelas contextuais ou documento) recebidos da análise linguística; nenhuma inferência ou divisão adicional"),
+                     "aviso": "Pontuações ordenam candidatos; não representam probabilidades de interpretação correta."}}
+diff --git a/agente_analista/entrada.py b/agente_analista/entrada.py
+--- a/agente_analista/entrada.py
++++ b/agente_analista/entrada.py
+@@ -37,8 +37,6 @@
+     if not palavras:
+         erros.append("Cole um relato para iniciar a busca.")
+     else:
+-        if len(paragrafos) != 2:
+-            erros.append(f"O relato deve ter exatamente dois parágrafos; foram encontrados {len(paragrafos)}.")
+         if palavras > 400:
+             erros.append(f"O relato tem {palavras} palavras. O limite é 400.")
+     return {"texto": texto, "palavras": palavras, "paragrafos": paragrafos,
+diff --git a/agente_analista/ligacoes.py b/agente_analista/ligacoes.py
+--- a/agente_analista/ligacoes.py
++++ b/agente_analista/ligacoes.py
+@@ -45,7 +45,7 @@
+     return valor
+ 
+ 
+-def _formato_resposta(modo="json_schema"):
++def _formato_resposta(modo="json_schema", *, paragrafos=None):
+     """Use o formato aceito pelo modelo; confira a literalidade das fontes depois."""
+     if modo == "texto":
+         return None
+@@ -59,7 +59,7 @@
+         "required": ["inicio", "fim", "texto"],
+     }
+     campos = {
+-        "paragrafo": {"type": "string", "enum": ["P1", "P2"]},
++        "paragrafo": {"type": "string", "enum": list(paragrafos) if paragrafos is not None else ["P1", "P2"]},
+         "relato": copy.deepcopy(passagem),
+         "observacao": {"type": "string"},
+         "conceito": {"type": "string"},
+@@ -136,15 +136,18 @@
+     if not isinstance(relato, dict) or not isinstance(relato.get("texto"), str):
+         raise ErroLigacoes("O relato recebido para avaliação é inválido. Envie o texto novamente.")
+     paragrafos = relato.get("paragrafos")
+-    if not isinstance(paragrafos, list) or len(paragrafos) != 2:
+-        raise ErroLigacoes("A avaliação requer os dois parágrafos identificados no relato.")
++    if not isinstance(paragrafos, list) or not paragrafos:
++        raise ErroLigacoes("A avaliação requer ao menos um parágrafo identificado no relato.")
+     por_paragrafo = {}
+-    for esperado, paragrafo in zip(("P1", "P2"), paragrafos):
++    fim_anterior = 0
++    for numero, paragrafo in enumerate(paragrafos, start=1):
++        esperado = f"P{numero}"
+         if not isinstance(paragrafo, dict) or paragrafo.get("id") != esperado or not _intervalo_literal(paragrafo, relato["texto"]):
+             raise ErroLigacoes("As posições dos parágrafos não correspondem ao relato original.")
++        if paragrafo["inicio"] < fim_anterior:
++            raise ErroLigacoes("Os parágrafos recebidos para avaliação têm posições sobrepostas ou fora de ordem.")
++        fim_anterior = paragrafo["fim"]
+         por_paragrafo[esperado] = paragrafo
+-    if paragrafos[0]["fim"] > paragrafos[1]["inicio"]:
+-        raise ErroLigacoes("Os parágrafos recebidos para avaliação têm posições sobrepostas.")
+     if not isinstance(recuperacao, dict) or not isinstance(recuperacao.get("candidatos"), list):
+         raise ErroLigacoes("Os candidatos da busca estão ausentes ou inválidos. Execute a busca novamente.")
+     por_bloco = {}
+@@ -192,9 +195,9 @@
+ 
+ def construir_mensagens(*, relato, recuperacao):
+     """Use o relato completo e blocos completos, tratando todo conteúdo como dados."""
+-    _fontes(relato, recuperacao)
++    por_paragrafo, _ = _fontes(relato, recuperacao)
+     esquema_ligacao = {
+-        "paragrafo": "P1 ou P2",
++        "paragrafo": " ou ".join(por_paragrafo),
+         "relato": {"inicio": "inteiro no relato original", "fim": "inteiro exclusivo", "texto": "cópia literal"},
+         "observacao": "observação descritiva específica da passagem do relato",
+         "conceito": "conceito ou problema teórico sugerido pela fonte, ou string vazia quando não pertinente",
+@@ -394,7 +397,8 @@
+         mensagens = construir_mensagens(relato=relato, recuperacao=enviada)
+         try:
+             pedido = _serializar_pedido(provedor=provedor, modelo=modelo, mensagens=mensagens,
+-                                       formato_resposta=_formato_resposta(modo_resposta))
++                                       formato_resposta=_formato_resposta(
++                                           modo_resposta, paragrafos=[p["id"] for p in relato["paragrafos"]]))
+         except (ErroAPINarrativa, TypeError, ValueError, UnicodeError):
+             raise ErroLigacoes("O contexto da avaliação contém texto inválido.") from None
+         if len(pedido) <= LIMITE_PEDIDO_BYTES:
+@@ -428,7 +432,7 @@
+     """
+     paragrafos, blocos = _fontes(relato, recuperacao)
+     provedor, modelo = _configuracao(provedor, modelo)
+-    formato_resposta = _formato_resposta(modo_resposta)
++    formato_resposta = _formato_resposta(modo_resposta, paragrafos=paragrafos)
+     if not blocos:
+         return {"ligacoes": [], "descartadas": [], "rejeitadas": [],
+                 "avaliacao": {"blocos_avaliados_ids": [], "blocos_nao_avaliados_ids": [],
+diff --git a/agente_analista/app.py b/agente_analista/app.py
+--- a/agente_analista/app.py
++++ b/agente_analista/app.py
+@@ -138,7 +138,7 @@
+ 
+     def carregar_vetorizacao(identificador):
+         if not isinstance(identificador, str) or re.fullmatch(r"[0-9a-f]{64}", identificador) is None:
+-            raise ErroImportacao("Importe o arquivo vetorizacao.json da análise linguística antes de buscar.")
++            raise ErroImportacao("Importe um arquivo de vetorização antes de buscar.")
+         registro = banco.obter_vetorizacao(identificador)
+         if registro is None:
+             return None
+@@ -156,10 +156,10 @@
+     @app.post("/api/vetorizacoes")
+     def importar():
+         if not request.is_json:
+-            return jsonify(erro="Envie a exportação vetorizacao.json em JSON."), 415
++            return jsonify(erro="Envie o arquivo de vetorização em JSON."), 415
+         dados = request.get_json(silent=True)
+         if not isinstance(dados, dict):
+-            return jsonify(erro="Envie o JSON completo da vetorização da análise linguística."), 400
++            return jsonify(erro="Envie o JSON da vetorização com seus vetores e metadados de origem."), 400
+         importada = importar_vetorizacao(dados)
+         conferir_compatibilidade(importada, manifesto_indice())
+         identificador = banco.registrar_vetorizacao(dados)
+diff --git a/agente_analista/static/app.js b/agente_analista/static/app.js
+--- a/agente_analista/static/app.js
++++ b/agente_analista/static/app.js
+@@ -160,7 +160,6 @@
+     const paragraphs = text.split(paragraphSeparator).map(trimWhitespace).filter(Boolean).length;
+     let error = "";
+     if (!trimmed) error = "Importe a vetorização de um relato para iniciar a busca.";
+-    else if (paragraphs !== 2) error = `O relato precisa ter exatamente dois parágrafos; foram encontrados ${paragraphs}. Separe-os por uma linha em branco.`;
+     else if (words > 400) error = `O relato tem ${words} palavras. Importe um arquivo com no máximo 400 palavras.`;
+     return { words, paragraphs, error };
+   }
+@@ -169,9 +168,9 @@
+     const state = inputState(storyText());
+     const configuration = configurationState();
+     elements["word-count"].textContent = `${state.words} / 400 palavras`;
+-    elements["paragraph-count"].textContent = `${state.paragraphs} / 2 parágrafos`;
++    elements["paragraph-count"].textContent = `${state.paragraphs} ${state.paragraphs === 1 ? "parágrafo" : "parágrafos"}`;
+     elements["word-count"].classList.toggle("count-invalid", state.words > 400);
+-    elements["paragraph-count"].classList.toggle("count-invalid", touched && state.paragraphs !== 2);
++    elements["paragraph-count"].classList.toggle("count-invalid", touched && state.paragraphs === 0);
+     elements["input-error"].textContent = state.error;
+     elements["input-error"].hidden = !touched || !state.error;
+     elements["search-button"].disabled = busy || saving || openingRecord || importing || !ready || !importedVectorization || Boolean(state.error) || Boolean(configuration.error);
+@@ -218,7 +217,8 @@
+     const legacyHelp = record.fonte?.estrategia_consultas === "paragrafos_documento"
+       ? " Estratégia anterior de busca; consultas longas usam seus fragmentos separadamente." : "";
+     elements["import-feedback"].className = "field-help";
+-    elements["import-feedback"].textContent = `Vetorização disponível: ${descriptions.join(", ")}.${legacyHelp}`;
++    const scope = record.fonte?.selecao_representacoes ? "Seleção disponível" : "Vetorização disponível";
++    elements["import-feedback"].textContent = `${scope}: ${descriptions.join(", ")}. A busca usa as consultas enviadas e combina seus resultados.${legacyHelp}`;
+   }
+ 
+   async function importVectorization() {
+@@ -239,7 +239,7 @@
+       if (file.size > 32 * 1024 * 1024) throw new Error("O arquivo ultrapassa o limite de 32 MiB.");
+       let payload;
+       try { payload = JSON.parse((await file.text()).replace(/^\uFEFF/u, "")); }
+-      catch (_) { throw new Error("O arquivo não contém um JSON válido. Exporte novamente o arquivo completo da análise linguística."); }
++      catch (_) { throw new Error("O arquivo não contém um JSON válido. Exporte novamente a vetorização ou a representação com seus metadados."); }
+       const record = await fetchJSON("/api/vetorizacoes", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+       useVectorization(record);
+       touched = true;
+diff --git a/agente_analista/templates/index.html b/agente_analista/templates/index.html
+--- a/agente_analista/templates/index.html
++++ b/agente_analista/templates/index.html
+@@ -33,17 +33,17 @@
+           <form id="search-form" novalidate>
+             <fieldset class="vector-import">
+               <legend>Importar vetorização</legend>
+-              <p class="field-help settings-intro">Selecione o arquivo <strong>vetorizacao.json</strong> gerado no Língua com vetores de consulta compatíveis. O agente usa os tipos presentes no arquivo: relato inteiro, parágrafos, contextos ou períodos. A finalidade <strong>Agente Analista — parágrafos e relato inteiro</strong> também continua aceita.</p>
++              <p class="field-help settings-intro">Selecione uma vetorização completa, uma representação individual ou uma seleção declarada de representações, com vetores de consulta compatíveis. O agente usa os tipos presentes no arquivo: relato inteiro, parágrafos, contextos ou períodos. O arquivo deve incluir o texto, as referências de origem e os metadados do modelo. A finalidade <strong>Agente Analista — parágrafos e relato inteiro</strong> também continua aceita.</p>
+               <label for="vetorizacao-file">Arquivo de vetorização</label>
+               <input id="vetorizacao-file" type="file" accept=".json,application/json" aria-describedby="import-help import-feedback">
+-              <p id="import-help" class="field-help">Até 32 MiB. O relato deve ter dois parágrafos e até 400 palavras. O agente usa os vetores enviados; para analisar outro texto, importe outro arquivo.</p>
++              <p id="import-help" class="field-help">Até 32 MiB e 400 palavras no relato de origem, com um ou mais parágrafos. O agente usa os vetores enviados; para analisar outro texto, importe outro arquivo.</p>
+               <p id="import-feedback" class="field-help" role="status" aria-live="polite">Importe a vetorização para habilitar a busca.</p>
+             </fieldset>
+             <details id="story-preview" class="story-preview" hidden>
+               <summary>Ver relato</summary>
+               <div id="relato" class="story-text"></div>
+               <div class="input-meta">
+-                <div id="input-counts" class="counts" aria-live="polite" aria-atomic="true"><span id="word-count">0 / 400 palavras</span><span id="paragraph-count">0 / 2 parágrafos</span></div>
++                <div id="input-counts" class="counts" aria-live="polite" aria-atomic="true"><span id="word-count">0 / 400 palavras</span><span id="paragraph-count">0 parágrafos</span></div>
+                 <span class="field-help">Somente leitura</span>
+               </div>
+             </details>

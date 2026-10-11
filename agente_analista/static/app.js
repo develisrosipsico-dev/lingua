@@ -209,18 +209,16 @@
     importedVectorization = record.id;
     showStory(record.relato.texto);
     const counts = record.contagens || {};
-    const labels = {
-      periodo: ["consulta de período", "consultas de períodos"],
-      contextual: ["consulta de contexto", "consultas de contextos"],
-      paragrafo: ["consulta de parágrafo", "consultas de parágrafos"],
-      documento: ["consulta do relato inteiro", "consultas do relato inteiro"],
-    };
-    const received = Object.entries(labels)
-      .filter(([type]) => Number(counts[type]) > 0)
-      .map(([type, label]) => `${countFormat(counts[type])} ${label[Number(counts[type]) === 1 ? 0 : 1]}`);
+    const descriptions = [
+      ["documento", "do relato inteiro"], ["paragrafo", "de parágrafos"],
+      ["contextual", "de janelas contextuais"], ["periodo", "de períodos"],
+    ].filter(([type]) => counts[type] > 0)
+      .map(([type, label]) => `${countFormat(counts[type])} ${counts[type] === 1 ? "consulta" : "consultas"} ${label}`);
+    const legacyHelp = record.fonte?.estrategia_consultas === "paragrafos_documento"
+      ? " Estratégia anterior de busca; consultas longas usam seus fragmentos separadamente." : "";
     elements["import-feedback"].className = "field-help";
     const scope = record.fonte?.selecao_representacoes ? "Seleção disponível" : "Vetorização disponível";
-    elements["import-feedback"].textContent = `${scope}: ${received.join(", ")}. A busca usa as consultas enviadas e combina seus resultados.`;
+    elements["import-feedback"].textContent = `${scope}: ${descriptions.join(", ")}. A busca usa as consultas enviadas e combina seus resultados.${legacyHelp}`;
   }
 
   async function importVectorization() {

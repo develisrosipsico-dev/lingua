@@ -8,6 +8,7 @@ import os
 from pathlib import Path
 import sys
 import tempfile
+from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
@@ -238,29 +239,32 @@ class BuscaTests(unittest.TestCase):
         resultado = self.buscador.buscar(importado)
         self.assertAlmostEqual(resultado["candidatos"][0]["rrf"], 8 / 61)
 
-    def test_analista_contextos_comparam_vetores_sem_predominar_ou_duplicar_janelas(self):
+    def test_contextos_historicos_preservam_pesos_relativos_da_versao_local(self):
         importado = _importado_analista()
-        anterior = self.buscador.buscar(importado)
         importado["fonte"]["estrategia_consultas"] = "paragrafos_contextos_documento"
         contextos = [deepcopy(c) for c in _importado()["consultas"] if c["tipo"] == "contextual"]
         importado["consultas"].extend(contextos)
         resultado = self.buscador.buscar(importado)
+        self.assertNotIn("politica", resultado["metodo_fusao"])
+        self.assertEqual(resultado["metodo_fusao"]["pesos_por_tipo"],
+                         {"paragrafo": 1 / 3, "documento": 1 / 3, "contextual": 1 / 3})
         self.assertEqual(resultado["metodo_fusao"]["consultas_por_tipo"],
                          {"paragrafo": 2, "documento": 1, "contextual": 2})
         for candidato in resultado["candidatos"]:
             for p in candidato["pontuacoes"]:
-                esperado = p["contribuicao_rrf_bruta"] / (2 if p["consulta_tipo"] == "contextual" else 1)
+                esperado = p["contribuicao_rrf_bruta"] / (3 * p["consultas_do_tipo"])
                 self.assertAlmostEqual(p["contribuicao_rrf"], esperado)
-            base = next(c for c in anterior["candidatos"] if c["bloco_id"] == candidato["bloco_id"])
-            extra = sum(p["contribuicao_rrf"] for p in candidato["pontuacoes"] if p["consulta_tipo"] == "contextual")
-            self.assertAlmostEqual(candidato["rrf"], base["rrf"] + extra)
-        for n in range(5):
-            duplicada = deepcopy(contextos[0])
-            duplicada["id"] += f":duplicada:{n}"
-            importado["consultas"].append(duplicada)
+        # O comportamento completo local mantém referências como consultas;
+        # a deduplicação foi introduzida apenas para a nova seleção explícita.
+        duplicada = deepcopy(contextos[0])
+        duplicada["id"] += ":outro-foco"
+        importado["consultas"].append(duplicada)
         repetido = self.buscador.buscar(importado)
-        self.assertEqual(repetido["candidatos"], resultado["candidatos"])
-        self.assertEqual(repetido["consultas"], resultado["consultas"])
+        self.assertEqual(len(repetido["consultas"]), 6)
+        self.assertEqual(repetido["metodo_fusao"]["consultas_por_tipo"]["contextual"], 3)
+        for antes, depois in zip(resultado["candidatos"], repetido["candidatos"]):
+            self.assertEqual(antes["bloco_id"], depois["bloco_id"])
+            self.assertAlmostEqual(antes["rrf"], depois["rrf"])
 
     def test_reutiliza_consultas_sem_recortar_inferir_ou_exportar_vetores(self):
         relato = _relato("  Não apago o sonho 🧠.\t" * 7, "A lembrança retorna.\r\nMesmo assim há dúvida.  ")
@@ -311,6 +315,67 @@ class BuscaTests(unittest.TestCase):
             importado["consultas"][0][campo] = valor
             with self.subTest(campo=campo), self.assertRaises(ErroBusca):
                 self.buscador.buscar(importado)
+
+    def test_ancoras_preservam_top2_e5_top1_bm25_e_origem_dos_trechos(self):
+        resultado = self.buscador.buscar(_selecao(_importado()["consultas"]))
+        self.assertEqual(resultado["metodo_fusao"]["ancoras"]["max_extras"], 12)
+        for consulta in resultado["consultas"]:
+            if consulta["tipo"] == "documento":
+                self.assertFalse(any(a["consulta_id"] == consulta["id"] for a in resultado["ancoras"]))
+                continue
+            ancora = next(a for a in resultado["ancoras"] if a["consulta_id"] == consulta["id"])
+            self.assertEqual(ancora["inicio"], consulta["inicio"])
+            self.assertEqual(ancora["fim"], consulta["fim"])
+            self.assertEqual(ancora["unidade_id"], consulta["unidade_id"])
+            self.assertEqual(ancora["periodo_id"], consulta["periodo_id"])
+            self.assertEqual([(b["bloco_id"], b["rank"]) for b in ancora["blocos"] if b["metodo"] == "E5"],
+                             [("sonhos#1", 1), ("viagem#1", 2)])
+            self.assertEqual([(b["bloco_id"], b["rank"]) for b in ancora["blocos"] if b["metodo"] == "BM25"],
+                             [("sonhos#1", 1)])
+        for candidato in resultado["candidatos"]:
+            registros = candidato["ancoras"]
+            for registro in registros:
+                self.assertNotEqual(registro["tipo"], "documento")
+                self.assertLessEqual(registro["rank"], 2 if registro["metodo"] == "E5" else 1)
+
+    def test_ranking_diagnostico_top50_e_pool_preserva_ate12_ancoras_extras(self):
+        # O documento favorece um setor do acervo. Trechos orientados em outras
+        # direções precisam conservar suas âncoras fora do top12 fundido.
+        fragmentos, blocos = [], {}
+        angulos = np.arange(64) * (2 * np.pi / 64)
+        vetores = np.column_stack((np.cos(angulos), np.sin(angulos), np.zeros(64))).astype(np.float32)
+        for numero in range(64):
+            bloco_id = f"bloco-{numero:02}"
+            fragmento = {"id": bloco_id + "@0", "bloco_id": bloco_id,
+                         "cabecalho": "Acervo", "texto": "Trecho do acervo."}
+            fragmentos.append(fragmento)
+            blocos[bloco_id] = {"bloco_id": bloco_id, "texto": fragmento["texto"]}
+        corpus = SimpleNamespace(manifesto=self.corpus.manifesto,
+                                 vetores=vetores, fragmentos=fragmentos, blocos=blocos)
+        importado = _importado(_relato("Caderno verde.", "Parede azul."))
+        contexto = importado["consultas"][2]
+        documento = importado["consultas"][-1]
+        consultas = []
+        for numero in range(0, 64, 2):
+            consulta = deepcopy(contexto)
+            consulta.update(id=f"contexto-{numero}", artefato_id=f"artefato-{numero}",
+                            vetor=vetores[numero].tolist())
+            consultas.append(consulta)
+        consultas.append(documento)
+        resultado = Buscador(corpus).buscar(_selecao(consultas))
+        ranking = resultado["ranking_fundido"]
+        self.assertEqual(len(ranking), 50)
+        self.assertEqual([r["posicao"] for r in ranking], list(range(1, 51)))
+        self.assertEqual(len(resultado["candidatos"]), 24)
+        self.assertEqual(resultado["metodo_fusao"]["ancoras"]["extras_no_pool"], 12)
+        self.assertEqual([c["bloco_id"] for c in resultado["candidatos"][:12]],
+                         [r["bloco_id"] for r in ranking[:12]])
+        ids_top12 = {r["bloco_id"] for r in ranking[:12]}
+        ids_extras = {c["bloco_id"] for c in resultado["candidatos"][12:]}
+        self.assertTrue(ids_extras.isdisjoint(ids_top12))
+        for candidato in resultado["candidatos"][12:]:
+            self.assertTrue(any(a["metodo"] == "E5" and a["rank"] <= 2 for a in candidato["ancoras"]))
+            self.assertNotIn(candidato["bloco_id"], ids_top12)
 
     def test_selecao_pesquisa_um_paragrafo_apenas_contextos_ou_so_documento(self):
         consultas = _importado()["consultas"]
@@ -391,15 +456,24 @@ class BuscaTests(unittest.TestCase):
         self.assertEqual(resultado["metodo_fusao"]["politica"], "tipos_presentes_v1")
         self.assertEqual({c["tipo"] for c in resultado["consultas"]}, {"periodo", "contextual", "documento"})
         importado["fonte"].pop("selecao_representacoes")
+        # O nome histórico não restringe novos tipos declarados no arquivo.
+        # Sem seleção explícita, preserva-se a fórmula relativa da versão local.
         resultado_sem_marca = self.buscador.buscar(importado)
-        self.assertEqual(resultado_sem_marca["candidatos"], resultado["candidatos"])
+        self.assertEqual({c["tipo"] for c in resultado_sem_marca["consultas"]},
+                         {"periodo", "contextual", "documento"})
+        self.assertEqual(resultado_sem_marca["metodo_fusao"]["pesos_por_tipo"],
+                         {"periodo": 1 / 3, "contextual": 1 / 3, "documento": 1 / 3})
+        for primeiro, segundo in zip(resultado["candidatos"], resultado_sem_marca["candidatos"]):
+            self.assertEqual(primeiro["bloco_id"], segundo["bloco_id"])
+            self.assertAlmostEqual(primeiro["rrf"], segundo["rrf"] * 3)
 
     def test_paragrafo_sem_nome_de_estrategia_continua_sendo_consulta_valida(self):
         importado = _importado_analista()
         importado["fonte"].pop("estrategia_consultas")
         importado["consultas"] = importado["consultas"][:1]
         resultado = self.buscador.buscar(importado)
-        self.assertEqual(resultado["metodo_fusao"]["politica"], "tipos_presentes_v1")
+        self.assertNotIn("politica", resultado["metodo_fusao"])
+        self.assertEqual(resultado["metodo_fusao"]["pesos_por_tipo"], {"paragrafo": 1.0})
         self.assertEqual(resultado["metodo_fusao"]["consultas_por_tipo"], {"paragrafo": 1})
 
 

@@ -18,6 +18,7 @@ from .contratos_importacao import (
 
 
 COORDENADAS = {"unidade": "pontos_de_codigo_unicode", "base": 0, "fim_exclusivo": True}
+TIPOS_REPRESENTACAO = ("documento", "paragrafo", "contextual", "periodo")
 
 
 def _intervalo(posicao, tamanho, *, vazio=False):
@@ -278,6 +279,67 @@ def _conferir_media(artefato, por_id, dimensao):
     exigir(artefato["valores"] == esperado, "Vetor agregado não corresponde aos componentes.")
 
 
+def _descricoes_atual(contexto, preparacao, perfil):
+    """Reconstrua a cobertura exigida pela seleção declarada no arquivo."""
+    def documento():
+        campo = perfil["texto_documento"]
+        texto = preparacao[campo]["texto"]
+        origem = {"campo": f"preparacao.{campo}.texto", **_mapa(preparacao, 0, len(texto), campo)}
+        return "documento", origem, campo, texto
+
+    def unidade(unidade, tipo):
+        campo = "foco" if tipo == "periodo" else "janela"
+        bloco = unidade[campo]
+        origem = {"campo": f"unidades.{campo}.texto", "unidade_id": unidade["id"],
+                  "periodo_foco_id": unidade["periodo_foco_id"], "janela_logica_id": unidade["janela_logica_id"],
+                  "trabalho": bloco["trabalho"], "original": bloco["original"]}
+        return tipo, origem, "trabalho", bloco["texto"]
+
+    if "tipos_representacao" in perfil:
+        tipos = perfil["tipos_representacao"]
+        exigir(type(tipos) is list and bool(tipos)
+               and all(type(tipo) is str and tipo in TIPOS_REPRESENTACAO for tipo in tipos)
+               and len(tipos) == len(set(tipos)), "Seleção de tipos vetoriais inválida.")
+        exigir(tipos == [tipo for tipo in TIPOS_REPRESENTACAO if tipo in tipos],
+               "Ordem da seleção de tipos vetoriais inválida.")
+        for tipo in tipos:
+            if tipo == "documento":
+                yield documento()
+            elif tipo == "paragrafo":
+                segmentacao = contexto["regras"]["analise"]["anotacao"]["segmentacao"]
+                for paragrafo in segmentacao["paragrafos"]:
+                    origem = {"campo": "segmentacao.paragrafos.texto", "paragrafo_id": paragrafo["id"],
+                              "trabalho": paragrafo["trabalho"], "original": paragrafo["original"]}
+                    yield tipo, origem, "trabalho", paragrafo["texto"]
+            else:
+                for item in contexto["unidades"]:
+                    yield unidade(item, tipo)
+        return
+
+    # Exportações anteriores mantêm sua ordem e suas referências de origem.
+    if perfil.get("id") == "e5_analista":
+        from .entrada import validar_relato
+        relato = validar_relato(preparacao["original"]["texto"])
+        for paragrafo in relato["paragrafos"]:
+            origem = {"campo": "preparacao.original.texto", "paragrafo_id": paragrafo["id"],
+                      **_mapa(preparacao, paragrafo["inicio"], paragrafo["fim"], "original")}
+            yield "paragrafo", origem, "original", paragrafo["texto"]
+        if perfil.get("estrategia_consultas") == "paragrafos_contextos_documento":
+            for item in contexto["unidades"]:
+                janela = item["janela"]["original"]
+                inicio, fim = janela["inicio"], janela["fim"]
+                origem = {"campo": "preparacao.original.texto", "unidade_id": item["id"],
+                          "periodo_foco_id": item["periodo_foco_id"],
+                          "janela_logica_id": item["janela_logica_id"],
+                          **_mapa(preparacao, inicio, fim, "original")}
+                yield "contextual", origem, "original", preparacao["original"]["texto"][inicio:fim]
+    else:
+        for item in contexto["unidades"]:
+            for tipo in ("periodo", "contextual"):
+                yield unidade(item, tipo)
+    yield documento()
+
+
 def validar_atual(registro):
     """Confira uma execução completa, mantendo seu contrato de cobertura."""
     return _validar_atual(registro)
@@ -343,34 +405,7 @@ def _validar_atual(registro, *, parcial=False):
     for artefato in por_id.values():
         if "derivacao" in artefato:
             _conferir_media(artefato, por_id, proc["dimensao"])
-    descricoes = []
-    if analista:
-        from .entrada import validar_relato
-        relato = validar_relato(preparacao["original"]["texto"])
-        for paragrafo in relato["paragrafos"]:
-            origem = {"campo": "preparacao.original.texto", "paragrafo_id": paragrafo["id"],
-                      **_mapa(preparacao, paragrafo["inicio"], paragrafo["fim"], "original")}
-            descricoes.append(("paragrafo", origem, "original", paragrafo["texto"]))
-        if perfil["estrategia_consultas"] == "paragrafos_contextos_documento":
-            for unidade in contexto["unidades"]:
-                janela = unidade["janela"]["original"]
-                inicio, fim = janela["inicio"], janela["fim"]
-                origem = {"campo": "preparacao.original.texto", "unidade_id": unidade["id"],
-                          "periodo_foco_id": unidade["periodo_foco_id"],
-                          "janela_logica_id": unidade["janela_logica_id"],
-                          **_mapa(preparacao, inicio, fim, "original")}
-                descricoes.append(("contextual", origem, "original", preparacao["original"]["texto"][inicio:fim]))
-    else:
-        for unidade in contexto["unidades"]:
-            for tipo, campo in (("periodo", "foco"), ("contextual", "janela")):
-                bloco = unidade[campo]
-                origem = {"campo": f"unidades.{campo}.texto", "unidade_id": unidade["id"],
-                          "periodo_foco_id": unidade["periodo_foco_id"], "janela_logica_id": unidade["janela_logica_id"],
-                          "trabalho": bloco["trabalho"], "original": bloco["original"]}
-                descricoes.append((tipo, origem, "trabalho", bloco["texto"]))
-    campo = perfil["texto_documento"]
-    texto = preparacao[campo]["texto"]
-    descricoes.append(("documento", {"campo": f"preparacao.{campo}.texto", **_mapa(preparacao, 0, len(texto), campo)}, campo, texto))
+    descricoes = list(_descricoes_atual(contexto, preparacao, perfil))
     reps = registro["representacoes"]
     if parcial:
         selecao = registro["selecao_representacoes"]
