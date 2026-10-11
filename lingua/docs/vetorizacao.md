@@ -147,6 +147,14 @@ sua descrição local:
 `--cache-modelos` permite selecionar uma pasta de pesos. A descrição
 efetiva registra o modelo realmente carregado, não somente a solicitação.
 
+`LINGUA_CACHE_MODELOS` seleciona o cache padrão ao iniciar o aplicativo, sem
+mover arquivos. Uma opção explícita `cache_modelos` prevalece. Execuções já
+criadas conservam o caminho registrado, inclusive após reiniciar o servidor
+com outra variável; crie uma nova execução para usar o novo cache. A página
+exibe imediatamente o diagnóstico de uma falha recebida pelo acompanhamento,
+e o GET de status preserva `erro.tipo` e `erro.mensagem`. Falhas de importação
+incluem a dependência original, sem serem confundidas com pesos ausentes.
+
 ## Textos e coordenadas
 
 Em `e5_analista`, são criadas três representações a partir de

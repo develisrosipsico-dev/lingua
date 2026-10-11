@@ -5,6 +5,7 @@ consulta a rede ou cria diretórios. A configuração efetiva vem do adaptador.
 """
 from copy import deepcopy
 import json
+import os
 from pathlib import Path
 import re
 
@@ -136,7 +137,7 @@ def carregar_perfil(perfil_id="e5_simetrico", *, opcoes=None):
         "limite_tokens": None, "pooling": "mean", "normalizacao": "l2",
         "prefixo": prefixo, "fragmentacao": "sem_sobreposicao",
         "agregacao": "media_ponderada_tokens", "texto_documento": "trabalho",
-        "cache_modelos": str((base_dados / "instance" / "modelos").resolve()),
+        "cache_modelos": os.environ.get("LINGUA_CACHE_MODELOS", str((base_dados / "instance" / "modelos").resolve())),
         "somente_local": True, "legado": None,
     }
     if perfil_id == "e5_analista":

@@ -14,7 +14,7 @@ from unittest.mock import patch
 from modelo_embeddings import (AdaptadorFastEmbed, AdaptadorSentenceTransformers,
     ErroModeloEmbeddings, _limite_efetivo, _resolver_snapshot, _selecionar_dispositivo,
     _tokenizar_hf, _validar_tokenizacao, _validar_vetores, criar_adaptador,
-    _carregar_fastembed)
+    _carregar_fastembed, _carregar_st)
 from perfis_vetorizacao import carregar_perfil
 
 
@@ -63,6 +63,17 @@ class TensorControlado:
 
 
 class TestModeloEmbeddings(unittest.TestCase):
+    def test_importacao_indisponivel_informa_dependencia_original_sem_carregar_modelo(self):
+        for nome, modulos in (('torch', {'torch': None}),
+                              ('sentence_transformers', {'torch': SimpleNamespace(), 'sentence_transformers': None})):
+            with self.subTest(nome=nome), patch.dict(sys.modules, modulos), \
+                    patch('modelo_embeddings._resolver_snapshot') as resolver:
+                with self.assertRaises(ErroModeloEmbeddings) as erro:
+                    _carregar_st(carregar_perfil('e5_analista'))
+                self.assertIn(nome, str(erro.exception))
+                self.assertIsInstance(erro.exception.__cause__, ImportError)
+                resolver.assert_not_called()
+
     def test_import_e_fabrica_nao_carregam_dependencias_pesadas(self):
         programa = ('import sys; from modelo_embeddings import criar_adaptador; '
                     'from perfis_vetorizacao import carregar_perfil; '

@@ -6,6 +6,7 @@ As anotações linguísticas da origem são manuais e controladas.
 
 import copy
 import json
+import os
 from pathlib import Path
 import sqlite3
 import tempfile
@@ -204,6 +205,21 @@ class VectorAppTests(unittest.TestCase):
         self.process(job)
         self.assertEqual(self.download(document_id).status_code, 200)
         self.assertEqual(self.status(document_id, job).get_json()["tentativas"], 2)
+
+    def test_cache_capturado_na_execucao_e_preservado_apos_mudar_ambiente(self):
+        document_id, context = self.source()
+        cache_inicial = self.database.parent / "cache inicial"
+        outro_cache = self.database.parent / "outro cache"
+        with patch.dict(os.environ, {"LINGUA_CACHE_MODELOS": str(cache_inicial)}):
+            job = self.enqueue(document_id)
+        with patch.dict(os.environ, {"LINGUA_CACHE_MODELOS": str(outro_cache)}):
+            self.process(job)
+            status = self.status(document_id, job)
+            self.assertEqual(status.status_code, 200, status.get_data(as_text=True))
+            self.assertEqual(status.get_json()["estado"], "concluida")
+            registro = self.download(document_id, job["execucao_id"])
+            self.assertEqual(registro.status_code, 200, registro.get_data(as_text=True))
+            self.assertEqual(registro.get_json()["perfil"]["cache_modelos"], str(cache_inicial.resolve()))
 
     def test_resume_rejects_pending_completed_and_configuration_change(self):
         document_id, context = self.source()

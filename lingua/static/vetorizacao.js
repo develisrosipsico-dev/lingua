@@ -22,9 +22,12 @@
     const progress = panel.querySelector("[data-vector-progress]");
     const label = panel.querySelector("[data-vector-progress-label]");
     const error = panel.querySelector("[data-vector-poll-error]");
+    const jobError = panel.querySelector("[data-vector-job-error]");
     let retryDelay = 1500;
+    let finished = false;
 
     const poll = async () => {
+      if (finished) return;
       try {
         const response = await fetch(statusUrl.href, {
           headers: { Accept: "application/json" },
@@ -38,6 +41,11 @@
         }
         if (state) state.textContent = stateLabels[job.estado];
         if (error) error.hidden = true;
+        document.querySelectorAll("[data-vector-history-execution-id]").forEach((link) => {
+          if (link.dataset.vectorHistoryExecutionId === job.execucao_id) {
+            link.textContent = `${link.dataset.vectorHistoryProfileId} · ${stateLabels[job.estado]}`;
+          }
+        });
 
         const total = job.progresso?.total;
         const completed = job.progresso?.concluidos;
@@ -53,15 +61,32 @@
         }
 
         if (finalStates.has(job.estado)) {
+          finished = true;
+          if (progress) progress.hidden = true;
+          if (label) {
+            label.textContent = job.estado === "concluida" ? "Vetorização concluída."
+              : job.estado === "falhou" ? "A vetorização falhou." : "A vetorização foi interrompida.";
+          }
+          if (jobError) {
+            jobError.hidden = job.estado === "concluida";
+            const message = job.erro?.mensagem;
+            jobError.textContent = typeof message === "string" && message.trim() ? message
+              : job.estado === "falhou" ? "Abra os detalhes da vetorização para verificar o motivo da falha."
+                : job.estado === "interrompida" ? "Abra os detalhes da vetorização para verificar a interrupção." : "";
+          }
           const stagePanel = panel.closest("[data-stage-panel]");
           if (stagePanel?.hidden) {
             // Outra etapa pode conter uma edição em andamento: preserve a página.
-            const result = document.createElement("a");
+            let result = panel.querySelector("[data-vector-detail-link]");
+            if (!result) {
+              result = document.createElement("a");
+              result.dataset.vectorDetailLink = "";
+              result.className = "download-link";
+              panel.append(result);
+            }
             detailUrl.hash = "etapa-vetorizacao";
             result.href = detailUrl.href;
-            result.className = "download-link";
             result.textContent = job.estado === "concluida" ? "Ver resultado da vetorização →" : "Ver detalhes da vetorização →";
-            panel.append(result);
             return;
           }
           if (stagePanel) detailUrl.hash = "etapa-vetorizacao";

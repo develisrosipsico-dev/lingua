@@ -1,10 +1,26 @@
 import json
+import os
+from pathlib import Path
+import tempfile
 import unittest
+from unittest.mock import patch
 
 from perfis_vetorizacao import E5_REVISAO, ErroPerfil, carregar_perfil, listar_perfis, validar_perfil
 
 
 class TestPerfisVetorizacao(unittest.TestCase):
+    def test_cache_existente_por_ambiente_e_opcao_explicita_tem_prioridade(self):
+        with tempfile.TemporaryDirectory() as pasta:
+            cache = Path(pasta) / 'cache existente'
+            outro = Path(pasta) / 'outro cache'
+            with patch.dict(os.environ, {'LINGUA_CACHE_MODELOS': str(cache)}):
+                perfil = carregar_perfil('e5_analista')
+                self.assertEqual(perfil['cache_modelos'], str(cache.resolve()))
+                explicito = carregar_perfil('e5_analista', opcoes={'cache_modelos': str(outro)})
+                self.assertEqual(explicito['cache_modelos'], str(outro.resolve()))
+                self.assertFalse(cache.exists())
+            self.assertEqual(perfil, validar_perfil(perfil))
+
     def test_defaults_e5_revisao_imutavel_e_sem_capacidade_global(self):
         perfil = carregar_perfil()
         self.assertEqual(perfil['modelo']['revisao'], E5_REVISAO)

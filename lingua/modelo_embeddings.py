@@ -198,7 +198,11 @@ def _carregar_st(perfil):
         from sentence_transformers import SentenceTransformer
         from transformers import AutoTokenizer
     except ImportError as exc:
-        raise ErroModeloEmbeddings("Instale requirements-vetorizacao.txt para usar SentenceTransformers.") from exc
+        raise ErroModeloEmbeddings(
+            "Não foi possível importar as dependências de embeddings. "
+            f"Detalhe: {exc}. Confira Torch, SentenceTransformers e Transformers "
+            "no ambiente Python que executa o Língua."
+        ) from exc
     dispositivo = _selecionar_dispositivo(torch, perfil["dispositivo"])
     caminho, manifesto = _resolver_snapshot(**{
         "identificacao": perfil["modelo"]["identificacao"], "revisao": perfil["modelo"]["revisao"],

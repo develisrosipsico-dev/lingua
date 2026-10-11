@@ -746,7 +746,9 @@
             <noscript><p class="option-help">Atualize esta página para acompanhar o processamento.</p></noscript>
             {% endif %}
             {% if current_vector_job.erro|default(none) %}
-            <p class="notice notice-error" role="alert">{{ current_vector_job.erro.mensagem|default(current_vector_job.erro) }}</p>
+            <p class="notice notice-error" role="alert" data-vector-job-error>{{ current_vector_job.erro.mensagem|default(current_vector_job.erro) }}</p>
+            {% else %}
+            <p class="notice notice-error" role="alert" data-vector-job-error hidden></p>
             {% endif %}
             {% if current_vector_job.estado in ['falhou', 'interrompida'] %}
             <form method="post" action="{{ url_for('resume_vector_submission', record_id=record.id, execution_id=current_vector_job.execucao_id) }}">
@@ -828,7 +830,7 @@
           <details class="vector-history">
             <summary>Experimentos de vetorização ({{ saved_vector_jobs|length }})</summary>
             <ul>{% for history in saved_vector_jobs %}
-              <li><a href="{{ url_for('submission', record_id=record.id, vetorizacao_execucao_id=history.execucao_id) }}"{% if current_vector_job and history.execucao_id == current_vector_job.execucao_id %} aria-current="page"{% endif %}>{{ history.perfil_id }} · {{ vector_state_labels.get(history.estado, history.estado) }}</a> <time datetime="{{ history.registrado_em }}">{{ history.registrado_em|horario_brasilia }} (horário de Brasília)</time>{% if current_vector_job and history.execucao_id == current_vector_job.execucao_id %} <span class="current-analysis">Em exibição</span>{% endif %}<span class="vector-history-origin">Contexto: {{ history.contexto_execucao_id }}</span></li>
+              <li><a href="{{ url_for('submission', record_id=record.id, vetorizacao_execucao_id=history.execucao_id) }}" data-vector-history-execution-id="{{ history.execucao_id }}" data-vector-history-profile-id="{{ history.perfil_id }}"{% if current_vector_job and history.execucao_id == current_vector_job.execucao_id %} aria-current="page"{% endif %}>{{ history.perfil_id }} · {{ vector_state_labels.get(history.estado, history.estado) }}</a> <time datetime="{{ history.registrado_em }}">{{ history.registrado_em|horario_brasilia }} (horário de Brasília)</time>{% if current_vector_job and history.execucao_id == current_vector_job.execucao_id %} <span class="current-analysis">Em exibição</span>{% endif %}<span class="vector-history-origin">Contexto: {{ history.contexto_execucao_id }}</span></li>
             {% endfor %}</ul>
           </details>
           {% endif %}

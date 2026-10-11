@@ -223,6 +223,10 @@ Falhas podem ser retomadas; um resultado parcial não é disponibilizado como
 pronto. O histórico e os downloads recuperam a origem contextual exata,
 os textos preservados, a configuração, os vetores e seus hashes.
 
+Se a execução falhar, a página mostra a mensagem do diagnóstico e atualiza o
+estado no histórico. O erro também pode ser consultado por GET em
+`/envios/<documento_id>/vetorizacoes/<execucao_id>`, no campo `erro`.
+
 As dependências de embeddings e os pesos são opcionais. Para vetorizar no
 próprio computador, com o aplicativo encerrado, instale e baixe explicitamente
 o modelo antes do primeiro uso:
@@ -236,6 +240,33 @@ o modelo antes do primeiro uso:
 No Windows, use `..\.venv\Scripts\python.exe`. Abrir a interface não baixa
 pesos automaticamente; as etapas 01–08 continuam usando suas dependências
 existentes. Depois de instalar os recursos, a inferência funciona localmente.
+
+No Mac Intel com o ambiente preparado `instance/venv-agente-e5-intel`, mantenha
+Torch 2.2.2, Transformers 4.51.3 e NumPy 1.26.4 ao instalar a biblioteca que
+falta. A partir da raiz do repositório:
+
+```bash
+instance/venv-agente-e5-intel/bin/python -m pip install "sentence-transformers==5.2.0" "torch==2.2.2" "transformers==4.51.3" "numpy==1.26.4"
+```
+
+O arquivo geral de embeddings fixa Torch 2.10 e não corresponde a esse ambiente
+Intel. A importação das bibliotecas e a geração real ainda precisam ser
+verificadas na máquina em que serão executadas.
+
+Para reaproveitar pesos preparados em outro cache, indique a pasta Hugging Face
+com `LINGUA_CACHE_MODELOS` ao iniciar o Língua. Por exemplo, para o cache
+existente em `instance/huggingface/hub`, a partir da raiz:
+
+```bash
+LINGUA_CACHE_MODELOS="$PWD/instance/huggingface/hub" instance/venv-agente-e5-intel/bin/python lingua/app.py
+```
+
+Isso muda a configuração do Língua sem mover os pesos nem modificar o agente.
+O padrão continua `instance/modelos`; `opcoes.cache_modelos` tem prioridade
+sobre a variável. Depois de alterar o cache, gere uma **nova execução**:
+retomar uma execução anterior conserva o cache e o perfil registrados nela.
+O cache precisa conter a revisão exata do modelo e os arquivos necessários;
+encontrar o arquivo de pesos não comprova que a inferência já funcionou.
 
 A entrada é enviada integralmente quando cabe no limite efetivo do modelo.
 No perfil do Analista, o orçamento é de 504 tokens, contando prefixo e tokens
