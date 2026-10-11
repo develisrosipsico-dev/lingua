@@ -100,6 +100,13 @@ def _importado_analista():
     return importado
 
 
+def _selecao(consultas):
+    importado = _importado()
+    importado["consultas"] = deepcopy(consultas)
+    importado["fonte"]["selecao_representacoes"] = True
+    return importado
+
+
 class CorpusTests(unittest.TestCase):
     def setUp(self):
         self.temporario = tempfile.TemporaryDirectory()
@@ -299,11 +306,101 @@ class BuscaTests(unittest.TestCase):
                 self.buscador.buscar(_importado(vetor=vetor))
 
     def test_rejeita_tipo_desconhecido_e_identificador_repetido(self):
-        for campo, valor in (("tipo", "paragrafo"), ("id", "documento")):
+        for campo, valor in (("tipo", "desconhecido"), ("id", "documento")):
             importado = _importado()
             importado["consultas"][0][campo] = valor
             with self.subTest(campo=campo), self.assertRaises(ErroBusca):
                 self.buscador.buscar(importado)
+
+    def test_selecao_pesquisa_um_paragrafo_apenas_contextos_ou_so_documento(self):
+        consultas = _importado()["consultas"]
+        paragrafo = _importado_analista()["consultas"][0]
+        for escolhidas in ([paragrafo], [c for c in consultas if c["tipo"] == "contextual"], [consultas[-1]]):
+            with self.subTest(tipos=[c["tipo"] for c in escolhidas]):
+                resultado = self.buscador.buscar(_selecao(escolhidas))
+                self.assertEqual([c["id"] for c in resultado["consultas"]], [c["id"] for c in escolhidas])
+                self.assertEqual(resultado["metodo_fusao"]["politica"], "tipos_presentes_v1")
+                self.assertEqual(resultado["metodo_fusao"]["pesos_por_tipo"], {escolhidas[0]["tipo"]: 1.0})
+                self.assertAlmostEqual(resultado["candidatos"][0]["rrf"], 2 / 61)
+                self.assertAlmostEqual(resultado["candidatos"][1]["rrf"], 1 / 62)
+
+    def test_selecao_mista_pesquisa_quatro_tipos_sem_exigir_estrategia(self):
+        consultas = _importado()["consultas"] + [_importado_analista()["consultas"][0]]
+        # Uma consulta de parágrafo faz outro ranking sem alterar os demais vetores.
+        consultas[-1]["id"] = "paragrafo-P1"
+        consultas[-1]["vetor"] = [0.0, 1.0, 0.0]
+        importado = _selecao(consultas)
+        resultado = self.buscador.buscar(importado)
+        self.assertEqual(resultado["metodo_fusao"]["consultas_por_tipo"],
+                         {"periodo": 2, "contextual": 2, "documento": 1, "paragrafo": 1})
+        self.assertEqual(resultado["metodo_fusao"]["pesos_por_tipo"],
+                         {"periodo": 1.0, "contextual": 1.0, "documento": 1.0, "paragrafo": 1.0})
+        for candidato in resultado["candidatos"]:
+            for p in candidato["pontuacoes"]:
+                self.assertEqual(p["peso_tipo"], 1.0)
+                self.assertAlmostEqual(p["contribuicao_rrf"],
+                                       p["contribuicao_rrf_bruta"] / p["consultas_do_tipo"])
+        semantica_paragrafo = [p for c in resultado["candidatos"] for p in c["pontuacoes"]
+                              if p["consulta_id"] == "paragrafo-P1" and p["metodo"] == "E5"]
+        self.assertEqual(next(p["fragmento_id"] for p in semantica_paragrafo if p["rank"] == 1), "viagem#1@0")
+        self.assertEqual(importado["consultas"][-1]["vetor"], [0.0, 1.0, 0.0])
+
+    def test_selecao_contextos_nao_ganham_peso_apenas_por_quantidade(self):
+        consultas = _importado()["consultas"]
+        contextos = [c for c in consultas if c["tipo"] == "contextual"]
+        antes = self.buscador.buscar(_selecao([contextos[0], consultas[-1]]))
+        depois = self.buscador.buscar(_selecao(contextos + [consultas[-1]]))
+        for primeiro, segundo in zip(antes["candidatos"], depois["candidatos"]):
+            self.assertEqual(primeiro["bloco_id"], segundo["bloco_id"])
+            self.assertAlmostEqual(primeiro["rrf"], segundo["rrf"])
+        self.assertEqual(depois["metodo_fusao"]["consultas_por_tipo"], {"contextual": 2, "documento": 1})
+
+    def test_selecao_deduplica_todos_tipos_sem_apagar_referencias_importadas(self):
+        consultas = _importado()["consultas"][:1] + _importado()["consultas"][2:3] + _importado()["consultas"][-1:]
+        paragrafo = deepcopy(_importado_analista()["consultas"][0])
+        paragrafo["id"] = "paragrafo-P1"
+        # Mesmo artefato e recorte, mas outro tipo: é uma consulta distinta.
+        consultas.append(paragrafo)
+        importado = _selecao(consultas)
+        antes = self.buscador.buscar(importado)
+        for c in consultas:
+            duplicada = deepcopy(c)
+            duplicada["id"] += "-outro-foco"
+            duplicada["unidade_id"] = "outro-foco"
+            importado["consultas"].append(duplicada)
+        original = deepcopy(importado)
+        depois = self.buscador.buscar(importado)
+        self.assertEqual(importado, original)
+        self.assertEqual(len(importado["consultas"]), 8)
+        self.assertEqual(len(depois["consultas"]), 4)
+        self.assertEqual(antes["candidatos"], depois["candidatos"])
+        self.assertEqual(antes["consultas"], depois["consultas"])
+
+    def test_selecao_nao_deduplica_vetores_divergentes_com_mesma_referencia(self):
+        consulta = _importado()["consultas"][0]
+        repetida = deepcopy(consulta)
+        repetida["id"] += "-divergente"
+        repetida["vetor"] = [0.0, 1.0, 0.0]
+        with self.assertRaisesRegex(ErroBusca, "vetores divergentes"):
+            self.buscador.buscar(_selecao([consulta, repetida]))
+
+    def test_estrategia_anterior_nao_rejeita_tipos_presentes_no_arquivo(self):
+        importado = _selecao(_importado()["consultas"])
+        importado["fonte"]["estrategia_consultas"] = "paragrafos_documento"
+        resultado = self.buscador.buscar(importado)
+        self.assertEqual(resultado["metodo_fusao"]["politica"], "tipos_presentes_v1")
+        self.assertEqual({c["tipo"] for c in resultado["consultas"]}, {"periodo", "contextual", "documento"})
+        importado["fonte"].pop("selecao_representacoes")
+        resultado_sem_marca = self.buscador.buscar(importado)
+        self.assertEqual(resultado_sem_marca["candidatos"], resultado["candidatos"])
+
+    def test_paragrafo_sem_nome_de_estrategia_continua_sendo_consulta_valida(self):
+        importado = _importado_analista()
+        importado["fonte"].pop("estrategia_consultas")
+        importado["consultas"] = importado["consultas"][:1]
+        resultado = self.buscador.buscar(importado)
+        self.assertEqual(resultado["metodo_fusao"]["politica"], "tipos_presentes_v1")
+        self.assertEqual(resultado["metodo_fusao"]["consultas_por_tipo"], {"paragrafo": 1})
 
 
 @unittest.skipUnless((RAIZ / "agente_analista/data/Vetor/vetores_fragmentos_e5.npy").is_file(),

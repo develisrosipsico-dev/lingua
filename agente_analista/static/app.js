@@ -160,7 +160,6 @@
     const paragraphs = text.split(paragraphSeparator).map(trimWhitespace).filter(Boolean).length;
     let error = "";
     if (!trimmed) error = "Importe a vetorização de um relato para iniciar a busca.";
-    else if (paragraphs !== 2) error = `O relato precisa ter exatamente dois parágrafos; foram encontrados ${paragraphs}. Separe-os por uma linha em branco.`;
     else if (words > 400) error = `O relato tem ${words} palavras. Importe um arquivo com no máximo 400 palavras.`;
     return { words, paragraphs, error };
   }
@@ -169,9 +168,9 @@
     const state = inputState(storyText());
     const configuration = configurationState();
     elements["word-count"].textContent = `${state.words} / 400 palavras`;
-    elements["paragraph-count"].textContent = `${state.paragraphs} / 2 parágrafos`;
+    elements["paragraph-count"].textContent = `${state.paragraphs} ${state.paragraphs === 1 ? "parágrafo" : "parágrafos"}`;
     elements["word-count"].classList.toggle("count-invalid", state.words > 400);
-    elements["paragraph-count"].classList.toggle("count-invalid", touched && state.paragraphs !== 2);
+    elements["paragraph-count"].classList.toggle("count-invalid", touched && state.paragraphs === 0);
     elements["input-error"].textContent = state.error;
     elements["input-error"].hidden = !touched || !state.error;
     elements["search-button"].disabled = busy || saving || openingRecord || importing || !ready || !importedVectorization || Boolean(state.error) || Boolean(configuration.error);
@@ -210,12 +209,18 @@
     importedVectorization = record.id;
     showStory(record.relato.texto);
     const counts = record.contagens || {};
+    const labels = {
+      periodo: ["consulta de período", "consultas de períodos"],
+      contextual: ["consulta de contexto", "consultas de contextos"],
+      paragrafo: ["consulta de parágrafo", "consultas de parágrafos"],
+      documento: ["consulta do relato inteiro", "consultas do relato inteiro"],
+    };
+    const received = Object.entries(labels)
+      .filter(([type]) => Number(counts[type]) > 0)
+      .map(([type, label]) => `${countFormat(counts[type])} ${label[Number(counts[type]) === 1 ? 0 : 1]}`);
     elements["import-feedback"].className = "field-help";
-    elements["import-feedback"].textContent = record.fonte?.estrategia_consultas === "paragrafos_contextos_documento"
-      ? `Vetorização disponível: ${countFormat(counts.paragrafo || 0)} consultas de parágrafos, ${countFormat(counts.contextual || 0)} janelas contextuais e ${countFormat(counts.documento || 0)} consulta(s) do relato inteiro. Janelas repetidas contam uma vez na busca.`
-      : record.fonte?.estrategia_consultas === "paragrafos_documento"
-      ? `Vetorização disponível: ${countFormat(counts.paragrafo || 0)} consultas de parágrafos e ${countFormat(counts.documento || 0)} consulta(s) do relato inteiro. Estratégia anterior de busca; consultas longas usam seus fragmentos separadamente.`
-      : `Vetorização disponível: ${countFormat(counts.periodo || 0)} períodos, ${countFormat(counts.contextual || 0)} janelas contextuais e ${countFormat(counts.documento || 0)} documento(s).`;
+    const scope = record.fonte?.selecao_representacoes ? "Seleção disponível" : "Vetorização disponível";
+    elements["import-feedback"].textContent = `${scope}: ${received.join(", ")}. A busca usa as consultas enviadas e combina seus resultados.`;
   }
 
   async function importVectorization() {
@@ -236,7 +241,7 @@
       if (file.size > 32 * 1024 * 1024) throw new Error("O arquivo ultrapassa o limite de 32 MiB.");
       let payload;
       try { payload = JSON.parse((await file.text()).replace(/^\uFEFF/u, "")); }
-      catch (_) { throw new Error("O arquivo não contém um JSON válido. Exporte novamente o arquivo completo da análise linguística."); }
+      catch (_) { throw new Error("O arquivo não contém um JSON válido. Exporte novamente a vetorização ou a representação com seus metadados."); }
       const record = await fetchJSON("/api/vetorizacoes", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
       useVectorization(record);
       touched = true;

@@ -9,6 +9,7 @@ from unittest.mock import Mock, patch
 from agente_analista import transporte as api
 from agente_analista.transporte import ErroAPINarrativa
 from agente_analista import ligacoes
+from agente_analista.entrada import validar_relato
 
 
 class LigacoesTests(unittest.TestCase):
@@ -118,6 +119,66 @@ class LigacoesTests(unittest.TestCase):
         resultado = self.avaliar()
         self.assertFalse(resultado["ligacoes"])
         self.assertIn("posições", resultado["rejeitadas"][0]["motivo"])
+
+    def test_um_ou_varios_paragrafos_sao_avaliados_com_ids_reais(self):
+        for texto, esperado in (("Não respondi à carta 😀.", "P1"),
+                                ("Não voltei 😀.\r\n\r\nRecordei a carta.\n\nNão respondi.", "P3")):
+            with self.subTest(paragrafo=esperado):
+                self.relato = validar_relato(texto)
+                self.item["paragrafo"] = esperado
+                self.item["relato"] = dict(self.relato["paragrafos"][-1])
+                transporte = Mock(return_value=json.dumps({"ligacoes": [self.item]}, ensure_ascii=False))
+                resultado = self.avaliar(transporte=transporte)
+                transporte.assert_called_once()
+                self.assertEqual(len(resultado["ligacoes"]), 1)
+                self.assertEqual(resultado["ligacoes"][0]["paragrafo"], esperado)
+                self.assertTrue(resultado["ligacoes"][0]["conferencias"]["relato_literal"])
+                dados = transporte.call_args.kwargs
+                schema = dados["formato_resposta"]["json_schema"]["schema"]
+                self.assertEqual(schema["properties"]["ligacoes"]["items"]["properties"]["paragrafo"]["enum"],
+                                 [p["id"] for p in self.relato["paragrafos"]])
+                mensagens = ligacoes.construir_mensagens(**dados["contexto"])
+                formato_prompt = json.loads(mensagens[1]["content"])["formato_resposta"]["ligacoes"][0]
+                self.assertEqual(formato_prompt["paragrafo"], " ou ".join(p["id"] for p in self.relato["paragrafos"]))
+                pedido = api._serializar_pedido(provedor=dados["provedor"], modelo=dados["modelo"],
+                                               mensagens=mensagens, formato_resposta=dados["formato_resposta"])
+                self.assertEqual(resultado["avaliacao"]["bytes_pedido"], len(pedido))
+
+    def test_todos_paragrafos_devem_ser_literais_sequenciais_e_sem_sobreposicao(self):
+        original = validar_relato("mesmo\n\nmesmo\n\nmesmo")
+        invalidos = []
+        sobreposto = copy.deepcopy(original)
+        sobreposto["paragrafos"][2].update(inicio=7, fim=12)
+        invalidos.append(sobreposto)
+        fora_de_ordem = copy.deepcopy(original)
+        fora_de_ordem["paragrafos"][1].update(inicio=14, fim=19)
+        fora_de_ordem["paragrafos"][2].update(inicio=7, fim=12)
+        invalidos.append(fora_de_ordem)
+        nao_sequencial = copy.deepcopy(original)
+        nao_sequencial["paragrafos"][2]["id"] = "P4"
+        invalidos.append(nao_sequencial)
+        nao_literal = copy.deepcopy(original)
+        nao_literal["paragrafos"][2]["texto"] = "outro"
+        invalidos.append(nao_literal)
+        vazio = copy.deepcopy(original)
+        vazio["paragrafos"] = []
+        invalidos.append(vazio)
+        for relato in invalidos:
+            with self.subTest(paragrafos=relato["paragrafos"]):
+                self.relato = relato
+                transporte = Mock()
+                with self.assertRaises(ligacoes.ErroLigacoes):
+                    self.avaliar(transporte=transporte)
+                transporte.assert_not_called()
+
+    def test_citacao_de_paragrafo_nao_recebido_continua_rejeitada(self):
+        self.relato = validar_relato("Não respondi à carta.")
+        self.item["paragrafo"] = "P2"
+        self.item["relato"] = dict(self.relato["paragrafos"][0])
+        resultado = self.avaliar()
+        self.assertFalse(resultado["ligacoes"])
+        self.assertEqual(len(resultado["rejeitadas"]), 1)
+        self.assertIn("não pertence", resultado["rejeitadas"][0]["motivo"])
 
     def test_ids_citacoes_posicoes_e_campos_invalidos_sao_rejeitados_individualmente(self):
         mudancas = [

@@ -133,7 +133,7 @@ class PersistenciaAPITests(unittest.TestCase):
         self.assertEqual(registro["relacoes"], [])
         self.assertEqual(self.servico.chamadas, 0)
         self.assertEqual(self.client.get(f"/api/relatos/{registro['id']}").get_json(), registro)
-        for dados in ({"texto": "Um só parágrafo."}, {"texto": []}, None):
+        for dados in ({"texto": " \t\n"}, {"texto": []}, None):
             with self.subTest(dados=dados):
                 resposta = self.client.post("/api/relatos", json=dados)
                 self.assertIn(resposta.status_code, (400, 415))

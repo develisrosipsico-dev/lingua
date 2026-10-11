@@ -57,7 +57,10 @@ client = app.test_client()
 assert client.get('/').status_code == 200
 for registro in json.loads(Path('exportacoes.json').read_text(encoding='utf-8')):
     recebido = importar_vetorizacao(registro)
-    assert {c['tipo'] for c in recebido['consultas']} == {'periodo','contextual','documento'}
+    tipos = {'periodo','contextual','documento'}
+    if 'modelo' in registro and registro['schema_version'] == '1.1.0':
+        tipos.add('paragrafo')
+    assert {c['tipo'] for c in recebido['consultas']} == tipos
     resposta = client.post('/api/vetorizacoes', json=registro)
     assert resposta.status_code == 201, resposta.get_json()
     resumo = resposta.get_json()

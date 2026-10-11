@@ -33,17 +33,17 @@
           <form id="search-form" novalidate>
             <fieldset class="vector-import">
               <legend>Importar vetorização</legend>
-              <p class="field-help settings-intro">Selecione o arquivo <strong>vetorizacao.json</strong> gerado no Língua com a finalidade <strong>Agente Analista — parágrafos e relato inteiro</strong>. O arquivo contém o relato e os vetores prontos para a busca.</p>
+              <p class="field-help settings-intro">Selecione uma vetorização completa, uma representação individual ou uma seleção declarada de representações. O agente busca usando os vetores presentes: períodos, contextos, parágrafos ou relato inteiro. O arquivo precisa incluir o texto, as referências de origem e os metadados de um modelo compatível com o índice.</p>
               <label for="vetorizacao-file">Arquivo de vetorização</label>
               <input id="vetorizacao-file" type="file" accept=".json,application/json" aria-describedby="import-help import-feedback">
-              <p id="import-help" class="field-help">Até 32 MiB. O relato deve ter dois parágrafos e até 400 palavras. O agente usa os vetores enviados; para analisar outro texto, importe outro arquivo.</p>
+              <p id="import-help" class="field-help">Até 32 MiB e 400 palavras no relato de origem, com um ou mais parágrafos. O agente usa os vetores enviados; para analisar outro texto, importe outro arquivo.</p>
               <p id="import-feedback" class="field-help" role="status" aria-live="polite">Importe a vetorização para habilitar a busca.</p>
             </fieldset>
             <details id="story-preview" class="story-preview" hidden>
               <summary>Ver relato</summary>
               <div id="relato" class="story-text"></div>
               <div class="input-meta">
-                <div id="input-counts" class="counts" aria-live="polite" aria-atomic="true"><span id="word-count">0 / 400 palavras</span><span id="paragraph-count">0 / 2 parágrafos</span></div>
+                <div id="input-counts" class="counts" aria-live="polite" aria-atomic="true"><span id="word-count">0 / 400 palavras</span><span id="paragraph-count">0 parágrafos</span></div>
                 <span class="field-help">Somente leitura</span>
               </div>
             </details>

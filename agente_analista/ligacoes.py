@@ -29,7 +29,7 @@ class ErroLigacoes(ValueError):
     """Problema com mensagem segura para exibição na página local."""
 
 
-def _formato_resposta(modo="json_schema"):
+def _formato_resposta(modo="json_schema", *, paragrafos=None):
     """Use o formato aceito pelo modelo; confira a literalidade das fontes depois."""
     if modo == "texto":
         return None
@@ -43,7 +43,7 @@ def _formato_resposta(modo="json_schema"):
         "required": ["inicio", "fim", "texto"],
     }
     campos = {
-        "paragrafo": {"type": "string", "enum": ["P1", "P2"]},
+        "paragrafo": {"type": "string", "enum": list(paragrafos) if paragrafos is not None else ["P1", "P2"]},
         "relato": copy.deepcopy(passagem),
         "observacao": {"type": "string"},
         "conceito": {"type": "string"},
@@ -120,15 +120,18 @@ def _fontes(relato, recuperacao):
     if not isinstance(relato, dict) or not isinstance(relato.get("texto"), str):
         raise ErroLigacoes("O relato recebido para avaliação é inválido. Envie o texto novamente.")
     paragrafos = relato.get("paragrafos")
-    if not isinstance(paragrafos, list) or len(paragrafos) != 2:
-        raise ErroLigacoes("A avaliação requer os dois parágrafos identificados no relato.")
+    if not isinstance(paragrafos, list) or not paragrafos:
+        raise ErroLigacoes("A avaliação requer ao menos um parágrafo identificado no relato.")
     por_paragrafo = {}
-    for esperado, paragrafo in zip(("P1", "P2"), paragrafos):
+    fim_anterior = 0
+    for numero, paragrafo in enumerate(paragrafos, start=1):
+        esperado = f"P{numero}"
         if not isinstance(paragrafo, dict) or paragrafo.get("id") != esperado or not _intervalo_literal(paragrafo, relato["texto"]):
             raise ErroLigacoes("As posições dos parágrafos não correspondem ao relato original.")
+        if paragrafo["inicio"] < fim_anterior:
+            raise ErroLigacoes("Os parágrafos recebidos para avaliação têm posições sobrepostas ou fora de ordem.")
+        fim_anterior = paragrafo["fim"]
         por_paragrafo[esperado] = paragrafo
-    if paragrafos[0]["fim"] > paragrafos[1]["inicio"]:
-        raise ErroLigacoes("Os parágrafos recebidos para avaliação têm posições sobrepostas.")
     if not isinstance(recuperacao, dict) or not isinstance(recuperacao.get("candidatos"), list):
         raise ErroLigacoes("Os candidatos da busca estão ausentes ou inválidos. Execute a busca novamente.")
     por_bloco = {}
@@ -176,9 +179,9 @@ def _passagens_disponiveis(texto, inicio=0):
 
 def construir_mensagens(*, relato, recuperacao):
     """Use o relato completo e blocos completos, tratando todo conteúdo como dados."""
-    _fontes(relato, recuperacao)
+    por_paragrafo, _ = _fontes(relato, recuperacao)
     esquema_ligacao = {
-        "paragrafo": "P1 ou P2",
+        "paragrafo": " ou ".join(por_paragrafo),
         "relato": {"inicio": "inteiro no relato original", "fim": "inteiro exclusivo", "texto": "cópia literal"},
         "observacao": "observação descritiva específica da passagem do relato",
         "conceito": "conceito ou problema teórico sugerido pela fonte, ou string vazia quando não pertinente",
@@ -359,7 +362,8 @@ def _limitar_contexto(relato, recuperacao, modelo, provedor="openrouter", modo_r
         mensagens = construir_mensagens(relato=relato, recuperacao=enviada)
         try:
             pedido = _serializar_pedido(provedor=provedor, modelo=modelo, mensagens=mensagens,
-                                       formato_resposta=_formato_resposta(modo_resposta))
+                                       formato_resposta=_formato_resposta(
+                                           modo_resposta, paragrafos=[p["id"] for p in relato["paragrafos"]]))
         except (ErroAPINarrativa, TypeError, ValueError, UnicodeError):
             raise ErroLigacoes("O contexto da avaliação contém texto inválido.") from None
         if len(pedido) <= LIMITE_PEDIDO_BYTES:
@@ -393,7 +397,7 @@ def avaliar_ligacoes(relato, recuperacao, *, provedor=None, modelo=None, transpo
     """
     paragrafos, blocos = _fontes(relato, recuperacao)
     provedor, modelo = _configuracao(provedor, modelo)
-    formato_resposta = _formato_resposta(modo_resposta)
+    formato_resposta = _formato_resposta(modo_resposta, paragrafos=paragrafos)
     if not blocos:
         return {"ligacoes": [], "descartadas": [], "rejeitadas": [],
                 "avaliacao": {"blocos_avaliados_ids": [], "blocos_nao_avaliados_ids": [],

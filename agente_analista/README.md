@@ -1,16 +1,16 @@
 # Agente analista: relato e Freud
 
 Página local para examinar ligações entre um relato em português e o acervo
-fornecido. Importa o arquivo completo `vetorizacao.json` produzido pela análise
-linguística e reaproveita seus vetores dos dois parágrafos originais, das janelas
-de contexto e do relato inteiro. O relato deve ter exatamente dois parágrafos e até 400 palavras.
+fornecido. Reaproveita os vetores presentes no arquivo importado: um parágrafo,
+vários contextos, períodos, relato inteiro ou uma combinação deles. O relato de
+origem deve ter um ou mais parágrafos e até 400 palavras.
 A busca consulta todos os 8.087 fragmentos e termina em uma tabela de propostas
 interpretativas. O agente não executa uma nova vetorização do relato.
 
 O Agente Analista e a análise linguística são aplicativos independentes. A
 integração ocorre pelo arquivo exportado: o agente executa sem instalar,
 importar código ou manter a análise linguística aberta. Para cada relato,
-importe somente **vetorizacao.json** pelo controle **Importar vetorização**.
+use o controle **Importar vetorização**.
 O texto e os metadados incluídos nesse arquivo permitem conferir os vetores e
 as posições das passagens; não é necessário carregar outros arquivos da
 análise linguística. Esse upload é a única entrada de novos relatos na página.
@@ -27,14 +27,12 @@ nos caminhos existentes.
 
 ```bash
 cd ~/lingua-agente
-git fetch origin
-git switch organizacao/projetos-20261010
-git pull --ff-only origin organizacao/projetos-20261010
 instance/venv-agente-e5-intel/bin/python -m pip install -r agente_analista/requirements.txt
 instance/venv-agente-e5-intel/bin/python -m agente_analista.app
 ```
 
-Os comandos usam o ambiente Python já preparado no Mac. As dependências da
+Os comandos iniciam a cópia local usando o ambiente Python já preparado no Mac.
+Ao atualizar o código, preserve suas modificações locais. As dependências da
 página e da busca são Flask, Certifi e NumPy. A chave das justificativas é
 informada na página.
 
@@ -42,33 +40,73 @@ Abra **http://127.0.0.1:5002** no navegador. Deixe o terminal aberto enquanto us
 a página; pressione `Ctrl+C` para encerrar. O agente precisa do índice vetorial
 do acervo, mas não carrega o E5 nem baixa seus pesos para realizar consultas.
 
-No Língua, escolha o perfil **Agente Analista — parágrafos, contextos e relato inteiro**
-na etapa **Vetores**, gere a vetorização do relato e exporte o arquivo
-completo **vetorizacao.json**. Na seção **Importar vetorização**,
-selecione esse arquivo. O agente confere os dados, guarda a importação no banco
-local, exibe a prévia do relato e mostra a quantidade de vetores por tipo. O limite do
-arquivo é 32 MiB. O arquivo exportado reúne os vetores e as informações do
-relato necessárias para a busca.
+### Atualizar preservando alterações locais
 
-Esse perfil usa consultas por P1, P2, janelas da etapa Contexto e relato inteiro, com prefixo
-`query: `, E5 multilingual large, média, normalização L2 e `float32`.
-Entradas acima de 504 tokens, contando prefixo e tokens especiais, geram
-recortes independentes e completos; não se calcula uma média entre eles.
-Arquivos anteriores de períodos e janelas continuam aceitos com sua estratégia
-anterior, mas não são convertidos automaticamente. Gere um novo arquivo para
-usar as consultas com contextos. Exportações anteriores de P1/P2/documento
-continuam aceitas, e não recebem contextos automaticamente.
-No Colab, gere também um **novo notebook**
-depois de atualizar o Língua: o notebook antigo contém uma cópia do código antigo.
+O atualizador aplica somente os trechos de importação, busca, entrada e interface
+necessários à consulta flexível. Ele confere a aplicação completa antes de
+alterar arquivos, cria um backup em `../lingua-agente-backups/` e interrompe se
+encontrar conflito com o código local. O Língua, o banco e o índice do acervo
+permanecem nos seus caminhos; a branch e o índice Git não são trocados.
 
-As novas janelas usam os trechos originais correspondentes aos intervalos da
-etapa 08, preservando foco e referências. O agente não carrega o E5 nem depende
-dos módulos do Língua. Na RRF, cada consulta de parágrafo/documento mantém
-sua contribuição anterior; as consultas contextuais distintas contribuem pela
-média de suas pontuações RRF. Janelas idênticas (mesmo recorte e artefato) contam
-uma vez, evitando multiplicar a pontuação por focos que compartilham contexto.
-O limite final permanece em 12 candidatos; adicionar contextos pode mudar as
-fontes recuperadas, sem garantir mais ligações pertinentes.
+```bash
+cd ~/lingua-agente &&
+git fetch origin organizacao/projetos-20261010 &&
+atualizador_analista=$(mktemp "${TMPDIR:-/tmp}/atualizar-analista.XXXXXX") &&
+git show FETCH_HEAD:agente_analista/scripts/atualizar_consulta_flexivel.sh > "$atualizador_analista" &&
+bash "$atualizador_analista"
+```
+
+Após a mensagem de aplicação concluída, reinicie somente o Agente Analista.
+Se houver conflito, conserve a cópia local e use os erros exibidos para adaptar
+os trechos às suas modificações antes de tentar novamente.
+
+### Arquivos aceitos
+
+Na etapa **Vetores** do Língua, exporte a execução completa
+**vetorizacao.json** ou uma representação individual
+**representacao-vetorial.json**. Selecione o arquivo em **Importar vetorização**.
+O agente confere os dados, guarda o arquivo intacto no banco local, exibe o relato
+de origem e mostra as consultas dos tipos presentes. O limite do arquivo é 32 MiB.
+
+Também é aceita uma seleção declarada de várias representações. Para criá-la
+por código, use `selecionar_representacoes(registro, representacao_ids)` de
+`agente_analista.importacao`. A função valida a execução completa e copia os
+itens escolhidos e seus artefatos, preservando IDs, ordens, texto e referências.
+O resultado declara `selecao_representacoes` com `versao: "1.0.0"`,
+`representacao_ids` e `representacoes_origem_total`. A quantidade declarada, os
+IDs, a origem e todos os fragmentos de cada representação são conferidos.
+Retirar itens de uma execução completa sem essa declaração continua sendo erro
+de cobertura; uma representação declarada incompleta também é rejeitada.
+
+O arquivo individual já exportado pelo Língua inclui o relato de origem, o
+perfil, o processamento e os artefatos necessários. Um vetor NPY isolado ou um
+JSON sem esses metadados não fornece as informações exigidas para a importação.
+O agente conserva o relato inteiro para avaliar as passagens, mesmo quando a
+busca recebe somente a representação de um parágrafo ou de um contexto.
+
+O perfil do produtor **Agente Analista — parágrafos, contextos e relato inteiro**
+continua gerando P1, P2, janelas da etapa Contexto e relato inteiro a partir de
+dois parágrafos e até 400 palavras. Essa é uma regra de geração desse perfil;
+o agente aceita outras composições válidas e relatos com um ou mais parágrafos.
+O modelo continua sendo E5 multilingual large, com prefixo `query: `, pooling
+médio, normalização L2 e `float32`. Entradas acima de 504 tokens, contando prefixo
+e tokens especiais, geram recortes independentes e completos no produtor.
+
+Execuções completas anteriores dos perfis E5 e do formato portátil 1.0 conservam
+sua estratégia de busca e não recebem contextos automaticamente.
+Para incluir contextos, gere uma nova execução ou um
+novo notebook para o Colab depois de atualizar o Língua. As janelas preservam os
+trechos originais, o foco e as referências da etapa 08. O formato portátil 1.1
+também aproveita os vetores de parágrafos que antes eram ignorados pelo agente.
+
+Nas seleções e nas exportações portáteis com parágrafos, a fusão RRF combina
+somente os tipos presentes, com peso 1 por tipo e contribuição média por consulta
+desse tipo. Nas seleções, contextos idênticos contam uma vez. A quantidade de janelas não
+multiplica o peso do tipo, e os vetores não são somados nem recalculados.
+As fórmulas dos arquivos completos anteriores de P1/P2/documento e de
+períodos/janelas/documento permanecem iguais. O limite final continua em 12
+candidatos; adicionar contextos pode mudar as fontes recuperadas, sem garantir
+mais ligações pertinentes.
 
 Na seção **Justificativas**, escolha o provedor, cole a chave de API no campo
 oculto e use **+** para incluir o identificador de um modelo. O seletor começa
@@ -116,8 +154,8 @@ provedor recebe o relato e os blocos recuperados por HTTPS; essa chamada usa
 a conta do provedor e pode consumir créditos. A busca é liberada após informar
 a chave, selecionar o modelo e importar a vetorização de um relato válido. **Salvar relato**
 guarda o texto importado e seu vínculo com a vetorização, sem enviar dados ao provedor ou consumir
-créditos. O relato precisa seguir os mesmos limites de dois parágrafos e até
-400 palavras. Uma busca também salva automaticamente o relato e seu resultado
+créditos. O relato precisa ter um ou mais parágrafos e até 400 palavras.
+Uma busca também salva automaticamente o relato e seu resultado
 no banco local. As chaves de API não fazem parte dos registros salvos.
 
 Os relatos e resultados permanecem disponíveis depois de encerrar e reiniciar
@@ -179,9 +217,9 @@ quando a chamada de avaliação consegue alcançar o provedor.
 - `corpus.py` carrega o manifesto e a matriz por mmap, valida IDs, dimensões,
   valores finitos, normalização L2 e hashes dos textos. Reconstrói blocos pelas
   posições, reúne sobreposições idênticas e rejeita lacunas/conflitos.
-- A importação recebe o registro completo da vetorização da análise
-  linguística. Cada vetor mantém seu tipo, texto e posição de origem. As
-  consultas de parágrafos, contextos e relato inteiro saem desse registro;
+- A importação recebe a execução completa, uma representação individual ou
+  uma seleção declarada da vetorização. Cada vetor mantém seu tipo, texto e
+  posição de origem. As consultas usam os tipos efetivamente enviados;
   não há nova inferência E5, divisão por tokens ou processamento linguístico
   no agente. Um texto diferente exige uma nova exportação correspondente.
 - A busca lexical usa BM25 (`k1=1.2`, `b=0.75`), palavras em minúsculas sem
@@ -194,7 +232,9 @@ quando a chamada de avaliação consegue alcançar o provedor.
   usam a média dessas contribuições, depois de eliminar janelas repetidas.
   Arquivos anteriores de períodos/janelas preservam
   sua fórmula `peso_tipo/(consultas_do_tipo * (60 + rank_bloco))`, com peso
-  `1/3` por tipo. Cada bloco contribui
+  `1/3` por tipo. Seleções declaradas e formatos portáteis com parágrafos usam
+  `1/(consultas_do_tipo * (60 + rank_bloco))` para cada tipo presente.
+  Cada bloco contribui
   uma vez por ranking. Os 12 melhores blocos
   distintos seguem com seu contexto inteiro para avaliação; nada é filtrado
   previamente por obra ou conceito. Os parâmetros saem no JSON.
@@ -318,6 +358,9 @@ registros e a separação das credenciais de cada busca. As respostas do
 provedor são simuladas nos testes para evitar chamadas cobradas. A consulta
 com um arquivo real exportado pela análise linguística e o índice completo
 do acervo deve ser validada no ambiente que contém esses dados.
+
+A busca com as novas seleções no corpus real permanece pendente de verificação
+no Mac, onde está a matriz `agente_analista/data/Vetor/vetores_fragmentos_e5.npy`.
 
 O código antigo continua guardado, sem execução automática, em
 `codigos/freud-agent-codigo-20261003-165655.zip`.

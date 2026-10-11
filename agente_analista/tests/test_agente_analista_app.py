@@ -17,15 +17,26 @@ from test_agente_analista_importacao import construir_exportacao, TEXTO
 
 
 class EntradaTests(unittest.TestCase):
-    def test_vazio_e_paragrafos_invalidos(self):
-        for texto, trecho in (("", "Cole"), (" \t\r\n", "Cole"), ("um", "1"),
-                               ("um\n\ndois\n\ntrês", "3")):
+    def test_vazio_invalido(self):
+        for texto, trecho in (("", "Cole"), (" \t\r\n", "Cole")):
             with self.subTest(texto=texto), self.assertRaises(ErroEntrada) as erro:
                 validar_relato(texto)
             self.assertIn(trecho, str(erro.exception))
 
     def test_dois_paragrafos_sem_minimo(self):
         self.assertEqual(validar_relato("a\n\nb")["palavras"], 2)
+
+    def test_um_ou_varios_paragrafos_preservam_texto_e_referencias(self):
+        for texto, quantidade in (("um", 1), ("um\n\ndois\n\ntrês", 3)):
+            with self.subTest(texto=texto):
+                relato = validar_relato(texto)
+                self.assertEqual(relato["texto"], texto)
+                self.assertEqual(len(relato["paragrafos"]), quantidade)
+                self.assertEqual([p["id"] for p in relato["paragrafos"]],
+                                 [f"P{i + 1}" for i in range(quantidade)])
+                for paragrafo in relato["paragrafos"]:
+                    self.assertEqual(texto[paragrafo["inicio"]:paragrafo["fim"]],
+                                     paragrafo["texto"])
 
     def test_400_e_401_palavras(self):
         texto = " ".join(["a"] * 200) + "\n \t\n" + " ".join(["b"] * 200)
@@ -122,6 +133,20 @@ class PaginaTests(unittest.TestCase):
         for acao in ("Buscar ligações", "Limpar", "Copiar tabela", "Exportar JSON"):
             self.assertIn(acao, pagina)
         self.assertIn("no-store", resposta.headers["Cache-Control"])
+        self.assertIn("um ou mais parágrafos", pagina)
+        self.assertNotIn("dois parágrafos", pagina)
+        self.assertNotIn("/ 2 parágrafos", pagina)
+
+    def test_salvar_relato_com_um_ou_varios_paragrafos(self):
+        for texto in ("Hoje conversei com minha irmã.", "Cheguei.\n\nEsperei.\n\nVoltei."):
+            with self.subTest(texto=texto):
+                resposta = self.client.post("/api/relatos", json={"texto": texto})
+                self.assertEqual(resposta.status_code, 201, resposta.get_json())
+                registro = resposta.get_json()
+                self.assertEqual(registro["texto"], texto)
+                self.assertEqual(registro["palavras"], len(texto.split()))
+                self.assertEqual(self.client.get(f"/api/relatos/{registro['id']}").get_json(), registro)
+        self.assertFalse(self.servico.iniciou.is_set())
 
     def test_upload_paragrafos_e_relato_preserva_contrato_e_contagens(self):
         registro = construir_exportacao(perfil_id="e5_analista", normalizar=True)
@@ -145,6 +170,58 @@ class PaginaTests(unittest.TestCase):
         self.assertEqual(self.client.get("/api/vetorizacoes/" + dados["id"]).get_json(), dados)
         self.assertEqual(self.app.extensions["agente_analista"]["banco"].obter_vetorizacao(dados["id"]), registro)
         self.assertFalse(self.servico.iniciou.is_set())
+
+    def test_upload_periodos_contextos_documento_mostra_tipos_recebidos(self):
+        resposta = self.client.get("/api/vetorizacoes/" + self.vetorizacao_id)
+        self.assertEqual(resposta.status_code, 200)
+        self.assertEqual(resposta.get_json()["contagens"],
+                         {"periodo": 5, "contextual": 5, "documento": 1})
+
+    def test_upload_selecao_so_contextos_preserva_origem_e_reabre(self):
+        from agente_analista.importacao import selecionar_representacoes
+        registro = construir_exportacao(perfil_id="e5_analista", normalizar=True,
+            opcoes={"estrategia_consultas": "paragrafos_contextos_documento"})
+        ids = [r["id"] for r in registro["representacoes"] if r["tipo"] == "contextual"]
+        selecao = selecionar_representacoes(registro, ids)
+        resposta = self.client.post("/api/vetorizacoes", json=selecao)
+        self.assertEqual(resposta.status_code, 201, resposta.get_json())
+        dados = resposta.get_json()
+        self.assertEqual(dados["contagens"], {"contextual": 5})
+        self.assertTrue(dados["fonte"]["selecao_representacoes"])
+        self.assertEqual(dados["relato"]["texto"], TEXTO)
+        self.assertEqual(self.client.get("/api/vetorizacoes/" + dados["id"]).get_json(), dados)
+        self.assertEqual(self.app.extensions["agente_analista"]["banco"].obter_vetorizacao(dados["id"]),
+                         selecao)
+        self.assertFalse(self.servico.iniciou.is_set())
+
+    def test_upload_representacao_individual_paragrafo_salva_e_busca(self):
+        registro = construir_exportacao(perfil_id="e5_analista", normalizar=True)
+        rep = registro["representacoes"][0]
+        campos = ("schema_version", "execucao_id", "contexto_execucao_id", "documento_id",
+                  "registrado_em", "contexto", "contexto_sha256", "perfil", "processamento",
+                  "configuracao_sha256", "espaco_vetorial_id")
+        individual = {campo: registro[campo] for campo in campos}
+        individual["representacao"] = rep
+        ids = {rep["artefato_id"]} | {f["artefato_id"] for f in rep["fragmentos"]}
+        individual["artefatos"] = [a for a in registro["artefatos"] if a["id"] in ids]
+        resposta = self.client.post("/api/vetorizacoes", json=individual)
+        self.assertEqual(resposta.status_code, 201, resposta.get_json())
+        dados = resposta.get_json()
+        self.assertEqual(dados["contagens"], {"paragrafo": 1})
+        self.assertTrue(dados["fonte"]["selecao_representacoes"])
+        self.assertEqual(dados["relato"]["texto"], TEXTO)
+        self.assertEqual(self.app.extensions["agente_analista"]["banco"].obter_vetorizacao(dados["id"]),
+                         individual)
+        salvo = self.client.post("/api/relatos", json={"texto": TEXTO,
+                                                      "vetorizacao_id": dados["id"]})
+        self.assertEqual(salvo.status_code, 201, salvo.get_json())
+        self.servico.liberar.set()
+        busca = self.client.post("/api/buscas", json=self.pedido(
+            vetorizacao_id=dados["id"], relato_id=salvo.get_json()["id"]))
+        self.assertEqual(busca.status_code, 202, busca.get_json())
+        resultado = self.aguardar(busca.get_json()["id"])
+        self.assertEqual(resultado["estado"], "concluido")
+        self.assertEqual(resultado["resultado"]["relato"]["texto"], TEXTO)
 
     def test_entrada_invalida_nao_inicia(self):
         self.assertEqual(self.client.post("/api/buscas", json={"texto": "um"}).status_code, 400)

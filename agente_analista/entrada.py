@@ -37,8 +37,6 @@ def contar_relato(texto):
     if not palavras:
         erros.append("Cole um relato para iniciar a busca.")
     else:
-        if len(paragrafos) != 2:
-            erros.append(f"O relato deve ter exatamente dois parágrafos; foram encontrados {len(paragrafos)}.")
         if palavras > 400:
             erros.append(f"O relato tem {palavras} palavras. O limite é 400.")
     return {"texto": texto, "palavras": palavras, "paragrafos": paragrafos,

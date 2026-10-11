@@ -279,6 +279,16 @@ def _conferir_media(artefato, por_id, dimensao):
 
 
 def validar_atual(registro):
+    """Confira uma execução completa, mantendo seu contrato de cobertura."""
+    return _validar_atual(registro)
+
+
+def validar_selecao_atual(registro):
+    """Confira a seleção declarada; a ausência de outros tipos é permitida."""
+    return _validar_atual(registro, parcial=True)
+
+
+def _validar_atual(registro, *, parcial=False):
     exigir(registro.get("schema_version") == "1.0.0" and registro.get("etapa") == "09_vetorizacao"
            and "derivacao_execucao" not in registro, "Importe a execução integral da etapa 09.")
     contexto = registro["contexto"]
@@ -362,9 +372,29 @@ def validar_atual(registro):
     texto = preparacao[campo]["texto"]
     descricoes.append(("documento", {"campo": f"preparacao.{campo}.texto", **_mapa(preparacao, 0, len(texto), campo)}, campo, texto))
     reps = registro["representacoes"]
-    exigir(len(reps) == len(descricoes), "Cobertura vetorial incompleta.")
+    if parcial:
+        selecao = registro["selecao_representacoes"]
+        exigir(type(selecao) is dict and set(selecao) == {
+            "versao", "representacao_ids", "representacoes_origem_total"}
+            and selecao["versao"] == "1.0.0", "Formato de seleção vetorial não suportado.")
+        ids = selecao["representacao_ids"]
+        exigir(type(ids) is list and bool(ids) and all(type(i) is str for i in ids)
+               and len(set(ids)) == len(ids), "Declare identificadores únicos para a seleção.")
+        exigir(type(selecao["representacoes_origem_total"]) is int
+               and selecao["representacoes_origem_total"] == len(descricoes),
+               "O total de representações da origem diverge da seleção.")
+        esperadas = {f"{registro['execucao_id']}:representacao:{i}": (i, d)
+                     for i, d in enumerate(descricoes)}
+        exigir(len(reps) == len(ids) and [r["id"] for r in reps] == ids
+               and all(i in esperadas for i in ids),
+               "A seleção perdeu uma representação declarada ou contém origem desconhecida.")
+        pares = [esperadas[i] for i in ids]
+    else:
+        exigir("selecao_representacoes" not in registro, "Valide este arquivo como uma seleção declarada.")
+        exigir(len(reps) == len(descricoes), "Cobertura vetorial incompleta.")
+        pares = list(enumerate(descricoes))
     usados = set()
-    for ordem, (rep, (tipo, origem, campo, texto)) in enumerate(zip(reps, descricoes)):
+    for rep, (ordem, (tipo, origem, campo, texto)) in zip(reps, pares):
         exigir(rep["id"] == f"{registro['execucao_id']}:representacao:{ordem}" and type(rep["ordem"]) is int
                and rep["ordem"] == ordem and rep["tipo"] == tipo and rep["origem"] == origem
                and rep["texto_sha256"] == sha256(texto) and rep["estado"] == "concluida"

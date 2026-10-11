@@ -138,7 +138,7 @@ def criar_app(config=None, *, servico=None):
 
     def carregar_vetorizacao(identificador):
         if not isinstance(identificador, str) or re.fullmatch(r"[0-9a-f]{64}", identificador) is None:
-            raise ErroImportacao("Importe o arquivo vetorizacao.json da análise linguística antes de buscar.")
+            raise ErroImportacao("Importe um arquivo de vetorização antes de buscar.")
         registro = banco.obter_vetorizacao(identificador)
         if registro is None:
             return None
@@ -147,22 +147,20 @@ def criar_app(config=None, *, servico=None):
         return importada
 
     def resumo_vetorizacao(identificador, importada):
-        estrategia = importada["fonte"].get("estrategia_consultas")
-        tipos = (("paragrafo", "contextual", "documento") if estrategia == "paragrafos_contextos_documento"
-                 else ("paragrafo", "documento") if estrategia == "paragrafos_documento"
-                 else ("periodo", "contextual", "documento"))
-        contagens = {tipo: sum(c["tipo"] == tipo for c in importada["consultas"])
-                     for tipo in tipos}
+        contagens = {}
+        for consulta in importada["consultas"]:
+            tipo = consulta["tipo"]
+            contagens[tipo] = contagens.get(tipo, 0) + 1
         return {"id": identificador, "relato": importada["relato"],
                 "fonte": importada["fonte"], "contagens": contagens}
 
     @app.post("/api/vetorizacoes")
     def importar():
         if not request.is_json:
-            return jsonify(erro="Envie a exportação vetorizacao.json em JSON."), 415
+            return jsonify(erro="Envie o arquivo de vetorização em JSON."), 415
         dados = request.get_json(silent=True)
         if not isinstance(dados, dict):
-            return jsonify(erro="Envie o JSON completo da vetorização da análise linguística."), 400
+            return jsonify(erro="Envie o JSON da vetorização com seus vetores e metadados de origem."), 400
         importada = importar_vetorizacao(dados)
         conferir_compatibilidade(importada, manifesto_indice())
         identificador = banco.registrar_vetorizacao(dados)

@@ -41,7 +41,10 @@ def _limites(registro):
         tamanho = len(json.dumps(registro, ensure_ascii=False, allow_nan=False,
                                  separators=(",", ":")).encode("utf-8"))
         _exigir(tamanho <= MAX_BYTES_IMPORTACAO, "A exportação excede o limite de 32 MiB.")
-        representacoes = registro.get("representacoes")
+        _exigir(not ("representacao" in registro and "representacoes" in registro),
+                "Envie uma representação individual ou uma lista de representações.")
+        representacoes = ([registro["representacao"]] if "representacao" in registro
+                          else registro.get("representacoes"))
         artefatos = registro.get("artefatos")
         _exigir(type(representacoes) is list and 0 < len(representacoes) <= MAX_REPRESENTACOES,
                 "A exportação deve conter entre 1 e 1.024 representações.")
@@ -65,11 +68,86 @@ def _consulta(rep, origem, vetor, original, texto_vetorizado, artefato_id, *, su
             "periodo_id": origem.get("periodo_foco_id"), "artefato_id": artefato_id}
 
 
+def _relatorio_selecao(representacoes, artefatos):
+    return {"pronto": True, "estado": "concluida", "cobertura": {
+        "representacoes_total": len(representacoes), "artefatos_total": len(artefatos),
+        "representacoes_sem_conteudo": 0, "cobertura_integral": True}}
+
+
+def _normalizar_representacao(registro):
+    """Adapte apenas o envelope individual já exportado pelo Língua.
+
+    Dados, vetores, IDs e posições recebidos permanecem intactos. Campos da
+    execução ausentes nesse envelope são derivados da origem que ele inclui.
+    """
+    campos = {"representacao", "artefatos", "perfil", "processamento", "contexto",
+              "execucao_id", "contexto_execucao_id", "contexto_sha256", "documento_id",
+              "registrado_em", "schema_version", "configuracao_sha256", "espaco_vetorial_id"}
+    _exigir(campos <= set(registro),
+            "A representação individual precisa incluir texto e contexto de origem, perfil, processamento e artefatos.")
+    _exigir("selecao_representacoes" not in registro,
+            "O arquivo individual já declara sua seleção pela representação enviada.")
+    _exigir("etapa" not in registro or registro["etapa"] == "09_vetorizacao",
+            "A representação individual deve pertencer à etapa de vetorização.")
+    resultado = deepcopy(registro)
+    contexto, perfil = resultado["contexto"], resultado["perfil"]
+    representacao = resultado.pop("representacao")
+    resultado["etapa"] = "09_vetorizacao"
+    for campo in ("preparacao_id", "segmentacao_id", "anotacao_id", "analise_id", "regras_execucao_id"):
+        resultado.setdefault(campo, contexto[campo])
+    if perfil.get("id") == "e5_analista":
+        total = len(validar_relato(_preparacao(resultado)["original"]["texto"])["paragrafos"]) + 1
+        if perfil.get("estrategia_consultas") == "paragrafos_contextos_documento":
+            total += len(contexto["unidades"])
+    else:
+        total = 2 * len(contexto["unidades"]) + 1
+    resultado["representacoes"] = [representacao]
+    resultado["selecao_representacoes"] = {
+        "versao": "1.0.0", "representacao_ids": [representacao["id"]],
+        "representacoes_origem_total": total}
+    resultado["validacao"] = _relatorio_selecao(resultado["representacoes"], resultado["artefatos"])
+    return resultado
+
+
+def selecionar_representacoes(registro, representacao_ids):
+    """Selecione vetores já conferidos; não tokenize nem gere representações.
+
+    A extensão de seleção tem versão própria. O formato de execução completa
+    conserva sua exigência de cobertura e nunca vira parcial implicitamente.
+    """
+    _exigir(type(registro) is dict and "perfil" in registro
+            and "representacao" not in registro and "selecao_representacoes" not in registro,
+            "Selecione representações de uma execução completa com perfil.")
+    importar_vetorizacao(registro)
+    _exigir(type(representacao_ids) is list and bool(representacao_ids)
+            and all(type(i) is str for i in representacao_ids)
+            and len(set(representacao_ids)) == len(representacao_ids),
+            "Selecione identificadores únicos de representações.")
+    ids = set(representacao_ids)
+    representacoes = [deepcopy(r) for r in registro["representacoes"] if r["id"] in ids]
+    _exigir(len(representacoes) == len(ids), "Uma representação selecionada não existe na execução.")
+    usados = {f["artefato_id"] for r in representacoes for f in r["fragmentos"]}
+    usados.update(r["artefato_id"] for r in representacoes if r["artefato_id"] is not None)
+    resultado = deepcopy(registro)
+    resultado["representacoes"] = representacoes
+    resultado["artefatos"] = [a for a in resultado["artefatos"] if a["id"] in usados]
+    resultado["selecao_representacoes"] = {
+        "versao": "1.0.0", "representacao_ids": [r["id"] for r in representacoes],
+        "representacoes_origem_total": len(registro["representacoes"])}
+    resultado["validacao"] = _relatorio_selecao(representacoes, resultado["artefatos"])
+    importar_vetorizacao(resultado)
+    return resultado
+
+
 def _importar_atual(registro):
     # O agente valida os dados recebidos; não importa nem executa o aplicativo
     # produtor, mesmo quando ambos os projetos estão no mesmo repositório.
-    from .validacao_vetorial import validar_atual
-    validar_atual(registro)
+    from .validacao_vetorial import validar_atual, validar_selecao_atual
+    individual = "representacao" in registro
+    if individual:
+        registro = _normalizar_representacao(registro)
+    selecao = "selecao_representacoes" in registro
+    (validar_selecao_atual if selecao else validar_atual)(registro)
     _exigir("derivacao_execucao" not in registro,
             "Importe a execução completa da etapa 09, com períodos, janelas e documento.")
     perfil, processamento = registro["perfil"], registro["processamento"]
@@ -116,6 +194,10 @@ def _importar_atual(registro):
              "backend": processamento["backend"], "precisao_inferencia": processamento["precisao_inferencia"]}
     if perfil["id"] == "e5_analista":
         fonte["estrategia_consultas"] = perfil["estrategia_consultas"]
+    if selecao:
+        fonte["selecao_representacoes"] = True
+        fonte["representacao_ids"] = deepcopy(registro["selecao_representacoes"]["representacao_ids"])
+        fonte["formato_importacao"] = "representacao_individual" if individual else "selecao_declarada"
     return original, consultas, fonte
 
 
@@ -132,14 +214,12 @@ def _importar_portatil(registro):
     por_id = {a["id"]: a for a in registro["artefatos"]}
     consultas = []
     for rep in registro["representacoes"]:
-        # O formato 1.1 também exporta parágrafos. Períodos, janelas e documento
-        # alimentam esta busca; os parágrafos permanecem no JSON arquivado.
-        if rep["tipo"] == "paragrafo":
-            continue
-        _exigir(rep["tipo"] in ("foco", "janela", "documento")
+        _exigir(rep["tipo"] in ("foco", "janela", "paragrafo", "documento")
                 and rep["construcao"] != "sem_conteudo", "Uma representação não possui conteúdo vetorial.")
         origem = {k: deepcopy(rep[k]) for k in
                   ("campo", "unidade_id", "periodo_foco_id", "janela_logica_id", "trabalho", "original")}
+        if rep["tipo"] == "paragrafo":
+            origem["paragrafo_id"] = rep["paragrafo_id"]
         if rep["vetor"] is not None:
             artefato_id = (rep["blocos"][0]["artefato_id"] if rep["construcao"] == "direta"
                            else rep["representacao_logica_id"])
@@ -179,7 +259,12 @@ def importar_vetorizacao(registro):
     """
     _limites(registro)
     try:
-        _exigir(registro.get("etapa") == "09_vetorizacao", "Importe a exportação da etapa 09 de vetorização.")
+        _exigir("representacao" not in registro or "perfil" in registro,
+                "A representação individual precisa incluir os metadados de perfil e de origem.")
+        _exigir("selecao_representacoes" not in registro or "perfil" in registro,
+                "A seleção declarada exige o formato vetorial com perfil e origem.")
+        _exigir(registro.get("etapa") == "09_vetorizacao" or "representacao" in registro,
+                "Importe a exportação vetorial ou uma representação individual com sua origem.")
         if "perfil" in registro:
             _exigir(registro.get("schema_version") == "1.0.0", "Versão vetorial não suportada.")
             original, consultas, fonte = _importar_atual(registro)
@@ -194,6 +279,8 @@ def importar_vetorizacao(registro):
     except ErroImportacao:
         raise
     except ErroEntrada as erro:
+        raise ErroImportacao(str(erro)) from None
+    except ErroVetorizacao as erro:
         raise ErroImportacao(str(erro)) from None
     except (ValueError, TypeError, KeyError, AttributeError, ImportError, OverflowError, RecursionError):
         raise ErroImportacao("A exportação vetorial está incompleta ou falhou na conferência de integridade.") from None
