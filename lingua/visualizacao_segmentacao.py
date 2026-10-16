@@ -6,6 +6,8 @@ resegmenta o texto e não altera a cadeia de origem nem os seus intervalos.
 
 from collections import defaultdict
 
+from diagnosticos_gramaticais import diagnosticar_gramatica, hierarquia_oracoes
+
 
 _CLASSES = {
     "ADJ": "Adjetivo", "ADP": "Preposição", "ADV": "Advérbio",
@@ -116,6 +118,9 @@ def construir_visualizacao_segmentacao(segmentacao, anotacao=None, analise=None,
     if segmentacao is None:
         return resultado
 
+    diagnosticos = diagnosticar_gramatica(segmentacao, anotacao, analise, regras)
+    resultado["grammar_diagnostics"] = diagnosticos
+
     tokens = {t["id"]: t for t in segmentacao["tokens"]}
     ordem = {t["id"]: i for i, t in enumerate(segmentacao["tokens"])}
     morfologia = {t["token_id"]: t for t in anotacao["anotacoes_tokens"]} if anotacao else {}
@@ -192,25 +197,23 @@ def construir_visualizacao_segmentacao(segmentacao, anotacao=None, analise=None,
     for oracoes in por_periodo.values():
         oracoes.sort(key=inicio_oracao)
 
-    def classificacao(ocorrencia, oracoes):
-        ids = {o["id"] for o in oracoes}
-        saidas = {v["tipo"] for v in ocorrencia["vinculos"]
-                  if v["alvo_tipo"] == "ocorrencia" and v["alvo_id"] in ids}
-        entradas = {v["tipo"] for o in oracoes for v in o["vinculos"]
-                    if v["alvo_tipo"] == "ocorrencia" and v["alvo_id"] == ocorrencia["id"]}
-        papeis = []
-        if "subordinacao" in saidas:
-            papeis.append("subordinada")
-        if "coordenacao" in saidas | entradas:
-            papeis.append("coordenada")
-        if "subordinacao" in entradas:
-            papeis.append("principal")
-        if papeis:
-            return "Oração " + " e ".join(papeis)
-        raiz = any(sintaxe.get(t, {}).get("dependencia") == "ROOT" for t in ocorrencia["nucleo_token_ids"])
-        if raiz:
-            return "Oração absoluta" if len(oracoes) == 1 else "Oração independente"
-        return "Classificação não determinada"
+    hierarquias = {}
+    for oracoes in por_periodo.values():
+        hierarquias.update(hierarquia_oracoes(oracoes, sintaxe))
+    conflitos = {ident for aviso in diagnosticos["avisos"]
+                 if aviso["codigo"] in {"marcador_subordinativo_em_raiz", "hierarquia_oracional_conflitante"}
+                 for ident in aviso["oracao_ids"]}
+
+    def classificacao(ocorrencia):
+        hierarquia = hierarquias[ocorrencia["id"]]
+        if ocorrencia["id"] in conflitos or hierarquia["conflito"]:
+            return "Classificação requer revisão"
+        posicao = hierarquia["posicao"]
+        if posicao == "indeterminada":
+            return "Classificação não determinada"
+        if posicao == "subordinada" and hierarquia["coordenada"]:
+            return "Oração subordinada e coordenada"
+        return "Oração " + posicao
 
     referencias = {}
     for periodo in segmentacao["periodos"]:
@@ -269,6 +272,8 @@ def construir_visualizacao_segmentacao(segmentacao, anotacao=None, analise=None,
             if periodo_id is not None and ident_periodo != periodo_id:
                 continue
             periodo = periodos[ident_periodo]
+            avisos_periodo = [dict(aviso, words=", ".join(tokens[t]["texto"] for t in aviso["token_ids"]))
+                              for aviso in diagnosticos["avisos"] if aviso["periodo_id"] == ident_periodo]
             exibidos, oracoes = set(), []
             for ocorrencia in por_periodo[ident_periodo]:
                 alcance = ocorrencia["alcance"]
@@ -284,13 +289,23 @@ def construir_visualizacao_segmentacao(segmentacao, anotacao=None, analise=None,
                             and tipo in _RELACOES and (tipo, alvo) not in vistos):
                         relacoes.append({"label": _RELACOES[tipo], **referencias[alvo]})
                         vistos.add((tipo, alvo))
+                hierarquia = hierarquias[ocorrencia["id"]]
+                for alvo in hierarquia["rege"]:
+                    relacoes.append({"label": "Rege a", **referencias[alvo]})
+                for alvo in hierarquia["coordenada_com"]:
+                    if ("coordenacao", alvo) not in vistos:
+                        relacoes.append({"label": _RELACOES["coordenacao"], **referencias[alvo]})
+                if hierarquia["subordinacao_compartilhada"]:
+                    for alvo in hierarquia["subordinada_a"]:
+                        relacoes.append({"label": "Compartilha subordinação a", **referencias[alvo]})
                 notas = []
                 for campo, rotulo in [("ambiguidades", "Ambiguidade"), ("alternativas", "Alternativa"),
                                        ("necessidade_contexto", "Necessidade de contexto")]:
                     notas.extend(f"{rotulo}: {texto}" for texto in ocorrencia[campo])
                 oracoes.append({
                     "id": ocorrencia["id"], **referencias[ocorrencia["id"]],
-                    "classification": classificacao(ocorrencia, por_periodo[ident_periodo]),
+                    "classification": classificacao(ocorrencia), "hierarchy": hierarquia,
+                    "requires_review": ocorrencia["id"] in conflitos or hierarquia["conflito"],
                     "text": " […] ".join(trechos) if alcance is not None else "Extensão não determinada",
                     "fragments": trechos, "evidence_fragments": evidencias,
                     "scope_resolved": alcance is not None,
@@ -300,6 +315,7 @@ def construir_visualizacao_segmentacao(segmentacao, anotacao=None, analise=None,
                 })
             grupo["periods"].append({
                 "period": periodo, "clauses": oracoes, "tokens": linhas(periodo["tokens"]),
+                "grammar_diagnostics": avisos_periodo,
                 "tone": periodo["ordem"] % 6 + 1,
                 "original_text": original[periodo["original"]["inicio"]:periodo["original"]["fim"]],
                 "clause_parts": partes_oracionais(periodo, oracoes),

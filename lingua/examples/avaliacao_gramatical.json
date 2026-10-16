@@ -1,0 +1,5038 @@
+{
+  "schema_version": "lingua.avaliacao_gramatical.v1",
+  "gerado_em": "2026-10-16T03:57:35.595317-03:00",
+  "referencia_sha256": "7008659c2ee6a09d31b78d6e3db66c1a9cc949a0037922e917f392135b7ea2f1",
+  "escopo": "Alvos selecionados em um texto real e controles independentes. Não é um corpus representativo nem mede acurácia global. Os grupos verbais são expectativas linguísticas para testes de segmentação; não são pontuados pela avaliação de tokens.",
+  "referencia": {
+    "schema_version": "lingua.referencia_gramatical.v1",
+    "identificacao": "revisao_gramatical_documento8_e_controles",
+    "versao": "1.0.0",
+    "coordenadas": {
+      "unidade": "pontos_de_codigo_unicode",
+      "base": 0,
+      "fim_exclusivo": true
+    },
+    "escopo": "Alvos selecionados em um texto real e controles independentes. Não é um corpus representativo nem mede acurácia global. Os grupos verbais são expectativas linguísticas para testes de segmentação; não são pontuados pela avaliação de tokens.",
+    "convencoes": [
+      "Classes universais e dependências UD. ROOT indica cabeça no próprio token.",
+      "Traços flexionais: conferir apenas as chaves explicitamente anotadas; dicionário vazio não exige ausência de todos os traços.",
+      "Continuar e passar aspectuais permanecem VERB; o verbo dependente é xcomp. O agrupamento em locução é independente do rótulo AUX.",
+      "Não há anotação integral de árvore. Cabeças ambíguas de relativas livres não são avaliadas.",
+      "Offsets referem-se ao texto original de cada caso e não podem ser reajustados para aumentar o acerto."
+    ],
+    "casos": [
+      {
+        "id": "documento-8",
+        "origem": "Texto enviado por Rodrigo; cinco períodos. Alvos revistos manualmente para esta avaliação, sem pretensão de anotação integral.",
+        "texto": "Embora os relatórios técnicos da comissão afirmem que a padronização dos formulários apenas otimiza o fluxo administrativo, a própria arquitetura do documento redefine silenciosamente o que a instituição passa a reconhecer como demanda legítima. Quando situações complexas de vulnerabilidade são comprimidas em caixas de seleção pré-definidas, elimina-se na origem a necessidade de que o avaliador examine as contradições concretas narradas pelo requerente durante a entrevista. Essa aparente neutralidade procedimental, longe de traduzir um avanço meramente operacional, funciona como um dispositivo silencioso que transfere para o algoritmo a responsabilidade política pelas exclusões cotidianas. Todavia, os dirigentes que patrocinam a automação integral do protocolo insistem em declarar nos pareceres oficiais que eventuais injustiças decorrem exclusivamente do preenchimento deficiente executado pelos funcionários da linha de frente. Caso semelhante premissa continue orientando as auditorias internas da organização, toda distorção sistêmica do modelo será convenientemente convertida em falha disciplinar individual, blindando o desenho normativo original contra contestações externas e cristalizando uma opacidade institucional quase impossível de reverter nos próximos ciclos de avaliação.",
+        "alvos": [
+          {
+            "texto": "afirmem",
+            "original": {
+              "inicio": 42,
+              "fim": 49
+            },
+            "lema": "afirmar",
+            "pos": "VERB",
+            "morfologia": {
+              "Mood": "Sub",
+              "Number": "Plur",
+              "Person": "3",
+              "Tense": "Pres",
+              "VerbForm": "Fin"
+            },
+            "dependencia": "advcl",
+            "cabeca_original": {
+              "inicio": 159,
+              "fim": 167
+            }
+          },
+          {
+            "texto": "redefine",
+            "original": {
+              "inicio": 159,
+              "fim": 167
+            },
+            "lema": "redefinir",
+            "pos": "VERB",
+            "morfologia": {
+              "Mood": "Ind",
+              "Number": "Sing",
+              "Person": "3",
+              "Tense": "Pres",
+              "VerbForm": "Fin"
+            },
+            "dependencia": "ROOT",
+            "cabeca_original": {
+              "inicio": 159,
+              "fim": 167
+            }
+          },
+          {
+            "texto": "silenciosamente",
+            "original": {
+              "inicio": 168,
+              "fim": 183
+            },
+            "lema": "silenciosamente",
+            "pos": "ADV",
+            "morfologia": {},
+            "dependencia": "advmod",
+            "cabeca_original": {
+              "inicio": 159,
+              "fim": 167
+            }
+          },
+          {
+            "texto": "passa",
+            "original": {
+              "inicio": 204,
+              "fim": 209
+            },
+            "lema": "passar",
+            "pos": "VERB",
+            "morfologia": {
+              "Mood": "Ind",
+              "Number": "Sing",
+              "Person": "3",
+              "Tense": "Pres",
+              "VerbForm": "Fin"
+            }
+          },
+          {
+            "texto": "reconhecer",
+            "original": {
+              "inicio": 212,
+              "fim": 222
+            },
+            "lema": "reconhecer",
+            "pos": "VERB",
+            "morfologia": {
+              "VerbForm": "Inf"
+            },
+            "dependencia": "xcomp",
+            "cabeca_original": {
+              "inicio": 204,
+              "fim": 209
+            }
+          },
+          {
+            "texto": "examine",
+            "original": {
+              "inicio": 398,
+              "fim": 405
+            },
+            "lema": "examinar",
+            "pos": "VERB",
+            "morfologia": {
+              "Mood": "Sub",
+              "Number": "Sing",
+              "Person": "3",
+              "Tense": "Pres",
+              "VerbForm": "Fin"
+            },
+            "dependencia": "acl",
+            "cabeca_original": {
+              "inicio": 367,
+              "fim": 378
+            }
+          },
+          {
+            "texto": "meramente",
+            "original": {
+              "inicio": 549,
+              "fim": 558
+            },
+            "lema": "meramente",
+            "pos": "ADV",
+            "morfologia": {},
+            "dependencia": "advmod",
+            "cabeca_original": {
+              "inicio": 559,
+              "fim": 570
+            }
+          },
+          {
+            "texto": "premissa",
+            "original": {
+              "inicio": 957,
+              "fim": 965
+            },
+            "lema": "premissa",
+            "pos": "NOUN",
+            "morfologia": {
+              "Gender": "Fem",
+              "Number": "Sing"
+            },
+            "dependencia": "nsubj",
+            "cabeca_original": {
+              "inicio": 966,
+              "fim": 974
+            }
+          },
+          {
+            "texto": "continue",
+            "original": {
+              "inicio": 966,
+              "fim": 974
+            },
+            "lema": "continuar",
+            "pos": "VERB",
+            "morfologia": {
+              "Mood": "Sub",
+              "Number": "Sing",
+              "Person": "3",
+              "Tense": "Pres",
+              "VerbForm": "Fin"
+            },
+            "dependencia": "advcl",
+            "cabeca_original": {
+              "inicio": 1082,
+              "fim": 1092
+            }
+          },
+          {
+            "texto": "orientando",
+            "original": {
+              "inicio": 975,
+              "fim": 985
+            },
+            "lema": "orientar",
+            "pos": "VERB",
+            "morfologia": {
+              "VerbForm": "Ger"
+            },
+            "dependencia": "xcomp",
+            "cabeca_original": {
+              "inicio": 966,
+              "fim": 974
+            }
+          },
+          {
+            "texto": "convertida",
+            "original": {
+              "inicio": 1082,
+              "fim": 1092
+            },
+            "lema": "converter",
+            "pos": "VERB",
+            "morfologia": {
+              "Gender": "Fem",
+              "Number": "Sing",
+              "VerbForm": "Part"
+            },
+            "dependencia": "ROOT",
+            "cabeca_original": {
+              "inicio": 1082,
+              "fim": 1092
+            }
+          }
+        ],
+        "grupos_verbais": [
+          {
+            "texto": "passa a reconhecer",
+            "original": {
+              "inicio": 204,
+              "fim": 222
+            },
+            "verbos": [
+              "passa",
+              "reconhecer"
+            ]
+          },
+          {
+            "texto": "continue orientando",
+            "original": {
+              "inicio": 966,
+              "fim": 985
+            },
+            "verbos": [
+              "continue",
+              "orientando"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "aspectual-passar",
+        "origem": "Controle independente escrito para a referência.",
+        "texto": "A equipe passa a reconhecer os erros.",
+        "alvos": [
+          {
+            "texto": "equipe",
+            "original": {
+              "inicio": 2,
+              "fim": 8
+            },
+            "lema": "equipe",
+            "pos": "NOUN",
+            "morfologia": {
+              "Gender": "Fem",
+              "Number": "Sing"
+            },
+            "dependencia": "nsubj",
+            "cabeca_original": {
+              "inicio": 9,
+              "fim": 14
+            }
+          },
+          {
+            "texto": "passa",
+            "original": {
+              "inicio": 9,
+              "fim": 14
+            },
+            "lema": "passar",
+            "pos": "VERB",
+            "morfologia": {
+              "Mood": "Ind",
+              "Number": "Sing",
+              "Person": "3",
+              "Tense": "Pres",
+              "VerbForm": "Fin"
+            },
+            "dependencia": "ROOT",
+            "cabeca_original": {
+              "inicio": 9,
+              "fim": 14
+            }
+          },
+          {
+            "texto": "reconhecer",
+            "original": {
+              "inicio": 17,
+              "fim": 27
+            },
+            "lema": "reconhecer",
+            "pos": "VERB",
+            "morfologia": {
+              "VerbForm": "Inf"
+            },
+            "dependencia": "xcomp",
+            "cabeca_original": {
+              "inicio": 9,
+              "fim": 14
+            }
+          }
+        ],
+        "grupos_verbais": [
+          {
+            "texto": "passa a reconhecer",
+            "original": {
+              "inicio": 9,
+              "fim": 27
+            },
+            "verbos": [
+              "passa",
+              "reconhecer"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "passagem-sem-locucao",
+        "origem": "Controle independente escrito para a referência.",
+        "texto": "A equipe passou a ponte ontem.",
+        "alvos": [
+          {
+            "texto": "passou",
+            "original": {
+              "inicio": 9,
+              "fim": 15
+            },
+            "lema": "passar",
+            "pos": "VERB",
+            "morfologia": {
+              "Mood": "Ind",
+              "Number": "Sing",
+              "Person": "3",
+              "Tense": "Past",
+              "VerbForm": "Fin"
+            },
+            "dependencia": "ROOT",
+            "cabeca_original": {
+              "inicio": 9,
+              "fim": 15
+            }
+          },
+          {
+            "texto": "ponte",
+            "original": {
+              "inicio": 18,
+              "fim": 23
+            },
+            "lema": "ponte",
+            "pos": "NOUN",
+            "morfologia": {
+              "Gender": "Fem",
+              "Number": "Sing"
+            },
+            "dependencia": "obj",
+            "cabeca_original": {
+              "inicio": 9,
+              "fim": 15
+            }
+          }
+        ],
+        "grupos_verbais": []
+      },
+      {
+        "id": "aspectual-continuar",
+        "origem": "Controle independente escrito para a referência.",
+        "texto": "A premissa continua orientando a decisão.",
+        "alvos": [
+          {
+            "texto": "premissa",
+            "original": {
+              "inicio": 2,
+              "fim": 10
+            },
+            "lema": "premissa",
+            "pos": "NOUN",
+            "morfologia": {
+              "Gender": "Fem",
+              "Number": "Sing"
+            },
+            "dependencia": "nsubj",
+            "cabeca_original": {
+              "inicio": 11,
+              "fim": 19
+            }
+          },
+          {
+            "texto": "continua",
+            "original": {
+              "inicio": 11,
+              "fim": 19
+            },
+            "lema": "continuar",
+            "pos": "VERB",
+            "morfologia": {
+              "Mood": "Ind",
+              "Number": "Sing",
+              "Person": "3",
+              "Tense": "Pres",
+              "VerbForm": "Fin"
+            },
+            "dependencia": "ROOT",
+            "cabeca_original": {
+              "inicio": 11,
+              "fim": 19
+            }
+          },
+          {
+            "texto": "orientando",
+            "original": {
+              "inicio": 20,
+              "fim": 30
+            },
+            "lema": "orientar",
+            "pos": "VERB",
+            "morfologia": {
+              "VerbForm": "Ger"
+            },
+            "dependencia": "xcomp",
+            "cabeca_original": {
+              "inicio": 11,
+              "fim": 19
+            }
+          }
+        ],
+        "grupos_verbais": [
+          {
+            "texto": "continua orientando",
+            "original": {
+              "inicio": 11,
+              "fim": 30
+            },
+            "verbos": [
+              "continua",
+              "orientando"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "concessiva-curta",
+        "origem": "Controle independente escrito para a referência.",
+        "texto": "Embora as equipes afirmem o contrário, a decisão permanece.",
+        "alvos": [
+          {
+            "texto": "afirmem",
+            "original": {
+              "inicio": 18,
+              "fim": 25
+            },
+            "lema": "afirmar",
+            "pos": "VERB",
+            "morfologia": {
+              "Mood": "Sub",
+              "Number": "Plur",
+              "Person": "3",
+              "Tense": "Pres",
+              "VerbForm": "Fin"
+            },
+            "dependencia": "advcl",
+            "cabeca_original": {
+              "inicio": 49,
+              "fim": 58
+            }
+          },
+          {
+            "texto": "permanece",
+            "original": {
+              "inicio": 49,
+              "fim": 58
+            },
+            "lema": "permanecer",
+            "pos": "VERB",
+            "morfologia": {
+              "Mood": "Ind",
+              "Number": "Sing",
+              "Person": "3",
+              "Tense": "Pres",
+              "VerbForm": "Fin"
+            },
+            "dependencia": "ROOT",
+            "cabeca_original": {
+              "inicio": 49,
+              "fim": 58
+            }
+          }
+        ],
+        "grupos_verbais": []
+      },
+      {
+        "id": "subjuntivo-complemento",
+        "origem": "Controle independente escrito para a referência.",
+        "texto": "Espero que a médica examine o documento.",
+        "alvos": [
+          {
+            "texto": "examine",
+            "original": {
+              "inicio": 20,
+              "fim": 27
+            },
+            "lema": "examinar",
+            "pos": "VERB",
+            "morfologia": {
+              "Mood": "Sub",
+              "Number": "Sing",
+              "Person": "3",
+              "Tense": "Pres",
+              "VerbForm": "Fin"
+            },
+            "dependencia": "ccomp",
+            "cabeca_original": {
+              "inicio": 0,
+              "fim": 6
+            }
+          },
+          {
+            "texto": "documento",
+            "original": {
+              "inicio": 30,
+              "fim": 39
+            },
+            "lema": "documento",
+            "pos": "NOUN",
+            "morfologia": {
+              "Gender": "Masc",
+              "Number": "Sing"
+            },
+            "dependencia": "obj",
+            "cabeca_original": {
+              "inicio": 20,
+              "fim": 27
+            }
+          }
+        ],
+        "grupos_verbais": []
+      },
+      {
+        "id": "adverbio-silenciosamente",
+        "origem": "Controle independente escrito para a referência.",
+        "texto": "Ela respondeu silenciosamente.",
+        "alvos": [
+          {
+            "texto": "respondeu",
+            "original": {
+              "inicio": 4,
+              "fim": 13
+            },
+            "lema": "responder",
+            "pos": "VERB",
+            "morfologia": {
+              "Mood": "Ind",
+              "Number": "Sing",
+              "Person": "3",
+              "Tense": "Past",
+              "VerbForm": "Fin"
+            },
+            "dependencia": "ROOT",
+            "cabeca_original": {
+              "inicio": 4,
+              "fim": 13
+            }
+          },
+          {
+            "texto": "silenciosamente",
+            "original": {
+              "inicio": 14,
+              "fim": 29
+            },
+            "lema": "silenciosamente",
+            "pos": "ADV",
+            "morfologia": {},
+            "dependencia": "advmod",
+            "cabeca_original": {
+              "inicio": 4,
+              "fim": 13
+            }
+          }
+        ],
+        "grupos_verbais": []
+      },
+      {
+        "id": "adverbio-meramente",
+        "origem": "Controle independente escrito para a referência.",
+        "texto": "O trabalho é meramente operacional.",
+        "alvos": [
+          {
+            "texto": "meramente",
+            "original": {
+              "inicio": 13,
+              "fim": 22
+            },
+            "lema": "meramente",
+            "pos": "ADV",
+            "morfologia": {},
+            "dependencia": "advmod",
+            "cabeca_original": {
+              "inicio": 23,
+              "fim": 34
+            }
+          },
+          {
+            "texto": "operacional",
+            "original": {
+              "inicio": 23,
+              "fim": 34
+            },
+            "lema": "operacional",
+            "pos": "ADJ",
+            "morfologia": {
+              "Number": "Sing"
+            },
+            "dependencia": "ROOT",
+            "cabeca_original": {
+              "inicio": 23,
+              "fim": 34
+            }
+          }
+        ],
+        "grupos_verbais": []
+      },
+      {
+        "id": "premissa-nominal",
+        "origem": "Controle independente escrito para a referência.",
+        "texto": "A premissa mudou.",
+        "alvos": [
+          {
+            "texto": "premissa",
+            "original": {
+              "inicio": 2,
+              "fim": 10
+            },
+            "lema": "premissa",
+            "pos": "NOUN",
+            "morfologia": {
+              "Gender": "Fem",
+              "Number": "Sing"
+            },
+            "dependencia": "nsubj",
+            "cabeca_original": {
+              "inicio": 11,
+              "fim": 16
+            }
+          },
+          {
+            "texto": "mudou",
+            "original": {
+              "inicio": 11,
+              "fim": 16
+            },
+            "lema": "mudar",
+            "pos": "VERB",
+            "morfologia": {
+              "Mood": "Ind",
+              "Number": "Sing",
+              "Person": "3",
+              "Tense": "Past",
+              "VerbForm": "Fin"
+            },
+            "dependencia": "ROOT",
+            "cabeca_original": {
+              "inicio": 11,
+              "fim": 16
+            }
+          }
+        ],
+        "grupos_verbais": []
+      },
+      {
+        "id": "ambiguidade-guarda",
+        "origem": "Controle independente escrito para a referência.",
+        "texto": "A guarda guarda os registros.",
+        "alvos": [
+          {
+            "texto": "guarda",
+            "original": {
+              "inicio": 2,
+              "fim": 8
+            },
+            "lema": "guarda",
+            "pos": "NOUN",
+            "morfologia": {
+              "Gender": "Fem",
+              "Number": "Sing"
+            },
+            "dependencia": "nsubj",
+            "cabeca_original": {
+              "inicio": 9,
+              "fim": 15
+            }
+          },
+          {
+            "texto": "guarda",
+            "original": {
+              "inicio": 9,
+              "fim": 15
+            },
+            "lema": "guardar",
+            "pos": "VERB",
+            "morfologia": {
+              "Mood": "Ind",
+              "Number": "Sing",
+              "Person": "3",
+              "Tense": "Pres",
+              "VerbForm": "Fin"
+            },
+            "dependencia": "ROOT",
+            "cabeca_original": {
+              "inicio": 9,
+              "fim": 15
+            }
+          }
+        ],
+        "grupos_verbais": []
+      },
+      {
+        "id": "redefinir-plural",
+        "origem": "Controle independente escrito para a referência.",
+        "texto": "Os relatórios redefinem o protocolo.",
+        "alvos": [
+          {
+            "texto": "relatórios",
+            "original": {
+              "inicio": 3,
+              "fim": 13
+            },
+            "lema": "relatório",
+            "pos": "NOUN",
+            "morfologia": {
+              "Gender": "Masc",
+              "Number": "Plur"
+            },
+            "dependencia": "nsubj",
+            "cabeca_original": {
+              "inicio": 14,
+              "fim": 23
+            }
+          },
+          {
+            "texto": "redefinem",
+            "original": {
+              "inicio": 14,
+              "fim": 23
+            },
+            "lema": "redefinir",
+            "pos": "VERB",
+            "morfologia": {
+              "Mood": "Ind",
+              "Number": "Plur",
+              "Person": "3",
+              "Tense": "Pres",
+              "VerbForm": "Fin"
+            },
+            "dependencia": "ROOT",
+            "cabeca_original": {
+              "inicio": 14,
+              "fim": 23
+            }
+          }
+        ],
+        "grupos_verbais": []
+      }
+    ]
+  },
+  "modelos": [
+    {
+      "modelo": "pt_core_news_sm",
+      "versao_modelo": "3.8.0",
+      "versao_spacy": "3.8.16",
+      "componentes": [
+        "tok2vec",
+        "morphologizer",
+        "parser",
+        "lemmatizer",
+        "attribute_ruler",
+        "ner"
+      ],
+      "tempo_carga_segundos": 0.19691880399477668,
+      "tempo_inferencia_segundos": 0.056368287005170714,
+      "resumo": {
+        "casos": 11,
+        "alvos": 33,
+        "alvos_alinhados": 33,
+        "metricas": {
+          "pos": {
+            "acertos": 28,
+            "avaliados": 33,
+            "taxa_nos_alvos": 0.8484848484848485
+          },
+          "lema": {
+            "acertos": 26,
+            "avaliados": 33,
+            "taxa_nos_alvos": 0.7878787878787878
+          },
+          "morfologia": {
+            "acertos": 25,
+            "avaliados": 29,
+            "taxa_nos_alvos": 0.8620689655172413
+          },
+          "dependencia": {
+            "acertos": 23,
+            "avaliados": 32,
+            "taxa_nos_alvos": 0.71875
+          },
+          "cabeca_original": {
+            "acertos": 23,
+            "avaliados": 32,
+            "taxa_nos_alvos": 0.71875
+          },
+          "dependencia_e_cabeca": {
+            "acertos": 23,
+            "avaliados": 32,
+            "taxa_nos_alvos": 0.71875
+          },
+          "tracos_individuais": {
+            "acertos": 95,
+            "avaliados": 99,
+            "taxa_nos_alvos": 0.9595959595959596
+          }
+        }
+      },
+      "casos": [
+        {
+          "id": "documento-8",
+          "tempo_segundos": 0.025978028003009968,
+          "tokens_modelo": 179,
+          "resultados": [
+            {
+              "texto": "afirmem",
+              "original": {
+                "inicio": 42,
+                "fim": 49
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "VERB",
+                "lema": "afirmar",
+                "morfologia": {
+                  "Mood": "Sub",
+                  "Number": "Plur",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "advcl",
+                "cabeca_original": {
+                  "inicio": 159,
+                  "fim": 167
+                }
+              },
+              "obtido": {
+                "pos": "VERB",
+                "lema": "afirmer",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Plur",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 42,
+                  "fim": 49
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": false,
+                "morfologia": false,
+                "dependencia": false,
+                "cabeca_original": false,
+                "dependencia_e_cabeca": false
+              },
+              "tracos": {
+                "Mood": {
+                  "esperado": "Sub",
+                  "obtido": "Ind",
+                  "acerto": false
+                },
+                "Number": {
+                  "esperado": "Plur",
+                  "obtido": "Plur",
+                  "acerto": true
+                },
+                "Person": {
+                  "esperado": "3",
+                  "obtido": "3",
+                  "acerto": true
+                },
+                "Tense": {
+                  "esperado": "Pres",
+                  "obtido": "Pres",
+                  "acerto": true
+                },
+                "VerbForm": {
+                  "esperado": "Fin",
+                  "obtido": "Fin",
+                  "acerto": true
+                }
+              }
+            },
+            {
+              "texto": "redefine",
+              "original": {
+                "inicio": 159,
+                "fim": 167
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "VERB",
+                "lema": "redefinir",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 159,
+                  "fim": 167
+                }
+              },
+              "obtido": {
+                "pos": "VERB",
+                "lema": "redefine",
+                "morfologia": {
+                  "Mood": "Sub",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "acl",
+                "cabeca_original": {
+                  "inicio": 134,
+                  "fim": 145
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": false,
+                "morfologia": false,
+                "dependencia": false,
+                "cabeca_original": false,
+                "dependencia_e_cabeca": false
+              },
+              "tracos": {
+                "Mood": {
+                  "esperado": "Ind",
+                  "obtido": "Sub",
+                  "acerto": false
+                },
+                "Number": {
+                  "esperado": "Sing",
+                  "obtido": "Sing",
+                  "acerto": true
+                },
+                "Person": {
+                  "esperado": "3",
+                  "obtido": "3",
+                  "acerto": true
+                },
+                "Tense": {
+                  "esperado": "Pres",
+                  "obtido": "Pres",
+                  "acerto": true
+                },
+                "VerbForm": {
+                  "esperado": "Fin",
+                  "obtido": "Fin",
+                  "acerto": true
+                }
+              }
+            },
+            {
+              "texto": "silenciosamente",
+              "original": {
+                "inicio": 168,
+                "fim": 183
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "ADV",
+                "lema": "silenciosamente",
+                "morfologia": {},
+                "dependencia": "advmod",
+                "cabeca_original": {
+                  "inicio": 159,
+                  "fim": 167
+                }
+              },
+              "obtido": {
+                "pos": "ADJ",
+                "lema": "silenciosamente",
+                "morfologia": {
+                  "Gender": "Masc",
+                  "Number": "Sing"
+                },
+                "dependencia": "advmod",
+                "cabeca_original": {
+                  "inicio": 159,
+                  "fim": 167
+                }
+              },
+              "acertos": {
+                "pos": false,
+                "lema": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {}
+            },
+            {
+              "texto": "passa",
+              "original": {
+                "inicio": 204,
+                "fim": 209
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "VERB",
+                "lema": "passar",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                }
+              },
+              "obtido": {
+                "pos": "VERB",
+                "lema": "passar",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true
+              },
+              "tracos": {
+                "Mood": {
+                  "esperado": "Ind",
+                  "obtido": "Ind",
+                  "acerto": true
+                },
+                "Number": {
+                  "esperado": "Sing",
+                  "obtido": "Sing",
+                  "acerto": true
+                },
+                "Person": {
+                  "esperado": "3",
+                  "obtido": "3",
+                  "acerto": true
+                },
+                "Tense": {
+                  "esperado": "Pres",
+                  "obtido": "Pres",
+                  "acerto": true
+                },
+                "VerbForm": {
+                  "esperado": "Fin",
+                  "obtido": "Fin",
+                  "acerto": true
+                }
+              }
+            },
+            {
+              "texto": "reconhecer",
+              "original": {
+                "inicio": 212,
+                "fim": 222
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "VERB",
+                "lema": "reconhecer",
+                "morfologia": {
+                  "VerbForm": "Inf"
+                },
+                "dependencia": "xcomp",
+                "cabeca_original": {
+                  "inicio": 204,
+                  "fim": 209
+                }
+              },
+              "obtido": {
+                "pos": "VERB",
+                "lema": "reconhecer",
+                "morfologia": {
+                  "VerbForm": "Inf"
+                },
+                "dependencia": "xcomp",
+                "cabeca_original": {
+                  "inicio": 204,
+                  "fim": 209
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "VerbForm": {
+                  "esperado": "Inf",
+                  "obtido": "Inf",
+                  "acerto": true
+                }
+              }
+            },
+            {
+              "texto": "examine",
+              "original": {
+                "inicio": 398,
+                "fim": 405
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "VERB",
+                "lema": "examinar",
+                "morfologia": {
+                  "Mood": "Sub",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "acl",
+                "cabeca_original": {
+                  "inicio": 367,
+                  "fim": 378
+                }
+              },
+              "obtido": {
+                "pos": "VERB",
+                "lema": "examine",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "acl",
+                "cabeca_original": {
+                  "inicio": 367,
+                  "fim": 378
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": false,
+                "morfologia": false,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "Mood": {
+                  "esperado": "Sub",
+                  "obtido": "Ind",
+                  "acerto": false
+                },
+                "Number": {
+                  "esperado": "Sing",
+                  "obtido": "Sing",
+                  "acerto": true
+                },
+                "Person": {
+                  "esperado": "3",
+                  "obtido": "3",
+                  "acerto": true
+                },
+                "Tense": {
+                  "esperado": "Pres",
+                  "obtido": "Pres",
+                  "acerto": true
+                },
+                "VerbForm": {
+                  "esperado": "Fin",
+                  "obtido": "Fin",
+                  "acerto": true
+                }
+              }
+            },
+            {
+              "texto": "meramente",
+              "original": {
+                "inicio": 549,
+                "fim": 558
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "ADV",
+                "lema": "meramente",
+                "morfologia": {},
+                "dependencia": "advmod",
+                "cabeca_original": {
+                  "inicio": 559,
+                  "fim": 570
+                }
+              },
+              "obtido": {
+                "pos": "ADJ",
+                "lema": "meramente",
+                "morfologia": {
+                  "Gender": "Masc",
+                  "Number": "Sing"
+                },
+                "dependencia": "amod",
+                "cabeca_original": {
+                  "inicio": 542,
+                  "fim": 548
+                }
+              },
+              "acertos": {
+                "pos": false,
+                "lema": true,
+                "dependencia": false,
+                "cabeca_original": false,
+                "dependencia_e_cabeca": false
+              },
+              "tracos": {}
+            },
+            {
+              "texto": "premissa",
+              "original": {
+                "inicio": 957,
+                "fim": 965
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "NOUN",
+                "lema": "premissa",
+                "morfologia": {
+                  "Gender": "Fem",
+                  "Number": "Sing"
+                },
+                "dependencia": "nsubj",
+                "cabeca_original": {
+                  "inicio": 966,
+                  "fim": 974
+                }
+              },
+              "obtido": {
+                "pos": "DET",
+                "lema": "premisse",
+                "morfologia": {
+                  "Gender": "Fem",
+                  "Number": "Sing",
+                  "PronType": "Dem"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 957,
+                  "fim": 965
+                }
+              },
+              "acertos": {
+                "pos": false,
+                "lema": false,
+                "morfologia": true,
+                "dependencia": false,
+                "cabeca_original": false,
+                "dependencia_e_cabeca": false
+              },
+              "tracos": {
+                "Gender": {
+                  "esperado": "Fem",
+                  "obtido": "Fem",
+                  "acerto": true
+                },
+                "Number": {
+                  "esperado": "Sing",
+                  "obtido": "Sing",
+                  "acerto": true
+                }
+              }
+            },
+            {
+              "texto": "continue",
+              "original": {
+                "inicio": 966,
+                "fim": 974
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "VERB",
+                "lema": "continuar",
+                "morfologia": {
+                  "Mood": "Sub",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "advcl",
+                "cabeca_original": {
+                  "inicio": 1082,
+                  "fim": 1092
+                }
+              },
+              "obtido": {
+                "pos": "VERB",
+                "lema": "continuar",
+                "morfologia": {
+                  "Mood": "Sub",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "xcomp",
+                "cabeca_original": {
+                  "inicio": 957,
+                  "fim": 965
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true,
+                "dependencia": false,
+                "cabeca_original": false,
+                "dependencia_e_cabeca": false
+              },
+              "tracos": {
+                "Mood": {
+                  "esperado": "Sub",
+                  "obtido": "Sub",
+                  "acerto": true
+                },
+                "Number": {
+                  "esperado": "Sing",
+                  "obtido": "Sing",
+                  "acerto": true
+                },
+                "Person": {
+                  "esperado": "3",
+                  "obtido": "3",
+                  "acerto": true
+                },
+                "Tense": {
+                  "esperado": "Pres",
+                  "obtido": "Pres",
+                  "acerto": true
+                },
+                "VerbForm": {
+                  "esperado": "Fin",
+                  "obtido": "Fin",
+                  "acerto": true
+                }
+              }
+            },
+            {
+              "texto": "orientando",
+              "original": {
+                "inicio": 975,
+                "fim": 985
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "VERB",
+                "lema": "orientar",
+                "morfologia": {
+                  "VerbForm": "Ger"
+                },
+                "dependencia": "xcomp",
+                "cabeca_original": {
+                  "inicio": 966,
+                  "fim": 974
+                }
+              },
+              "obtido": {
+                "pos": "VERB",
+                "lema": "orientar",
+                "morfologia": {
+                  "VerbForm": "Ger"
+                },
+                "dependencia": "advcl",
+                "cabeca_original": {
+                  "inicio": 957,
+                  "fim": 965
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true,
+                "dependencia": false,
+                "cabeca_original": false,
+                "dependencia_e_cabeca": false
+              },
+              "tracos": {
+                "VerbForm": {
+                  "esperado": "Ger",
+                  "obtido": "Ger",
+                  "acerto": true
+                }
+              }
+            },
+            {
+              "texto": "convertida",
+              "original": {
+                "inicio": 1082,
+                "fim": 1092
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "VERB",
+                "lema": "converter",
+                "morfologia": {
+                  "Gender": "Fem",
+                  "Number": "Sing",
+                  "VerbForm": "Part"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 1082,
+                  "fim": 1092
+                }
+              },
+              "obtido": {
+                "pos": "VERB",
+                "lema": "convertir",
+                "morfologia": {
+                  "Gender": "Fem",
+                  "Number": "Sing",
+                  "VerbForm": "Part",
+                  "Voice": "Pass"
+                },
+                "dependencia": "conj",
+                "cabeca_original": {
+                  "inicio": 957,
+                  "fim": 965
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": false,
+                "morfologia": true,
+                "dependencia": false,
+                "cabeca_original": false,
+                "dependencia_e_cabeca": false
+              },
+              "tracos": {
+                "Gender": {
+                  "esperado": "Fem",
+                  "obtido": "Fem",
+                  "acerto": true
+                },
+                "Number": {
+                  "esperado": "Sing",
+                  "obtido": "Sing",
+                  "acerto": true
+                },
+                "VerbForm": {
+                  "esperado": "Part",
+                  "obtido": "Part",
+                  "acerto": true
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "aspectual-passar",
+          "tempo_segundos": 0.003472660006082151,
+          "tokens_modelo": 8,
+          "resultados": [
+            {
+              "texto": "equipe",
+              "original": {
+                "inicio": 2,
+                "fim": 8
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "NOUN",
+                "lema": "equipe",
+                "morfologia": {
+                  "Gender": "Fem",
+                  "Number": "Sing"
+                },
+                "dependencia": "nsubj",
+                "cabeca_original": {
+                  "inicio": 9,
+                  "fim": 14
+                }
+              },
+              "obtido": {
+                "pos": "NOUN",
+                "lema": "equipe",
+                "morfologia": {
+                  "Gender": "Fem",
+                  "Number": "Sing"
+                },
+                "dependencia": "nsubj",
+                "cabeca_original": {
+                  "inicio": 9,
+                  "fim": 14
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "Gender": {
+                  "esperado": "Fem",
+                  "obtido": "Fem",
+                  "acerto": true
+                },
+                "Number": {
+                  "esperado": "Sing",
+                  "obtido": "Sing",
+                  "acerto": true
+                }
+              }
+            },
+            {
+              "texto": "passa",
+              "original": {
+                "inicio": 9,
+                "fim": 14
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "VERB",
+                "lema": "passar",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 9,
+                  "fim": 14
+                }
+              },
+              "obtido": {
+                "pos": "VERB",
+                "lema": "passar",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 9,
+                  "fim": 14
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "Mood": {
+                  "esperado": "Ind",
+                  "obtido": "Ind",
+                  "acerto": true
+                },
+                "Number": {
+                  "esperado": "Sing",
+                  "obtido": "Sing",
+                  "acerto": true
+                },
+                "Person": {
+                  "esperado": "3",
+                  "obtido": "3",
+                  "acerto": true
+                },
+                "Tense": {
+                  "esperado": "Pres",
+                  "obtido": "Pres",
+                  "acerto": true
+                },
+                "VerbForm": {
+                  "esperado": "Fin",
+                  "obtido": "Fin",
+                  "acerto": true
+                }
+              }
+            },
+            {
+              "texto": "reconhecer",
+              "original": {
+                "inicio": 17,
+                "fim": 27
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "VERB",
+                "lema": "reconhecer",
+                "morfologia": {
+                  "VerbForm": "Inf"
+                },
+                "dependencia": "xcomp",
+                "cabeca_original": {
+                  "inicio": 9,
+                  "fim": 14
+                }
+              },
+              "obtido": {
+                "pos": "VERB",
+                "lema": "reconhecer",
+                "morfologia": {
+                  "VerbForm": "Inf"
+                },
+                "dependencia": "xcomp",
+                "cabeca_original": {
+                  "inicio": 9,
+                  "fim": 14
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "VerbForm": {
+                  "esperado": "Inf",
+                  "obtido": "Inf",
+                  "acerto": true
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "passagem-sem-locucao",
+          "tempo_segundos": 0.003269528999226168,
+          "tokens_modelo": 7,
+          "resultados": [
+            {
+              "texto": "passou",
+              "original": {
+                "inicio": 9,
+                "fim": 15
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "VERB",
+                "lema": "passar",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Past",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 9,
+                  "fim": 15
+                }
+              },
+              "obtido": {
+                "pos": "VERB",
+                "lema": "passar",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Past",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 9,
+                  "fim": 15
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "Mood": {
+                  "esperado": "Ind",
+                  "obtido": "Ind",
+                  "acerto": true
+                },
+                "Number": {
+                  "esperado": "Sing",
+                  "obtido": "Sing",
+                  "acerto": true
+                },
+                "Person": {
+                  "esperado": "3",
+                  "obtido": "3",
+                  "acerto": true
+                },
+                "Tense": {
+                  "esperado": "Past",
+                  "obtido": "Past",
+                  "acerto": true
+                },
+                "VerbForm": {
+                  "esperado": "Fin",
+                  "obtido": "Fin",
+                  "acerto": true
+                }
+              }
+            },
+            {
+              "texto": "ponte",
+              "original": {
+                "inicio": 18,
+                "fim": 23
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "NOUN",
+                "lema": "ponte",
+                "morfologia": {
+                  "Gender": "Fem",
+                  "Number": "Sing"
+                },
+                "dependencia": "obj",
+                "cabeca_original": {
+                  "inicio": 9,
+                  "fim": 15
+                }
+              },
+              "obtido": {
+                "pos": "NOUN",
+                "lema": "ponte",
+                "morfologia": {
+                  "Gender": "Fem",
+                  "Number": "Sing"
+                },
+                "dependencia": "obj",
+                "cabeca_original": {
+                  "inicio": 9,
+                  "fim": 15
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "Gender": {
+                  "esperado": "Fem",
+                  "obtido": "Fem",
+                  "acerto": true
+                },
+                "Number": {
+                  "esperado": "Sing",
+                  "obtido": "Sing",
+                  "acerto": true
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "aspectual-continuar",
+          "tempo_segundos": 0.003117715001280885,
+          "tokens_modelo": 7,
+          "resultados": [
+            {
+              "texto": "premissa",
+              "original": {
+                "inicio": 2,
+                "fim": 10
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "NOUN",
+                "lema": "premissa",
+                "morfologia": {
+                  "Gender": "Fem",
+                  "Number": "Sing"
+                },
+                "dependencia": "nsubj",
+                "cabeca_original": {
+                  "inicio": 11,
+                  "fim": 19
+                }
+              },
+              "obtido": {
+                "pos": "NOUN",
+                "lema": "premissa",
+                "morfologia": {
+                  "Gender": "Fem",
+                  "Number": "Sing"
+                },
+                "dependencia": "nsubj",
+                "cabeca_original": {
+                  "inicio": 11,
+                  "fim": 19
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "Gender": {
+                  "esperado": "Fem",
+                  "obtido": "Fem",
+                  "acerto": true
+                },
+                "Number": {
+                  "esperado": "Sing",
+                  "obtido": "Sing",
+                  "acerto": true
+                }
+              }
+            },
+            {
+              "texto": "continua",
+              "original": {
+                "inicio": 11,
+                "fim": 19
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "VERB",
+                "lema": "continuar",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 11,
+                  "fim": 19
+                }
+              },
+              "obtido": {
+                "pos": "VERB",
+                "lema": "continuar",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 11,
+                  "fim": 19
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "Mood": {
+                  "esperado": "Ind",
+                  "obtido": "Ind",
+                  "acerto": true
+                },
+                "Number": {
+                  "esperado": "Sing",
+                  "obtido": "Sing",
+                  "acerto": true
+                },
+                "Person": {
+                  "esperado": "3",
+                  "obtido": "3",
+                  "acerto": true
+                },
+                "Tense": {
+                  "esperado": "Pres",
+                  "obtido": "Pres",
+                  "acerto": true
+                },
+                "VerbForm": {
+                  "esperado": "Fin",
+                  "obtido": "Fin",
+                  "acerto": true
+                }
+              }
+            },
+            {
+              "texto": "orientando",
+              "original": {
+                "inicio": 20,
+                "fim": 30
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "VERB",
+                "lema": "orientar",
+                "morfologia": {
+                  "VerbForm": "Ger"
+                },
+                "dependencia": "xcomp",
+                "cabeca_original": {
+                  "inicio": 11,
+                  "fim": 19
+                }
+              },
+              "obtido": {
+                "pos": "VERB",
+                "lema": "orientar",
+                "morfologia": {
+                  "VerbForm": "Ger"
+                },
+                "dependencia": "xcomp",
+                "cabeca_original": {
+                  "inicio": 11,
+                  "fim": 19
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "VerbForm": {
+                  "esperado": "Ger",
+                  "obtido": "Ger",
+                  "acerto": true
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "concessiva-curta",
+          "tempo_segundos": 0.0035429029958322644,
+          "tokens_modelo": 11,
+          "resultados": [
+            {
+              "texto": "afirmem",
+              "original": {
+                "inicio": 18,
+                "fim": 25
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "VERB",
+                "lema": "afirmar",
+                "morfologia": {
+                  "Mood": "Sub",
+                  "Number": "Plur",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "advcl",
+                "cabeca_original": {
+                  "inicio": 49,
+                  "fim": 58
+                }
+              },
+              "obtido": {
+                "pos": "VERB",
+                "lema": "afirmer",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Plur",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "advcl",
+                "cabeca_original": {
+                  "inicio": 49,
+                  "fim": 58
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": false,
+                "morfologia": false,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "Mood": {
+                  "esperado": "Sub",
+                  "obtido": "Ind",
+                  "acerto": false
+                },
+                "Number": {
+                  "esperado": "Plur",
+                  "obtido": "Plur",
+                  "acerto": true
+                },
+                "Person": {
+                  "esperado": "3",
+                  "obtido": "3",
+                  "acerto": true
+                },
+                "Tense": {
+                  "esperado": "Pres",
+                  "obtido": "Pres",
+                  "acerto": true
+                },
+                "VerbForm": {
+                  "esperado": "Fin",
+                  "obtido": "Fin",
+                  "acerto": true
+                }
+              }
+            },
+            {
+              "texto": "permanece",
+              "original": {
+                "inicio": 49,
+                "fim": 58
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "VERB",
+                "lema": "permanecer",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 49,
+                  "fim": 58
+                }
+              },
+              "obtido": {
+                "pos": "VERB",
+                "lema": "permanecer",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 49,
+                  "fim": 58
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "Mood": {
+                  "esperado": "Ind",
+                  "obtido": "Ind",
+                  "acerto": true
+                },
+                "Number": {
+                  "esperado": "Sing",
+                  "obtido": "Sing",
+                  "acerto": true
+                },
+                "Person": {
+                  "esperado": "3",
+                  "obtido": "3",
+                  "acerto": true
+                },
+                "Tense": {
+                  "esperado": "Pres",
+                  "obtido": "Pres",
+                  "acerto": true
+                },
+                "VerbForm": {
+                  "esperado": "Fin",
+                  "obtido": "Fin",
+                  "acerto": true
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "subjuntivo-complemento",
+          "tempo_segundos": 0.0031795559989404865,
+          "tokens_modelo": 8,
+          "resultados": [
+            {
+              "texto": "examine",
+              "original": {
+                "inicio": 20,
+                "fim": 27
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "VERB",
+                "lema": "examinar",
+                "morfologia": {
+                  "Mood": "Sub",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "ccomp",
+                "cabeca_original": {
+                  "inicio": 0,
+                  "fim": 6
+                }
+              },
+              "obtido": {
+                "pos": "VERB",
+                "lema": "examine",
+                "morfologia": {
+                  "Mood": "Sub",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "ccomp",
+                "cabeca_original": {
+                  "inicio": 0,
+                  "fim": 6
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": false,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "Mood": {
+                  "esperado": "Sub",
+                  "obtido": "Sub",
+                  "acerto": true
+                },
+                "Number": {
+                  "esperado": "Sing",
+                  "obtido": "Sing",
+                  "acerto": true
+                },
+                "Person": {
+                  "esperado": "3",
+                  "obtido": "3",
+                  "acerto": true
+                },
+                "Tense": {
+                  "esperado": "Pres",
+                  "obtido": "Pres",
+                  "acerto": true
+                },
+                "VerbForm": {
+                  "esperado": "Fin",
+                  "obtido": "Fin",
+                  "acerto": true
+                }
+              }
+            },
+            {
+              "texto": "documento",
+              "original": {
+                "inicio": 30,
+                "fim": 39
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "NOUN",
+                "lema": "documento",
+                "morfologia": {
+                  "Gender": "Masc",
+                  "Number": "Sing"
+                },
+                "dependencia": "obj",
+                "cabeca_original": {
+                  "inicio": 20,
+                  "fim": 27
+                }
+              },
+              "obtido": {
+                "pos": "NOUN",
+                "lema": "documento",
+                "morfologia": {
+                  "Gender": "Masc",
+                  "Number": "Sing"
+                },
+                "dependencia": "obj",
+                "cabeca_original": {
+                  "inicio": 20,
+                  "fim": 27
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "Gender": {
+                  "esperado": "Masc",
+                  "obtido": "Masc",
+                  "acerto": true
+                },
+                "Number": {
+                  "esperado": "Sing",
+                  "obtido": "Sing",
+                  "acerto": true
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "adverbio-silenciosamente",
+          "tempo_segundos": 0.0025626429996918887,
+          "tokens_modelo": 4,
+          "resultados": [
+            {
+              "texto": "respondeu",
+              "original": {
+                "inicio": 4,
+                "fim": 13
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "VERB",
+                "lema": "responder",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Past",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 4,
+                  "fim": 13
+                }
+              },
+              "obtido": {
+                "pos": "VERB",
+                "lema": "responder",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Past",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 4,
+                  "fim": 13
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "Mood": {
+                  "esperado": "Ind",
+                  "obtido": "Ind",
+                  "acerto": true
+                },
+                "Number": {
+                  "esperado": "Sing",
+                  "obtido": "Sing",
+                  "acerto": true
+                },
+                "Person": {
+                  "esperado": "3",
+                  "obtido": "3",
+                  "acerto": true
+                },
+                "Tense": {
+                  "esperado": "Past",
+                  "obtido": "Past",
+                  "acerto": true
+                },
+                "VerbForm": {
+                  "esperado": "Fin",
+                  "obtido": "Fin",
+                  "acerto": true
+                }
+              }
+            },
+            {
+              "texto": "silenciosamente",
+              "original": {
+                "inicio": 14,
+                "fim": 29
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "ADV",
+                "lema": "silenciosamente",
+                "morfologia": {},
+                "dependencia": "advmod",
+                "cabeca_original": {
+                  "inicio": 4,
+                  "fim": 13
+                }
+              },
+              "obtido": {
+                "pos": "NOUN",
+                "lema": "silenciosamente",
+                "morfologia": {
+                  "Gender": "Masc",
+                  "Number": "Sing"
+                },
+                "dependencia": "advmod",
+                "cabeca_original": {
+                  "inicio": 4,
+                  "fim": 13
+                }
+              },
+              "acertos": {
+                "pos": false,
+                "lema": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {}
+            }
+          ]
+        },
+        {
+          "id": "adverbio-meramente",
+          "tempo_segundos": 0.0029880029978812672,
+          "tokens_modelo": 6,
+          "resultados": [
+            {
+              "texto": "meramente",
+              "original": {
+                "inicio": 13,
+                "fim": 22
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "ADV",
+                "lema": "meramente",
+                "morfologia": {},
+                "dependencia": "advmod",
+                "cabeca_original": {
+                  "inicio": 23,
+                  "fim": 34
+                }
+              },
+              "obtido": {
+                "pos": "NOUN",
+                "lema": "meramente",
+                "morfologia": {
+                  "Gender": "Masc",
+                  "Number": "Sing"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 13,
+                  "fim": 22
+                }
+              },
+              "acertos": {
+                "pos": false,
+                "lema": true,
+                "dependencia": false,
+                "cabeca_original": false,
+                "dependencia_e_cabeca": false
+              },
+              "tracos": {}
+            },
+            {
+              "texto": "operacional",
+              "original": {
+                "inicio": 23,
+                "fim": 34
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "ADJ",
+                "lema": "operacional",
+                "morfologia": {
+                  "Number": "Sing"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 23,
+                  "fim": 34
+                }
+              },
+              "obtido": {
+                "pos": "ADJ",
+                "lema": "operacional",
+                "morfologia": {
+                  "Gender": "Masc",
+                  "Number": "Sing"
+                },
+                "dependencia": "amod",
+                "cabeca_original": {
+                  "inicio": 13,
+                  "fim": 22
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true,
+                "dependencia": false,
+                "cabeca_original": false,
+                "dependencia_e_cabeca": false
+              },
+              "tracos": {
+                "Number": {
+                  "esperado": "Sing",
+                  "obtido": "Sing",
+                  "acerto": true
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "premissa-nominal",
+          "tempo_segundos": 0.002430546999676153,
+          "tokens_modelo": 4,
+          "resultados": [
+            {
+              "texto": "premissa",
+              "original": {
+                "inicio": 2,
+                "fim": 10
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "NOUN",
+                "lema": "premissa",
+                "morfologia": {
+                  "Gender": "Fem",
+                  "Number": "Sing"
+                },
+                "dependencia": "nsubj",
+                "cabeca_original": {
+                  "inicio": 11,
+                  "fim": 16
+                }
+              },
+              "obtido": {
+                "pos": "NOUN",
+                "lema": "premissa",
+                "morfologia": {
+                  "Gender": "Fem",
+                  "Number": "Sing"
+                },
+                "dependencia": "nsubj",
+                "cabeca_original": {
+                  "inicio": 11,
+                  "fim": 16
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "Gender": {
+                  "esperado": "Fem",
+                  "obtido": "Fem",
+                  "acerto": true
+                },
+                "Number": {
+                  "esperado": "Sing",
+                  "obtido": "Sing",
+                  "acerto": true
+                }
+              }
+            },
+            {
+              "texto": "mudou",
+              "original": {
+                "inicio": 11,
+                "fim": 16
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "VERB",
+                "lema": "mudar",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Past",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 11,
+                  "fim": 16
+                }
+              },
+              "obtido": {
+                "pos": "VERB",
+                "lema": "mudar",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Past",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 11,
+                  "fim": 16
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "Mood": {
+                  "esperado": "Ind",
+                  "obtido": "Ind",
+                  "acerto": true
+                },
+                "Number": {
+                  "esperado": "Sing",
+                  "obtido": "Sing",
+                  "acerto": true
+                },
+                "Person": {
+                  "esperado": "3",
+                  "obtido": "3",
+                  "acerto": true
+                },
+                "Tense": {
+                  "esperado": "Past",
+                  "obtido": "Past",
+                  "acerto": true
+                },
+                "VerbForm": {
+                  "esperado": "Fin",
+                  "obtido": "Fin",
+                  "acerto": true
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "ambiguidade-guarda",
+          "tempo_segundos": 0.002863667999918107,
+          "tokens_modelo": 6,
+          "resultados": [
+            {
+              "texto": "guarda",
+              "original": {
+                "inicio": 2,
+                "fim": 8
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "NOUN",
+                "lema": "guarda",
+                "morfologia": {
+                  "Gender": "Fem",
+                  "Number": "Sing"
+                },
+                "dependencia": "nsubj",
+                "cabeca_original": {
+                  "inicio": 9,
+                  "fim": 15
+                }
+              },
+              "obtido": {
+                "pos": "NOUN",
+                "lema": "guarda",
+                "morfologia": {
+                  "Gender": "Fem",
+                  "Number": "Sing"
+                },
+                "dependencia": "nsubj",
+                "cabeca_original": {
+                  "inicio": 9,
+                  "fim": 15
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "Gender": {
+                  "esperado": "Fem",
+                  "obtido": "Fem",
+                  "acerto": true
+                },
+                "Number": {
+                  "esperado": "Sing",
+                  "obtido": "Sing",
+                  "acerto": true
+                }
+              }
+            },
+            {
+              "texto": "guarda",
+              "original": {
+                "inicio": 9,
+                "fim": 15
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "VERB",
+                "lema": "guardar",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 9,
+                  "fim": 15
+                }
+              },
+              "obtido": {
+                "pos": "VERB",
+                "lema": "guardar",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 9,
+                  "fim": 15
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "Mood": {
+                  "esperado": "Ind",
+                  "obtido": "Ind",
+                  "acerto": true
+                },
+                "Number": {
+                  "esperado": "Sing",
+                  "obtido": "Sing",
+                  "acerto": true
+                },
+                "Person": {
+                  "esperado": "3",
+                  "obtido": "3",
+                  "acerto": true
+                },
+                "Tense": {
+                  "esperado": "Pres",
+                  "obtido": "Pres",
+                  "acerto": true
+                },
+                "VerbForm": {
+                  "esperado": "Fin",
+                  "obtido": "Fin",
+                  "acerto": true
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "redefinir-plural",
+          "tempo_segundos": 0.0029630350036313757,
+          "tokens_modelo": 6,
+          "resultados": [
+            {
+              "texto": "relatórios",
+              "original": {
+                "inicio": 3,
+                "fim": 13
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "NOUN",
+                "lema": "relatório",
+                "morfologia": {
+                  "Gender": "Masc",
+                  "Number": "Plur"
+                },
+                "dependencia": "nsubj",
+                "cabeca_original": {
+                  "inicio": 14,
+                  "fim": 23
+                }
+              },
+              "obtido": {
+                "pos": "NOUN",
+                "lema": "relatório",
+                "morfologia": {
+                  "Gender": "Masc",
+                  "Number": "Plur"
+                },
+                "dependencia": "nsubj",
+                "cabeca_original": {
+                  "inicio": 14,
+                  "fim": 23
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "Gender": {
+                  "esperado": "Masc",
+                  "obtido": "Masc",
+                  "acerto": true
+                },
+                "Number": {
+                  "esperado": "Plur",
+                  "obtido": "Plur",
+                  "acerto": true
+                }
+              }
+            },
+            {
+              "texto": "redefinem",
+              "original": {
+                "inicio": 14,
+                "fim": 23
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "VERB",
+                "lema": "redefinir",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Plur",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 14,
+                  "fim": 23
+                }
+              },
+              "obtido": {
+                "pos": "VERB",
+                "lema": "redefinir",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Plur",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 14,
+                  "fim": 23
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "Mood": {
+                  "esperado": "Ind",
+                  "obtido": "Ind",
+                  "acerto": true
+                },
+                "Number": {
+                  "esperado": "Plur",
+                  "obtido": "Plur",
+                  "acerto": true
+                },
+                "Person": {
+                  "esperado": "3",
+                  "obtido": "3",
+                  "acerto": true
+                },
+                "Tense": {
+                  "esperado": "Pres",
+                  "obtido": "Pres",
+                  "acerto": true
+                },
+                "VerbForm": {
+                  "esperado": "Fin",
+                  "obtido": "Fin",
+                  "acerto": true
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "modelo": "pt_core_news_md",
+      "versao_modelo": "3.8.0",
+      "versao_spacy": "3.8.16",
+      "componentes": [
+        "tok2vec",
+        "morphologizer",
+        "parser",
+        "lemmatizer",
+        "attribute_ruler",
+        "ner"
+      ],
+      "tempo_carga_segundos": 0.5771158059942536,
+      "tempo_inferencia_segundos": 0.06422038598248037,
+      "resumo": {
+        "casos": 11,
+        "alvos": 33,
+        "alvos_alinhados": 33,
+        "metricas": {
+          "pos": {
+            "acertos": 33,
+            "avaliados": 33,
+            "taxa_nos_alvos": 1.0
+          },
+          "lema": {
+            "acertos": 26,
+            "avaliados": 33,
+            "taxa_nos_alvos": 0.7878787878787878
+          },
+          "morfologia": {
+            "acertos": 27,
+            "avaliados": 29,
+            "taxa_nos_alvos": 0.9310344827586207
+          },
+          "dependencia": {
+            "acertos": 30,
+            "avaliados": 32,
+            "taxa_nos_alvos": 0.9375
+          },
+          "cabeca_original": {
+            "acertos": 30,
+            "avaliados": 32,
+            "taxa_nos_alvos": 0.9375
+          },
+          "dependencia_e_cabeca": {
+            "acertos": 30,
+            "avaliados": 32,
+            "taxa_nos_alvos": 0.9375
+          },
+          "tracos_individuais": {
+            "acertos": 97,
+            "avaliados": 99,
+            "taxa_nos_alvos": 0.9797979797979798
+          }
+        }
+      },
+      "casos": [
+        {
+          "id": "documento-8",
+          "tempo_segundos": 0.03180283899564529,
+          "tokens_modelo": 179,
+          "resultados": [
+            {
+              "texto": "afirmem",
+              "original": {
+                "inicio": 42,
+                "fim": 49
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "VERB",
+                "lema": "afirmar",
+                "morfologia": {
+                  "Mood": "Sub",
+                  "Number": "Plur",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "advcl",
+                "cabeca_original": {
+                  "inicio": 159,
+                  "fim": 167
+                }
+              },
+              "obtido": {
+                "pos": "VERB",
+                "lema": "afirmer",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Plur",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "advcl",
+                "cabeca_original": {
+                  "inicio": 159,
+                  "fim": 167
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": false,
+                "morfologia": false,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "Mood": {
+                  "esperado": "Sub",
+                  "obtido": "Ind",
+                  "acerto": false
+                },
+                "Number": {
+                  "esperado": "Plur",
+                  "obtido": "Plur",
+                  "acerto": true
+                },
+                "Person": {
+                  "esperado": "3",
+                  "obtido": "3",
+                  "acerto": true
+                },
+                "Tense": {
+                  "esperado": "Pres",
+                  "obtido": "Pres",
+                  "acerto": true
+                },
+                "VerbForm": {
+                  "esperado": "Fin",
+                  "obtido": "Fin",
+                  "acerto": true
+                }
+              }
+            },
+            {
+              "texto": "redefine",
+              "original": {
+                "inicio": 159,
+                "fim": 167
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "VERB",
+                "lema": "redefinir",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 159,
+                  "fim": 167
+                }
+              },
+              "obtido": {
+                "pos": "VERB",
+                "lema": "redefinir",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 159,
+                  "fim": 167
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "Mood": {
+                  "esperado": "Ind",
+                  "obtido": "Ind",
+                  "acerto": true
+                },
+                "Number": {
+                  "esperado": "Sing",
+                  "obtido": "Sing",
+                  "acerto": true
+                },
+                "Person": {
+                  "esperado": "3",
+                  "obtido": "3",
+                  "acerto": true
+                },
+                "Tense": {
+                  "esperado": "Pres",
+                  "obtido": "Pres",
+                  "acerto": true
+                },
+                "VerbForm": {
+                  "esperado": "Fin",
+                  "obtido": "Fin",
+                  "acerto": true
+                }
+              }
+            },
+            {
+              "texto": "silenciosamente",
+              "original": {
+                "inicio": 168,
+                "fim": 183
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "ADV",
+                "lema": "silenciosamente",
+                "morfologia": {},
+                "dependencia": "advmod",
+                "cabeca_original": {
+                  "inicio": 159,
+                  "fim": 167
+                }
+              },
+              "obtido": {
+                "pos": "ADV",
+                "lema": "silenciosamente",
+                "morfologia": {},
+                "dependencia": "advmod",
+                "cabeca_original": {
+                  "inicio": 159,
+                  "fim": 167
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {}
+            },
+            {
+              "texto": "passa",
+              "original": {
+                "inicio": 204,
+                "fim": 209
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "VERB",
+                "lema": "passar",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                }
+              },
+              "obtido": {
+                "pos": "VERB",
+                "lema": "passar",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true
+              },
+              "tracos": {
+                "Mood": {
+                  "esperado": "Ind",
+                  "obtido": "Ind",
+                  "acerto": true
+                },
+                "Number": {
+                  "esperado": "Sing",
+                  "obtido": "Sing",
+                  "acerto": true
+                },
+                "Person": {
+                  "esperado": "3",
+                  "obtido": "3",
+                  "acerto": true
+                },
+                "Tense": {
+                  "esperado": "Pres",
+                  "obtido": "Pres",
+                  "acerto": true
+                },
+                "VerbForm": {
+                  "esperado": "Fin",
+                  "obtido": "Fin",
+                  "acerto": true
+                }
+              }
+            },
+            {
+              "texto": "reconhecer",
+              "original": {
+                "inicio": 212,
+                "fim": 222
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "VERB",
+                "lema": "reconhecer",
+                "morfologia": {
+                  "VerbForm": "Inf"
+                },
+                "dependencia": "xcomp",
+                "cabeca_original": {
+                  "inicio": 204,
+                  "fim": 209
+                }
+              },
+              "obtido": {
+                "pos": "VERB",
+                "lema": "reconhecer",
+                "morfologia": {
+                  "VerbForm": "Inf"
+                },
+                "dependencia": "xcomp",
+                "cabeca_original": {
+                  "inicio": 204,
+                  "fim": 209
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "VerbForm": {
+                  "esperado": "Inf",
+                  "obtido": "Inf",
+                  "acerto": true
+                }
+              }
+            },
+            {
+              "texto": "examine",
+              "original": {
+                "inicio": 398,
+                "fim": 405
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "VERB",
+                "lema": "examinar",
+                "morfologia": {
+                  "Mood": "Sub",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "acl",
+                "cabeca_original": {
+                  "inicio": 367,
+                  "fim": 378
+                }
+              },
+              "obtido": {
+                "pos": "VERB",
+                "lema": "examine",
+                "morfologia": {
+                  "Mood": "Sub",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "acl",
+                "cabeca_original": {
+                  "inicio": 367,
+                  "fim": 378
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": false,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "Mood": {
+                  "esperado": "Sub",
+                  "obtido": "Sub",
+                  "acerto": true
+                },
+                "Number": {
+                  "esperado": "Sing",
+                  "obtido": "Sing",
+                  "acerto": true
+                },
+                "Person": {
+                  "esperado": "3",
+                  "obtido": "3",
+                  "acerto": true
+                },
+                "Tense": {
+                  "esperado": "Pres",
+                  "obtido": "Pres",
+                  "acerto": true
+                },
+                "VerbForm": {
+                  "esperado": "Fin",
+                  "obtido": "Fin",
+                  "acerto": true
+                }
+              }
+            },
+            {
+              "texto": "meramente",
+              "original": {
+                "inicio": 549,
+                "fim": 558
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "ADV",
+                "lema": "meramente",
+                "morfologia": {},
+                "dependencia": "advmod",
+                "cabeca_original": {
+                  "inicio": 559,
+                  "fim": 570
+                }
+              },
+              "obtido": {
+                "pos": "ADV",
+                "lema": "meramente",
+                "morfologia": {},
+                "dependencia": "advmod",
+                "cabeca_original": {
+                  "inicio": 559,
+                  "fim": 570
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {}
+            },
+            {
+              "texto": "premissa",
+              "original": {
+                "inicio": 957,
+                "fim": 965
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "NOUN",
+                "lema": "premissa",
+                "morfologia": {
+                  "Gender": "Fem",
+                  "Number": "Sing"
+                },
+                "dependencia": "nsubj",
+                "cabeca_original": {
+                  "inicio": 966,
+                  "fim": 974
+                }
+              },
+              "obtido": {
+                "pos": "NOUN",
+                "lema": "premissa",
+                "morfologia": {
+                  "Gender": "Fem",
+                  "Number": "Sing"
+                },
+                "dependencia": "nsubj",
+                "cabeca_original": {
+                  "inicio": 966,
+                  "fim": 974
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "Gender": {
+                  "esperado": "Fem",
+                  "obtido": "Fem",
+                  "acerto": true
+                },
+                "Number": {
+                  "esperado": "Sing",
+                  "obtido": "Sing",
+                  "acerto": true
+                }
+              }
+            },
+            {
+              "texto": "continue",
+              "original": {
+                "inicio": 966,
+                "fim": 974
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "VERB",
+                "lema": "continuar",
+                "morfologia": {
+                  "Mood": "Sub",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "advcl",
+                "cabeca_original": {
+                  "inicio": 1082,
+                  "fim": 1092
+                }
+              },
+              "obtido": {
+                "pos": "VERB",
+                "lema": "continuar",
+                "morfologia": {
+                  "Mood": "Sub",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 966,
+                  "fim": 974
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true,
+                "dependencia": false,
+                "cabeca_original": false,
+                "dependencia_e_cabeca": false
+              },
+              "tracos": {
+                "Mood": {
+                  "esperado": "Sub",
+                  "obtido": "Sub",
+                  "acerto": true
+                },
+                "Number": {
+                  "esperado": "Sing",
+                  "obtido": "Sing",
+                  "acerto": true
+                },
+                "Person": {
+                  "esperado": "3",
+                  "obtido": "3",
+                  "acerto": true
+                },
+                "Tense": {
+                  "esperado": "Pres",
+                  "obtido": "Pres",
+                  "acerto": true
+                },
+                "VerbForm": {
+                  "esperado": "Fin",
+                  "obtido": "Fin",
+                  "acerto": true
+                }
+              }
+            },
+            {
+              "texto": "orientando",
+              "original": {
+                "inicio": 975,
+                "fim": 985
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "VERB",
+                "lema": "orientar",
+                "morfologia": {
+                  "VerbForm": "Ger"
+                },
+                "dependencia": "xcomp",
+                "cabeca_original": {
+                  "inicio": 966,
+                  "fim": 974
+                }
+              },
+              "obtido": {
+                "pos": "VERB",
+                "lema": "orientar",
+                "morfologia": {
+                  "VerbForm": "Ger"
+                },
+                "dependencia": "xcomp",
+                "cabeca_original": {
+                  "inicio": 966,
+                  "fim": 974
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "VerbForm": {
+                  "esperado": "Ger",
+                  "obtido": "Ger",
+                  "acerto": true
+                }
+              }
+            },
+            {
+              "texto": "convertida",
+              "original": {
+                "inicio": 1082,
+                "fim": 1092
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "VERB",
+                "lema": "converter",
+                "morfologia": {
+                  "Gender": "Fem",
+                  "Number": "Sing",
+                  "VerbForm": "Part"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 1082,
+                  "fim": 1092
+                }
+              },
+              "obtido": {
+                "pos": "VERB",
+                "lema": "convertir",
+                "morfologia": {
+                  "Gender": "Fem",
+                  "Number": "Sing",
+                  "VerbForm": "Part",
+                  "Voice": "Pass"
+                },
+                "dependencia": "acl",
+                "cabeca_original": {
+                  "inicio": 989,
+                  "fim": 999
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": false,
+                "morfologia": true,
+                "dependencia": false,
+                "cabeca_original": false,
+                "dependencia_e_cabeca": false
+              },
+              "tracos": {
+                "Gender": {
+                  "esperado": "Fem",
+                  "obtido": "Fem",
+                  "acerto": true
+                },
+                "Number": {
+                  "esperado": "Sing",
+                  "obtido": "Sing",
+                  "acerto": true
+                },
+                "VerbForm": {
+                  "esperado": "Part",
+                  "obtido": "Part",
+                  "acerto": true
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "aspectual-passar",
+          "tempo_segundos": 0.004098835997865535,
+          "tokens_modelo": 8,
+          "resultados": [
+            {
+              "texto": "equipe",
+              "original": {
+                "inicio": 2,
+                "fim": 8
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "NOUN",
+                "lema": "equipe",
+                "morfologia": {
+                  "Gender": "Fem",
+                  "Number": "Sing"
+                },
+                "dependencia": "nsubj",
+                "cabeca_original": {
+                  "inicio": 9,
+                  "fim": 14
+                }
+              },
+              "obtido": {
+                "pos": "NOUN",
+                "lema": "equipe",
+                "morfologia": {
+                  "Gender": "Fem",
+                  "Number": "Sing"
+                },
+                "dependencia": "nsubj",
+                "cabeca_original": {
+                  "inicio": 9,
+                  "fim": 14
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "Gender": {
+                  "esperado": "Fem",
+                  "obtido": "Fem",
+                  "acerto": true
+                },
+                "Number": {
+                  "esperado": "Sing",
+                  "obtido": "Sing",
+                  "acerto": true
+                }
+              }
+            },
+            {
+              "texto": "passa",
+              "original": {
+                "inicio": 9,
+                "fim": 14
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "VERB",
+                "lema": "passar",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 9,
+                  "fim": 14
+                }
+              },
+              "obtido": {
+                "pos": "VERB",
+                "lema": "passar",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 9,
+                  "fim": 14
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "Mood": {
+                  "esperado": "Ind",
+                  "obtido": "Ind",
+                  "acerto": true
+                },
+                "Number": {
+                  "esperado": "Sing",
+                  "obtido": "Sing",
+                  "acerto": true
+                },
+                "Person": {
+                  "esperado": "3",
+                  "obtido": "3",
+                  "acerto": true
+                },
+                "Tense": {
+                  "esperado": "Pres",
+                  "obtido": "Pres",
+                  "acerto": true
+                },
+                "VerbForm": {
+                  "esperado": "Fin",
+                  "obtido": "Fin",
+                  "acerto": true
+                }
+              }
+            },
+            {
+              "texto": "reconhecer",
+              "original": {
+                "inicio": 17,
+                "fim": 27
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "VERB",
+                "lema": "reconhecer",
+                "morfologia": {
+                  "VerbForm": "Inf"
+                },
+                "dependencia": "xcomp",
+                "cabeca_original": {
+                  "inicio": 9,
+                  "fim": 14
+                }
+              },
+              "obtido": {
+                "pos": "VERB",
+                "lema": "reconhecer",
+                "morfologia": {
+                  "VerbForm": "Inf"
+                },
+                "dependencia": "xcomp",
+                "cabeca_original": {
+                  "inicio": 9,
+                  "fim": 14
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "VerbForm": {
+                  "esperado": "Inf",
+                  "obtido": "Inf",
+                  "acerto": true
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "passagem-sem-locucao",
+          "tempo_segundos": 0.0034094759976142086,
+          "tokens_modelo": 7,
+          "resultados": [
+            {
+              "texto": "passou",
+              "original": {
+                "inicio": 9,
+                "fim": 15
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "VERB",
+                "lema": "passar",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Past",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 9,
+                  "fim": 15
+                }
+              },
+              "obtido": {
+                "pos": "VERB",
+                "lema": "passar",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Past",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 9,
+                  "fim": 15
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "Mood": {
+                  "esperado": "Ind",
+                  "obtido": "Ind",
+                  "acerto": true
+                },
+                "Number": {
+                  "esperado": "Sing",
+                  "obtido": "Sing",
+                  "acerto": true
+                },
+                "Person": {
+                  "esperado": "3",
+                  "obtido": "3",
+                  "acerto": true
+                },
+                "Tense": {
+                  "esperado": "Past",
+                  "obtido": "Past",
+                  "acerto": true
+                },
+                "VerbForm": {
+                  "esperado": "Fin",
+                  "obtido": "Fin",
+                  "acerto": true
+                }
+              }
+            },
+            {
+              "texto": "ponte",
+              "original": {
+                "inicio": 18,
+                "fim": 23
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "NOUN",
+                "lema": "ponte",
+                "morfologia": {
+                  "Gender": "Fem",
+                  "Number": "Sing"
+                },
+                "dependencia": "obj",
+                "cabeca_original": {
+                  "inicio": 9,
+                  "fim": 15
+                }
+              },
+              "obtido": {
+                "pos": "NOUN",
+                "lema": "ponte",
+                "morfologia": {
+                  "Gender": "Fem",
+                  "Number": "Sing"
+                },
+                "dependencia": "obj",
+                "cabeca_original": {
+                  "inicio": 9,
+                  "fim": 15
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "Gender": {
+                  "esperado": "Fem",
+                  "obtido": "Fem",
+                  "acerto": true
+                },
+                "Number": {
+                  "esperado": "Sing",
+                  "obtido": "Sing",
+                  "acerto": true
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "aspectual-continuar",
+          "tempo_segundos": 0.0031983439985197037,
+          "tokens_modelo": 7,
+          "resultados": [
+            {
+              "texto": "premissa",
+              "original": {
+                "inicio": 2,
+                "fim": 10
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "NOUN",
+                "lema": "premissa",
+                "morfologia": {
+                  "Gender": "Fem",
+                  "Number": "Sing"
+                },
+                "dependencia": "nsubj",
+                "cabeca_original": {
+                  "inicio": 11,
+                  "fim": 19
+                }
+              },
+              "obtido": {
+                "pos": "NOUN",
+                "lema": "premissa",
+                "morfologia": {
+                  "Gender": "Fem",
+                  "Number": "Sing"
+                },
+                "dependencia": "nsubj",
+                "cabeca_original": {
+                  "inicio": 11,
+                  "fim": 19
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "Gender": {
+                  "esperado": "Fem",
+                  "obtido": "Fem",
+                  "acerto": true
+                },
+                "Number": {
+                  "esperado": "Sing",
+                  "obtido": "Sing",
+                  "acerto": true
+                }
+              }
+            },
+            {
+              "texto": "continua",
+              "original": {
+                "inicio": 11,
+                "fim": 19
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "VERB",
+                "lema": "continuar",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 11,
+                  "fim": 19
+                }
+              },
+              "obtido": {
+                "pos": "VERB",
+                "lema": "continuar",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 11,
+                  "fim": 19
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "Mood": {
+                  "esperado": "Ind",
+                  "obtido": "Ind",
+                  "acerto": true
+                },
+                "Number": {
+                  "esperado": "Sing",
+                  "obtido": "Sing",
+                  "acerto": true
+                },
+                "Person": {
+                  "esperado": "3",
+                  "obtido": "3",
+                  "acerto": true
+                },
+                "Tense": {
+                  "esperado": "Pres",
+                  "obtido": "Pres",
+                  "acerto": true
+                },
+                "VerbForm": {
+                  "esperado": "Fin",
+                  "obtido": "Fin",
+                  "acerto": true
+                }
+              }
+            },
+            {
+              "texto": "orientando",
+              "original": {
+                "inicio": 20,
+                "fim": 30
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "VERB",
+                "lema": "orientar",
+                "morfologia": {
+                  "VerbForm": "Ger"
+                },
+                "dependencia": "xcomp",
+                "cabeca_original": {
+                  "inicio": 11,
+                  "fim": 19
+                }
+              },
+              "obtido": {
+                "pos": "VERB",
+                "lema": "orientar",
+                "morfologia": {
+                  "VerbForm": "Ger"
+                },
+                "dependencia": "xcomp",
+                "cabeca_original": {
+                  "inicio": 11,
+                  "fim": 19
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "VerbForm": {
+                  "esperado": "Ger",
+                  "obtido": "Ger",
+                  "acerto": true
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "concessiva-curta",
+          "tempo_segundos": 0.0038097789947642013,
+          "tokens_modelo": 11,
+          "resultados": [
+            {
+              "texto": "afirmem",
+              "original": {
+                "inicio": 18,
+                "fim": 25
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "VERB",
+                "lema": "afirmar",
+                "morfologia": {
+                  "Mood": "Sub",
+                  "Number": "Plur",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "advcl",
+                "cabeca_original": {
+                  "inicio": 49,
+                  "fim": 58
+                }
+              },
+              "obtido": {
+                "pos": "VERB",
+                "lema": "afirmer",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Plur",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "advcl",
+                "cabeca_original": {
+                  "inicio": 49,
+                  "fim": 58
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": false,
+                "morfologia": false,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "Mood": {
+                  "esperado": "Sub",
+                  "obtido": "Ind",
+                  "acerto": false
+                },
+                "Number": {
+                  "esperado": "Plur",
+                  "obtido": "Plur",
+                  "acerto": true
+                },
+                "Person": {
+                  "esperado": "3",
+                  "obtido": "3",
+                  "acerto": true
+                },
+                "Tense": {
+                  "esperado": "Pres",
+                  "obtido": "Pres",
+                  "acerto": true
+                },
+                "VerbForm": {
+                  "esperado": "Fin",
+                  "obtido": "Fin",
+                  "acerto": true
+                }
+              }
+            },
+            {
+              "texto": "permanece",
+              "original": {
+                "inicio": 49,
+                "fim": 58
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "VERB",
+                "lema": "permanecer",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 49,
+                  "fim": 58
+                }
+              },
+              "obtido": {
+                "pos": "VERB",
+                "lema": "permanecer",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 49,
+                  "fim": 58
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "Mood": {
+                  "esperado": "Ind",
+                  "obtido": "Ind",
+                  "acerto": true
+                },
+                "Number": {
+                  "esperado": "Sing",
+                  "obtido": "Sing",
+                  "acerto": true
+                },
+                "Person": {
+                  "esperado": "3",
+                  "obtido": "3",
+                  "acerto": true
+                },
+                "Tense": {
+                  "esperado": "Pres",
+                  "obtido": "Pres",
+                  "acerto": true
+                },
+                "VerbForm": {
+                  "esperado": "Fin",
+                  "obtido": "Fin",
+                  "acerto": true
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "subjuntivo-complemento",
+          "tempo_segundos": 0.0032092100009322166,
+          "tokens_modelo": 8,
+          "resultados": [
+            {
+              "texto": "examine",
+              "original": {
+                "inicio": 20,
+                "fim": 27
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "VERB",
+                "lema": "examinar",
+                "morfologia": {
+                  "Mood": "Sub",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "ccomp",
+                "cabeca_original": {
+                  "inicio": 0,
+                  "fim": 6
+                }
+              },
+              "obtido": {
+                "pos": "VERB",
+                "lema": "examine",
+                "morfologia": {
+                  "Mood": "Sub",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "ccomp",
+                "cabeca_original": {
+                  "inicio": 0,
+                  "fim": 6
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": false,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "Mood": {
+                  "esperado": "Sub",
+                  "obtido": "Sub",
+                  "acerto": true
+                },
+                "Number": {
+                  "esperado": "Sing",
+                  "obtido": "Sing",
+                  "acerto": true
+                },
+                "Person": {
+                  "esperado": "3",
+                  "obtido": "3",
+                  "acerto": true
+                },
+                "Tense": {
+                  "esperado": "Pres",
+                  "obtido": "Pres",
+                  "acerto": true
+                },
+                "VerbForm": {
+                  "esperado": "Fin",
+                  "obtido": "Fin",
+                  "acerto": true
+                }
+              }
+            },
+            {
+              "texto": "documento",
+              "original": {
+                "inicio": 30,
+                "fim": 39
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "NOUN",
+                "lema": "documento",
+                "morfologia": {
+                  "Gender": "Masc",
+                  "Number": "Sing"
+                },
+                "dependencia": "obj",
+                "cabeca_original": {
+                  "inicio": 20,
+                  "fim": 27
+                }
+              },
+              "obtido": {
+                "pos": "NOUN",
+                "lema": "documento",
+                "morfologia": {
+                  "Gender": "Masc",
+                  "Number": "Sing"
+                },
+                "dependencia": "obj",
+                "cabeca_original": {
+                  "inicio": 20,
+                  "fim": 27
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "Gender": {
+                  "esperado": "Masc",
+                  "obtido": "Masc",
+                  "acerto": true
+                },
+                "Number": {
+                  "esperado": "Sing",
+                  "obtido": "Sing",
+                  "acerto": true
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "adverbio-silenciosamente",
+          "tempo_segundos": 0.0026979829999618232,
+          "tokens_modelo": 4,
+          "resultados": [
+            {
+              "texto": "respondeu",
+              "original": {
+                "inicio": 4,
+                "fim": 13
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "VERB",
+                "lema": "responder",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Past",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 4,
+                  "fim": 13
+                }
+              },
+              "obtido": {
+                "pos": "VERB",
+                "lema": "responder",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Past",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 4,
+                  "fim": 13
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "Mood": {
+                  "esperado": "Ind",
+                  "obtido": "Ind",
+                  "acerto": true
+                },
+                "Number": {
+                  "esperado": "Sing",
+                  "obtido": "Sing",
+                  "acerto": true
+                },
+                "Person": {
+                  "esperado": "3",
+                  "obtido": "3",
+                  "acerto": true
+                },
+                "Tense": {
+                  "esperado": "Past",
+                  "obtido": "Past",
+                  "acerto": true
+                },
+                "VerbForm": {
+                  "esperado": "Fin",
+                  "obtido": "Fin",
+                  "acerto": true
+                }
+              }
+            },
+            {
+              "texto": "silenciosamente",
+              "original": {
+                "inicio": 14,
+                "fim": 29
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "ADV",
+                "lema": "silenciosamente",
+                "morfologia": {},
+                "dependencia": "advmod",
+                "cabeca_original": {
+                  "inicio": 4,
+                  "fim": 13
+                }
+              },
+              "obtido": {
+                "pos": "ADV",
+                "lema": "silenciosamente",
+                "morfologia": {},
+                "dependencia": "advmod",
+                "cabeca_original": {
+                  "inicio": 4,
+                  "fim": 13
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {}
+            }
+          ]
+        },
+        {
+          "id": "adverbio-meramente",
+          "tempo_segundos": 0.0031198469951050356,
+          "tokens_modelo": 6,
+          "resultados": [
+            {
+              "texto": "meramente",
+              "original": {
+                "inicio": 13,
+                "fim": 22
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "ADV",
+                "lema": "meramente",
+                "morfologia": {},
+                "dependencia": "advmod",
+                "cabeca_original": {
+                  "inicio": 23,
+                  "fim": 34
+                }
+              },
+              "obtido": {
+                "pos": "ADV",
+                "lema": "meramente",
+                "morfologia": {},
+                "dependencia": "advmod",
+                "cabeca_original": {
+                  "inicio": 23,
+                  "fim": 34
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {}
+            },
+            {
+              "texto": "operacional",
+              "original": {
+                "inicio": 23,
+                "fim": 34
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "ADJ",
+                "lema": "operacional",
+                "morfologia": {
+                  "Number": "Sing"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 23,
+                  "fim": 34
+                }
+              },
+              "obtido": {
+                "pos": "ADJ",
+                "lema": "operacional",
+                "morfologia": {
+                  "Gender": "Masc",
+                  "Number": "Sing"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 23,
+                  "fim": 34
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "Number": {
+                  "esperado": "Sing",
+                  "obtido": "Sing",
+                  "acerto": true
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "premissa-nominal",
+          "tempo_segundos": 0.0026456349951331504,
+          "tokens_modelo": 4,
+          "resultados": [
+            {
+              "texto": "premissa",
+              "original": {
+                "inicio": 2,
+                "fim": 10
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "NOUN",
+                "lema": "premissa",
+                "morfologia": {
+                  "Gender": "Fem",
+                  "Number": "Sing"
+                },
+                "dependencia": "nsubj",
+                "cabeca_original": {
+                  "inicio": 11,
+                  "fim": 16
+                }
+              },
+              "obtido": {
+                "pos": "NOUN",
+                "lema": "premissa",
+                "morfologia": {
+                  "Gender": "Fem",
+                  "Number": "Sing"
+                },
+                "dependencia": "nsubj",
+                "cabeca_original": {
+                  "inicio": 11,
+                  "fim": 16
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "Gender": {
+                  "esperado": "Fem",
+                  "obtido": "Fem",
+                  "acerto": true
+                },
+                "Number": {
+                  "esperado": "Sing",
+                  "obtido": "Sing",
+                  "acerto": true
+                }
+              }
+            },
+            {
+              "texto": "mudou",
+              "original": {
+                "inicio": 11,
+                "fim": 16
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "VERB",
+                "lema": "mudar",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Past",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 11,
+                  "fim": 16
+                }
+              },
+              "obtido": {
+                "pos": "VERB",
+                "lema": "mudar",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Past",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 11,
+                  "fim": 16
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "Mood": {
+                  "esperado": "Ind",
+                  "obtido": "Ind",
+                  "acerto": true
+                },
+                "Number": {
+                  "esperado": "Sing",
+                  "obtido": "Sing",
+                  "acerto": true
+                },
+                "Person": {
+                  "esperado": "3",
+                  "obtido": "3",
+                  "acerto": true
+                },
+                "Tense": {
+                  "esperado": "Past",
+                  "obtido": "Past",
+                  "acerto": true
+                },
+                "VerbForm": {
+                  "esperado": "Fin",
+                  "obtido": "Fin",
+                  "acerto": true
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "ambiguidade-guarda",
+          "tempo_segundos": 0.0030895920062903315,
+          "tokens_modelo": 6,
+          "resultados": [
+            {
+              "texto": "guarda",
+              "original": {
+                "inicio": 2,
+                "fim": 8
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "NOUN",
+                "lema": "guarda",
+                "morfologia": {
+                  "Gender": "Fem",
+                  "Number": "Sing"
+                },
+                "dependencia": "nsubj",
+                "cabeca_original": {
+                  "inicio": 9,
+                  "fim": 15
+                }
+              },
+              "obtido": {
+                "pos": "NOUN",
+                "lema": "Guarda",
+                "morfologia": {
+                  "Gender": "Fem",
+                  "Number": "Sing"
+                },
+                "dependencia": "nsubj",
+                "cabeca_original": {
+                  "inicio": 9,
+                  "fim": 15
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": false,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "Gender": {
+                  "esperado": "Fem",
+                  "obtido": "Fem",
+                  "acerto": true
+                },
+                "Number": {
+                  "esperado": "Sing",
+                  "obtido": "Sing",
+                  "acerto": true
+                }
+              }
+            },
+            {
+              "texto": "guarda",
+              "original": {
+                "inicio": 9,
+                "fim": 15
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "VERB",
+                "lema": "guardar",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 9,
+                  "fim": 15
+                }
+              },
+              "obtido": {
+                "pos": "VERB",
+                "lema": "Guarda",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Sing",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 9,
+                  "fim": 15
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": false,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "Mood": {
+                  "esperado": "Ind",
+                  "obtido": "Ind",
+                  "acerto": true
+                },
+                "Number": {
+                  "esperado": "Sing",
+                  "obtido": "Sing",
+                  "acerto": true
+                },
+                "Person": {
+                  "esperado": "3",
+                  "obtido": "3",
+                  "acerto": true
+                },
+                "Tense": {
+                  "esperado": "Pres",
+                  "obtido": "Pres",
+                  "acerto": true
+                },
+                "VerbForm": {
+                  "esperado": "Fin",
+                  "obtido": "Fin",
+                  "acerto": true
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "redefinir-plural",
+          "tempo_segundos": 0.003138845000648871,
+          "tokens_modelo": 6,
+          "resultados": [
+            {
+              "texto": "relatórios",
+              "original": {
+                "inicio": 3,
+                "fim": 13
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "NOUN",
+                "lema": "relatório",
+                "morfologia": {
+                  "Gender": "Masc",
+                  "Number": "Plur"
+                },
+                "dependencia": "nsubj",
+                "cabeca_original": {
+                  "inicio": 14,
+                  "fim": 23
+                }
+              },
+              "obtido": {
+                "pos": "NOUN",
+                "lema": "relatório",
+                "morfologia": {
+                  "Gender": "Masc",
+                  "Number": "Plur"
+                },
+                "dependencia": "nsubj",
+                "cabeca_original": {
+                  "inicio": 14,
+                  "fim": 23
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "Gender": {
+                  "esperado": "Masc",
+                  "obtido": "Masc",
+                  "acerto": true
+                },
+                "Number": {
+                  "esperado": "Plur",
+                  "obtido": "Plur",
+                  "acerto": true
+                }
+              }
+            },
+            {
+              "texto": "redefinem",
+              "original": {
+                "inicio": 14,
+                "fim": 23
+              },
+              "alinhado": true,
+              "esperado": {
+                "pos": "VERB",
+                "lema": "redefinir",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Plur",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 14,
+                  "fim": 23
+                }
+              },
+              "obtido": {
+                "pos": "VERB",
+                "lema": "redefinir",
+                "morfologia": {
+                  "Mood": "Ind",
+                  "Number": "Plur",
+                  "Person": "3",
+                  "Tense": "Pres",
+                  "VerbForm": "Fin"
+                },
+                "dependencia": "ROOT",
+                "cabeca_original": {
+                  "inicio": 14,
+                  "fim": 23
+                }
+              },
+              "acertos": {
+                "pos": true,
+                "lema": true,
+                "morfologia": true,
+                "dependencia": true,
+                "cabeca_original": true,
+                "dependencia_e_cabeca": true
+              },
+              "tracos": {
+                "Mood": {
+                  "esperado": "Ind",
+                  "obtido": "Ind",
+                  "acerto": true
+                },
+                "Number": {
+                  "esperado": "Plur",
+                  "obtido": "Plur",
+                  "acerto": true
+                },
+                "Person": {
+                  "esperado": "3",
+                  "obtido": "3",
+                  "acerto": true
+                },
+                "Tense": {
+                  "esperado": "Pres",
+                  "obtido": "Pres",
+                  "acerto": true
+                },
+                "VerbForm": {
+                  "esperado": "Fin",
+                  "obtido": "Fin",
+                  "acerto": true
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

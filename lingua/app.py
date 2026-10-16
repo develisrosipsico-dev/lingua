@@ -8,7 +8,7 @@ from pathlib import Path
 import sqlite3
 from zoneinfo import ZoneInfo
 
-from flask import Flask, Response, abort, redirect, render_template, request, send_file, url_for
+from flask import Flask, Response, abort, current_app, has_app_context, redirect, render_template, request, send_file, url_for
 from werkzeug.datastructures import MultiDict
 
 from preparacao import ErroPreparacao, preparar_texto, validar_registro
@@ -44,6 +44,7 @@ from unidades_contexto import (
 from perfis_vetorizacao import ErroPerfil, carregar_perfil
 from colab_notebook import ErroNotebookColab, gerar_notebook_colab
 from exportacao_revisao import gerar_pacote_revisao
+from perfis_gramaticais import MODELOS_SUPORTADOS, normalizar_modelo
 from vetorizacao import ErroVetorizacao, consultar_representacao
 from persistencia_vetores import (
     ErroPersistenciaVetores,
@@ -178,6 +179,10 @@ def latest_segmentation(connection, document, preparation_id=None, segmentation_
 
 def save_annotation(connection, document, segmented, **options):
     """Acrescenta anotações da segmentação escolhida, sem substituir o histórico."""
+    if "modelo" not in options and has_app_context():
+        modelo = current_app.config["GRAMMAR_MODEL"]
+        if modelo != "pt_core_news_sm":
+            options["modelo"] = modelo
     annotated = anotar_segmentacao(segmented, **options)
     connection.execute(
         """INSERT INTO annotations
@@ -428,9 +433,11 @@ def create_app(config=None):
         VECTORS_AUTO_START=True,
         VECTORS_MAX_WORKERS=1,
         VECTORS_ADAPTER_FACTORY=None,
+        GRAMMAR_MODEL=os.environ.get("LINGUA_MODELO_GRAMATICAL", "pt_core_news_sm"),
     )
     if config:
         app.config.update(config)
+    app.config["GRAMMAR_MODEL"] = normalizar_modelo(app.config["GRAMMAR_MODEL"])
 
     @app.template_filter("horario_brasilia")
     def display_time(value):
@@ -830,8 +837,49 @@ def create_app(config=None):
             contextualized=contextualized, context_history=[dict(item) for item in context_history],
             vector_job=vector_job, vectorized=vectorized, vector_history=vector_history,
             vector_profiles=VECTOR_PROFILES,
+            grammar_model=app.config["GRAMMAR_MODEL"], grammar_models=MODELOS_SUPORTADOS,
             quick_error=quick_error, quick_stage=quick_stage,
         )
+
+    @app.post("/envios/<int:record_id>/gramatica/reprocessar")
+    def reprocess_grammar(record_id):
+        """Acrescente uma cadeia gramatical completa, preservando o histórico."""
+        payload = request.get_json(silent=True) if request.is_json else request.form
+        if (request.args or not isinstance(payload, (dict, MultiDict))
+                or set(payload) != {"segmentacao_id", "modelo"}
+                or any(not isinstance(v, str) or not v.strip() for v in payload.values())
+                or isinstance(payload, MultiDict) and any(len(payload.getlist(f)) != 1 for f in payload)):
+            return {"erro": "Selecione uma segmentação e um modelo gramatical únicos."}, 400
+        try:
+            modelo = normalizar_modelo(payload["modelo"])
+        except ValueError as error:
+            return {"erro": str(error)}, 400
+        try:
+            with closing(connect_database(app.config["DATABASE"])) as connection:
+                document = connection.execute("SELECT * FROM submissions WHERE id = ?", (record_id,)).fetchone()
+                if document is None:
+                    abort(404)
+                segmented = latest_segmentation(connection, document, segmentation_id=payload["segmentacao_id"])
+                if segmented is None:
+                    return {"erro": "A segmentação não pertence a este documento."}, 404
+                annotated = save_annotation(connection, document, segmented, modelo=modelo)
+                connection.commit()
+                analyzed = save_analysis(connection, document, annotated)
+                connection.commit()
+                ruled = save_rule_run(connection, document, analyzed)
+                connection.commit()
+                contextualized = save_context_run(connection, document, ruled)
+                connection.commit()
+        except SOURCE_ERRORS as error:
+            status = (503 if isinstance(error, (ErroModelo, ErroAnaliseModelo))
+                      else 413 if isinstance(error, (ErroLimite, ErroAnaliseLimite, ErroContextoLimite)) else 409)
+            return {"erro": str(error), "resultados_concluidos_preservados": True}, status
+        if request.is_json:
+            return {"anotacao_id": annotated["anotacao_id"], "analise_id": analyzed["analise_id"],
+                    "execucao_id": ruled["execucao_id"], "contexto_execucao_id": contextualized["execucao_id"],
+                    "modelo": modelo}, 201
+        return redirect(url_for("submission", record_id=record_id,
+                                contexto_execucao_id=contextualized["execucao_id"], _anchor="etapa-segmentacao"), code=303)
 
     @app.post("/envios/<int:record_id>/preparacoes")
     def prepare_submission(record_id):

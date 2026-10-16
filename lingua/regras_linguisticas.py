@@ -13,14 +13,14 @@ import math
 import re
 from uuid import uuid4
 
-from catalogo_regras import CATALOGO, CATALOGO_V1
+from catalogo_regras import CATALOGO, CATALOGO_V1, CATALOGO_V11
 from preparacao import mapear_intervalos
 from regras_detectores import construir_contexto, detectar_regra
 from sintaxe_entidades import ErroAnalise, validar_analise_sintaxe_entidades
 
 
 SCHEMA_VERSION = "1.0.0"
-MODULO_VERSION = "1.1.0"
+MODULO_VERSION = "1.2.0"
 ETAPA = "07_regras_linguisticas"
 FAMILIAS = ("oracoes", "negacao", "tempo", "modalidade", "conectores")
 _IDS_ORIGEM = ("documento_id", "preparacao_id", "segmentacao_id", "anotacao_id", "analise_id")
@@ -107,9 +107,9 @@ def _fonte(analise):
 
 
 def _catalogo_versao(versao):
-    _exigir(type(versao) is str and versao in ("1.0.0", MODULO_VERSION),
+    _exigir(type(versao) is str and versao in ("1.0.0", "1.1.0", MODULO_VERSION),
             "Versão do mecanismo de regras não suportada.")
-    return CATALOGO_V1 if versao == "1.0.0" else CATALOGO
+    return {"1.0.0": CATALOGO_V1, "1.1.0": CATALOGO_V11, MODULO_VERSION: CATALOGO}[versao]
 
 
 def _regras_catalogo(versao=MODULO_VERSION):
@@ -385,7 +385,8 @@ def _gerar(fonte, execucao_id, data, configuracao, *, falhas=None, versao=MODULO
     return registro
 
 
-def aplicar_regras_linguisticas(analise, *, execucao_id=None, registrado_em=None, regras_habilitadas=None):
+def aplicar_regras_linguisticas(analise, *, execucao_id=None, registrado_em=None,
+                               regras_habilitadas=None, versao=MODULO_VERSION):
     """Acrescente as cinco famílias sem modificar a origem ou executar um modelo.
 
     Erros de entrada/configuração são exceções. Falhas operacionais de regras
@@ -398,8 +399,8 @@ def aplicar_regras_linguisticas(analise, *, execucao_id=None, registrado_em=None
     _fonte(fonte)
     identificador = str(uuid4()) if execucao_id is None else _id(execucao_id, "execucao_id")
     data = _data(registrado_em, gerar=True)
-    configuracao = _configuracao(regras_habilitadas)
-    registro = _gerar(fonte, identificador, data, configuracao)
+    configuracao = _configuracao(regras_habilitadas, versao=versao)
+    registro = _gerar(fonte, identificador, data, configuracao, versao=versao)
     # A construção usa fonte validada e fragmentos canônicos; a validação pública
     # adicional permite verificar o JSON posteriormente, sem inferência neural.
     _json_estrito(registro)

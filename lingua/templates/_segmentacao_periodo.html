@@ -1,10 +1,18 @@
 <p class="period-text map-original-text map-period-clauses">{% for part in period_view.clause_parts %}{% if part.clause_id %}<a class="map-clause-highlight map-tone-{{ part.tone }}" href="#{{ part.anchor }}" title="Oração {{ part.number }} — {{ part.classification }}">{{ part.text }}</a>{% else %}{{ part.text }}{% endif %}{% endfor %}</p>
+{% if period_view.grammar_diagnostics %}
+<aside class="map-notes" aria-label="Pontos para revisão gramatical">
+  <p><strong>Pontos para revisão gramatical</strong></p>
+  <p>Estes avisos preservam as previsões de origem e permitem continuar o processamento. A ausência de avisos não garante correção gramatical.</p>
+  <ul>{% for diagnostic in period_view.grammar_diagnostics %}<li><p>{{ diagnostic.mensagem }}</p>{% if diagnostic.words %}<p>Elementos: {{ diagnostic.words }}.</p>{% endif %}<details><summary>Evidência e limitação</summary><p>{{ diagnostic.limitacao }}</p><p class="map-reference">{{ diagnostic.codigo }}</p></details></li>{% endfor %}</ul>
+</aside>
+{% endif %}
 {% if ruled and segmentation_view.clause_state in ('executada', 'executada_com_pendencias') %}
   {% if segmentation_view.rule_notes %}<ul class="map-notes">{% for note in segmentation_view.rule_notes %}<li>{{ note }}</li>{% endfor %}</ul>{% endif %}
   {% for clause in period_view.clauses %}
   <details class="map-clause map-tone-{{ clause.tone }}" id="{{ clause.anchor }}"{% if request.args.get('mapa_oracao_id') == clause.id %} open{% endif %}>
     <summary><strong>Oração {{ clause.number }} — <span class="map-clause-classification">{{ clause.classification }}</span></strong>{% if clause.nucleus_text %}<span class="map-clause-nucleus">Núcleo: {{ clause.nucleus_text }}</span>{% endif %}</summary>
     <div class="map-unit-body">
+      {% if clause.requires_review %}<p class="annotation-note">Há evidências conflitantes para a posição desta oração. Consulte os pontos para revisão do período; os vínculos abaixo são os propostos pela análise salva.</p>{% endif %}
       {% if clause.scope_resolved %}<p class="period-text map-clause-text" data-clause-intro{% if request.args.get('mapa_oracao_id') == clause.id and request.args.get('mapa_analise') in ('sintaxe', 'morfologia') %} hidden{% endif %}>{{ clause.text }}</p>{% else %}<p class="annotation-note">Extensão da oração não determinada. As análises abrangem somente os elementos identificados.</p>{% for fragment in clause.evidence_fragments %}<p class="period-text">{{ fragment }}</p>{% endfor %}{% endif %}
       {% if clause.relations %}<ul class="map-relations">{% for relation in clause.relations %}<li>{{ relation.label }} <a href="#{{ relation.anchor }}">oração {{ relation.number }}</a></li>{% endfor %}</ul>{% endif %}
       {% if clause.notes %}<details class="map-notes"><summary>Ressalvas da identificação</summary><ul>{% for note in clause.notes %}<li>{{ note }}</li>{% endfor %}</ul></details>{% endif %}

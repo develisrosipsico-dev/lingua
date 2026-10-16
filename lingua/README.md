@@ -147,6 +147,44 @@ permanecem explícitas. Palavras fora dos alcances e períodos sem oração
 identificada têm suas anotações disponíveis separadamente. Relações e atributos
 são propostas do modelo e das regras para revisão gramatical.
 
+### Revisão gramatical e modelo português médio
+
+O mapa agora separa a posição da oração no período de seus vínculos com outras
+orações. Uma subordinada que rege outra continua subordinada; a relação
+**Rege a** identifica sua dependente. Conflitos e palavras relevantes fora dos
+agrupamentos aparecem como avisos com os dados usados na identificação. Os
+avisos não corrigem a previsão do modelo nem impedem a vetorização.
+
+As regras `1.2.0` agrupam **passar a + infinitivo** e **continuar + gerúndio**
+quando a árvore, a morfologia e o contexto sustentam a locução. Outros
+complementos, como **quer sair**, continuam separados. Os mecanismos `1.0.0` e
+`1.1.0` permanecem disponíveis para conferir registros históricos.
+
+O modelo pequeno continua disponível. Para instalar também o modelo médio:
+
+```bash
+../.venv/bin/python -m pip install -r requirements-gramatica.txt
+LINGUA_MODELO_GRAMATICAL=pt_core_news_md ../.venv/bin/python app.py
+```
+
+Use o Python do seu ambiente virtual. A variável escolhe o modelo das novas
+análises; não reprocessa resultados existentes. Na aba **Segmentação**, abra
+**Reprocessar gramática com outro modelo ou com as regras atuais**, selecione
+o modelo instalado e clique em **Reprocessar gramática**. Isso acrescenta uma
+nova cadeia de morfologia, sintaxe, regras e contexto, preserva o texto e as
+versões anteriores e não inicia o E5. A sintaxe herda o modelo da morfologia.
+Uma falha mantém as etapas concluídas; não há troca silenciosa de modelo.
+
+O pacote de revisão inclui `revisao_gramatical.json`, com os diagnósticos das
+cadeias de regras salvas. Ausência de avisos não significa ausência de erros.
+
+A [avaliação ampliada](docs/avaliacao_gramatical.md) compara classes, lemas,
+traços e dependências em 33 alvos selecionados de 11 casos. O modelo médio
+melhorou classes e dependências nesses alvos; persistem erros de lemas, modo
+verbal e análise do último período do documento de referência. Veja os
+[resultados e divergências](docs/avaliacao_gramatical_resultado.md). Essa
+amostra é uma referência de regressão, não uma medida de acurácia global.
+
 ## Preparar o registro para análise
 
 Por padrão, o texto de trabalho é idêntico ao original. A opção técnica de

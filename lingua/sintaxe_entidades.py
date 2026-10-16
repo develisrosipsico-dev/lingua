@@ -16,6 +16,10 @@ from anotacao import (
     _data, _json_estrito, validar_anotacao,
 )
 from preparacao import ErroPreparacao, mapear_intervalos
+from perfis_gramaticais import (
+    COMPATIBILIDADE_SPACY, especificacao_modelo, normalizar_modelo,
+    perfil_registrado_valido,
+)
 
 
 SCHEMA_VERSION = "1.0.0"
@@ -100,16 +104,17 @@ def _fonte(anotacao):
     return anotacao["segmentacao"]["preparacao"]["trabalho"]["texto"]
 
 
-@lru_cache(maxsize=1)
-def _carregar_modelo():
+@lru_cache(maxsize=2)
+def _carregar_modelo(nome=MODELO_NOME):
     try:
+        nome = normalizar_modelo(nome)
         import spacy
         from packaging.specifiers import SpecifierSet
-        modelo = spacy.load(MODELO_NOME, disable=_DESATIVADOS)
+        modelo = spacy.load(nome, disable=_DESATIVADOS)
         if (
-            modelo.meta.get("lang") != "pt" or modelo.meta.get("name") != "core_news_sm"
+            modelo.meta.get("lang") != "pt" or modelo.meta.get("name") != nome.removeprefix("pt_")
             or modelo.meta.get("version") != MODELO_VERSAO
-            or modelo.meta.get("spacy_version") != ">=3.8.0,<3.9.0"
+            or modelo.meta.get("spacy_version") != COMPATIBILIDADE_SPACY
             or spacy.__version__ not in SpecifierSet(modelo.meta["spacy_version"])
             or modelo.pipe_names != _COMPONENTES
             or modelo.get_pipe_meta("parser").factory != "parser"
@@ -124,9 +129,10 @@ def _carregar_modelo():
     except ErroModelo:
         raise
     except Exception as erro:
+        requisitos = "requirements.txt" if nome == MODELO_NOME else "requirements-gramatica.txt"
         raise ErroModelo(
-            "Não foi possível carregar pt_core_news_sm 3.8.0 compatível. "
-            "Instale com o Python do ambiente virtual: python -m pip install -r requirements.txt."
+            f"Não foi possível carregar {nome} {MODELO_VERSAO} compatível. "
+            f"Instale com o Python do ambiente virtual: python -m pip install -r {requisitos}."
         ) from erro
 
 
@@ -146,10 +152,11 @@ def _configuracoes(anotacao, versao):
 
 
 def _processamento(modelo, versao, anotacao):
-    return {
+    nome = normalizar_modelo(f"{modelo.meta['lang']}_{modelo.meta['name']}")
+    resultado = {
         "ferramenta": "spacy", "versao": versao, "idioma": "pt",
         "modulo": {"nome": "sintaxe_entidades", "versao": MODULO_VERSION},
-        "modelo": {"nome": MODELO_NOME, "versao": modelo.meta["version"],
+        "modelo": {"nome": nome, "versao": modelo.meta["version"],
                    "compatibilidade_spacy": modelo.meta["spacy_version"]},
         "componentes_executados": list(modelo.pipe_names),
         "componentes_desativados": list(modelo.disabled),
@@ -158,6 +165,9 @@ def _processamento(modelo, versao, anotacao):
         "rotulos_entidades": sorted(modelo.get_pipe("ner").labels),
         "natureza": "previsoes_do_modelo", "configuracoes": _configuracoes(anotacao, versao),
     }
+    if "perfil_gramatical" in anotacao["processamento"]:
+        resultado["perfil_gramatical"] = deepcopy(anotacao["processamento"]["perfil_gramatical"])
+    return resultado
 
 
 def _origem(processamento):
@@ -190,7 +200,8 @@ def _atributos(token):
 def _executar(anotacao, texto):
     # Cache e lock próprios: esta etapa não ativa componentes no modelo da 05.
     with _MODELO_LOCK:
-        modelo, versao = _carregar_modelo()
+        nome = anotacao["processamento"]["modelo"]["nome"]
+        modelo, versao = _carregar_modelo() if nome == MODELO_NOME else _carregar_modelo(nome)
         try:
             from spacy.tokens import Doc
             from segmentacao import _tokenizador
@@ -273,13 +284,18 @@ def _processamento_valido(valor, fonte):
     esperados = {
         "ferramenta": "spacy", "idioma": "pt", "natureza": "previsoes_do_modelo",
         "modulo": {"nome": "sintaxe_entidades", "versao": MODULO_VERSION},
-        "modelo": {"nome": MODELO_NOME, "versao": MODELO_VERSAO, "compatibilidade_spacy": ">=3.8.0,<3.9.0"},
+        "modelo": especificacao_modelo(fonte["processamento"]["modelo"]["nome"]),
         "componentes_executados": _COMPONENTES, "componentes_desativados": _DESATIVADOS,
         "componentes_disponiveis": _DISPONIVEIS, "rotulos_dependencias": _ROTULOS_DEPENDENCIAS,
         "rotulos_entidades": _ROTULOS_ENTIDADES, "configuracoes": _configuracoes(fonte, versao),
     }
     for chave, esperado in esperados.items():
         _exigir(_campo(valor, chave, "processamento") == esperado, f"processamento.{chave} inconsistente.")
+    _exigir(perfil_registrado_valido(valor), "Perfil gramatical ou versão não suportado.")
+    _exigir(
+        valor.get("perfil_gramatical") == fonte["processamento"].get("perfil_gramatical"),
+        "O perfil gramatical deve ser herdado da etapa 05.",
+    )
     configuracoes = valor["configuracoes"]
     _exigir(type(configuracoes["max_caracteres"]) is int and type(configuracoes["max_tokens_internos"]) is int
             and configuracoes["embeddings_exportados"] is False, "Tipos de limites ou opções inconsistentes.")

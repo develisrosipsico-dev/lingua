@@ -157,6 +157,21 @@
             </dl>
             <a class="download-link" href="{{ url_for('segmentation_json', record_id=record.id, segmentacao_id=segmented.segmentacao_id) }}">Baixar segmentação JSON <span aria-hidden="true">↓</span></a>
 
+            <details class="grammar-reprocessing">
+              <summary>Reprocessar gramática com outro modelo ou com as regras atuais</summary>
+              <p class="table-description">Gera novas análises de morfologia, sintaxe, orações e contexto para todo o texto. As versões anteriores permanecem salvas. O E5 é executado separadamente.</p>
+              {% if annotated %}<p class="annotation-note">Modelo da análise em exibição: {{ annotated.processamento.modelo.nome }} {{ annotated.processamento.modelo.versao }}.{% if ruled %} Regras: {{ ruled.processamento.modulo.versao }}.{% endif %}</p>{% endif %}
+              <form method="post" action="{{ url_for('reprocess_grammar', record_id=record.id) }}">
+                <input type="hidden" name="segmentacao_id" value="{{ segmented.segmentacao_id }}">
+                <label for="grammar-model">Modelo gramatical local</label>
+                <select id="grammar-model" name="modelo">
+                  {% for model in grammar_models %}<option value="{{ model }}"{% if model == grammar_model %} selected{% endif %}>{{ 'Português médio — pt_core_news_md' if model == 'pt_core_news_md' else 'Português pequeno — pt_core_news_sm' }}</option>{% endfor %}
+                </select>
+                <button type="submit">Reprocessar gramática <span aria-hidden="true">→</span></button>
+              </form>
+              <p class="local-processing">O modelo selecionado precisa estar instalado. O aplicativo não baixa modelos durante a análise. A análise automática pode conter erros; os avisos ajudam a localizar pontos para revisão.</p>
+            </details>
+
             {% include '_segmentacao_mapa.html' %}
           </div>
           {% endif %}

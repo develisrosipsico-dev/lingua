@@ -158,13 +158,42 @@ CATALOGO_V1 = {
 
 # A versão recebida da continuação permanece íntegra para validar arquivos
 # históricos. Mudanças de alcance têm uma versão própria, sem reinterpretá-los.
-CATALOGO = deepcopy(CATALOGO_V1)
-CATALOGO["versao"] = "1.1.0"
-for _regra_atual in CATALOGO["regras"]:
+CATALOGO_V11 = deepcopy(CATALOGO_V1)
+CATALOGO_V11["versao"] = "1.1.0"
+for _regra_atual in CATALOGO_V11["regras"]:
     _regra_atual["versao"] = "1.1.0"
     _regra_atual["condicoes"].append(
         "Delimitadores literais de citação não constituem núcleos; o alcance "
         "permanece na mesma região de citação do marcador, inclusive fora de aspas."
     )
+
+CATALOGO = deepcopy(CATALOGO_V11)
+CATALOGO["versao"] = "1.2.0"
+for _regra_atual in CATALOGO["regras"]:
+    _regra_atual["versao"] = "1.2.0"
+    _regra_atual["condicoes"].append(
+        "O alcance usa agrupamentos aspectuais apenas para passar a+Inf e "
+        "continuar+Ger sustentados por xcomp/aux, morfologia e região enunciativa."
+    )
+    if _regra_atual["id"] == "oracao_predicado":
+        _regra_atual["atributos_utilizados"] += ["lema", "morfologia", "texto"]
+        _regra_atual["padrao"] += (
+            " Passar a+Inf e continuar+Ger podem formar um agrupamento quando "
+            "a árvore recebida e as formas verbais sustentam o padrão."
+        )
+        _regra_atual["excecoes"][0] = (
+            "xcomp/ccomp permanecem separados, salvo os dois padrões aspectuais "
+            "explicitamente cobertos. Ausência de morfologia ou árvore incompatível "
+            "não autoriza fusão nem correção das previsões recebidas."
+        )
+        _regra_atual["resultado"] += (
+            " Locuções reconhecidas preservam todos os componentes verbais no "
+            "núcleo e os elos nas evidências e vínculos."
+        )
+        _regra_atual["exemplos"] += [
+            {"texto": "Ela passou a reconhecer o problema.", "agrupamento": "passou a reconhecer"},
+            {"texto": "Ela continua orientando a equipe.", "agrupamento": "continua orientando"},
+            {"texto": "Ela passou a ponte.", "agrupamento_aspectual": False},
+        ]
 
 REGRA_IDS = tuple(regra["id"] for regra in CATALOGO["regras"])

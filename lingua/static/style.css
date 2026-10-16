@@ -459,6 +459,11 @@ button:hover { background: #1e483d; }
   .stage-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
+.grammar-reprocessing { margin: 20px 0; padding: 16px; border: 1px solid var(--line, #dedbd3); border-radius: 12px; }
+.grammar-reprocessing summary { cursor: pointer; font-weight: 600; }
+.grammar-reprocessing form { display: grid; gap: 10px; margin-top: 12px; }
+.grammar-reprocessing select { width: 100%; min-width: 0; }
+
 @media (max-height: 500px) {
   .stage-navigation { position: static; }
   .stage-panel, .stage-panel :is(input, button, select, textarea, summary, a, [tabindex]) { scroll-margin-top: 12px; }

@@ -43,12 +43,12 @@ class _Indice:
     """Índices compartilhados, com ownership de oração e subárvores em ordem DFS."""
 
     def __init__(self, analise, *, versao="1.1.0"):
-        if versao not in {"1.0.0", "1.1.0"}:
+        if versao not in {"1.0.0", "1.1.0", "1.2.0"}:
             raise ValueError(f"Versão de detectores não suportada: {versao!r}.")
         self.versao = versao
         # Reproduzir 1.0.0 é necessário para conferir registros históricos:
         # suas decisões não recebem retroativamente as correções de citação.
-        self.corrigir_citacao = versao == "1.1.0"
+        self.corrigir_citacao = versao != "1.0.0"
         self.analise = analise
         self.segmentacao = analise["anotacao"]["segmentacao"]
         anotacoes = {a["token_id"]: a for a in analise["anotacao"]["anotacoes_tokens"]}
@@ -78,6 +78,13 @@ class _Indice:
         if self.corrigir_citacao:
             self.nucleos.difference_update(
                 t["id"] for t in self.lista if t["texto"] in _DELIMITADORES_CITACAO)
+        self.citacao = {}
+        self._indexar_aspas()
+        self.grupos_aspectuais = self._agrupar_aspectuais() if versao == "1.2.0" else {}
+        self.componentes_aspectuais = {
+            componente for grupo in self.grupos_aspectuais.values()
+            for componente in grupo["componentes"]
+        }
         self.pertence = {}
         self.proprios = defaultdict(list)
         self.entrada, self.saida, self.dfs = {}, {}, []
@@ -103,10 +110,90 @@ class _Indice:
             self.proprios[nucleo].sort(key=self.posicao.__getitem__)
         self.pos_ausentes_periodo = {periodo: [i for i in ids if self.tokens[i]["pos"] is None]
                                      for periodo, ids in self.periodos.items()}
-        self.citacao = {}
-        self._indexar_aspas()
         self._correlativas = None
         self._supressao_correlativa = None
+
+    def _agrupar_aspectuais(self):
+        """Agrupe dois padrões fechados, sem modificar POS, morfologia ou árvore.
+
+        O representante é a cabeça superior recebida; todos os componentes e
+        elos reconhecidos são preservados na ocorrência, inclusive na cadeia
+        passar a continuar orientando. Complementos finitos, sujeitos próprios,
+        coordenação, travessias de aspas e morfologia ausente impedem a fusão.
+        """
+        candidatos = []
+        for auxiliar in self.lista:
+            lema = (auxiliar["lema"] or "").lower()
+            if auxiliar["pos"] not in _VERBAIS or lema not in {"passar", "continuar"}:
+                continue
+            auxiliar_id = auxiliar["id"]
+            if self.dependencia[auxiliar_id] == "aux":
+                principais = [auxiliar["cabeca_token_id"]]
+                relacao = "aux"
+            elif auxiliar_id in self.nucleos:
+                principais = [i for i in self.filhos[auxiliar_id]
+                              if self.dependencia[i] == "xcomp" and self.tokens[i]["pos"] in _VERBAIS]
+                relacao = "xcomp"
+            else:
+                continue
+            if len(principais) != 1:
+                continue
+            principal_id = principais[0]
+            principal = self.tokens[principal_id]
+            forma = "Inf" if lema == "passar" else "Ger"
+            if (principal_id not in self.nucleos or principal["pos"] not in _VERBAIS
+                    or (principal["morfologia"] or {}).get("VerbForm") != forma
+                    or principal["periodo_id"] != auxiliar["periodo_id"]
+                    or self.posicao[auxiliar_id] >= self.posicao[principal_id]
+                    or self.contexto_citacao(auxiliar_id) is not self.contexto_citacao(principal_id)):
+                continue
+            citacao = self.contexto_citacao(auxiliar_id)
+            if citacao is not None and not citacao["fechado"]:
+                continue
+            if any(self.dependencia[i] in {"nsubj", "csubj"}
+                   for i in self.filhos[principal_id]) and relacao == "xcomp":
+                continue
+            elos = [i for i in self.filhos[principal_id]
+                    if self.tokens[i]["texto"].lower() == "a"
+                    and self.tokens[i]["pos"] in {"ADP", "SCONJ"}
+                    and self.dependencia[i] in {"mark", "case"}
+                    and self.posicao[auxiliar_id] < self.posicao[i] < self.posicao[principal_id]]
+            if lema == "passar" and len(elos) != 1:
+                continue
+            if lema == "continuar":
+                elos = []
+            intervalo = self.lista[self.posicao[auxiliar_id] + 1:self.posicao[principal_id]]
+            # Apenas advérbios/partículas e o elo explícito podem interromper
+            # a sequência; proximidade lexical por si só nunca produz locução.
+            if any(t["id"] not in elos and t["pos"] not in {"ADV", "PART"} for t in intervalo):
+                continue
+            candidatos.append({"auxiliar": auxiliar_id, "principal": principal_id,
+                               "relacao": relacao, "elos": elos,
+                               "padrao": "passar a + infinitivo" if lema == "passar" else "continuar + gerúndio"})
+        representantes = {i: i for i in self.nucleos}
+
+        def representante(ident):
+            while representantes.get(ident, ident) != ident:
+                ident = representantes[ident]
+            return ident
+
+        for candidato in candidatos:
+            auxiliar_id, principal_id = candidato["auxiliar"], candidato["principal"]
+            superior, inferior = ((auxiliar_id, principal_id) if candidato["relacao"] == "xcomp"
+                                  else (principal_id, auxiliar_id))
+            representantes[representante(inferior)] = representante(superior)
+        grupos = {}
+        for candidato in candidatos:
+            nucleo = representante(candidato["principal"])
+            grupo = grupos.setdefault(nucleo, {"componentes": [], "elos": [], "padroes": []})
+            grupo["componentes"].extend([candidato["auxiliar"], candidato["principal"]])
+            grupo["elos"].extend(candidato["elos"])
+            grupo["padroes"].append(candidato)
+        for nucleo, grupo in grupos.items():
+            grupo["componentes"] = self.ordenar(grupo["componentes"])
+            grupo["elos"] = self.ordenar(grupo["elos"])
+            self.nucleos.difference_update(set(grupo["componentes"]) - {nucleo})
+        return grupos
 
     def ordenar(self, ids):
         return sorted(set(ids), key=self.posicao.__getitem__)
@@ -288,11 +375,13 @@ def _oracoes(indice, habilitadas):
         "A identificação de núcleos verbais depende da classe gramatical recebida.")
     for ident in indice.ordenar(indice.nucleos):
         token = indice.tokens[ident]
-        auxiliares = [filho for filho in indice.filhos[ident]
+        grupo = indice.grupos_aspectuais.get(ident)
+        componentes = [ident] if grupo is None else grupo["componentes"]
+        auxiliares = [filho for componente in componentes for filho in indice.filhos[componente]
                       if indice.dependencia[filho] in _AUXILIARES
                       and (not indice.corrigir_citacao
                            or indice.tokens[filho]["texto"] not in _DELIMITADORES_CITACAO)]
-        marcador = indice.ordenar([ident] + auxiliares)
+        marcador = indice.ordenar(componentes + auxiliares + ([] if grupo is None else grupo["elos"]))
         pai = indice.pai_oracional(ident)
         dep = indice.dependencia[ident]
         vinculos = [_vinculo("auxiliar" if indice.dependencia[a] == "aux" else "copula", a)
@@ -305,9 +394,17 @@ def _oracoes(indice, habilitadas):
         explicacao = f"{token['texto']!r} é {origem} na anotação recebida (POS={token['pos']}, dependência={token['dependencia']})."
         if auxiliares:
             explicacao += " Auxiliares/cópulas dependentes integram este agrupamento."
+        if grupo is not None:
+            vinculos += [_vinculo("componente_aspectual", componente) for componente in componentes]
+            vinculos += [_vinculo("elo_aspectual", elo) for elo in grupo["elos"]]
+            for padrao in grupo["padroes"]:
+                auxiliar, principal = indice.tokens[padrao["auxiliar"]], indice.tokens[padrao["principal"]]
+                explicacao += (f" O padrão {padrao['padrao']} agrupa {auxiliar['texto']!r} e "
+                               f"{principal['texto']!r}, sustentado pela relação {padrao['relacao']} "
+                               f"e VerbForm={principal['morfologia']['VerbForm']}; as anotações de origem são preservadas.")
         if pai is not None:
             explicacao += f" A dependência {token['dependencia']} liga este núcleo a outro agrupamento; não é fundido automaticamente."
-        ocorrencias.append(_proposta("oracoes", "oracao", marcador, [ident], alcance, explicacao, vinculos=vinculos))
+        ocorrencias.append(_proposta("oracoes", "oracao", marcador, componentes, alcance, explicacao, vinculos=vinculos))
     return ocorrencias, pendencias
 
 
@@ -351,7 +448,8 @@ def _negador(indice, ident, habilitadas):
         nucleo = None
     elif permitido and cabeca != ident and indice.tokens[cabeca]["pos"] is None:
         nucleo = None
-    elif permitido and cabeca != ident and cabeca not in indice.nucleos and indice.dependencia[cabeca] not in _AUXILIARES:
+    elif (permitido and cabeca != ident and cabeca not in indice.nucleos
+          and cabeca not in indice.componentes_aspectuais and indice.dependencia[cabeca] not in _AUXILIARES):
         nucleo, constituinte = cabeca, True
     alcance = indice.alcance(nucleo, ident, constituinte=constituinte) if permitido else None
     if citacao is not None and (nucleo is None or indice.contexto_citacao(nucleo) is not citacao):

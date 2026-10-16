@@ -14,12 +14,15 @@ from threading import Lock
 from uuid import uuid4
 
 from segmentacao import ErroSegmentacao, validar_segmentacao
+from perfis_gramaticais import (
+    COMPATIBILIDADE_SPACY, MODELO_PADRAO, MODELO_VERSAO, especificacao_modelo,
+    normalizar_modelo, perfil_gramatical, perfil_registrado_valido,
+)
 
 
 SCHEMA_VERSION = "1.0.0"
 ETAPA = "05_morfologia_vocabulario"
-MODELO_NOME = "pt_core_news_sm"
-MODELO_VERSAO = "3.8.0"
+MODELO_NOME = MODELO_PADRAO
 MAX_CARACTERES = 50_000
 MAX_TOKENS = 10_000
 _COMPONENTES = ["tok2vec", "morphologizer", "lemmatizer"]
@@ -124,16 +127,18 @@ def _fonte(segmentacao):
     return texto
 
 
-@lru_cache(maxsize=1)
-def _carregar_modelo():
+@lru_cache(maxsize=2)
+def _carregar_modelo(nome=MODELO_NOME):
     try:
+        nome = normalizar_modelo(nome)
         import spacy
         from packaging.specifiers import SpecifierSet
-        modelo = spacy.load(MODELO_NOME, disable=_DESATIVADOS)
+        modelo = spacy.load(nome, disable=_DESATIVADOS)
         meta = modelo.meta
         if (
             meta.get("lang") != "pt" or meta.get("version") != MODELO_VERSAO
-            or meta.get("name") != "core_news_sm"
+            or meta.get("name") != nome.removeprefix("pt_")
+            or meta.get("spacy_version") != COMPATIBILIDADE_SPACY
             or spacy.__version__ not in SpecifierSet(meta.get("spacy_version", ""))
             or modelo.pipe_names != _COMPONENTES
             or modelo.get_pipe_meta("lemmatizer").factory != "trainable_lemmatizer"
@@ -145,9 +150,10 @@ def _carregar_modelo():
     except ErroModelo:
         raise
     except Exception as erro:
+        requisitos = "requirements.txt" if nome == MODELO_NOME else "requirements-gramatica.txt"
         raise ErroModelo(
-            "Não foi possível carregar pt_core_news_sm 3.8.0 compatível. "
-            "Instale as dependências com o Python do ambiente virtual: python -m pip install -r requirements.txt."
+            f"Não foi possível carregar {nome} {MODELO_VERSAO} compatível. "
+            f"Instale as dependências com o Python do ambiente virtual: python -m pip install -r {requisitos}."
         ) from erro
 
 
@@ -165,15 +171,19 @@ def _configuracoes(versao_origem, versao_execucao):
 
 
 def _processamento(modelo, versao, segmentacao):
-    return {
+    nome = normalizar_modelo(f"{modelo.meta['lang']}_{modelo.meta['name']}")
+    resultado = {
         "ferramenta": "spacy", "versao": versao, "idioma": "pt",
-        "modelo": {"nome": MODELO_NOME, "versao": modelo.meta["version"],
+        "modelo": {"nome": nome, "versao": modelo.meta["version"],
                    "compatibilidade_spacy": modelo.meta["spacy_version"]},
         "componentes_executados": list(modelo.pipe_names),
         "componentes_desativados": list(modelo.disabled),
         "componentes_disponiveis": list(modelo.component_names),
         "configuracoes": _configuracoes(segmentacao["processamento"]["versao"], versao),
     }
+    if nome != MODELO_NOME:
+        resultado["perfil_gramatical"] = perfil_gramatical(nome)
+    return resultado
 
 
 def _origem(processamento):
@@ -195,10 +205,10 @@ def _conferir_alinhamento(documento, segmentacao, texto):
         raise ErroAlinhamento("O texto ou as fronteiras dos tokens não correspondem à segmentação recebida.")
 
 
-def _executar(segmentacao, texto):
+def _executar(segmentacao, texto, modelo_nome=None):
     # Os listeners do tok2vec compartilham estado: serialize a execução por processo.
     with _MODELO_LOCK:
-        modelo, versao = _carregar_modelo()
+        modelo, versao = _carregar_modelo() if modelo_nome in (None, MODELO_NOME) else _carregar_modelo(modelo_nome)
         try:
             from spacy.tokens import Doc
             from segmentacao import _tokenizador
@@ -283,7 +293,7 @@ def _relatorio(anotacoes):
     }
 
 
-def anotar_segmentacao(segmentacao, *, anotacao_id=None, registrado_em=None):
+def anotar_segmentacao(segmentacao, *, anotacao_id=None, registrado_em=None, modelo=None):
     """Anote o contexto inteiro, preservando a fonte e os intervalos existentes."""
     try:
         fonte = deepcopy(segmentacao)
@@ -292,7 +302,14 @@ def anotar_segmentacao(segmentacao, *, anotacao_id=None, registrado_em=None):
     texto = _fonte(fonte)
     identificador = str(uuid4()) if anotacao_id is None else _id(anotacao_id, "anotacao_id")
     data = _data(registrado_em, gerar=True)
-    anotacoes, processamento = _executar(fonte, texto)
+    try:
+        nome_modelo = normalizar_modelo(modelo)
+    except ValueError as erro:
+        raise ErroModelo(str(erro)) from erro
+    anotacoes, processamento = (
+        _executar(fonte, texto) if nome_modelo == MODELO_NOME
+        else _executar(fonte, texto, modelo_nome=nome_modelo)
+    )
     registro = {
         "schema_version": SCHEMA_VERSION, "etapa": ETAPA,
         **{c: fonte[c] for c in ("documento_id", "preparacao_id", "segmentacao_id")},
@@ -311,9 +328,15 @@ def _processamento_valido(valor, fonte):
             and _campo(valor, "idioma", "processamento") == "pt", "Ferramenta ou idioma inválido.")
     versao = _id(_campo(valor, "versao", "processamento"), "processamento.versao")
     _exigir(re.fullmatch(r"3\.8\.\d+", versao) is not None, "Versão do spaCy incompatível com o modelo registrado.")
-    _exigir(_campo(valor, "modelo", "processamento") == {
-        "nome": MODELO_NOME, "versao": MODELO_VERSAO, "compatibilidade_spacy": ">=3.8.0,<3.9.0",
-    }, "Modelo ou compatibilidade não suportado.")
+    modelo = _objeto(_campo(valor, "modelo", "processamento"), "processamento.modelo")
+    try:
+        nome = normalizar_modelo(_campo(modelo, "nome", "processamento.modelo"))
+        _exigir(modelo == especificacao_modelo(nome), "Modelo ou compatibilidade não suportado.")
+        _exigir(perfil_registrado_valido(valor), "Perfil gramatical ou versão não suportado.")
+    except ValueError as erro:
+        if isinstance(erro, ErroAnotacao):
+            raise
+        raise ErroAnotacao(str(erro)) from erro
     _exigir(_campo(valor, "componentes_executados", "processamento") == _COMPONENTES,
             "Componentes executados incompatíveis com esta etapa.")
     _exigir(_campo(valor, "componentes_desativados", "processamento") == _DESATIVADOS,

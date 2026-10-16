@@ -39,7 +39,7 @@ _ETAPAS = (
 )
 
 _BIBLIOTECAS = (
-    "Flask", "tzdata", "spacy", "pt-core-news-sm", "numpy", "torch",
+    "Flask", "tzdata", "spacy", "pt-core-news-sm", "pt-core-news-md", "numpy", "torch",
     "transformers", "sentence-transformers", "huggingface-hub", "fastembed", "onnx",
 )
 
@@ -462,6 +462,7 @@ def _leia_me(processamento, codigo):
         "", "Estados: disponivel indica registros presentes; ausente indica que nenhum registro foi encontrado; com_erros indica falhas de leitura ou validação.",
         "Um registro estruturalmente válido ainda pode declarar processamento incompleto, pendências ou prontidão falsa. Confira seus relatórios e estados originais.",
         "As verificações estruturais conferem formato, associações e integridade. Não atestam correção linguística, semântica, sintática, morfológica ou qualidade dos embeddings.", "",
+        "revisao_gramatical.json reúne diagnósticos reproduzíveis das cadeias de regras salvas: conflitos, hierarquia e palavras fora de agrupamentos. Não altera as previsões nem bloqueia a vetorização. A ausência de avisos não certifica acerto gramatical.", "",
         "O exportador lê um snapshot SQLite e não executa modelos nem grava no banco. A rota que o chamou pode ter processado etapas antes deste snapshot.",
         "Os resultados vetoriais publicados são restaurados e validados por obter_vetorizacao, com todos os valores disponíveis. Falhas ficam registradas e o JSON bruto é mantido.",
         "O cache contém checkpoints, inclusive parciais. Sua restauração confere bytes e chave, mas não substitui a validação integral de um resultado publicado.",
@@ -496,6 +497,27 @@ def _leia_me(processamento, codigo):
         "Erros ao copiar código: " + str(len(codigo["erros"])), "",
     ])
     return "\n".join(linhas).encode("utf-8")
+
+
+def _revisao_gramatical(etapas):
+    """Diagnostique as cadeias salvas sem inferência ou revisão da fonte."""
+    from diagnosticos_gramaticais import diagnosticar_gramatica
+
+    revisoes, erros = [], []
+    for item in etapas["07"]["registros"]:
+        if item["validacao"]["estado"] != "valido":
+            continue
+        regra = item["registro"]
+        try:
+            analise = regra["analise"]
+            anotacao = analise["anotacao"]
+            relatorio = diagnosticar_gramatica(anotacao["segmentacao"], anotacao, analise, regra)
+            revisoes.append({"execucao_id": regra["execucao_id"], "relatorio": relatorio})
+        except Exception as erro:
+            erros.append({"execucao_id": regra.get("execucao_id"), **_erro(erro)})
+    return {"schema_version": "1.0.0", "escopo": "cadeias_de_regras_salvas",
+            "limite": "Diagnósticos não certificam correção gramatical nem alteram a prontidão técnica.",
+            "execucoes": revisoes, "erros": erros}
 
 
 def gerar_pacote_revisao(connection, documento, *, codigo_raiz=None, processamento=None):
@@ -544,6 +566,8 @@ def gerar_pacote_revisao(connection, documento, *, codigo_raiz=None, processamen
     completo = {"schema_version": SCHEMA_VERSION, "gerado_em": gerado_em,
                 "documento": documento, "processamento_solicitado": sem_claim(relato),
                 "etapas": etapas, "erros": erros}
+    completo["revisao_gramatical"] = _revisao_gramatical(etapas)
+    arquivos["revisao_gramatical.json"] = _json_bytes(completo["revisao_gramatical"])
     codigo = _codigo(Path(__file__).resolve().parent if codigo_raiz is None else codigo_raiz, arquivos)
     arquivos["processamento_completo.json"] = _json_bytes(completo)
     arquivos["ambiente.json"] = _json_bytes(_ambiente())

@@ -1,7 +1,7 @@
 """Compatibilidade dos registros recebidos e evolução explícita da etapa 07.
 
 Os quatro arquivos recebidos permanecem exemplos históricos da versão 1.0.0.
-Novas execuções usam a versão 1.1.0 e preservam a cadeia anterior. O teste de
+Novas execuções usam a versão 1.2.0 e preservam a cadeia anterior. O teste de
 SQLite importa cópias dos exemplos com a identidade numérica exigida pela
 aplicação; não altera os arquivos nem refaz previsões linguísticas.
 """
@@ -102,7 +102,7 @@ class CompatibilidadeRegistrosTests(unittest.TestCase):
     def test_contexto_normalizado_recebido_continua_valido_e_intacto(self):
         self.conferir_legado("unidades_contexto_normalizada.json")
 
-    def test_novas_execucoes_usam_versao_11_e_preservam_cadeia_sem_modelo(self):
+    def test_novas_execucoes_usam_versao_12_e_preservam_cadeia_sem_modelo(self):
         for modalidade in ("literal", "normalizada"):
             with self.subTest(modalidade=modalidade):
                 legado = ler_exemplo(f"regras_linguisticas_{modalidade}.json")
@@ -113,8 +113,8 @@ class CompatibilidadeRegistrosTests(unittest.TestCase):
                     novas_regras = aplicar_regras_linguisticas(
                         analise, execucao_id=f"compatibilidade:07:11:{modalidade}", registrado_em=INSTANTE,
                     )
-                    self.assertEqual(novas_regras["catalogo"]["versao"], "1.1.0")
-                    self.assertEqual(novas_regras["processamento"]["modulo"]["versao"], "1.1.0")
+                    self.assertEqual(novas_regras["catalogo"]["versao"], "1.2.0")
+                    self.assertEqual(novas_regras["processamento"]["modulo"]["versao"], "1.2.0")
                     self.assertTrue(validar_regras_linguisticas(novas_regras)["pronto_para_etapa_08"])
                     antes_regras = deepcopy(novas_regras)
                     contexto = construir_unidades_contexto(
@@ -214,7 +214,7 @@ class CompatibilidadeHistoricoSQLiteTests(unittest.TestCase):
             })
             self.assertEqual(resposta.status_code, 201, resposta.get_data(as_text=True))
             regras = resposta.get_json()
-            self.assertEqual(regras["catalogo"]["versao"], "1.1.0")
+            self.assertEqual(regras["catalogo"]["versao"], "1.2.0")
             self.assertEqual(regras["analise"], legado["regras"]["analise"])
             resposta = self.client.post("/envios/1/contextos", json={
                 "regras_execucao_id": regras["execucao_id"], "execucao_id": f"sqlite:08:11:{modalidade}",
