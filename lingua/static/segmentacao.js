@@ -95,6 +95,16 @@
   };
   panel.addEventListener("toggle", (event) => {
     if (event.target.matches("[data-map-period]") && event.target.open) loadPeriod(event.target);
+    if (event.target.matches(".map-clause") && event.target.open) {
+      const clause = event.target;
+      if (clause.dataset.analysisType) return;
+      const selected = clause.querySelector('[data-clause-analysis] button[aria-expanded="true"]');
+      if (selected) {
+        clause.dataset.analysisType = selected.form.elements.namedItem("tipo").value;
+      } else {
+        clause.querySelector('[data-clause-analysis] input[value="sintaxe"]').form.requestSubmit();
+      }
+    }
   }, true);
 
   panel.addEventListener("click", (event) => {
@@ -131,14 +141,18 @@
     event.preventDefault();
     const button = form.querySelector("button");
     const result = document.getElementById(button.getAttribute("aria-controls"));
-    if (result.dataset.loaded === "true") {
-      result.hidden = !result.hidden;
-      button.setAttribute("aria-expanded", String(!result.hidden));
-      return;
+    const clause = form.closest(".map-clause");
+    clause.dataset.analysisType = form.elements.namedItem("tipo").value;
+    for (const choice of clause.querySelectorAll("[data-clause-analysis] button")) {
+      const selected = choice === button;
+      choice.setAttribute("aria-expanded", String(selected));
+      document.getElementById(choice.getAttribute("aria-controls")).hidden = !selected;
     }
+    const intro = clause.querySelector("[data-clause-intro]");
+    if (intro) intro.hidden = true;
+    if (result.dataset.loaded === "true" || result.dataset.loading === "true") return;
+    result.dataset.loading = "true";
     button.disabled = true;
-    result.hidden = false;
-    button.setAttribute("aria-expanded", "true");
     result.textContent = "Preparando a análise desta oração…";
     try {
       const data = await send(form);
@@ -147,6 +161,7 @@
     } catch (error) {
       result.textContent = error.message;
     } finally {
+      delete result.dataset.loading;
       button.disabled = false;
     }
   });

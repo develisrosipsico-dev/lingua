@@ -99,6 +99,10 @@ pode ser absoluta. Classificações não determinadas permanecem indicadas.
 Dentro de cada período, as orações também têm cores próprias, repetidas nos
 blocos correspondentes. A análise sintática apresenta o texto da oração e um
 mapa com cada palavra ligada à sua função e a indicação de sua cabeça sintática.
+Abrir uma oração mostra a sintaxe, com cores por função e uma legenda. Escolher
+**Análise morfológica** substitui essa visualização; os dois modos não aparecem
+juntos na mesma oração. Trocar de modo reutiliza os resultados e preserva a
+palavra selecionada na morfologia.
 A análise morfológica mostra o texto com palavras clicáveis: selecionar uma
 palavra exibe apenas seu lema, sua classe e seus traços logo abaixo. A seleção
 é local e reutiliza os dados salvos, sem nova inferência. Trechos cujo alcance não

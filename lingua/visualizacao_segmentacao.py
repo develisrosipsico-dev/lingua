@@ -56,6 +56,16 @@ _RELACOES = {
     "subordinacao": "Subordinação a",
     "associacao_sintatica": "Associação sintática com",
 }
+_GRUPOS_SINTATICOS = {
+    "nsubj": (1, "Sujeito"), "csubj": (1, "Sujeito"),
+    "ROOT": (2, "Núcleo e auxiliares"), "aux": (2, "Núcleo e auxiliares"), "cop": (2, "Núcleo e auxiliares"),
+    "obj": (3, "Complementos"), "iobj": (3, "Complementos"),
+    "ccomp": (3, "Complementos"), "xcomp": (3, "Complementos"),
+    "obl": (4, "Modificadores e oblíquos"), "advmod": (4, "Modificadores e oblíquos"), "advcl": (4, "Modificadores e oblíquos"),
+    "amod": (5, "Modificadores nominais"), "nmod": (5, "Modificadores nominais"),
+    "nummod": (5, "Modificadores nominais"), "appos": (5, "Modificadores nominais"), "acl": (5, "Modificadores nominais"),
+    "cc": (6, "Conectivos"), "mark": (6, "Conectivos"), "case": (6, "Conectivos"),
+}
 _ESTADOS = {
     "executada": "Identificação de orações concluída a partir das análises salvas.",
     "executada_com_pendencias": "A identificação de orações tem pendências. Consulte os avisos de cada oração.",
@@ -113,6 +123,27 @@ def construir_visualizacao_segmentacao(segmentacao, anotacao=None, analise=None,
     periodos = {p["id"]: p for p in segmentacao["periodos"]}
     original = segmentacao["preparacao"]["original"]["texto"]
 
+    def grupo_sintatico(ident, selecionados):
+        """A cor acompanha o ramo principal; a função individual permanece intacta."""
+        if sintaxe.get(ident, {}).get("dependencia") == "punct":
+            return None, None
+        atual, caminho, vistos = ident, [], set()
+        while atual in selecionados and atual not in vistos:
+            vistos.add(atual)
+            item = sintaxe.get(atual, {})
+            cabeca, dependencia = item.get("cabeca_token_id"), item.get("dependencia")
+            if cabeca is None or dependencia is None:
+                return None, None
+            if cabeca == atual or cabeca not in selecionados:
+                if caminho:
+                    dependencia = sintaxe[caminho[-1]]["dependencia"]
+                elif morfologia.get(atual, {}).get("pos") in ("VERB", "AUX"):
+                    dependencia = "ROOT"
+                return _GRUPOS_SINTATICOS.get(dependencia.split(":")[0], (None, None))
+            caminho.append(atual)
+            atual = cabeca
+        return None, None
+
     def linhas(identificadores):
         if anotacao is None and analise is None:
             return []
@@ -125,6 +156,7 @@ def construir_visualizacao_segmentacao(segmentacao, anotacao=None, analise=None,
             sint = sintaxe.get(ident, {})
             cabeca_id = sint.get("cabeca_token_id")
             pos, dependencia = morf.get("pos"), sint.get("dependencia")
+            tom, grupo = grupo_sintatico(ident, selecionados)
             prefixo = ""
             if anterior is not None:
                 prefixo = (original[tokens[anterior]["original"]["fim"]:token["original"]["inicio"]]
@@ -136,6 +168,7 @@ def construir_visualizacao_segmentacao(segmentacao, anotacao=None, analise=None,
                 "pos": pos, "pos_label": _CLASSES.get(pos, pos),
                 "morphology": _morfologia(morf.get("morfologia")),
                 "dependency": dependencia, "dependency_label": _DEPENDENCIAS.get(dependencia, dependencia),
+                "syntax_tone": tom, "syntax_group": grupo,
                 "head_id": cabeca_id, "head_text": tokens[cabeca_id]["texto"] if cabeca_id else None,
                 "head_is_self": cabeca_id == ident,
                 "head_outside_clause": cabeca_id is not None and cabeca_id not in selecionados,

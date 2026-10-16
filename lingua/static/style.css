@@ -173,8 +173,13 @@ h1 {
 .syntax-reading-map { margin: 20px 0; min-width: 0; }
 .syntax-reading-map h4 { margin: 0 0 12px; font-size: 14px; }
 .syntax-sentence { font-size: 19px; margin-bottom: 24px; }
+.syntax-phrase { background: var(--period-background); border-bottom: 2px solid var(--period-color); box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.syntax-legend { display: flex; flex-wrap: wrap; gap: 8px 16px; padding: 0; margin: 14px 0 24px; list-style: none; color: var(--muted); font-size: 12px; }
+.syntax-legend li { display: inline-flex; align-items: center; gap: 5px; }
+.syntax-legend li > span { width: 9px; height: 9px; border-radius: 50%; background: var(--period-color); }
 .syntax-word-map { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 28px 18px; list-style: none; padding: 0; margin: 0 0 20px; }
 .syntax-word-branch { display: flex; flex-direction: column; align-items: center; flex: 0 1 120px; min-width: 0; text-align: center; overflow-wrap: anywhere; }
+.syntax-word-branch.syntax-neutral { --period-color: var(--muted); }
 .syntax-word { font-size: 17px; }
 .syntax-stem { display: block; width: 1px; height: 24px; background: var(--period-color, var(--accent)); position: relative; margin: 5px 0 8px; }
 .syntax-stem::after { content: ""; position: absolute; bottom: -2px; left: -2px; width: 5px; height: 5px; border-radius: 50%; background: var(--period-color, var(--accent)); }

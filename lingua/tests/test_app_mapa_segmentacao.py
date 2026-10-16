@@ -120,7 +120,8 @@ class ClauseAnalysisIntegrationTests(unittest.TestCase):
                 self.assertNotIn("<table", result.get_json()["html"])
                 self.assertEqual(result.get_json()["oracao_id"], target["oracao_id"])
                 if kind == "sintaxe":
-                    self.assertIn('class="period-text syntax-sentence">Ela quer […] .', result.get_json()["html"])
+                    self.assertIn('class="period-text syntax-sentence"', result.get_json()["html"])
+                    self.assertIn('title="Sujeito">Ela</span>', result.get_json()["html"])
                     self.assertIn('class="syntax-function" title="nsubj">Sujeito', result.get_json()["html"])
                     self.assertNotIn('class="map-element"', result.get_json()["html"])
                 else:
@@ -142,6 +143,8 @@ class ClauseAnalysisIntegrationTests(unittest.TestCase):
         html = self.client.get(response.location).get_data(as_text=True)
         self.assertIn("Traços morfológicos", html)
         self.assertIn('data-loaded="true"', html)
+        self.assertIn('id="seg-oracao-1-1-sintaxe" aria-live="polite" hidden', html)
+        self.assertIn('id="seg-oracao-1-1-morfologia" aria-live="polite" data-loaded="true"', html)
 
     def test_ids_from_other_documents_or_non_clause_occurrences_are_rejected(self):
         execution = self.identify()

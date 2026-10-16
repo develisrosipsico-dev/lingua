@@ -19,6 +19,7 @@ class SegmentationMapTests(unittest.TestCase):
         before = deepcopy(source)
         view = construir_visualizacao_segmentacao(*source)
         self.assertEqual(source, before)
+
         self.assertEqual(len(view["paragraphs"]), 2)
         self.assertEqual([g["original_text"] for g in view["paragraphs"]], ["Ela não saiu."] * 2)
         self.assertEqual([len(g["periods"]) for g in view["paragraphs"]], [1, 1])
@@ -27,6 +28,12 @@ class SegmentationMapTests(unittest.TestCase):
             for period in group["periods"]:
                 self.assertEqual(len(period["clauses"]), 1)
                 self.assertTrue(period["clauses"][0]["tokens"])
+
+    def test_syntax_colors_follow_the_function_of_the_phrase_without_changing_word_roles(self):
+        source = self.source("copula")
+        rows = construir_visualizacao_segmentacao(*source)["paragraphs"][0]["periods"][0]["clauses"][0]["tokens"]
+        self.assertEqual([t["syntax_tone"] for t in rows], [1, 2, 2, None])
+        self.assertEqual([t["dependency_label"] for t in rows], ["Sujeito", "Cópula", "Raiz sintática", "Pontuação"])
 
     def test_discontinuous_clause_does_not_include_the_subordinate_scope(self):
         view = construir_visualizacao_segmentacao(*self.source())
@@ -80,6 +87,7 @@ class SegmentationMapTests(unittest.TestCase):
         clauses = construir_visualizacao_segmentacao(*source)["paragraphs"][0]["periods"][0]["clauses"]
         self.assertEqual([c["nucleus_text"] for c in clauses], ["saiu", "chegou"])
         self.assertEqual([c["classification"] for c in clauses], ["Oração principal", "Oração subordinada"])
+        self.assertEqual([t["syntax_tone"] for t in clauses[0]["tokens"]], [1, 1, 2, None])
         self.assertEqual([c["number"] for c in clauses], [1, 2])
         self.assertEqual(clauses[1]["relations"][0]["anchor"], clauses[0]["anchor"])
         self.assertEqual(source, before)

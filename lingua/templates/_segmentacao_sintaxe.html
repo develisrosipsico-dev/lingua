@@ -1,9 +1,16 @@
 <figure class="syntax-reading-map">
   <h4>Análise sintática</h4>
-  {% if analysis_text|default(none) %}<figcaption class="period-text syntax-sentence">{{ analysis_text }}</figcaption>{% endif %}
+  {% if tokens %}<figcaption class="period-text syntax-sentence">{% for token in tokens %}{{ token.reading_prefix }}{% if token.syntax_tone %}<span class="syntax-phrase map-tone-{{ token.syntax_tone }}" title="{{ token.syntax_group }}">{{ token.reading_text }}</span>{% else %}{{ token.reading_text }}{% endif %}{% endfor %}</figcaption>{% endif %}
+  <ul class="syntax-legend" aria-label="Cores das funções sintáticas">
+    {% set legend = namespace(groups=[]) %}
+    {% for token in tokens %}{% if token.syntax_group and token.syntax_group not in legend.groups %}
+    <li class="map-tone-{{ token.syntax_tone }}"><span aria-hidden="true"></span>{{ token.syntax_group }}</li>
+    {% set legend.groups = legend.groups + [token.syntax_group] %}
+    {% endif %}{% endfor %}
+  </ul>
   <ol class="syntax-word-map" aria-label="Palavras e suas funções na oração">
     {% for token in tokens %}
-    <li class="syntax-word-branch">
+    <li class="syntax-word-branch{% if token.syntax_tone %} map-tone-{{ token.syntax_tone }}{% else %} syntax-neutral{% endif %}">
       <strong class="syntax-word">{{ token.text }}</strong>
       <span class="syntax-stem" aria-hidden="true"></span>
       <span class="syntax-function"{% if token.dependency %} title="{{ token.dependency }}"{% endif %}>{{ token.dependency_label if token.dependency else 'Função não determinada' }}</span>

@@ -5,7 +5,7 @@
   <details class="map-clause map-tone-{{ clause.tone }}" id="{{ clause.anchor }}"{% if request.args.get('mapa_oracao_id') == clause.id %} open{% endif %}>
     <summary><strong>Oração {{ clause.number }} — <span class="map-clause-classification">{{ clause.classification }}</span></strong>{% if clause.nucleus_text %}<span class="map-clause-nucleus">Núcleo: {{ clause.nucleus_text }}</span>{% endif %}</summary>
     <div class="map-unit-body">
-      {% if clause.scope_resolved %}<p class="period-text map-clause-text">{{ clause.text }}</p>{% else %}<p class="annotation-note">Extensão da oração não determinada. As análises abrangem somente os elementos identificados.</p>{% for fragment in clause.evidence_fragments %}<p class="period-text">{{ fragment }}</p>{% endfor %}{% endif %}
+      {% if clause.scope_resolved %}<p class="period-text map-clause-text" data-clause-intro{% if request.args.get('mapa_oracao_id') == clause.id and request.args.get('mapa_analise') in ('sintaxe', 'morfologia') %} hidden{% endif %}>{{ clause.text }}</p>{% else %}<p class="annotation-note">Extensão da oração não determinada. As análises abrangem somente os elementos identificados.</p>{% for fragment in clause.evidence_fragments %}<p class="period-text">{{ fragment }}</p>{% endfor %}{% endif %}
       {% if clause.relations %}<ul class="map-relations">{% for relation in clause.relations %}<li>{{ relation.label }} <a href="#{{ relation.anchor }}">oração {{ relation.number }}</a></li>{% endfor %}</ul>{% endif %}
       {% if clause.notes %}<details class="map-notes"><summary>Ressalvas da identificação</summary><ul>{% for note in clause.notes %}<li>{{ note }}</li>{% endfor %}</ul></details>{% endif %}
       <div class="map-analysis-choices">
