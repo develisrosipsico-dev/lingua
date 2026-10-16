@@ -1,8 +1,9 @@
+<p class="period-text map-original-text map-period-clauses">{% for part in period_view.clause_parts %}{% if part.clause_id %}<a class="map-clause-highlight map-tone-{{ part.tone }}" href="#{{ part.anchor }}" title="Oração {{ part.number }} — {{ part.classification }}">{{ part.text }}</a>{% else %}{{ part.text }}{% endif %}{% endfor %}</p>
 {% if ruled and segmentation_view.clause_state in ('executada', 'executada_com_pendencias') %}
   {% if segmentation_view.rule_notes %}<ul class="map-notes">{% for note in segmentation_view.rule_notes %}<li>{{ note }}</li>{% endfor %}</ul>{% endif %}
   {% for clause in period_view.clauses %}
-  <details class="map-clause" id="{{ clause.anchor }}"{% if request.args.get('mapa_oracao_id') == clause.id %} open{% endif %}>
-    <summary><strong>Oração {{ clause.number }}</strong><span class="map-clause-classification">{{ clause.classification }}</span>{% if clause.nucleus_text %}<span class="map-unit-meta">Núcleo: {{ clause.nucleus_text }}</span>{% endif %}</summary>
+  <details class="map-clause map-tone-{{ clause.tone }}" id="{{ clause.anchor }}"{% if request.args.get('mapa_oracao_id') == clause.id %} open{% endif %}>
+    <summary><strong>Oração {{ clause.number }} — <span class="map-clause-classification">{{ clause.classification }}</span></strong>{% if clause.nucleus_text %}<span class="map-clause-nucleus">Núcleo: {{ clause.nucleus_text }}</span>{% endif %}</summary>
     <div class="map-unit-body">
       {% if clause.scope_resolved %}<p class="period-text map-clause-text">{{ clause.text }}</p>{% else %}<p class="annotation-note">Extensão da oração não determinada. As análises abrangem somente os elementos identificados.</p>{% for fragment in clause.evidence_fragments %}<p class="period-text">{{ fragment }}</p>{% endfor %}{% endif %}
       {% if clause.relations %}<ul class="map-relations">{% for relation in clause.relations %}<li>{{ relation.label }} <a href="#{{ relation.anchor }}">oração {{ relation.number }}</a></li>{% endfor %}</ul>{% endif %}
@@ -21,7 +22,7 @@
       {% for kind in ['sintaxe', 'morfologia'] %}
       {% set expanded = request.args.get('mapa_oracao_id') == clause.id and request.args.get('mapa_analise') == kind %}
       <section class="map-analysis-result" id="{{ clause.anchor }}-{{ kind }}" aria-live="polite"{% if not expanded %} hidden{% else %} data-loaded="true"{% endif %}>
-        {% if expanded %}{% with tokens=clause.tokens, analysis_type=kind %}{% include '_segmentacao_analise.html' %}{% endwith %}{% endif %}
+        {% if expanded %}{% with tokens=clause.tokens, analysis_type=kind, analysis_text=clause.text if clause.scope_resolved else none %}{% include '_segmentacao_analise.html' %}{% endwith %}{% endif %}
       </section>
       {% endfor %}
       <details class="map-notes"><summary>Identificação e referências</summary><p>{{ clause.explanation }}</p><p class="map-reference">{{ clause.id }}</p></details>

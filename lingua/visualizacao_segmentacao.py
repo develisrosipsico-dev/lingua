@@ -176,7 +176,38 @@ def construir_visualizacao_segmentacao(segmentacao, anotacao=None, analise=None,
         for numero, ocorrencia in enumerate(por_periodo[periodo["id"]], 1):
             referencias[ocorrencia["id"]] = {
                 "anchor": f"seg-oracao-{periodo['ordem'] + 1}-{numero}", "number": numero,
+                "tone": (numero - 1) % 6 + 1,
             }
+
+    def partes_oracionais(periodo, oracoes):
+        """Realce somente alcances resolvidos e sem sobreposição, sem mudar o texto."""
+        inicio, fim = periodo["original"]["inicio"], periodo["original"]["fim"]
+        eventos = defaultdict(list)
+        eventos[inicio], eventos[fim] = [], []
+        for ocorrencia in por_periodo[periodo["id"]]:
+            if ocorrencia["alcance"] is None:
+                continue
+            for trecho in ocorrencia["alcance"]["trechos"]:
+                eventos[trecho["original"]["inicio"]].append((ocorrencia["id"], 1))
+                eventos[trecho["original"]["fim"]].append((ocorrencia["id"], -1))
+        partes, ativos, cursor = [], {}, inicio
+        por_id = {o["id"]: o for o in oracoes}
+        for posicao in sorted(eventos):
+            if posicao > cursor:
+                ident = next(iter(ativos)) if len(ativos) == 1 else None
+                texto = original[cursor:posicao]
+                if partes and partes[-1]["clause_id"] == ident:
+                    partes[-1]["text"] += texto
+                else:
+                    alvo = por_id[ident] if ident else {}
+                    partes.append({"text": texto, "clause_id": ident,
+                        **{k: alvo.get(k) for k in ("anchor", "number", "tone", "classification")}})
+            for ident, variacao in eventos[posicao]:
+                ativos[ident] = ativos.get(ident, 0) + variacao
+                if ativos[ident] == 0:
+                    del ativos[ident]
+            cursor = posicao
+        return partes
 
     for paragrafo in segmentacao["paragrafos"]:
         if periodo_id is not None and periodo_id not in paragrafo["periodos"]:
@@ -230,6 +261,7 @@ def construir_visualizacao_segmentacao(segmentacao, anotacao=None, analise=None,
                 "period": periodo, "clauses": oracoes, "tokens": linhas(periodo["tokens"]),
                 "tone": periodo["ordem"] % 6 + 1,
                 "original_text": original[periodo["original"]["inicio"]:periodo["original"]["fim"]],
+                "clause_parts": partes_oracionais(periodo, oracoes),
                 "unassigned_tokens": linhas([t for t in periodo["tokens"] if t not in exibidos]) if oracoes else [],
             })
             resultado["clauses_total"] += len(oracoes)

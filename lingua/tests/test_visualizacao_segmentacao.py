@@ -100,6 +100,23 @@ class SegmentationMapTests(unittest.TestCase):
         self.assertNotEqual(colored[0]["tone"], colored[1]["tone"])
         self.assertEqual([p["tone"] for p in colored], [p["tone"] for p in group["periods"]])
 
+    def test_clause_highlights_preserve_full_period_and_match_clause_colors(self):
+        source = self.source()
+        period = construir_visualizacao_segmentacao(*source)["paragraphs"][0]["periods"][0]
+        self.assertEqual("".join(p["text"] for p in period["clause_parts"]), "Ela quer sair.")
+        clauses = {c["id"]: c for c in period["clauses"]}
+        for part in period["clause_parts"]:
+            if part["clause_id"]:
+                clause = clauses[part["clause_id"]]
+                self.assertEqual((part["tone"], part["anchor"]), (clause["tone"], clause["anchor"]))
+        colored = [p for p in period["clause_parts"] if p["clause_id"]]
+        self.assertEqual([p["text"] for p in colored], ["Ela quer", "sair", "."])
+        self.assertEqual(colored[0]["tone"], colored[2]["tone"])
+        self.assertNotEqual(colored[0]["tone"], colored[1]["tone"])
+        pending = construir_visualizacao_segmentacao(source[0])["paragraphs"][0]["periods"][0]
+        self.assertEqual(pending["clause_parts"][0]["text"], "Ela quer sair.")
+        self.assertIsNone(pending["clause_parts"][0]["clause_id"])
+
 
 if __name__ == "__main__":
     unittest.main()

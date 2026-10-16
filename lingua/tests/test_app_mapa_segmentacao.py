@@ -91,7 +91,7 @@ class ClauseAnalysisIntegrationTests(unittest.TestCase):
             page = self.client.get("/envios/1").get_data(as_text=True)
         self.assertIn('id="seg-paragrafo-1"', page)
         self.assertIn('id="seg-paragrafo-2"', page)
-        self.assertNotIn('class="map-clause"', page)
+        self.assertNotIn('class="map-clause map-tone-', page)
         self.assertEqual(self.snapshot(), before)
         self.assertEqual(self.client.get("/envios/1/segmentacao.json").get_json(), self.seg)
 
@@ -100,7 +100,7 @@ class ClauseAnalysisIntegrationTests(unittest.TestCase):
             execution = self.identify()
         enqueue.assert_not_called()
         start.assert_not_called()
-        self.assertEqual(execution["html"].count('class="map-clause"'), 2)
+        self.assertEqual(execution["html"].count('class="map-clause map-tone-'), 2)
         self.assertTrue(execution["atualizou_cadeia"])
         self.assertIn("Análise sintática", execution["html"])
         self.assertIn("Oração principal", execution["html"])
@@ -115,9 +115,14 @@ class ClauseAnalysisIntegrationTests(unittest.TestCase):
                 self.assertEqual(result.status_code, 200, result.get_json())
                 self.assertIn(column, result.get_json()["html"])
                 self.assertNotIn(absent, result.get_json()["html"])
-                self.assertIn('class="map-element-list"', result.get_json()["html"])
+                presentation = 'syntax-word-map' if kind == "sintaxe" else 'map-element-list'
+                self.assertIn(f'class="{presentation}"', result.get_json()["html"])
                 self.assertNotIn("<table", result.get_json()["html"])
                 self.assertEqual(result.get_json()["oracao_id"], target["oracao_id"])
+                if kind == "sintaxe":
+                    self.assertIn('class="period-text syntax-sentence">Ela quer […] .', result.get_json()["html"])
+                    self.assertIn('class="syntax-function" title="nsubj">Sujeito', result.get_json()["html"])
+                    self.assertNotIn('class="map-element"', result.get_json()["html"])
             cached = self.client.post("/envios/1/segmentacao/mapa-periodo", json=self.data)
             self.assertEqual(cached.status_code, 200)
             self.assertFalse(cached.get_json()["atualizou_cadeia"])

@@ -1,0 +1,15 @@
+<figure class="syntax-reading-map">
+  <h4>Análise sintática</h4>
+  {% if analysis_text|default(none) %}<figcaption class="period-text syntax-sentence">{{ analysis_text }}</figcaption>{% endif %}
+  <ol class="syntax-word-map" aria-label="Palavras e suas funções na oração">
+    {% for token in tokens %}
+    <li class="syntax-word-branch">
+      <strong class="syntax-word">{{ token.text }}</strong>
+      <span class="syntax-stem" aria-hidden="true"></span>
+      <span class="syntax-function"{% if token.dependency %} title="{{ token.dependency }}"{% endif %}>{{ token.dependency_label if token.dependency else 'Função não determinada' }}</span>
+      <span class="syntax-head"><span class="visually-hidden">Cabeça sintática: </span>{% if token.head_is_self %}núcleo{% elif token.head_text %}<span class="syntax-head-target"><span class="syntax-head-arrow" aria-hidden="true"></span>{{ token.head_text }}</span>{% if token.head_outside_clause %}<span class="syntax-external">fora desta oração</span>{% endif %}{% else %}ligação não determinada{% endif %}</span>
+    </li>
+    {% else %}<li class="empty-result">Nenhum elemento disponível.</li>{% endfor %}
+  </ol>
+  <p class="map-analysis-note">A função aparece abaixo de cada palavra. A seta indica a palavra à qual ela se liga na análise.</p>
+</figure>
