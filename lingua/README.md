@@ -259,13 +259,18 @@ a [especificação consolidada](docs/especificacao_etapa08.md), o
 históricos com [preservação literal](examples/unidades_contexto_literal.json) e
 [normalização opcional de CRLF](examples/unidades_contexto_normalizada.json).
 
-## Vetorizar para o Agente Analista e outros consumidores
+## Vetorização independente dos consumidores
 
 Escolha uma execução contextual pronta e solicite a vetorização no painel
-da etapa 09. O perfil inicial **Agente Analista — parágrafos e relato inteiro**
+da etapa 09. O perfil inicial **Parágrafos, contextos e documento — E5**
 (`e5_analista`) usa `intfloat/multilingual-e5-large` com `query: ` e produz
-vetores dos dois parágrafos originais e do relato inteiro. Exige dois parágrafos
-e até 400 palavras. CPU é o dispositivo inicial. Outros perfis continuam
+vetores de todos os parágrafos originais, das janelas contextuais e do documento
+inteiro. Não exige dois parágrafos nem limita a entrada a 400 palavras. O Língua
+produz os resultados independentemente dos aplicativos que os receberão;
+regras de importação pertencem a cada consumidor. O identificador histórico
+`e5_analista` é mantido nos arquivos para preservar compatibilidade. Textos
+longos são fragmentados conforme a capacidade do modelo, sem truncamento.
+CPU é o dispositivo inicial. Outros perfis continuam
 produzindo períodos, janelas contextuais e documento, com modelo e políticas
 configuráveis. GPUs são opcionais, e os
 experimentos de modelos diferentes conservam seus próprios resultados.
@@ -348,8 +353,8 @@ git pull --ff-only origin organizacao/projetos-20261010
 ```
 
 1. Abra <http://127.0.0.1:5001>, selecione o documento e conclua a etapa
-   **Contexto**. Na aba **Vetores**, mantenha o perfil **Agente Analista —
-   parágrafos e relato inteiro** para alimentar o agente e clique em
+   **Contexto**. Na aba **Vetores**, mantenha o perfil **Parágrafos, contextos
+   e documento — E5** e clique em
    **Gerar notebook para o Colab**. O navegador baixa um arquivo `.ipynb`.
 2. Abra <https://colab.research.google.com> e use **Arquivo → Fazer upload de notebook**
    para enviar o arquivo baixado.

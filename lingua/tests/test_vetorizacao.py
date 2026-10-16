@@ -11,7 +11,7 @@ import unittest
 from unittest.mock import patch
 
 from fixtures_contexto import construir_regras, INSTANTE, TEXTO
-from fixtures_regras import token
+from fixtures_regras import ponto, token
 from perfis_vetorizacao import carregar_perfil
 from unidades_contexto import construir_unidades_contexto
 from vetorizacao import (ErroVetorizacao, codificar_vetor, decodificar_vetor,
@@ -85,6 +85,33 @@ class VetorizacaoTestes(unittest.TestCase):
         self.assertEqual(registro["processamento"]["limite_tokens"], 504)
         self.assertTrue(all(r["metodo"] == "direto" for r in registro["representacoes"]))
         self.assertTrue(validar_vetorizacao(registro)["pronto"])
+
+    def test_paragraph_query_vectors_accept_one_or_many_paragraphs_and_over_400_words(self):
+        for counts in ((1,), (401,), (2, 3, 4)):
+            with self.subTest(words_per_paragraph=counts):
+                blocks, rows = [], []
+                for count in counts:
+                    blocks.append(" ".join(["palavra"] * count) + ".")
+                    root = len(rows)
+                    rows.extend(token("palavra", "palavra", "NOUN", root, "ROOT" if i == 0 else "nmod")
+                                for i in range(count))
+                    rows.append(ponto(root))
+                text = "  " + "\r\n\r\n".join(blocks) + "  "
+                context = construir_unidades_contexto(construir_regras(texto=text, linhas=rows, normalizar=True))
+                before = deepcopy(context)
+                record, _ = self.gerar(contexto=context, perfil_id="e5_analista", limite=512)
+                self.assertEqual(context, before)
+                paragraphs = [r for r in record["representacoes"] if r["tipo"] == "paragrafo"]
+                self.assertEqual([p["origem"]["paragrafo_id"] for p in paragraphs],
+                                 [f"P{i + 1}" for i in range(len(counts))])
+                artifacts = {a["id"]: a for a in record["artefatos"]}
+                for representation in record["representacoes"]:
+                    span = representation["origem"]["original"]
+                    restored = "".join(artifacts[f["artefato_id"]]["entrada"]["texto"][len("query: "):]
+                                       for f in representation["fragmentos"])
+                    self.assertEqual(restored, text[span["inicio"]:span["fim"]])
+                    self.assertTrue(representation["cobertura_integral"])
+                self.assertTrue(validar_vetorizacao(record)["pronto"])
 
     def test_analista_inclui_janelas_no_texto_original_com_referencias(self):
         registro, _ = self.gerar(contexto=self.normalizado, perfil_id="e5_analista", limite=512)

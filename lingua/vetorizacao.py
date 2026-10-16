@@ -193,7 +193,7 @@ def _mapa(preparacao, inicio, fim, campo="trabalho"):
 
 
 def _paragrafos_originais(texto):
-    """Localize os mesmos blocos usados na antiga entrada do analista."""
+    """Localize todos os parágrafos, preservando os intervalos do original."""
     quebra = r"(?:\r\n|\n|\r(?!\n))"
     separador = re.compile(quebra + r"[\t ]*" + quebra + r"(?:[\t ]*" + quebra + r")*")
     inicio, intervalos = 0, []
@@ -209,8 +209,7 @@ def _paragrafos_originais(texto):
             fim -= 1
         if inicio < fim:
             paragrafos.append({"id": f"P{len(paragrafos) + 1}", "inicio": inicio, "fim": fim})
-    _exigir(len(paragrafos) == 2 and 0 < len(texto.split()) <= 400,
-            "O perfil do Agente Analista requer dois parágrafos e até 400 palavras.")
+    _exigir(bool(paragrafos), "O texto precisa conter conteúdo para vetorização.")
     return paragrafos
 
 

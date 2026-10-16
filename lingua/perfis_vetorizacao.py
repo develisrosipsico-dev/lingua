@@ -169,7 +169,7 @@ def carregar_perfil(perfil_id="e5_simetrico", *, opcoes=None):
     perfil.update(opcoes)
     if perfil_id == "e5_analista":
         if perfil["estrategia_consultas"] not in ("paragrafos_documento", "paragrafos_contextos_documento"):
-            raise ErroPerfil("Estratégia de consultas do Agente Analista desconhecida.")
+            raise ErroPerfil("Estratégia de consultas por parágrafos desconhecida.")
         fixos = {"modelo": {"identificacao": E5_MODELO, "revisao": E5_REVISAO},
                  "tokenizador": {"identificacao": E5_MODELO, "revisao": E5_REVISAO},
                  "backend": "sentence_transformers", "prefixo": "query: ",
@@ -178,11 +178,11 @@ def carregar_perfil(perfil_id="e5_simetrico", *, opcoes=None):
                  "fragmentacao": "sem_sobreposicao", "agregacao": "nenhuma",
                  "texto_documento": "original"}
         if any(perfil[k] != v for k, v in fixos.items()):
-            raise ErroPerfil("O perfil do Agente Analista preserva E5, query:, média, L2, float32 e orçamento de 504 tokens.")
+            raise ErroPerfil("O perfil de consultas por parágrafos preserva E5, query:, média, L2, float32 e orçamento de 504 tokens.")
     elif "estrategia_consultas" in perfil:
-        raise ErroPerfil("A estratégia de consultas é exclusiva do Agente Analista.")
+        raise ErroPerfil("A estratégia de consultas é exclusiva do perfil por parágrafos.")
     elif perfil["agregacao"] == "nenhuma":
-        raise ErroPerfil("A ausência de agregação é exclusiva do perfil do Agente Analista.")
+        raise ErroPerfil("A ausência de agregação é exclusiva do perfil por parágrafos.")
     for nome, permitidos in _ENUMS.items():
         valor = perfil[nome]
         if type(valor) is not str or valor not in permitidos:

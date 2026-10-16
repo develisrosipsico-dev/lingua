@@ -9,10 +9,12 @@ import unittest
 from unittest.mock import patch
 from urllib.parse import parse_qs, urlsplit
 
-from app import create_app
+from app import create_app, load_vector_context
 from anotacao import ErroModelo
 from fixtures_contexto import LINHAS, TEXTO
-from fixtures_regras import construir_analise
+from fixtures_regras import construir_analise, ponto, token
+from fixtures_vetorizacao import AdaptadorControlado
+from trabalhos_vetorizacao import processar_trabalho
 from unidades_contexto import validar_unidades_contexto
 
 
@@ -168,6 +170,29 @@ class VectorShortcutIntegrationTests(unittest.TestCase):
         segmentation.assert_not_called()
         for table in self.TABLES:
             self.assertEqual(self.rows(table), [], table)
+
+    def test_one_paragraph_over_400_words_reaches_vector_export_from_the_first_page(self):
+        text = " ".join(["palavra"] * 401) + "."
+        rows = [token("palavra", "palavra", "NOUN", 0, "ROOT" if i == 0 else "nmod") for i in range(401)]
+        self.analysis_template = construir_analise(texto=text, linhas=rows + [ponto(0)])
+        with patch("anotacao._executar", side_effect=self.morphology), patch("sintaxe_entidades._executar", side_effect=self.syntax):
+            response = self.client.post("/envios", data={"content": text, "destino": "vetorizacao"})
+        self.assertEqual(response.status_code, 303)
+        page = self.client.get(response.location).get_data(as_text=True)
+        self.assertIn("Parágrafos, contextos e documento — E5", page)
+        self.assertNotIn("O perfil do Agente Analista requer", page)
+        context = self.latest_record("context_runs")
+        queued = self.client.post("/envios/1/vetorizacoes", json={"contexto_execucao_id": context["execucao_id"]})
+        self.assertEqual(queued.status_code, 202)
+        job = queued.get_json()
+        completed = processar_trabalho(self.database, job["execucao_id"],
+            fabrica_adaptador=AdaptadorControlado, carregar_contexto=load_vector_context)
+        self.assertEqual(completed["estado"], "concluida", completed)
+        exported = self.client.get("/envios/1/vetorizacao.json", query_string={"vetorizacao_execucao_id": job["execucao_id"]})
+        self.assertEqual(exported.status_code, 200)
+        record = exported.get_json()
+        self.assertEqual([r["tipo"] for r in record["representacoes"]], ["paragrafo", "contextual", "documento"])
+        self.assertEqual(record["contexto"]["regras"]["analise"]["anotacao"]["segmentacao"]["preparacao"]["original"]["texto"], text)
 
 
 if __name__ == "__main__":

@@ -66,7 +66,7 @@ BASE_DADOS = BASE.parent if (BASE.parent / ".git").exists() else BASE
 SOURCE_ERRORS = (ErroPreparacao, ErroSegmentacao, ErroAnotacao, ErroAnalise, ErroRegras, ErroContexto)
 VECTOR_ERRORS = (ErroVetorizacao, ErroPersistenciaVetores, ErroTrabalhoVetorizacao, ErroPerfil)
 VECTOR_PROFILES = [
-    {"id": "e5_analista", "nome": "Agente Analista — parágrafos, contextos e relato inteiro", "descricao": "Texto original, janelas de contexto, consultas independentes e E5 float32."},
+    {"id": "e5_analista", "nome": "Parágrafos, contextos e documento — E5", "descricao": "Texto original, janelas de contexto, consultas independentes e E5 float32."},
     {"id": "e5_simetrico", "nome": "Comparação entre textos", "descricao": "Perfil simétrico E5 de referência."},
     {"id": "e5_consulta", "nome": "Consulta de recuperação", "descricao": "Consulta para um índice compatível."},
     {"id": "e5_conteudo", "nome": "Conteúdo para recuperação", "descricao": "Conteúdo para um índice compatível."},
