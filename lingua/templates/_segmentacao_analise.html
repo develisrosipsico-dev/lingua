@@ -1,20 +1,6 @@
 {% if analysis_type == 'sintaxe' %}
 {% include '_segmentacao_sintaxe.html' %}
 {% else %}
-<div class="map-elements">
-  <h4>Análise morfológica dos elementos selecionados</h4>
-  <ol class="map-element-list">
-    {% for token in tokens %}
-    <li class="map-element">
-      <strong class="token-text">{{ token.text }}</strong>
-      <dl class="map-element-attributes">
-        <div><dt>Lema</dt><dd>{{ token.lemma if token.lemma is not none else 'Não disponível' }}</dd></div>
-        <div><dt>Classe gramatical</dt><dd>{% if token.pos %}<span title="{{ token.pos }}">{{ token.pos_label }}</span>{% else %}Não disponível{% endif %}</dd></div>
-        <div><dt>Traços morfológicos</dt><dd>{% if token.morphology is none %}Não disponível{% elif token.morphology %}<ul class="map-morphology">{% for attribute in token.morphology %}<li><span title="{{ attribute.field }}">{{ attribute.label }}:</span> <span title="{{ attribute.raw_value }}">{{ attribute.value }}</span></li>{% endfor %}</ul>{% else %}Sem traços registrados{% endif %}</dd></div>
-      </dl>
-    </li>
-    {% else %}<li class="empty-result">Nenhum elemento disponível.</li>{% endfor %}
-  </ol>
-</div>
+{% include '_segmentacao_morfologia.html' %}
 {% endif %}
 <p class="map-analysis-note">Resultados das anotações salvas, considerando o contexto do período. Relações e traços sugeridos pelo modelo permanecem sujeitos à revisão.</p>

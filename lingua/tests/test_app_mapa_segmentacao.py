@@ -115,7 +115,7 @@ class ClauseAnalysisIntegrationTests(unittest.TestCase):
                 self.assertEqual(result.status_code, 200, result.get_json())
                 self.assertIn(column, result.get_json()["html"])
                 self.assertNotIn(absent, result.get_json()["html"])
-                presentation = 'syntax-word-map' if kind == "sintaxe" else 'map-element-list'
+                presentation = 'syntax-word-map' if kind == "sintaxe" else 'morph-reading'
                 self.assertIn(f'class="{presentation}"', result.get_json()["html"])
                 self.assertNotIn("<table", result.get_json()["html"])
                 self.assertEqual(result.get_json()["oracao_id"], target["oracao_id"])
@@ -123,6 +123,10 @@ class ClauseAnalysisIntegrationTests(unittest.TestCase):
                     self.assertIn('class="period-text syntax-sentence">Ela quer […] .', result.get_json()["html"])
                     self.assertIn('class="syntax-function" title="nsubj">Sujeito', result.get_json()["html"])
                     self.assertNotIn('class="map-element"', result.get_json()["html"])
+                else:
+                    self.assertIn('class="period-text morph-sentence"', result.get_json()["html"])
+                    self.assertEqual(result.get_json()["html"].count('data-morph-word'), 3)
+                    self.assertNotIn('is-selected', result.get_json()["html"])
             cached = self.client.post("/envios/1/segmentacao/mapa-periodo", json=self.data)
             self.assertEqual(cached.status_code, 200)
             self.assertFalse(cached.get_json()["atualizou_cadeia"])

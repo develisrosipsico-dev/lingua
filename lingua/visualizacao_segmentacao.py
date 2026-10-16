@@ -118,14 +118,21 @@ def construir_visualizacao_segmentacao(segmentacao, anotacao=None, analise=None,
             return []
         selecionados = set(identificadores)
         linhas_resultado = []
+        anterior = None
         for ident in sorted(selecionados, key=ordem.__getitem__):
             token = tokens[ident]
             morf = morfologia.get(ident, {})
             sint = sintaxe.get(ident, {})
             cabeca_id = sint.get("cabeca_token_id")
             pos, dependencia = morf.get("pos"), sint.get("dependencia")
+            prefixo = ""
+            if anterior is not None:
+                prefixo = (original[tokens[anterior]["original"]["fim"]:token["original"]["inicio"]]
+                           if ordem[ident] == ordem[anterior] + 1 else " […] ")
             linhas_resultado.append({
                 "id": ident, "text": token["texto"], "lemma": morf.get("lema"),
+                "reading_text": original[token["original"]["inicio"]:token["original"]["fim"]],
+                "reading_prefix": prefixo,
                 "pos": pos, "pos_label": _CLASSES.get(pos, pos),
                 "morphology": _morfologia(morf.get("morfologia")),
                 "dependency": dependencia, "dependency_label": _DEPENDENCIAS.get(dependencia, dependencia),
@@ -133,6 +140,7 @@ def construir_visualizacao_segmentacao(segmentacao, anotacao=None, analise=None,
                 "head_is_self": cabeca_id == ident,
                 "head_outside_clause": cabeca_id is not None and cabeca_id not in selecionados,
             })
+            anterior = ident
         return linhas_resultado
 
     def fragmentos(trechos):

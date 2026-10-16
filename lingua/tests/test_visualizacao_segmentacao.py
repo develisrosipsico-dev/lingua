@@ -33,6 +33,7 @@ class SegmentationMapTests(unittest.TestCase):
         first, second = view["paragraphs"][0]["periods"][0]["clauses"]
         self.assertEqual(first["fragments"], ["Ela quer", "."])
         self.assertEqual(first["text"], "Ela quer […] .")
+        self.assertEqual("".join(t["reading_prefix"] + t["reading_text"] for t in first["tokens"]), first["text"])
         self.assertEqual([t["text"] for t in first["tokens"]], ["Ela", "quer", "."])
         self.assertEqual([t["text"] for t in second["tokens"]], ["sair"])
         self.assertTrue(second["tokens"][0]["head_outside_clause"])
@@ -116,6 +117,13 @@ class SegmentationMapTests(unittest.TestCase):
         pending = construir_visualizacao_segmentacao(source[0])["paragraphs"][0]["periods"][0]
         self.assertEqual(pending["clause_parts"][0]["text"], "Ela quer sair.")
         self.assertIsNone(pending["clause_parts"][0]["clause_id"])
+
+    def test_clickable_word_reading_preserves_spaces_and_distinct_occurrences(self):
+        source = self.source("repeticao", texto="Ela\t não saiu.  Ela não saiu.")
+        periods = construir_visualizacao_segmentacao(*source)["paragraphs"][0]["periods"]
+        readings = ["".join(t["reading_prefix"] + t["reading_text"] for t in p["tokens"]) for p in periods]
+        self.assertEqual(readings, ["Ela\t não saiu.", "Ela não saiu."])
+        self.assertNotEqual(periods[0]["tokens"][0]["id"], periods[1]["tokens"][0]["id"])
 
 
 if __name__ == "__main__":

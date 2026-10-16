@@ -97,6 +97,24 @@
     if (event.target.matches("[data-map-period]") && event.target.open) loadPeriod(event.target);
   }, true);
 
+  panel.addEventListener("click", (event) => {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    const word = event.target.closest("[data-morph-word]");
+    if (!word) return;
+    const reading = word.closest("[data-morphology]");
+    const detail = document.getElementById(word.getAttribute("aria-controls"));
+    if (!detail || !reading.contains(detail)) return;
+    event.preventDefault();
+    reading.classList.add("morph-enhanced");
+    for (const link of reading.querySelectorAll("[data-morph-word]")) {
+      if (link === word) link.setAttribute("aria-current", "true");
+      else link.removeAttribute("aria-current");
+    }
+    for (const item of reading.querySelectorAll(".morph-word-detail")) {
+      item.classList.toggle("is-selected", item === detail);
+    }
+  });
+
   panel.addEventListener("submit", async (event) => {
     const form = event.target;
     if (form.matches("[data-initial-segmentation]")) {

@@ -22,7 +22,7 @@
       {% for kind in ['sintaxe', 'morfologia'] %}
       {% set expanded = request.args.get('mapa_oracao_id') == clause.id and request.args.get('mapa_analise') == kind %}
       <section class="map-analysis-result" id="{{ clause.anchor }}-{{ kind }}" aria-live="polite"{% if not expanded %} hidden{% else %} data-loaded="true"{% endif %}>
-        {% if expanded %}{% with tokens=clause.tokens, analysis_type=kind, analysis_text=clause.text if clause.scope_resolved else none %}{% include '_segmentacao_analise.html' %}{% endwith %}{% endif %}
+        {% if expanded %}{% with tokens=clause.tokens, analysis_type=kind, analysis_text=clause.text if clause.scope_resolved else none, analysis_anchor=clause.anchor %}{% include '_segmentacao_analise.html' %}{% endwith %}{% endif %}
       </section>
       {% endfor %}
       <details class="map-notes"><summary>Identificação e referências</summary><p>{{ clause.explanation }}</p><p class="map-reference">{{ clause.id }}</p></details>
@@ -32,7 +32,7 @@
   {% if period_view.unassigned_tokens or not period_view.clauses %}
   <details class="map-unassigned"><summary>{{ 'Elementos fora dos alcances das orações' if period_view.clauses else 'Anotações do período' }}</summary>
     {% for kind, label in [('sintaxe', 'Análise sintática'), ('morfologia', 'Análise morfológica')] %}
-    <details class="map-unit-body"><summary>{{ label }}</summary>{% with tokens=period_view.unassigned_tokens if period_view.clauses else period_view.tokens, analysis_type=kind %}{% include '_segmentacao_analise.html' %}{% endwith %}</details>
+    <details class="map-unit-body"><summary>{{ label }}</summary>{% with tokens=period_view.unassigned_tokens if period_view.clauses else period_view.tokens, analysis_type=kind, analysis_anchor='seg-periodo-' ~ (period_view.period.ordem + 1) ~ '-outros' %}{% include '_segmentacao_analise.html' %}{% endwith %}</details>
     {% endfor %}
   </details>
   {% endif %}

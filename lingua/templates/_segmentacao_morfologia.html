@@ -1,0 +1,17 @@
+<div class="morph-reading" data-morphology>
+  <h4>Análise morfológica</h4>
+  <p class="map-analysis-note">Clique em uma palavra para ver sua análise.</p>
+  <p class="period-text morph-sentence">{% for token in tokens %}{{ token.reading_prefix }}<a class="morph-word" data-morph-word href="#seg-morf-{{ analysis_anchor }}-{{ token.id }}" aria-controls="seg-morf-{{ analysis_anchor }}-{{ token.id }}">{{ token.reading_text }}</a>{% else %}Nenhum elemento disponível.{% endfor %}</p>
+  <div class="morph-selection" aria-live="polite">
+    {% for token in tokens %}
+    <section class="morph-word-detail" id="seg-morf-{{ analysis_anchor }}-{{ token.id }}" aria-labelledby="seg-morf-{{ analysis_anchor }}-{{ token.id }}-titulo">
+      <h5 id="seg-morf-{{ analysis_anchor }}-{{ token.id }}-titulo">{{ token.text }}</h5>
+      <dl class="map-element-attributes">
+        <div><dt>Lema</dt><dd>{{ token.lemma if token.lemma is not none else 'Não disponível' }}</dd></div>
+        <div><dt>Classe gramatical</dt><dd>{% if token.pos %}<span title="{{ token.pos }}">{{ token.pos_label }}</span>{% else %}Não disponível{% endif %}</dd></div>
+        <div><dt>Traços morfológicos</dt><dd>{% if token.morphology is none %}Não disponível{% elif token.morphology %}<ul class="map-morphology">{% for attribute in token.morphology %}<li><span title="{{ attribute.field }}">{{ attribute.label }}:</span> <span title="{{ attribute.raw_value }}">{{ attribute.value }}</span></li>{% endfor %}</ul>{% else %}Sem traços registrados{% endif %}</dd></div>
+      </dl>
+    </section>
+    {% endfor %}
+  </div>
+</div>

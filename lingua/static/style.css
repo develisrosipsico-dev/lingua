@@ -157,9 +157,14 @@ h1 {
 .map-analysis-button { padding: 10px 14px; font-size: 13px; }
 .map-analysis-button[aria-expanded="true"] { background: #315e48; }
 .map-analysis-result { margin-top: 14px; }
-.map-elements h4 { margin: 12px 0; font-size: 14px; }
-.map-element-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
-.map-element { padding: 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); overflow-wrap: anywhere; }
+.morph-reading h4 { margin: 12px 0; font-size: 14px; }
+.morph-sentence { font-size: 19px; line-height: 2; margin: 14px 0 20px; }
+.morph-word { color: var(--ink); text-decoration: underline dotted; text-underline-offset: 4px; border-radius: 3px; }
+.morph-word:hover, .morph-word:focus-visible, .morph-word[aria-current="true"] { color: var(--accent); background: var(--period-background, var(--success)); text-decoration: underline; }
+.morph-word-detail { display: none; padding: 4px 0 4px 16px; margin: 16px 0; border-left: 2px solid var(--period-color, var(--accent)); overflow-wrap: anywhere; scroll-margin-top: var(--stage-navigation-height, 140px); }
+.morph-word-detail:target, .morph-word-detail.is-selected { display: block; }
+.morph-enhanced .morph-word-detail:target:not(.is-selected) { display: none; }
+.morph-word-detail h5 { font-size: 18px; margin: 0 0 10px; }
 .map-element-attributes { margin: 6px 0 0; font-size: 13px; }
 .map-element-attributes > div { margin-top: 5px; }
 .map-element-attributes dt { font-weight: 600; }

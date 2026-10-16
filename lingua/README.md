@@ -99,7 +99,9 @@ pode ser absoluta. Classificações não determinadas permanecem indicadas.
 Dentro de cada período, as orações também têm cores próprias, repetidas nos
 blocos correspondentes. A análise sintática apresenta o texto da oração e um
 mapa com cada palavra ligada à sua função e a indicação de sua cabeça sintática.
-A morfologia mantém a lista por palavra, sem tabelas. Trechos cujo alcance não
+A análise morfológica mostra o texto com palavras clicáveis: selecionar uma
+palavra exibe apenas seu lema, sua classe e seus traços logo abaixo. A seleção
+é local e reutiliza os dados salvos, sem nova inferência. Trechos cujo alcance não
 foi determinado ou que pertencem a mais de uma oração não recebem atribuição
 exclusiva de cor.
 

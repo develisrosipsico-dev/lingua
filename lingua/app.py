@@ -913,7 +913,8 @@ def create_app(config=None):
                                                    periodo_id=occurrence["periodo_id"])
         clause = next(c for c in view["paragraphs"][0]["periods"][0]["clauses"] if c["id"] == occurrence["id"])
         html = render_template("_segmentacao_analise.html", tokens=clause["tokens"], analysis_type=payload["tipo"],
-                               analysis_text=clause["text"] if clause["scope_resolved"] else None)
+                               analysis_text=clause["text"] if clause["scope_resolved"] else None,
+                               analysis_anchor=clause["anchor"])
         if not request.is_json:
             return redirect(url_for("submission", record_id=record_id, execucao_id=ruled["execucao_id"],
                 mapa_oracao_id=clause["id"], mapa_analise=payload["tipo"], _anchor=clause["anchor"]), code=303)
