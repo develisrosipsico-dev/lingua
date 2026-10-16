@@ -18,7 +18,25 @@
   ];
   let activeStage = null;
 
+  const mapTarget = () => {
+    let id;
+    try { id = decodeURIComponent(window.location.hash.slice(1)); } catch (_) { return null; }
+    if (!id.startsWith("seg-")) return null;
+    const target = document.getElementById(id);
+    return target?.closest('[data-stage-panel="segmentacao"]') ? target : null;
+  };
+
+  const revealMapTarget = () => {
+    const target = mapTarget();
+    if (!target) return;
+    for (let ancestor = target; ancestor; ancestor = ancestor.parentElement) {
+      if (ancestor.tagName === "DETAILS") ancestor.open = true;
+    }
+    target.scrollIntoView({ block: "start" });
+  };
+
   const stageFromUrl = () => {
+    if (mapTarget()) return "segmentacao";
     const url = new URL(window.location.href);
     const hashStage = url.hash.startsWith("#etapa-") ? url.hash.slice(7) : null;
     if (stages.has(hashStage)) return hashStage;
@@ -50,6 +68,7 @@
       const start = document.querySelector("[data-stage-start]");
       if (start) window.scrollTo({ top: Math.max(0, start.getBoundingClientRect().top + window.scrollY - 8), behavior: "auto" });
     }
+    document.dispatchEvent(new CustomEvent("lingua:etapa", { detail: { etapa: stage } }));
   };
 
   list.setAttribute("role", "tablist");
@@ -104,11 +123,15 @@
   const restore = () => {
     const stage = stageFromUrl();
     if (stage !== activeStage) select(stage, { scroll: true });
+    revealMapTarget();
   };
   window.addEventListener("popstate", restore);
   window.addEventListener("hashchange", restore);
   select(stageFromUrl(), { scroll: window.location.hash.startsWith("#etapa-") });
-  const url = new URL(window.location.href);
-  url.hash = `etapa-${activeStage}`;
-  window.history.replaceState(window.history.state, "", url);
+  if (mapTarget()) revealMapTarget();
+  else {
+    const url = new URL(window.location.href);
+    url.hash = `etapa-${activeStage}`;
+    window.history.replaceState(window.history.state, "", url);
+  }
 })();

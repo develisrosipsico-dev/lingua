@@ -126,6 +126,29 @@ h1 {
 .segmentation-panel { margin-bottom: 20px; }
 .segmentation-result { margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--line); }
 .segmentation-result h3 { margin: 0 0 14px; font-size: 15px; font-weight: 650; }
+.segmentation-map { margin-top: 28px; }
+.segmentation-map details { scroll-margin-top: var(--stage-navigation-height, 140px); }
+.segmentation-map summary { cursor: pointer; padding: 12px; line-height: 1.6; }
+.segmentation-map summary::marker { color: var(--accent); }
+.map-paragraph { margin-top: 16px; border: 1px solid var(--line); border-radius: 10px; }
+.map-paragraph > summary { background: #f3f6f0; border-radius: 10px; }
+.map-period { margin-top: 14px; border-left: 3px solid #d2dfd0; }
+.map-clause { margin-top: 12px; border: 1px solid var(--line); border-radius: 8px; }
+.map-clause > summary { background: #f8faf6; border-radius: 8px; }
+.map-clause:target > summary { background: var(--success); }
+.map-unit-body { padding: 0 12px 14px; min-width: 0; }
+.map-unit-meta { margin-left: 12px; color: var(--muted); font-size: 12px; }
+.map-preview { display: block; color: var(--muted); font-size: 13px; overflow-wrap: anywhere; }
+.map-original-text, .map-clause-text { padding: 12px; margin: 8px 0 14px; border-left: 2px solid var(--line); background: #fafbf8; }
+.map-notes, .map-relations, .map-reference, .map-analysis-note, .map-period-status { font-size: 13px; color: var(--muted); overflow-wrap: anywhere; }
+.map-notes summary { padding-left: 0; }
+.map-analysis-choices { display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0; }
+.map-analysis-button { padding: 10px 14px; font-size: 13px; }
+.map-analysis-button[aria-expanded="true"] { background: #315e48; }
+.map-analysis-result { margin-top: 14px; }
+.map-analysis-table caption { text-align: left; padding: 12px 14px; font-weight: 600; }
+.map-analysis-table th[scope="row"] { background: transparent; color: inherit; border-top: 1px solid var(--line); font-weight: 500; }
+.map-unassigned { margin-top: 12px; border-top: 1px solid var(--line); }
 .unit-counts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 0 0 18px; }
 .unit-counts > div { display: flex; flex-direction: column; padding: 14px 18px; border: 1px solid var(--line); border-radius: 9px; background: #f8faf6; }
 .unit-counts dt { color: var(--muted); font-size: 13px; }

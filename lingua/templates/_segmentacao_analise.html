@@ -1,0 +1,29 @@
+<div class="table-scroll map-analysis-table">
+  <table class="analysis-table token-table">
+    <caption>{{ 'Análise sintática' if analysis_type == 'sintaxe' else 'Análise morfológica' }} dos elementos selecionados</caption>
+    <thead><tr>
+      <th scope="col">Palavra ou sinal</th>
+      {% if analysis_type == 'sintaxe' %}
+      <th scope="col">Relação sintática</th><th scope="col">Cabeça sintática</th>
+      {% else %}
+      <th scope="col">Lema</th><th scope="col">Classe gramatical</th><th scope="col">Traços morfológicos</th>
+      {% endif %}
+    </tr></thead>
+    <tbody>
+      {% for token in tokens %}
+      <tr>
+        <th scope="row" class="token-text">{{ token.text }}</th>
+        {% if analysis_type == 'sintaxe' %}
+        <td>{% if token.dependency %}<span title="{{ token.dependency }}">{{ token.dependency_label }}</span>{% else %}<span class="unavailable">Não disponível</span>{% endif %}</td>
+        <td>{% if token.head_text %}{{ token.head_text }}{% if token.head_is_self %}<span class="root-label">raiz</span>{% elif token.head_outside_clause %}<span class="unavailable"> · fora deste recorte</span>{% endif %}{% else %}<span class="unavailable">Não disponível</span>{% endif %}</td>
+        {% else %}
+        <td>{{ token.lemma if token.lemma is not none else 'Não disponível' }}</td>
+        <td>{% if token.pos %}<span title="{{ token.pos }}">{{ token.pos_label }}</span>{% else %}<span class="unavailable">Não disponível</span>{% endif %}</td>
+        <td>{% if token.morphology is none %}<span class="unavailable">Não disponível</span>{% elif token.morphology %}<dl class="morph-attributes">{% for attribute in token.morphology %}<div><dt title="{{ attribute.field }}">{{ attribute.label }}:</dt><dd title="{{ attribute.raw_value }}">{{ attribute.value }}</dd></div>{% endfor %}</dl>{% else %}<span class="unavailable">Sem traços registrados</span>{% endif %}</td>
+        {% endif %}
+      </tr>
+      {% else %}<tr><td colspan="{{ 3 if analysis_type == 'sintaxe' else 4 }}" class="empty-result">Nenhum elemento disponível.</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</div>
+<p class="map-analysis-note">Resultados das anotações salvas, considerando o contexto do período. Relações e traços sugeridos pelo modelo permanecem sujeitos à revisão.</p>

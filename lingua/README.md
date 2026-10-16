@@ -85,6 +85,31 @@ Se a vetorização terminar enquanto você consulta outra aba, suas edições
 permanecem na página. Abra **Vetores** e use **Ver resultado da vetorização**
 para consultar a execução concluída.
 
+### Mapa gramatical na Segmentação
+
+Abra **Segmentação** para organizar o texto em parágrafos e períodos. A primeira
+abertura gera a segmentação se ela ainda não estiver salva; com JavaScript
+desativado, use **Tokenizar e segmentar**. Cada parágrafo abre seus períodos,
+e cada período abre as orações identificadas.
+
+Dentro de uma oração, os comandos são independentes:
+
+- **Análise sintática**: palavras, relações sintáticas e suas cabeças.
+- **Análise morfológica**: palavras, lemas, classes e traços morfológicos.
+
+A primeira abertura de um período completa as etapas gramaticais necessárias
+à identificação das orações. O modelo usa o contexto do texto e respeita as
+fronteiras dos períodos já salvos. Anotações, análises e regras existentes são
+reutilizadas; os comandos de uma oração consultam esse resultado sem executar
+o modelo novamente. Nenhum vetor é gerado por essa navegação. As outras abas
+continuam disponíveis e oferecem **Ver no mapa da segmentação**.
+
+O mapa usa o texto original e preserva IDs e posições. Alcances descontínuos
+aparecem com `[…]` entre os trechos; extensões não determinadas e pendências
+permanecem explícitas. Palavras fora dos alcances e períodos sem oração
+identificada têm suas anotações disponíveis separadamente. Relações e atributos
+são propostas do modelo e das regras para revisão gramatical.
+
 ## Preparar o registro para análise
 
 Por padrão, o texto de trabalho é idêntico ao original. A opção técnica de
@@ -102,8 +127,10 @@ exemplos de [preservação literal](examples/preservacao_literal.json) e
 
 Depois de registrar o texto, escolha a preparação em **Preparações salvas**,
 quando houver versões anteriores. Abra a aba **Segmentação** e clique em
-**Tokenizar e segmentar**. O resultado mostra as contagens e os
-períodos; **Baixar segmentação JSON** exporta o registro completo. Cada geração
+**Tokenizar e segmentar**, ou abra a aba **Segmentação** para gerar as unidades
+automaticamente. O resultado mostra as contagens e o mapa expansível de
+parágrafos, períodos e orações; **Baixar segmentação JSON** exporta o registro
+de tokenização e fronteiras. Cada geração
 acrescenta um registro ao histórico, vinculado à preparação escolhida, sem
 modificar o texto original ou resultados anteriores.
 

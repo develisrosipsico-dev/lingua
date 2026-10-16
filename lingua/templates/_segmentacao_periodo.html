@@ -1,0 +1,49 @@
+{% if ruled and segmentation_view.clause_state in ('executada', 'executada_com_pendencias') %}
+  {% if segmentation_view.rule_notes %}<ul class="map-notes">{% for note in segmentation_view.rule_notes %}<li>{{ note }}</li>{% endfor %}</ul>{% endif %}
+  {% for clause in period_view.clauses %}
+  <details class="map-clause" id="{{ clause.anchor }}"{% if request.args.get('mapa_oracao_id') == clause.id %} open{% endif %}>
+    <summary><strong>Oração {{ clause.number }}</strong>{% if clause.nucleus_text %}<span class="map-unit-meta">Núcleo: {{ clause.nucleus_text }}</span>{% endif %}</summary>
+    <div class="map-unit-body">
+      {% if clause.scope_resolved %}<p class="period-text map-clause-text">{{ clause.text }}</p>{% else %}<p class="annotation-note">Extensão da oração não determinada. As análises abrangem somente os elementos identificados.</p>{% for fragment in clause.evidence_fragments %}<p class="period-text">{{ fragment }}</p>{% endfor %}{% endif %}
+      {% if clause.relations %}<ul class="map-relations">{% for relation in clause.relations %}<li>{{ relation.label }} <a href="#{{ relation.anchor }}">oração {{ relation.number }}</a></li>{% endfor %}</ul>{% endif %}
+      {% if clause.notes %}<details class="map-notes"><summary>Ressalvas da identificação</summary><ul>{% for note in clause.notes %}<li>{{ note }}</li>{% endfor %}</ul></details>{% endif %}
+      <div class="map-analysis-choices">
+        {% for kind, label in [('sintaxe', 'Análise sintática'), ('morfologia', 'Análise morfológica')] %}
+        {% set expanded = request.args.get('mapa_oracao_id') == clause.id and request.args.get('mapa_analise') == kind %}
+        <form method="post" action="{{ url_for('segmentation_clause_analysis', record_id=record.id) }}" data-clause-analysis>
+          <input type="hidden" name="execucao_id" value="{{ ruled.execucao_id }}">
+          <input type="hidden" name="oracao_id" value="{{ clause.id }}">
+          <input type="hidden" name="tipo" value="{{ kind }}">
+          <button type="submit" class="map-analysis-button" aria-expanded="{{ 'true' if expanded else 'false' }}" aria-controls="{{ clause.anchor }}-{{ kind }}">{{ label }}</button>
+        </form>
+        {% endfor %}
+      </div>
+      {% for kind in ['sintaxe', 'morfologia'] %}
+      {% set expanded = request.args.get('mapa_oracao_id') == clause.id and request.args.get('mapa_analise') == kind %}
+      <section class="map-analysis-result" id="{{ clause.anchor }}-{{ kind }}" aria-live="polite"{% if not expanded %} hidden{% else %} data-loaded="true"{% endif %}>
+        {% if expanded %}{% with tokens=clause.tokens, analysis_type=kind %}{% include '_segmentacao_analise.html' %}{% endwith %}{% endif %}
+      </section>
+      {% endfor %}
+      <details class="map-notes"><summary>Identificação e referências</summary><p>{{ clause.explanation }}</p><p class="map-reference">{{ clause.id }}</p></details>
+    </div>
+  </details>
+  {% else %}<p class="annotation-note">Nenhuma oração foi identificada neste período. As anotações das palavras continuam disponíveis abaixo.</p>{% endfor %}
+  {% if period_view.unassigned_tokens or not period_view.clauses %}
+  <details class="map-unassigned"><summary>{{ 'Elementos fora dos alcances das orações' if period_view.clauses else 'Anotações do período' }}</summary>
+    {% for kind, label in [('sintaxe', 'Análise sintática'), ('morfologia', 'Análise morfológica')] %}
+    <details class="map-unit-body"><summary>{{ label }}</summary>{% with tokens=period_view.unassigned_tokens if period_view.clauses else period_view.tokens, analysis_type=kind %}{% include '_segmentacao_analise.html' %}{% endwith %}</details>
+    {% endfor %}
+  </details>
+  {% endif %}
+{% else %}
+  <p class="map-period-status" role="status">Abra o período para identificar suas orações. A identificação utiliza morfologia e sintaxe no contexto do texto, processadas localmente.</p>
+  {% if ruled %}<p class="annotation-note">{{ segmentation_view.clause_message }}</p>{% endif %}
+  <form method="post" action="{{ url_for('segmentation_period_map', record_id=record.id) }}" data-period-analysis>
+    <input type="hidden" name="segmentacao_id" value="{{ segmented.segmentacao_id }}">
+    <input type="hidden" name="periodo_id" value="{{ period_view.period.id }}">
+    {% if ruled|default(none) %}<input type="hidden" name="execucao_id" value="{{ ruled.execucao_id }}">
+    {% elif analyzed|default(none) %}<input type="hidden" name="analise_id" value="{{ analyzed.analise_id }}">
+    {% elif annotated|default(none) %}<input type="hidden" name="anotacao_id" value="{{ annotated.anotacao_id }}">{% endif %}
+    <button type="submit">Identificar orações</button>
+  </form>
+{% endif %}

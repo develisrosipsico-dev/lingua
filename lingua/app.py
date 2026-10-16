@@ -9,9 +9,11 @@ import sqlite3
 from zoneinfo import ZoneInfo
 
 from flask import Flask, Response, abort, redirect, render_template, request, url_for
+from werkzeug.datastructures import MultiDict
 
 from preparacao import ErroPreparacao, preparar_texto, validar_registro
 from segmentacao import ErroSegmentacao, contexto_periodo, segmentar_preparacao, validar_segmentacao
+from visualizacao_segmentacao import construir_visualizacao_segmentacao
 from anotacao import (
     ErroAlinhamento, ErroAnotacao, ErroLimite, ErroModelo, anotar_segmentacao, validar_anotacao,
 )
@@ -710,6 +712,7 @@ def create_app(config=None):
         return render_template(
             "index.html", content=row["content"], error=None, record=record, prepared=prepared,
             segmented=segmented, segmentation_history=[dict(item) for item in history],
+            segmentation_view=construir_visualizacao_segmentacao(segmented, annotated, analyzed, ruled),
             preparation_history=[dict(item) for item in preparation_history],
             annotated=annotated, annotation_history=[dict(item) for item in annotation_history],
             analyzed=analyzed, analysis_history=[dict(item) for item in analysis_history],
@@ -805,6 +808,115 @@ def create_app(config=None):
             url_for("submission", record_id=record_id, preparacao_id=prepared["preparacao_id"], segmentacao_id=segmented["segmentacao_id"]),
             code=303,
         )
+
+    @app.post("/envios/<int:record_id>/segmentacao/mapa-periodo")
+    def segmentation_period_map(record_id):
+        payload = request.get_json(silent=True) if request.is_json else request.form
+        fields = {"segmentacao_id", "periodo_id"}
+        sources = {"anotacao_id", "analise_id", "execucao_id"}
+        if (not isinstance(payload, (dict, MultiDict)) or not fields <= set(payload)
+                or set(payload) - fields - sources or len(set(payload) & sources) > 1
+                or any(not isinstance(value, str) or not value.strip() for value in payload.values())
+                or isinstance(payload, MultiDict) and any(len(payload.getlist(f)) != 1 for f in payload)):
+            return {"erro": "Selecione uma segmentação e um período únicos."}, 400
+        changed = False
+        try:
+            with closing(connect_database(app.config["DATABASE"])) as connection:
+                document = connection.execute("SELECT * FROM submissions WHERE id = ?", (record_id,)).fetchone()
+                if document is None:
+                    abort(404)
+                segmented = latest_segmentation(connection, document, segmentation_id=payload["segmentacao_id"])
+                if segmented is None:
+                    return {"erro": "A segmentação selecionada não foi encontrada neste documento."}, 404
+                period = next((p for p in segmented["periodos"] if p["id"] == payload["periodo_id"]), None)
+                if period is None:
+                    return {"erro": "O período selecionado não pertence a esta segmentação."}, 404
+                annotated = analyzed = ruled = None
+                for field, load in (("execucao_id", lambda value: latest_rule_run(connection, document, execution_id=value)),
+                                    ("analise_id", lambda value: latest_analysis(connection, document, analysis_id=value)),
+                                    ("anotacao_id", lambda value: latest_annotation(connection, document, annotation_id=value))):
+                    if field not in payload:
+                        continue
+                    selected = load(payload[field])
+                    if selected is None:
+                        return {"erro": "A origem selecionada não foi encontrada neste documento."}, 404
+                    if selected["segmentacao_id"] != segmented["segmentacao_id"]:
+                        return {"erro": "A origem selecionada pertence a outra segmentação."}, 409
+                    if field == "execucao_id":
+                        ruled = selected
+                        analyzed = ruled["analise"]
+                        annotated = analyzed["anotacao"]
+                    elif field == "analise_id":
+                        analyzed = selected
+                        annotated = analyzed["anotacao"]
+                    else:
+                        annotated = selected
+                # A identificação das orações precisa das relações gramaticais.
+                # Preserve o contexto e reaproveite a cadeia validada; cada
+                # etapa concluída fica salva mesmo se a seguinte falhar.
+                annotated = annotated or latest_annotation(connection, document, segmented["segmentacao_id"])
+                if annotated is None:
+                    annotated = save_annotation(connection, document, segmented)
+                    connection.commit()
+                    changed = True
+                analyzed = analyzed or latest_analysis(connection, document, annotated["anotacao_id"])
+                if analyzed is None:
+                    analyzed = save_analysis(connection, document, annotated)
+                    connection.commit()
+                    changed = True
+                ruled = ruled or latest_rule_run(connection, document, analysis_id=analyzed["analise_id"])
+                if ruled is None:
+                    ruled = save_rule_run(connection, document, analyzed)
+                    connection.commit()
+                    changed = True
+        except SOURCE_ERRORS as error:
+            status = (503 if isinstance(error, (ErroModelo, ErroAnaliseModelo))
+                      else 413 if isinstance(error, (ErroLimite, ErroAnaliseLimite)) else 409)
+            return {"erro": str(error)}, status
+        view = construir_visualizacao_segmentacao(segmented, annotated, analyzed, ruled, periodo_id=period["id"])
+        detail = url_for("submission", record_id=record_id, execucao_id=ruled["execucao_id"],
+                         mapa_periodo_id=period["id"], _anchor=f"seg-periodo-{period['ordem'] + 1}")
+        if not request.is_json:
+            return redirect(detail, code=303)
+        return {"periodo_id": period["id"], "execucao_id": ruled["execucao_id"], "detalhe_url": detail,
+                "atualizou_cadeia": changed,
+                "html": render_template("_segmentacao_periodo.html", record={"id": record_id},
+                    segmented=segmented, segmentation_view=view, period_view=view["paragraphs"][0]["periods"][0],
+                    ruled=ruled)}, 200
+
+    @app.post("/envios/<int:record_id>/segmentacao/analise-oracao")
+    def segmentation_clause_analysis(record_id):
+        payload = request.get_json(silent=True) if request.is_json else request.form
+        fields = {"execucao_id", "oracao_id", "tipo"}
+        if (not isinstance(payload, (dict, MultiDict)) or set(payload) != fields
+                or any(not isinstance(payload[f], str) or not payload[f].strip() for f in fields)
+                or isinstance(payload, MultiDict) and any(len(payload.getlist(f)) != 1 for f in fields)
+                or payload["tipo"] not in ("sintaxe", "morfologia")):
+            return {"erro": "Selecione uma oração e a análise sintática ou morfológica."}, 400
+        try:
+            with closing(connect_database(app.config["DATABASE"])) as connection:
+                document = connection.execute("SELECT * FROM submissions WHERE id = ?", (record_id,)).fetchone()
+                if document is None:
+                    abort(404)
+                ruled = latest_rule_run(connection, document, execution_id=payload["execucao_id"])
+                if ruled is None:
+                    return {"erro": "A execução selecionada não pertence a este documento."}, 404
+                occurrence = next((o for o in ruled["ocorrencias"]
+                    if o["id"] == payload["oracao_id"] and o["familia"] == "oracoes"), None)
+                if occurrence is None:
+                    return {"erro": "A oração selecionada não pertence a esta execução."}, 404
+        except SOURCE_ERRORS as error:
+            return {"erro": str(error)}, 409
+        analyzed = ruled["analise"]
+        annotated = analyzed["anotacao"]
+        view = construir_visualizacao_segmentacao(annotated["segmentacao"], annotated, analyzed, ruled,
+                                                   periodo_id=occurrence["periodo_id"])
+        clause = next(c for c in view["paragraphs"][0]["periods"][0]["clauses"] if c["id"] == occurrence["id"])
+        html = render_template("_segmentacao_analise.html", tokens=clause["tokens"], analysis_type=payload["tipo"])
+        if not request.is_json:
+            return redirect(url_for("submission", record_id=record_id, execucao_id=ruled["execucao_id"],
+                mapa_oracao_id=clause["id"], mapa_analise=payload["tipo"], _anchor=clause["anchor"]), code=303)
+        return {"oracao_id": clause["id"], "execucao_id": ruled["execucao_id"], "tipo": payload["tipo"], "html": html}
 
     @app.get("/envios/<int:record_id>/segmentacao.json")
     def segmentation_json(record_id):

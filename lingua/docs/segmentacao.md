@@ -210,6 +210,45 @@ O resultado preserva a preparação utilizada; ele não muda para acompanhar a
 preparação mais recente. O JSON exportado e as respostas de contexto passam
 pela validação do registro armazenado.
 
+## Mapa por parágrafo, período e oração
+
+`visualizacao_segmentacao.py`, baseado no módulo enviado no pacote de referência,
+projeta a cadeia já validada sem alterar os registros de origem. A função
+`construir_visualizacao_segmentacao(segmentacao, anotacao=None, analise=None,
+regras=None, *, periodo_id=None)` organiza parágrafos, períodos, orações,
+anotações das palavras e vínculos entre ocorrências. O filtro opcional restringe
+a projeção a um período, preservando seus IDs e sua ordem global.
+
+Na interface, abrir **Segmentação** cria somente os tokens e segmentos quando
+necessário. Abrir um período solicita as orações e completa as etapas 05–07
+que ainda faltam. A identificação de orações depende da análise gramatical;
+por isso utiliza o modelo no contexto do texto, em vez de recortar e analisar
+uma oração isolada. Registros existentes são reutilizados e cada etapa nova
+é salva separadamente. Se faltar o modelo ou ocorrer uma falha, as etapas
+concluídas permanecem disponíveis para nova tentativa.
+
+Dentro de cada oração, **Análise sintática** e **Análise morfológica** fazem
+solicitações independentes para a execução selecionada. A resposta usa os tokens
+do alcance salvo, sem nova inferência ou vetorização. Cabeças externas à oração
+são indicadas; trechos descontínuos não são unidos como se fossem contíguos.
+Períodos sem oração e elementos fora dos alcances continuam consultáveis.
+Os resultados são propostas gramaticais, não interpretações do relato.
+
+- `POST /envios/<id>/segmentacao/mapa-periodo`: recebe `segmentacao_id` e
+  `periodo_id`. Pode receber **um** identificador de origem: `anotacao_id`,
+  `analise_id` ou `execucao_id`, para respeitar uma seleção histórica. Retorna
+  `periodo_id`, `execucao_id`, `detalhe_url`, `atualizou_cadeia` e o HTML do
+  período. O formulário recebe redirecionamento HTTP 303.
+- `POST /envios/<id>/segmentacao/analise-oracao`: recebe `execucao_id`,
+  `oracao_id` e `tipo` (`sintaxe` ou `morfologia`). Confere a execução e a oração
+  no documento e retorna o HTML apenas da análise solicitada. O formulário
+  recebe HTTP 303 com seleção da oração e da análise para funcionar sem JS.
+
+Origens inconsistentes retornam HTTP 409; IDs de outro documento ou unidade
+inexistente retornam 404. Um modelo ausente retorna 503 e limites da análise
+retornam 413. A estrutura exportada da etapa 04 continua na versão 1.0.0;
+morfologia, sintaxe e regras conservam seus registros e validações próprios.
+
 ## Exemplos e verificação
 
 O [exemplo completo](../examples/segmentacao.json) contém uma preparação e sua
