@@ -190,6 +190,11 @@ h1 {
 .syntax-head-arrow::after { content: ""; position: absolute; right: 0; bottom: -2px; width: 4px; height: 4px; border-right: 1px solid currentColor; border-top: 1px solid currentColor; transform: rotate(45deg); }
 .syntax-external { display: block; font-size: 11px; }
 .map-unassigned { margin-top: 12px; border-top: 1px solid var(--line); }
+.review-export { margin: 20px 0; padding: 20px; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); }
+.review-export h2 { margin: 0 0 8px; font-size: 17px; }
+.review-export p { margin: 8px 0 14px; }
+.review-export-help, [data-review-status] { font-size: 13px; color: var(--muted); }
+.review-export-warning { color: #8b3e2f; }
 .unit-counts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 0 0 18px; }
 .unit-counts > div { display: flex; flex-direction: column; padding: 14px 18px; border: 1px solid var(--line); border-radius: 9px; background: #f8faf6; }
 .unit-counts dt { color: var(--muted); font-size: 13px; }

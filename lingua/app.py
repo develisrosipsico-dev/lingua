@@ -8,7 +8,7 @@ from pathlib import Path
 import sqlite3
 from zoneinfo import ZoneInfo
 
-from flask import Flask, Response, abort, redirect, render_template, request, url_for
+from flask import Flask, Response, abort, redirect, render_template, request, send_file, url_for
 from werkzeug.datastructures import MultiDict
 
 from preparacao import ErroPreparacao, preparar_texto, validar_registro
@@ -43,6 +43,7 @@ from unidades_contexto import (
 )
 from perfis_vetorizacao import ErroPerfil, carregar_perfil
 from colab_notebook import ErroNotebookColab, gerar_notebook_colab
+from exportacao_revisao import gerar_pacote_revisao
 from vetorizacao import ErroVetorizacao, consultar_representacao
 from persistencia_vetores import (
     ErroPersistenciaVetores,
@@ -55,6 +56,7 @@ from trabalhos_vetorizacao import (
     iniciar_trabalho,
     listar_trabalhos,
     obter_trabalho,
+    processar_trabalho,
     retomar_trabalho,
 )
 
@@ -373,6 +375,51 @@ def load_vector_context(connection, document_id, context_execution_id):
     return contextualized
 
 
+def completar_revisao(connection, document, origem):
+    """Complete a cadeia escolhida uma vez, preservando cada etapa concluída."""
+    etapas = [
+        ("03", "preparacao_id", "preparation_id", latest_preparation, save_preparation),
+        ("04", "segmentacao_id", "segmentation_id", latest_segmentation, save_segmentation),
+        ("05", "anotacao_id", "annotation_id", latest_annotation, save_annotation),
+        ("06", "analise_id", "analysis_id", latest_analysis, save_analysis),
+        ("07", "execucao_id", "execution_id", latest_rule_run, save_rule_run),
+        ("08", "contexto_execucao_id", "execution_id", latest_context_run, save_context_run),
+    ]
+    campos_pai = ["preparacao", "segmentacao", "anotacao", "analise", "regras"]
+    campos_id = ["preparacao_id", "segmentacao_id", "anotacao_id", "analise_id", "execucao_id", "execucao_id"]
+    cadeia = [None] * len(etapas)
+    report = {"solicitado_em": datetime.now(timezone.utc).isoformat(), "escopo": "documento_inteiro",
+              "origem_selecionada": dict(origem), "etapas": [], "erros": [], "completo": False}
+    stage = "03"
+    try:
+        if origem:
+            field, identifier = next(iter(origem.items()))
+            selected = next(i for i, item in enumerate(etapas) if item[1] == field)
+            stage, _, keyword, load, _ = etapas[selected]
+            source = load(connection, document, **{keyword: identifier})
+            if source is None:
+                abort(404)
+            cadeia[selected] = source
+            for i in range(selected, 0, -1):
+                cadeia[i - 1] = cadeia[i][campos_pai[i - 1]]
+        for i, (stage, _, _, load, save) in enumerate(etapas):
+            parent = cadeia[i - 1] if i else None
+            args = (connection, document) if i == 0 else (connection, document, parent[campos_id[i - 1]])
+            source = cadeia[i] or load(*args)
+            reused = source is not None
+            if source is None:
+                source = save(connection, document) if i == 0 else save(connection, document, parent)
+                connection.commit()
+            cadeia[i] = source
+            report["etapas"].append({"etapa": stage, "estado": "reutilizada" if reused else "gerada",
+                                      "identificador": source[campos_id[i]]})
+    except SOURCE_ERRORS as error:
+        report["erros"].append({"etapa": stage, "tipo": type(error).__name__, "mensagem": str(error)})
+        report["etapas"].append({"etapa": stage, "estado": "falhou"})
+        return None, report
+    return cadeia[-1], report
+
+
 def create_app(config=None):
     app = Flask(__name__)
     app.config.from_mapping(
@@ -500,6 +547,69 @@ def create_app(config=None):
     @app.get("/")
     def index():
         return render_template("index.html", content="", error=None, record=None)
+
+    @app.post("/envios/<int:record_id>/revisao.zip")
+    def complete_review(record_id):
+        payload = request.get_json(silent=True) if request.is_json else request.form
+        allowed = {"preparacao_id", "segmentacao_id", "anotacao_id", "analise_id", "execucao_id", "contexto_execucao_id"}
+        if (request.args or not isinstance(payload, (dict, MultiDict)) or set(payload) - allowed or len(payload) > 1
+                or any(not isinstance(value, str) or not value.strip() for value in payload.values())
+                or isinstance(payload, MultiDict) and any(len(payload.getlist(f)) != 1 for f in payload)):
+            return {"erro": "Selecione uma única origem do texto para gerar a revisão."}, 400
+        with closing(connect_database(app.config["DATABASE"])) as connection:
+            document = connection.execute("SELECT * FROM submissions WHERE id = ?", (record_id,)).fetchone()
+            if document is None:
+                abort(404)
+            context, report = completar_revisao(connection, document, payload)
+            job = None
+            if context is not None:
+                try:
+                    profile = carregar_perfil("e5_analista")
+                    jobs = [j for j in listar_trabalhos(connection, record_id, context["execucao_id"])
+                            if j["contexto_execucao_id"] == context["execucao_id"] and j["perfil"] == profile
+                            and j["estado"] in ("concluida", "enfileirada", "executando")]
+                    job = jobs[0] if jobs else enfileirar_vetorizacao(connection, record_id, context,
+                                                                    perfil_id="e5_analista")
+                    if job["estado"] == "concluida":
+                        result = obter_vetorizacao(connection, record_id, execucao_id=job["execucao_id"])
+                        if result is None or result["contexto"] != context:
+                            raise ErroPersistenciaVetores("O resultado vetorial não corresponde à origem selecionada.")
+                    connection.commit()
+                except SOURCE_ERRORS + VECTOR_ERRORS as error:
+                    report["erros"].append({"etapa": "09", "tipo": type(error).__name__, "mensagem": str(error)})
+                    job = None
+        if job is not None:
+            try:
+                reused = job["estado"] == "concluida"
+                if job["estado"] == "enfileirada":
+                    job = processar_trabalho(app.config["DATABASE"], job["execucao_id"],
+                        fabrica_adaptador=app.config["VECTORS_ADAPTER_FACTORY"], carregar_contexto=load_vector_context)
+                report["etapas"].append({"etapa": "09", "estado": "reutilizada" if reused else job["estado"],
+                                          "identificador": job["execucao_id"]})
+                report["completo"] = job["estado"] == "concluida"
+                if job.get("erro"):
+                    report["erros"].append({"etapa": "09", **job["erro"]})
+            except SOURCE_ERRORS + VECTOR_ERRORS as error:
+                report["erros"].append({"etapa": "09", "tipo": type(error).__name__, "mensagem": str(error)})
+        recorded = {e["etapa"] for e in report["etapas"]}
+        for stage in ("03", "04", "05", "06", "07", "08", "09"):
+            if stage not in recorded:
+                failed = any(e["etapa"] == stage for e in report["erros"])
+                report["etapas"].append({"etapa": stage, "estado": "falhou" if failed else "nao_executada"})
+        report["etapas"].sort(key=lambda e: e["etapa"])
+        with closing(connect_database(app.config["DATABASE"])) as connection:
+            connection.execute("BEGIN")
+            document = connection.execute("SELECT * FROM submissions WHERE id = ?", (record_id,)).fetchone()
+            package = gerar_pacote_revisao(connection, document, codigo_raiz=BASE, processamento=report)
+        stamp = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
+        response = send_file(package, mimetype="application/zip", as_attachment=True,
+                             download_name=f"lingua-revisao-{record_id}-{stamp}.zip", max_age=0)
+        response.headers["Cache-Control"] = "no-store"
+        response.headers["X-Lingua-Revisao-Estado"] = "completo" if report["completo"] else "parcial"
+        if context is not None:
+            response.headers["X-Lingua-Revisao-Detalhe"] = url_for("submission", record_id=record_id,
+                                                                 contexto_execucao_id=context["execucao_id"])
+        return response
 
     @app.post("/envios")
     def submit_text():

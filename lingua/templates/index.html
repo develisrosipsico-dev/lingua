@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script src="{{ url_for('static', filename='etapas.js') }}" defer></script>
     <script src="{{ url_for('static', filename='segmentacao.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='revisao.js') }}" defer></script>
     <script src="{{ url_for('static', filename='vetorizacao.js') }}" defer></script>
   </head>
   <body>
@@ -39,6 +40,23 @@
             <p>Registro #{{ record.id }} <span class="notice-separator" aria-hidden="true">·</span> {{ record.created_at }} (horário de Brasília)</p>
           </div>
           <a class="new-text" href="{{ url_for('index') }}">Novo texto <span aria-hidden="true">→</span></a>
+        </section>
+
+        <section class="review-export" aria-labelledby="review-export-title">
+          <h2 id="review-export-title">Revisão completa</h2>
+          <p>Complete o processamento de todo o texto e baixe os resultados, o histórico e o código do Língua. Não é necessário abrir cada período ou oração.</p>
+          <form method="post" action="{{ url_for('complete_review', record_id=record.id) }}" data-review-export data-record-id="{{ record.id }}">
+            {% if contextualized|default(none) %}<input type="hidden" name="contexto_execucao_id" value="{{ contextualized.execucao_id }}">
+            {% elif ruled|default(none) %}<input type="hidden" name="execucao_id" value="{{ ruled.execucao_id }}">
+            {% elif analyzed|default(none) %}<input type="hidden" name="analise_id" value="{{ analyzed.analise_id }}">
+            {% elif annotated|default(none) %}<input type="hidden" name="anotacao_id" value="{{ annotated.anotacao_id }}">
+            {% elif segmented|default(none) %}<input type="hidden" name="segmentacao_id" value="{{ segmented.segmentacao_id }}">
+            {% elif prepared|default(none) %}<input type="hidden" name="preparacao_id" value="{{ prepared.preparacao_id }}">{% endif %}
+            <button type="submit">Gerar revisão completa <span aria-hidden="true">↓</span></button>
+          </form>
+          <p class="review-export-help">As etapas salvas são reutilizadas. A vetorização usa o E5 local e pode levar alguns minutos. Se uma etapa falhar, o ZIP reúne os resultados disponíveis e o diagnóstico.</p>
+          <p role="status" data-review-status hidden></p>
+          <a class="download-link" data-review-detail hidden>Atualizar as etapas na tela</a>
         </section>
 
         {% if quick_error|default(none) %}

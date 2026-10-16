@@ -69,6 +69,26 @@ inicia o E5 automaticamente. Se uma etapa falhar, a página mostra o diagnóstic
 e mantém o texto e os passos concluídos disponíveis para continuar pelas abas.
 O botão **Registrar texto** mantém o percurso manual anterior.
 
+## Gerar um pacote completo para revisão
+
+Depois de registrar o texto, clique em **Gerar revisão completa ↓**. O comando
+completa preparação, segmentação, morfologia, sintaxe, regras, contexto e
+vetorização do documento inteiro, mesmo sem abrir seus períodos e orações na
+tela. Reutiliza as etapas salvas da origem selecionada e usa o perfil E5 de
+parágrafos, contextos e documento. O processamento local pode levar alguns minutos.
+
+O ZIP reúne `texto_original.txt`, `processamento_completo.json`, os vetores,
+históricos, validações e erros, além de `ambiente.json`, um manifesto com hashes
+e uma cópia dos fontes do Língua em `codigo/`. Essa cópia corresponde ao código
+presente na exportação; os registros históricos podem ter sido gerados por outras
+versões. A validação estrutural não certifica a correção das análises gramaticais.
+
+Se uma etapa falhar ou a vetorização já estiver em execução, o pacote é marcado
+como **parcial** e mantém os resultados disponíveis e o diagnóstico. Os modelos
+locais são necessários para completar suas respectivas etapas. O pacote contém
+somente os registros deste documento e não inclui o banco completo nem os pesos
+dos modelos. Após o download, **Atualizar as etapas na tela** abre os resultados.
+
 ## Navegar pelas etapas
 
 Depois de registrar um texto, use as abas **Texto**, **Preparação**,
