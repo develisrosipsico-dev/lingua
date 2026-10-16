@@ -6,11 +6,21 @@
 
   const payload = (form) => Object.fromEntries(new FormData(form));
   const send = async (form) => {
-    const response = await fetch(form.action, {
-      method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload(form)),
-    });
-    const data = await response.json();
+    let response;
+    try {
+      response = await fetch(form.action, {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload(form)),
+      });
+    } catch (_) {
+      throw new Error("Não foi possível comunicar com o Língua. Confira se o terminal continua executando o aplicativo e use a aba aberta pela execução atual. Depois, tente novamente.");
+    }
+    let data;
+    try {
+      data = await response.json();
+    } catch (_) {
+      throw new Error(`Não foi possível ler a resposta do Língua (HTTP ${response.status}). Confira o terminal do aplicativo e tente novamente.`);
+    }
     if (!response.ok) throw new Error(data.erro || "Não foi possível concluir esta análise.");
     return data;
   };
