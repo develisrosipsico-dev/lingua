@@ -86,7 +86,8 @@ class SegmentationMapTests(unittest.TestCase):
         before = deepcopy(source)
         clauses = construir_visualizacao_segmentacao(*source)["paragraphs"][0]["periods"][0]["clauses"]
         self.assertEqual([c["nucleus_text"] for c in clauses], ["saiu", "chegou"])
-        self.assertEqual([c["classification"] for c in clauses], ["Oração principal", "Oração subordinada"])
+        self.assertEqual([c["classification"] for c in clauses],
+                         ["Oração principal", "Oração subordinada adjetiva restritiva"])
         self.assertEqual([t["syntax_tone"] for t in clauses[0]["tokens"]], [1, 1, 2, None])
         self.assertEqual([c["number"] for c in clauses], [1, 2])
         self.assertEqual(clauses[1]["relations"][0]["anchor"], clauses[0]["anchor"])

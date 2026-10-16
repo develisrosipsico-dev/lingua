@@ -155,6 +155,20 @@ orações. Uma subordinada que rege outra continua subordinada; a relação
 agrupamentos aparecem como avisos com os dados usados na identificação. Os
 avisos não corrigem a previsão do modelo nem impedem a vetorização.
 
+Os cabeçalhos e a **Análise sintática** também apresentam subtipos quando há
+evidências: adjetiva restritiva/explicativa e adverbial concessiva, condicional,
+temporal ou final nos padrões cobertos. Por exemplo, **que minha avó tricotava**
+é proposta como adjetiva restritiva, e **embora nunca tivesse** como adverbial
+concessiva. A análise mostra a explicação, os elementos usados e a referência
+prevista na árvore. Uma vírgula antes de uma oração dependente da relativa não
+a transforma, por si só, em explicativa.
+
+A classificação é derivada dos registros salvos, sem nova inferência nem
+alteração do histórico. Substantivas, marcadores ambíguos e evidências
+insuficientes permanecem sem subtipo; conflitos exigem revisão. O antecedente
+exibido é o previsto pelo modelo e pode conter erro. A classificação detalhada
+também integra `revisao_gramatical.json` no pacote completo de revisão.
+
 As regras `1.2.0` agrupam **passar a + infinitivo** e **continuar + gerúndio**
 quando a árvore, a morfologia e o contexto sustentam a locução. Outros
 complementos, como **quer sair**, continuam separados. Os mecanismos `1.0.0` e

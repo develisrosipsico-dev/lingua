@@ -30,7 +30,7 @@
       {% for kind in ['sintaxe', 'morfologia'] %}
       {% set expanded = request.args.get('mapa_oracao_id') == clause.id and request.args.get('mapa_analise') == kind %}
       <section class="map-analysis-result" id="{{ clause.anchor }}-{{ kind }}" aria-live="polite"{% if not expanded %} hidden{% else %} data-loaded="true"{% endif %}>
-        {% if expanded %}{% with tokens=clause.tokens, analysis_type=kind, analysis_text=clause.text if clause.scope_resolved else none, analysis_anchor=clause.anchor %}{% include '_segmentacao_analise.html' %}{% endwith %}{% endif %}
+        {% if expanded %}{% with tokens=clause.tokens, analysis_type=kind, analysis_text=clause.text if clause.scope_resolved else none, analysis_anchor=clause.anchor, clause_classification=clause.specific_classification %}{% include '_segmentacao_analise.html' %}{% endwith %}{% endif %}
       </section>
       {% endfor %}
       <details class="map-notes"><summary>Identificação e referências</summary><p>{{ clause.explanation }}</p><p class="map-reference">{{ clause.id }}</p></details>

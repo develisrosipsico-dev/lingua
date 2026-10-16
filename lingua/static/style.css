@@ -463,6 +463,9 @@ button:hover { background: #1e483d; }
 .grammar-reprocessing summary { cursor: pointer; font-weight: 600; }
 .grammar-reprocessing form { display: grid; gap: 10px; margin-top: 12px; }
 .grammar-reprocessing select { width: 100%; min-width: 0; }
+.clause-classification { margin: 12px 0 18px; padding: 14px; border: 1px solid var(--line, #dedbd3); border-radius: 10px; }
+.clause-classification p { margin: 0 0 8px; overflow-wrap: anywhere; }
+.clause-classification details { margin-top: 8px; }
 
 @media (max-height: 500px) {
   .stage-navigation { position: static; }

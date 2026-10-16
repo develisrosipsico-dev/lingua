@@ -1,5 +1,13 @@
 <figure class="syntax-reading-map">
   <h4>Análise sintática</h4>
+  {% if clause_classification|default(none) and clause_classification.estado != 'nao_aplicavel' %}
+  <section class="clause-classification" aria-label="Classificação da oração">
+    <p><strong>{{ clause_classification.rotulo or ('Classificação requer revisão' if clause_classification.estado == 'requer_revisao' else 'Subtipo não determinado') }}</strong></p>
+    <p>{{ clause_classification.explicacao }}</p>
+    {% if clause_classification.referencia %}<p>Elemento de referência previsto: <strong>{{ clause_classification.referencia.texto }}</strong>.</p>{% endif %}
+    {% if clause_classification.evidencias %}<details><summary>Elementos usados na classificação</summary><p>{{ clause_classification.evidencias|map(attribute='texto')|unique|join(', ') }}</p></details>{% endif %}
+  </section>
+  {% endif %}
   {% if tokens %}<figcaption class="period-text syntax-sentence">{% for token in tokens %}{{ token.reading_prefix }}{% if token.syntax_tone %}<span class="syntax-phrase map-tone-{{ token.syntax_tone }}" title="{{ token.syntax_group }}">{{ token.reading_text }}</span>{% else %}{{ token.reading_text }}{% endif %}{% endfor %}</figcaption>{% endif %}
   <ul class="syntax-legend" aria-label="Cores das funções sintáticas">
     {% set legend = namespace(groups=[]) %}

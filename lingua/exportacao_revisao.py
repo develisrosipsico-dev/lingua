@@ -502,6 +502,7 @@ def _leia_me(processamento, codigo):
 def _revisao_gramatical(etapas):
     """Diagnostique as cadeias salvas sem inferência ou revisão da fonte."""
     from diagnosticos_gramaticais import diagnosticar_gramatica
+    from classificacao_oracoes import classificar_oracoes
 
     revisoes, erros = [], []
     for item in etapas["07"]["registros"]:
@@ -512,7 +513,9 @@ def _revisao_gramatical(etapas):
             analise = regra["analise"]
             anotacao = analise["anotacao"]
             relatorio = diagnosticar_gramatica(anotacao["segmentacao"], anotacao, analise, regra)
-            revisoes.append({"execucao_id": regra["execucao_id"], "relatorio": relatorio})
+            classificacao = classificar_oracoes(anotacao["segmentacao"], anotacao, analise, regra)
+            revisoes.append({"execucao_id": regra["execucao_id"], "relatorio": relatorio,
+                             "classificacao_oracoes": classificacao})
         except Exception as erro:
             erros.append({"execucao_id": regra.get("execucao_id"), **_erro(erro)})
     return {"schema_version": "1.0.0", "escopo": "cadeias_de_regras_salvas",

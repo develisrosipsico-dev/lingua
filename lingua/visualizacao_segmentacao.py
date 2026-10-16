@@ -5,6 +5,7 @@ resegmenta o texto e não altera a cadeia de origem nem os seus intervalos.
 """
 
 from collections import defaultdict
+from classificacao_oracoes import classificar_oracoes
 
 from diagnosticos_gramaticais import diagnosticar_gramatica, hierarquia_oracoes
 
@@ -120,6 +121,9 @@ def construir_visualizacao_segmentacao(segmentacao, anotacao=None, analise=None,
 
     diagnosticos = diagnosticar_gramatica(segmentacao, anotacao, analise, regras)
     resultado["grammar_diagnostics"] = diagnosticos
+    classificacoes = classificar_oracoes(segmentacao, anotacao, analise, regras)
+    resultado["clause_classifications"] = classificacoes
+    subtipos = {item["oracao_id"]: item for item in classificacoes["oracoes"]}
 
     tokens = {t["id"]: t for t in segmentacao["tokens"]}
     ordem = {t["id"]: i for i, t in enumerate(segmentacao["tokens"])}
@@ -211,6 +215,9 @@ def construir_visualizacao_segmentacao(segmentacao, anotacao=None, analise=None,
         posicao = hierarquia["posicao"]
         if posicao == "indeterminada":
             return "Classificação não determinada"
+        subtipo = subtipos.get(ocorrencia["id"])
+        if posicao == "subordinada" and subtipo and subtipo["estado"] == "classificada":
+            return subtipo["rotulo"] + (" e coordenada" if hierarquia["coordenada"] else "")
         if posicao == "subordinada" and hierarquia["coordenada"]:
             return "Oração subordinada e coordenada"
         return "Oração " + posicao
@@ -305,6 +312,7 @@ def construir_visualizacao_segmentacao(segmentacao, anotacao=None, analise=None,
                 oracoes.append({
                     "id": ocorrencia["id"], **referencias[ocorrencia["id"]],
                     "classification": classificacao(ocorrencia), "hierarchy": hierarquia,
+                    "specific_classification": subtipos.get(ocorrencia["id"]),
                     "requires_review": ocorrencia["id"] in conflitos or hierarquia["conflito"],
                     "text": " […] ".join(trechos) if alcance is not None else "Extensão não determinada",
                     "fragments": trechos, "evidence_fragments": evidencias,
