@@ -92,21 +92,37 @@ def gerar_notebook_gramatica():
         ## 2. Preparar o ambiente
 
         O ambiente isolado reutiliza o PyTorch CUDA já instalado pelo Colab.
+        Ele é criado sem `ensurepip`; o pip do Python do Colab instala os pacotes
+        no ambiente de destino. Reexecutar a célula também repara a configuração
+        de um ambiente parcial deixado por uma instalação interrompida.
         As bibliotecas de extração e embeddings são instaladas nele, sem substituir
         o PyTorch da GPU. O download inicial do E5 Large é de aproximadamente 2,2 GB.
         As versões efetivamente usadas serão registradas no pacote.
         """)
     code("ambiente", """
+        import os
+        import subprocess
+        import sys
+        import textwrap
+        import venv
+        from pathlib import Path
+
         PASTA_AMBIENTE = Path("/content/venv_gramatica_livro")
         PYTHON_LIVRO = PASTA_AMBIENTE / "bin" / "python"
-        if not PYTHON_LIVRO.exists():
-            venv.EnvBuilder(with_pip=True, system_site_packages=True).create(PASTA_AMBIENTE)
+        # Sempre reconfigura: uma falha de ensurepip pode deixar o Python criado,
+        # mas sem acesso aos pacotes do Colab. Não remove PDF ou checkpoints.
+        venv.EnvBuilder(with_pip=False, system_site_packages=True).create(PASTA_AMBIENTE)
+        PIP_LIVRO = [sys.executable, "-m", "pip", "--python", str(PYTHON_LIVRO)]
+        subprocess.run(PIP_LIVRO + ["--version"], check=True)
         subprocess.run([str(PYTHON_LIVRO), "-c",
-            "import torch; assert torch.cuda.is_available(), 'Selecione GPU no ambiente de execução do Colab.'; "
+            "import sys, torch; from pathlib import Path; "
+            "assert Path(sys.prefix).resolve() == Path(sys.argv[1]).resolve(), 'Ambiente Python incorreto.'; "
+            "assert torch.cuda.is_available(), 'Selecione GPU no ambiente de execução do Colab.'; "
             "print('PyTorch CUDA existente:', torch.__version__); "
             "print('GPU:', torch.cuda.get_device_name(0)); "
-            "print('VRAM GiB:', round(torch.cuda.get_device_properties(0).total_memory / 2**30, 2))"], check=True)
-        subprocess.run([str(PYTHON_LIVRO), "-m", "pip", "install", "--disable-pip-version-check",
+            "print('VRAM GiB:', round(torch.cuda.get_device_properties(0).total_memory / 2**30, 2))",
+            str(PASTA_AMBIENTE)], check=True)
+        subprocess.run(PIP_LIVRO + ["install", "--disable-pip-version-check",
             "--no-input", "PyMuPDF==1.26.7", "sentence-transformers==5.2.0",
             "transformers==4.57.3", "huggingface-hub==0.36.0", "numpy>=1.26,<3",
             "sentencepiece==0.2.1", "protobuf>=5.29,<7", "rank-bm25==0.2.2"], check=True)

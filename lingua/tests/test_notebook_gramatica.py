@@ -12,6 +12,8 @@ import tempfile
 import textwrap
 from types import SimpleNamespace
 import unittest
+from unittest.mock import patch
+import venv
 import zipfile
 
 from notebook_gramatica import gerar_notebook_gramatica
@@ -249,6 +251,91 @@ print(json.dumps({"nbformat": notebook["nbformat"], "celulas": len(notebook["cel
                 import numpy as np
                 matriz = np.load(io.BytesIO(pacote.read("vetores.npy")), allow_pickle=False)
                 self.assertEqual(matriz.shape, (len(fragmentos), 1024))
+
+    def test_pip_host_instala_wheel_local_em_venv_sem_pip(self):
+        """Valida o caminho --python sem ensurepip, rede ou pacotes do modelo."""
+        ajuda = subprocess.run([sys.executable, "-m", "pip", "--help"],
+                               capture_output=True, text=True, check=False)
+        if ajuda.returncode != 0 or "--python" not in ajuda.stdout:
+            self.skipTest("Este teste requer pip do host com suporte a --python (22.3+).")
+        with tempfile.TemporaryDirectory() as temporario:
+            raiz = Path(temporario)
+            ambiente = raiz / "venv_sem_pip"
+            venv.EnvBuilder(with_pip=False, system_site_packages=False).create(ambiente)
+            python = ambiente / "bin" / "python"
+            sem_pip = subprocess.run([str(python), "-I", "-c",
+                "import importlib.util; assert importlib.util.find_spec('pip') is None"],
+                capture_output=True, text=True, check=False)
+            self.assertEqual(sem_pip.returncode, 0, sem_pip.stderr)
+            dist_info = "lingua_notebook_offline_probe-0.0.1.dist-info"
+            arquivos = {
+                "lingua_notebook_offline_probe/__init__.py": "VALOR = 42\n",
+                dist_info + "/METADATA": "Metadata-Version: 2.1\nName: lingua-notebook-offline-probe\nVersion: 0.0.1\n",
+                dist_info + "/WHEEL": "Wheel-Version: 1.0\nGenerator: teste-local\nRoot-Is-Purelib: true\nTag: py3-none-any\n",
+            }
+            arquivos[dist_info + "/RECORD"] = "".join(
+                nome + ",,\n" for nome in [*arquivos, dist_info + "/RECORD"])
+            wheel = raiz / "lingua_notebook_offline_probe-0.0.1-py3-none-any.whl"
+            with zipfile.ZipFile(wheel, "w") as pacote:
+                for nome, conteudo in arquivos.items():
+                    pacote.writestr(nome, conteudo)
+            resultado = subprocess.run([sys.executable, "-m", "pip", "--isolated", "--python",
+                str(python), "install", "--no-index", "--no-deps", "--disable-pip-version-check",
+                str(wheel)], capture_output=True, text=True, check=False, timeout=30)
+            self.assertEqual(resultado.returncode, 0, resultado.stdout + resultado.stderr)
+            verificacao = subprocess.run([str(python), "-I", "-c",
+                "import importlib.util, json, sys; import lingua_notebook_offline_probe as p; "
+                "print(json.dumps({'valor': p.VALOR, 'prefixo': sys.prefix, "
+                "'pip_instalado': importlib.util.find_spec('pip') is not None}))"],
+                capture_output=True, text=True, check=False)
+            self.assertEqual(verificacao.returncode, 0, verificacao.stderr)
+            estado = json.loads(verificacao.stdout)
+            self.assertEqual(estado, {"valor": 42, "prefixo": str(ambiente), "pip_instalado": False})
+
+    def test_celula_repara_venv_parcial_sem_invocar_ensurepip(self):
+        """Python existente não garante configuração concluída após falha anterior."""
+        ambiente_source = next(fonte(c) for c in self.notebook()["cells"]
+                               if c["id"] == "ambiente")
+        arvore = ast.parse(ambiente_source)
+        preparacao = []
+        for no in arvore.body:
+            if (isinstance(no, ast.Expr) and isinstance(no.value, ast.Call)
+                    and isinstance(no.value.func, ast.Attribute)
+                    and isinstance(no.value.func.value, ast.Name)
+                    and no.value.func.value.id == "subprocess"):
+                break
+            preparacao.append(no)
+        with tempfile.TemporaryDirectory() as temporario:
+            ambiente = Path(temporario) / "venv_parcial"
+            venv.EnvBuilder(with_pip=False, system_site_packages=False).create(ambiente)
+            cfg = ambiente / "pyvenv.cfg"
+            self.assertIn("include-system-site-packages = false", cfg.read_text())
+            self.assertTrue((ambiente / "bin" / "python").exists())
+
+            class BuilderSemEnsurepip(venv.EnvBuilder):
+                def _setup_pip(self, context):
+                    raise AssertionError("ensurepip não pode ser usado no Colab.")
+
+            for no in preparacao:
+                if (isinstance(no, ast.Assign) and len(no.targets) == 1
+                        and isinstance(no.targets[0], ast.Name)
+                        and no.targets[0].id == "PASTA_AMBIENTE"):
+                    no.value = ast.parse("Path(" + repr(str(ambiente)) + ")", mode="eval").body
+            programa = ast.fix_missing_locations(ast.Module(body=preparacao, type_ignores=[]))
+            escopo = {"Path": Path, "venv": venv}
+            with patch.object(venv, "EnvBuilder", BuilderSemEnsurepip):
+                for tentativa in range(2):
+                    with self.subTest(tentativa=tentativa):
+                        # Reproduz o arquivo deixado incompleto pela falha do ensurepip.
+                        cfg.write_text(cfg.read_text().replace(
+                            "include-system-site-packages = true", "include-system-site-packages = false"))
+                        exec(compile(programa, "montagem-ambiente", "exec"), escopo)
+                        self.assertIn("include-system-site-packages = true", cfg.read_text())
+                        resultado = subprocess.run([str(escopo["PYTHON_LIVRO"]), "-I", "-c",
+                            "import json, sys; print(json.dumps({'prefixo':sys.prefix}))"],
+                            capture_output=True, text=True, check=False)
+                        self.assertEqual(resultado.returncode, 0, resultado.stderr)
+                        self.assertEqual(json.loads(resultado.stdout)["prefixo"], str(ambiente))
 
 
 if __name__ == "__main__":

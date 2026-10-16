@@ -33,7 +33,10 @@ tratamento não resolve automaticamente a leitura de tabelas ou toda a diagrama�
 
 O E5 Large é baixado na revisão fixada. O notebook reutiliza o PyTorch CUDA
 do Colab em um ambiente Python isolado e registra as versões efetivamente
-usadas. Inferência e armazenamento são float32, com 1.024 dimensões, mean
+usadas. O ambiente é criado com `with_pip=False`, sem depender do `ensurepip`
+do Colab. O pip do Python principal instala os pacotes no destino com
+`--python`; reexecutar a célula repara inclusive um ambiente parcialmente
+criado, preservando PDF e checkpoints. Inferência e armazenamento são float32, com 1.024 dimensões, mean
 pooling e normalização L2. O livro usa `passage: ` e as consultas opcionais
 usam `query: `. O teto padrão é 490 tokens, incluindo prefixo, seção e tokens
 especiais, dentro do limite de 512 do modelo. A contagem é refeita com o
