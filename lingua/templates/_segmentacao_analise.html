@@ -1,29 +1,21 @@
-<div class="table-scroll map-analysis-table">
-  <table class="analysis-table token-table">
-    <caption>{{ 'Análise sintática' if analysis_type == 'sintaxe' else 'Análise morfológica' }} dos elementos selecionados</caption>
-    <thead><tr>
-      <th scope="col">Palavra ou sinal</th>
-      {% if analysis_type == 'sintaxe' %}
-      <th scope="col">Relação sintática</th><th scope="col">Cabeça sintática</th>
-      {% else %}
-      <th scope="col">Lema</th><th scope="col">Classe gramatical</th><th scope="col">Traços morfológicos</th>
-      {% endif %}
-    </tr></thead>
-    <tbody>
-      {% for token in tokens %}
-      <tr>
-        <th scope="row" class="token-text">{{ token.text }}</th>
+<div class="map-elements">
+  <h4>{{ 'Análise sintática' if analysis_type == 'sintaxe' else 'Análise morfológica' }} dos elementos selecionados</h4>
+  <ol class="map-element-list">
+    {% for token in tokens %}
+    <li class="map-element">
+      <strong class="token-text">{{ token.text }}</strong>
+      <dl class="map-element-attributes">
         {% if analysis_type == 'sintaxe' %}
-        <td>{% if token.dependency %}<span title="{{ token.dependency }}">{{ token.dependency_label }}</span>{% else %}<span class="unavailable">Não disponível</span>{% endif %}</td>
-        <td>{% if token.head_text %}{{ token.head_text }}{% if token.head_is_self %}<span class="root-label">raiz</span>{% elif token.head_outside_clause %}<span class="unavailable"> · fora deste recorte</span>{% endif %}{% else %}<span class="unavailable">Não disponível</span>{% endif %}</td>
+        <div><dt>Relação sintática</dt><dd>{% if token.dependency %}<span title="{{ token.dependency }}">{{ token.dependency_label }}</span>{% else %}Não disponível{% endif %}</dd></div>
+        <div><dt>Cabeça sintática</dt><dd>{% if token.head_text %}{{ token.head_text }}{% if token.head_is_self %} · raiz{% elif token.head_outside_clause %} · fora deste recorte{% endif %}{% else %}Não disponível{% endif %}</dd></div>
         {% else %}
-        <td>{{ token.lemma if token.lemma is not none else 'Não disponível' }}</td>
-        <td>{% if token.pos %}<span title="{{ token.pos }}">{{ token.pos_label }}</span>{% else %}<span class="unavailable">Não disponível</span>{% endif %}</td>
-        <td>{% if token.morphology is none %}<span class="unavailable">Não disponível</span>{% elif token.morphology %}<dl class="morph-attributes">{% for attribute in token.morphology %}<div><dt title="{{ attribute.field }}">{{ attribute.label }}:</dt><dd title="{{ attribute.raw_value }}">{{ attribute.value }}</dd></div>{% endfor %}</dl>{% else %}<span class="unavailable">Sem traços registrados</span>{% endif %}</td>
+        <div><dt>Lema</dt><dd>{{ token.lemma if token.lemma is not none else 'Não disponível' }}</dd></div>
+        <div><dt>Classe gramatical</dt><dd>{% if token.pos %}<span title="{{ token.pos }}">{{ token.pos_label }}</span>{% else %}Não disponível{% endif %}</dd></div>
+        <div><dt>Traços morfológicos</dt><dd>{% if token.morphology is none %}Não disponível{% elif token.morphology %}<ul class="map-morphology">{% for attribute in token.morphology %}<li><span title="{{ attribute.field }}">{{ attribute.label }}:</span> <span title="{{ attribute.raw_value }}">{{ attribute.value }}</span></li>{% endfor %}</ul>{% else %}Sem traços registrados{% endif %}</dd></div>
         {% endif %}
-      </tr>
-      {% else %}<tr><td colspan="{{ 3 if analysis_type == 'sintaxe' else 4 }}" class="empty-result">Nenhum elemento disponível.</td></tr>{% endfor %}
-    </tbody>
-  </table>
+      </dl>
+    </li>
+    {% else %}<li class="empty-result">Nenhum elemento disponível.</li>{% endfor %}
+  </ol>
 </div>
 <p class="map-analysis-note">Resultados das anotações salvas, considerando o contexto do período. Relações e traços sugeridos pelo modelo permanecem sujeitos à revisão.</p>

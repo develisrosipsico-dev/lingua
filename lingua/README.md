@@ -92,6 +92,12 @@ abertura gera a segmentação se ela ainda não estiver salva; com JavaScript
 desativado, use **Tokenizar e segmentar**. Cada parágrafo abre seus períodos,
 e cada período abre as orações identificadas.
 
+Os períodos têm cores correspondentes no texto do parágrafo e nos seus blocos.
+As orações seguem a posição de seu conteúdo no texto, com classificação a partir
+dos vínculos salvos: principal, coordenada ou subordinada; uma oração isolada
+pode ser absoluta. Classificações não determinadas permanecem indicadas.
+Os elementos das análises aparecem em listas por palavra, sem tabelas.
+
 Dentro de uma oração, os comandos são independentes:
 
 - **Análise sintática**: palavras, relações sintáticas e suas cabeças.

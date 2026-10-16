@@ -3,7 +3,7 @@
 from copy import deepcopy
 import unittest
 
-from fixtures_regras import CASOS, construir_analise
+from fixtures_regras import construir_analise, ponto, token, verbo
 from regras_linguisticas import aplicar_regras_linguisticas
 from visualizacao_segmentacao import construir_visualizacao_segmentacao
 
@@ -68,6 +68,37 @@ class SegmentationMapTests(unittest.TestCase):
         self.assertEqual(len(view["paragraphs"]), 1)
         self.assertEqual(view["paragraphs"][0]["paragraph"]["ordem"], 1)
         self.assertEqual(view["paragraphs"][0]["periods"][0]["period"], target)
+
+    def test_clause_order_follows_the_text_even_when_main_verb_comes_last(self):
+        lines = [token("O", "o", "DET", 1, "det"), token("homem", "homem", "NOUN", 4, "nsubj"),
+                 token("que", "que", "PRON", 3, "nsubj"),
+                 verbo("chegou", "chegar", 1, "acl:relcl", tempo="Past"),
+                 verbo("saiu", "sair", 4, tempo="Past"), ponto(4)]
+        source = self.source(texto="O homem que chegou saiu.", linhas=lines)
+        before = deepcopy(source)
+        clauses = construir_visualizacao_segmentacao(*source)["paragraphs"][0]["periods"][0]["clauses"]
+        self.assertEqual([c["nucleus_text"] for c in clauses], ["saiu", "chegou"])
+        self.assertEqual([c["classification"] for c in clauses], ["Oração principal", "Oração subordinada"])
+        self.assertEqual([c["number"] for c in clauses], [1, 2])
+        self.assertEqual(clauses[1]["relations"][0]["anchor"], clauses[0]["anchor"])
+        self.assertEqual(source, before)
+
+    def test_subordinate_before_main_and_coordinated_clauses_are_classified(self):
+        for name, expected in (("condicao", ["Oração subordinada", "Oração principal"]),
+                               ("coordenacao", ["Oração coordenada", "Oração coordenada"]),
+                               ("auxiliar", ["Oração absoluta"])):
+            with self.subTest(name=name):
+                clauses = construir_visualizacao_segmentacao(*self.source(name))["paragraphs"][0]["periods"][0]["clauses"]
+                self.assertEqual([c["classification"] for c in clauses], expected)
+
+    def test_colored_periods_reconstruct_literal_paragraph_including_spaces(self):
+        source = self.source("repeticao", texto="Ela não saiu.\t  Ela não saiu.")
+        group = construir_visualizacao_segmentacao(*source)["paragraphs"][0]
+        self.assertEqual("".join(p["text"] for p in group["original_parts"]), group["original_text"])
+        colored = [p for p in group["original_parts"] if p["period_number"]]
+        self.assertEqual([p["period_number"] for p in colored], [1, 2])
+        self.assertNotEqual(colored[0]["tone"], colored[1]["tone"])
+        self.assertEqual([p["tone"] for p in colored], [p["tone"] for p in group["periods"]])
 
 
 if __name__ == "__main__":

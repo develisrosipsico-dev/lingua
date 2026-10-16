@@ -7,9 +7,9 @@
   <details class="map-paragraph" id="seg-paragrafo-{{ group.paragraph.ordem + 1 }}"{% if selected.open %} open{% endif %}>
     <summary><strong>Parágrafo {{ group.paragraph.ordem + 1 }}</strong><span class="map-unit-meta">{{ group.periods|length }} período(s)</span></summary>
     <div class="map-unit-body">
-      <p class="period-text map-original-text">{{ group.original_text }}</p>
+      <p class="period-text map-original-text">{% for part in group.original_parts %}{% if part.period_number %}<a class="map-period-highlight map-tone-{{ part.tone }}" href="#seg-periodo-{{ part.period_number }}" title="Período {{ part.period_number }}">{{ part.text }}</a>{% else %}{{ part.text }}{% endif %}{% endfor %}</p>
       {% for period_view in group.periods %}
-      <details class="map-period" id="seg-periodo-{{ period_view.period.ordem + 1 }}" data-map-period{% if request.args.get('mapa_periodo_id') == period_view.period.id or period_view.clauses|selectattr('id', 'equalto', request.args.get('mapa_oracao_id'))|list %} open{% endif %}>
+      <details class="map-period map-tone-{{ period_view.tone }}" id="seg-periodo-{{ period_view.period.ordem + 1 }}" data-map-period{% if request.args.get('mapa_periodo_id') == period_view.period.id or period_view.clauses|selectattr('id', 'equalto', request.args.get('mapa_oracao_id'))|list %} open{% endif %}>
         <summary><strong>Período {{ period_view.period.ordem + 1 }}</strong><span class="map-preview">{{ period_view.original_text|truncate(120, true) }}</span></summary>
         <div class="map-unit-body">
           <p class="period-text map-original-text">{{ period_view.original_text }}</p>

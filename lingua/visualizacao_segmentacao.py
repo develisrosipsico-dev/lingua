@@ -143,6 +143,34 @@ def construir_visualizacao_segmentacao(segmentacao, anotacao=None, analise=None,
         if ocorrencia["familia"] == "oracoes":
             por_periodo[ocorrencia["periodo_id"]].append(ocorrencia)
 
+    def inicio_oracao(ocorrencia):
+        alcance = ocorrencia["alcance"]
+        ids = alcance["token_ids"] if alcance else ocorrencia["marcador_token_ids"] + ocorrencia["nucleo_token_ids"]
+        return min(ordem[t] for t in ids)
+
+    for oracoes in por_periodo.values():
+        oracoes.sort(key=inicio_oracao)
+
+    def classificacao(ocorrencia, oracoes):
+        ids = {o["id"] for o in oracoes}
+        saidas = {v["tipo"] for v in ocorrencia["vinculos"]
+                  if v["alvo_tipo"] == "ocorrencia" and v["alvo_id"] in ids}
+        entradas = {v["tipo"] for o in oracoes for v in o["vinculos"]
+                    if v["alvo_tipo"] == "ocorrencia" and v["alvo_id"] == ocorrencia["id"]}
+        papeis = []
+        if "subordinacao" in saidas:
+            papeis.append("subordinada")
+        if "coordenacao" in saidas | entradas:
+            papeis.append("coordenada")
+        if "subordinacao" in entradas:
+            papeis.append("principal")
+        if papeis:
+            return "Oração " + " e ".join(papeis)
+        raiz = any(sintaxe.get(t, {}).get("dependencia") == "ROOT" for t in ocorrencia["nucleo_token_ids"])
+        if raiz:
+            return "Oração absoluta" if len(oracoes) == 1 else "Oração independente"
+        return "Classificação não determinada"
+
     referencias = {}
     for periodo in segmentacao["periodos"]:
         for numero, ocorrencia in enumerate(por_periodo[periodo["id"]], 1):
@@ -155,7 +183,16 @@ def construir_visualizacao_segmentacao(segmentacao, anotacao=None, analise=None,
             continue
         posicao = paragrafo["original"]
         grupo = {"paragraph": paragrafo, "periods": [],
-                 "original_text": original[posicao["inicio"]:posicao["fim"]]}
+                 "original_text": original[posicao["inicio"]:posicao["fim"]], "original_parts": []}
+        cursor = posicao["inicio"]
+        for ident in paragrafo["periodos"]:
+            periodo = periodos[ident]
+            inicio, fim = periodo["original"]["inicio"], periodo["original"]["fim"]
+            grupo["original_parts"].append({"text": original[cursor:inicio], "period_number": None})
+            grupo["original_parts"].append({"text": original[inicio:fim],
+                "period_number": periodo["ordem"] + 1, "tone": periodo["ordem"] % 6 + 1})
+            cursor = fim
+        grupo["original_parts"].append({"text": original[cursor:posicao["fim"]], "period_number": None})
         for ident_periodo in paragrafo["periodos"]:
             if periodo_id is not None and ident_periodo != periodo_id:
                 continue
@@ -181,6 +218,7 @@ def construir_visualizacao_segmentacao(segmentacao, anotacao=None, analise=None,
                     notas.extend(f"{rotulo}: {texto}" for texto in ocorrencia[campo])
                 oracoes.append({
                     "id": ocorrencia["id"], **referencias[ocorrencia["id"]],
+                    "classification": classificacao(ocorrencia, por_periodo[ident_periodo]),
                     "text": " […] ".join(trechos) if alcance is not None else "Extensão não determinada",
                     "fragments": trechos, "evidence_fragments": evidencias,
                     "scope_resolved": alcance is not None,
@@ -190,6 +228,7 @@ def construir_visualizacao_segmentacao(segmentacao, anotacao=None, analise=None,
                 })
             grupo["periods"].append({
                 "period": periodo, "clauses": oracoes, "tokens": linhas(periodo["tokens"]),
+                "tone": periodo["ordem"] % 6 + 1,
                 "original_text": original[periodo["original"]["inicio"]:periodo["original"]["fim"]],
                 "unassigned_tokens": linhas([t for t in periodo["tokens"] if t not in exibidos]) if oracoes else [],
             })
